@@ -36,7 +36,6 @@ const Login: React.FC = () => {
 
           if (token) {
             dispatch(setToken(token));
-            console.log('로그인 성공:', response);
             navigate('/main');
 
             setEmail('');
@@ -53,7 +52,6 @@ const Login: React.FC = () => {
           setError('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
         }
       } catch (error) {
-        console.error('로그인 실패:', error);
         setError('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
       }
     } else {
