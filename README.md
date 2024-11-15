@@ -1,9 +1,11 @@
 hoBIT-admin-frontend
 
 ## 처음 실행할 때 실행할 명령어
+```
 npm install -g typescript
 npm install -g react-scripts
 npm install
+```
 
 ## 코드 작동 방식 설명(src)
 1. envs.ts 
