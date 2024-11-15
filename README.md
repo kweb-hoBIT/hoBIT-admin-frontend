@@ -8,6 +8,7 @@ npm install
 ```
 
 ## 코드 작동 방식 설명(src)
+```
 1. envs.ts 
   1) src/envs.ts에서 env 파일을 읽어와 고정 endpoint 설정(http://localhost:3000)
 
@@ -33,4 +34,4 @@ npm install
 
 7. /lib
   1) 애플리케이션 전반에 걸쳐 공통으로 사용될 수 있는 유틸리티 코드나 기능을 모아두는 곳(자동 완성, 날짜 포맷)
-
+```
