@@ -22,6 +22,5 @@ const authSlice = createSlice({
   },
 });
 
-// 리듀서와 액션을 export
 export const { setToken, clearToken } = authSlice.actions;
 export const authReducer = authSlice.reducer;
