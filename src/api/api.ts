@@ -8,7 +8,7 @@ import {
   jsonParseFailPayload,
 } from '../types/api';
 
-const endpoint = `${envs.HOBIT_BACKEND_ENDPOINT!}/api/v0`;
+const endpoint = `${envs.HOBIT_BACKEND_ENDPOINT!}/api`;
 
 export async function hobitApi<
   T extends HobitAdminApiRequest,
@@ -37,7 +37,10 @@ export async function hobitApi<
 
   try {
     const json = await resp.json();
-    return json;
+    return {
+      error: null,
+      payload: json as R,
+    };
   } catch (err) {
     return { error: jsonParseFailPayload, payload: null };
   }
