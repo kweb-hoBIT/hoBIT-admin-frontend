@@ -3,7 +3,7 @@ import { RootState } from '../redux/store';
 
 import Header from '../components/Header';
 
-const MainPage: React.FC = () => {
+const FAQEditPage: React.FC = () => {
   // Redux 상태 예시 (필요 시 사용)
   const isEmpty = useSelector((state: RootState) => state.input?.isEmpty);
 
@@ -14,10 +14,10 @@ const MainPage: React.FC = () => {
 
       {/* 공통 콘텐츠 영역*/}
       <main>
-
+        
       </main>
     </div>
   );
 };
 
-export default MainPage;
+export default FAQEditPage;
