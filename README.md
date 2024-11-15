@@ -4,7 +4,6 @@ hoBIT-admin-frontend
 npm install -g typescript
 npm install -g react-scripts
 npm install
-##
 
 ## 코드 작동 방식 설명(src)
 1. envs.ts 
