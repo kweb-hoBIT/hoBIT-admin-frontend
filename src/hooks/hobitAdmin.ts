@@ -20,7 +20,7 @@ export function useHobitMutateApi<
   R extends { type: C } & HobitAdminApiResponse,
 >(type: C) {
   const { mutateAsync } = useMutation({
-    mutationFn: async (req?: Omit<T, 'type'>) => {
+    mutationFn: async (req?: { type: C } & Omit<T, 'type'>) => {
       const resp = await hobitApi<T, R>({ type, ...req } as T);
       return resp;
     },
@@ -28,3 +28,4 @@ export function useHobitMutateApi<
 
   return mutateAsync;
 }
+
