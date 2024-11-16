@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setToken } from '../../redux/authSlice';
 import { sendInputValue, clearSentValue } from '../../redux/inputSlice';
 import { useHobitMutateApi } from '../../hooks/hobitAdmin';
 import { useNavigate } from 'react-router-dom';
+import LoginForm from './LoginForm';
+import { LoginRequest, LoginResponse  } from '../../types/user';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -12,15 +14,7 @@ const Login: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const mutateLogin = useHobitMutateApi('auth');
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
+  const mutateLogin = useHobitMutateApi<LoginRequest, 'auth', LoginResponse>('auth');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,15 +23,13 @@ const Login: React.FC = () => {
       dispatch(sendInputValue(`로그인 요청: ${email}`));
 
       try {
-        const response = await mutateLogin({ email, password });
-
-        if (response.payload && response.payload.status === 'success') {
+        const response = await mutateLogin({ type: 'auth', email, password });
+        if (response.payload?.status === 'success') {
           const token = response.payload.data?.token;
 
           if (token) {
             dispatch(setToken(token));
             navigate('/main');
-
             setEmail('');
             setPassword('');
             setError(null);
@@ -49,9 +41,15 @@ const Login: React.FC = () => {
             setError('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
           }
         } else {
-          setError('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
+          if(response.payload?.message === 'User not found') {
+            setError('존재하지 않는 이메일입니다. 다시 확인해주세요.');
+          } else if( response.payload?.message === 'Invalid password') {
+            setError('비밀번호가 일치하지 않습니다. 다시 확인해주세요.');
+          } else if( response.payload?.message === 'User registration is pending approval') {
+            setError('관리자의 승인을 기다리는 계정입니다. 승인 후 로그인해주세요.');
+          }
         }
-      } catch (error) {
+      } catch {
         setError('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
       }
     } else {
@@ -59,47 +57,18 @@ const Login: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    console.log('Login 컴포넌트 렌더링');
-  }, []);
-
   return (
     <div className="login-container flex justify-center items-center h-screen">
       <div className="bg-white p-6 rounded-xl shadow-md w-[400px]">
         <h2 className="text-2xl font-semibold mb-4 text-center">로그인</h2>
-        {error && <div className="text-red-500 text-center mb-4">{error}</div>}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-lg font-medium">이메일</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={handleEmailChange}
-              placeholder="이메일을 입력하세요"
-              className="w-full p-2 border border-gray-300 rounded-md mt-1"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="password" className="block text-lg font-medium">비밀번호</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={handlePasswordChange}
-              placeholder="비밀번호를 입력하세요"
-              className="w-full p-2 border border-gray-300 rounded-md mt-1"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-[#F3D0D7] text-[#686D76] font-semibold text-xl py-2 rounded-md hover:bg-[#e8b9c2]"
-          >
-            로그인
-          </button>
-        </form>
+        <LoginForm
+          email={email}
+          password={password}
+          error={error}
+          onEmailChange={(e) => setEmail(e.target.value)}
+          onPasswordChange={(e) => setPassword(e.target.value)}
+          onSubmit={handleSubmit}
+        />
       </div>
     </div>
   );
