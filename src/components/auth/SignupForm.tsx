@@ -1,6 +1,6 @@
 import React from "react";
-import InputField from './InputField';
-import ErrorMessage from './ErrorMessage';
+import InputField from '../InputField';
+import ErrorMessage from '../ErrorMessage';
 
 interface SignupFormProps {
   email: string;
