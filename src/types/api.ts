@@ -1,16 +1,13 @@
-import { RateFaqRequest, RateFaqResponse } from './faq';
-import { GetQuestionRequest, GetQuestionResponse } from './question';
-import { LoginRequest, LoginResponse } from './user';
+import { LoginRequest, LoginResponse, SignupRequest, SignupResponse } from './user';
 
 export type HobitAdminApiRequest =
-  | ({ type: 'get_question' } & GetQuestionRequest)
-  | ({ type: 'rate_faq' } & RateFaqRequest)
-  | ({ type: 'auth' } & LoginRequest);
+  | ({ type: 'auth' } & LoginRequest)
+  | ({ type: 'users' } & SignupRequest);
+
 
 export type HobitAdminApiResponse =
-  | ({ type: 'get_question' } & GetQuestionResponse)
-  | ({ type: 'rate' } & RateFaqResponse)
-  | ({ type: 'auth' } & LoginResponse);
+  | ({ type: 'auth' } & LoginResponse)
+  | ({ type: 'users' } & SignupResponse);
 
 export type ApiResponse<P> = {
   error: ApiErrorPayload | null;
