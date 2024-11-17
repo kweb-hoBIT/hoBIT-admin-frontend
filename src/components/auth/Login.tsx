@@ -5,7 +5,7 @@ import { sendInputValue, clearSentValue } from '../../redux/inputSlice';
 import { useHobitMutateApi } from '../../hooks/hobitAdmin';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from './LoginForm';
-import { LoginRequest, LoginResponse  } from '../../types/user';
+import { LoginRequest, LoginResponse } from '../../types/user';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -41,11 +41,11 @@ const Login: React.FC = () => {
             setError('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
           }
         } else {
-          if(response.payload?.message === 'User not found') {
+          if (response.payload?.message === 'User not found') {
             setError('존재하지 않는 이메일입니다. 다시 확인해주세요.');
-          } else if( response.payload?.message === 'Invalid password') {
+          } else if (response.payload?.message === 'Invalid password') {
             setError('비밀번호가 일치하지 않습니다. 다시 확인해주세요.');
-          } else if( response.payload?.message === 'User registration is pending approval') {
+          } else if (response.payload?.message === 'User registration is pending approval') {
             setError('관리자의 승인을 기다리는 계정입니다. 승인 후 로그인해주세요.');
           }
         }
@@ -58,19 +58,14 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="login-container flex justify-center items-center h-screen">
-      <div className="bg-white p-6 rounded-xl shadow-md w-[400px]">
-        <h2 className="text-2xl font-semibold mb-4 text-center">로그인</h2>
-        <LoginForm
-          email={email}
-          password={password}
-          error={error}
-          onEmailChange={(e) => setEmail(e.target.value)}
-          onPasswordChange={(e) => setPassword(e.target.value)}
-          onSubmit={handleSubmit}
-        />
-      </div>
-    </div>
+    <LoginForm
+      email={email}
+      password={password}
+      error={error}
+      onEmailChange={(e) => setEmail(e.target.value)}
+      onPasswordChange={(e) => setPassword(e.target.value)}
+      onSubmit={handleSubmit}
+    />
   );
 };
 

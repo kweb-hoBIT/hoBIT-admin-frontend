@@ -1,56 +1,55 @@
 import React from 'react';
 import InputField from '../InputField';
+import Button from '../Button';
 import ErrorMessage from '../ErrorMessage';
 
-interface LoginFormProps {
+const LoginForm: React.FC<{
   email: string;
   password: string;
   error: string | null;
   onEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent) => void;
-}
-
-const LoginForm: React.FC<LoginFormProps> = ({
+}> = ({
   email,
   password,
   error,
   onEmailChange,
   onPasswordChange,
-  onSubmit
+  onSubmit,
 }) => {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    onSubmit(e);
-  };
-
   return (
-    <form onSubmit={handleSubmit}>
-      <ErrorMessage message={error} />
-      <InputField
-        id="email"
-        label="이메일"
-        type="email"
-        value={email}
-        onChange={onEmailChange}
-        placeholder="이메일을 입력하세요"
-      />
-      <InputField
-        id="password"
-        label="비밀번호"
-        type="password"
-        value={password}
-        onChange={onPasswordChange}
-        placeholder="비밀번호를 입력하세요"
-      />
-      <button
-        type="submit"
-        className="w-full bg-[#F3D0D7] text-[#686D76] font-semibold text-xl py-2 rounded-md hover:bg-[#e8b9c2]"
-      >
-        로그인
-      </button>
-    </form>
+    <div className="flex justify-center items-center h-screen bg-gray-100">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+        <h2 className="text-2xl font-semibold mb-4 text-center">로그인</h2>
+        <form onSubmit={onSubmit} className="flex flex-col gap-4">
+          <ErrorMessage message={error} />
+          <InputField
+            id="email"
+            label="이메일"
+            type="email"
+            value={email}
+            onChange={onEmailChange}
+            placeholder="이메일을 입력하세요"
+            className="w-full p-2 border border-gray-300 rounded-md text-base"
+          />
+          <InputField
+            id="password"
+            label="비밀번호"
+            type="password"
+            value={password}
+            onChange={onPasswordChange}
+            placeholder="비밀번호를 입력하세요"
+            className="w-full p-2 border border-gray-300 rounded-md text-base"
+          />
+          <Button 
+            type="submit" 
+            children="로그인"
+            className="w-full bg-pink-200 text-gray-600 font-semibold text-xl p-2 rounded-md transition-colors duration-300"
+          />
+        </form>
+      </div>
+    </div>
   );
 };
 

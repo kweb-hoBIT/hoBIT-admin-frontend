@@ -20,6 +20,9 @@ const Signup: React.FC = () => {
   const mutateSignup = useHobitMutateApi<SignupRequest, 'users', SignupResponse>('users');
 
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // 유효성 검사
     if (password.length < 6) {
       setError('비밀번호는 6자 이상이어야 합니다.');
       return;
@@ -35,19 +38,21 @@ const Signup: React.FC = () => {
       return;
     }
 
-    e.preventDefault();
-
+    // 모든 값이 존재하는지 확인
     if (email && password && username && phone_num && invitationKey) {
       dispatch(sendInputValue(`회원가입 요청: ${email}`));
+
       try {
+        // 회원가입 API 호출
         const response = await mutateSignup({ type: 'users', email, password, username, phone_num, invitationKey });
+
         if (response.payload?.status === 'success') {
           alert('회원가입 성공! 로그인 해주세요.');
           navigate('/login');
         } else {
-          if(response.payload?.message === 'Invalid invitation key. Access denied.') {
-            setError('Invitation key가 올바르지 않습니다. 다시 확인해주세요.');
-          } else if(response.payload?.message === 'User already exists') {
+          if (response.payload?.message === 'Invalid invitation key. Access denied.') {
+            setError('초대키가 올바르지 않습니다. 다시 확인해주세요.');
+          } else if (response.payload?.message === 'User already exists') {
             setError('이미 존재하는 이메일입니다. 다른 이메일로 시도해주세요.');
           }
         }
@@ -60,27 +65,22 @@ const Signup: React.FC = () => {
   };
 
   return (
-    <div className="signup-container flex justify-center items-center h-screen">
-      <div className="bg-white p-6 rounded-xl shadow-md w-[400px]">
-        <h2 className="text-2xl font-semibold mb-4 text-center">회원가입</h2>
-        <SignupForm
-          email={email}
-          password={password}
-          confirmPassword={confirmPassword}
-          username={username}
-          phone_num={phone_num}
-          invitationKey={invitationKey}
-          error={error}
-          onEmailChange={(e) => setEmail(e.target.value)}
-          onPasswordChange={(e) => setPassword(e.target.value)}
-          onConfirmPasswordChange={(e) => setConfirmPassword(e.target.value)}
-          onUsernameChange={(e) => setUsername(e.target.value)}
-          onPhoneNumChange={(e) => setPhoneNum(e.target.value)}
-          onInvitationKeyChange={(e) => setInvitationKey(e.target.value)}
-          onSubmit={handleSubmit}
-        />
-      </div>
-    </div>
+    <SignupForm
+      email={email}
+      password={password}
+      confirmPassword={confirmPassword}
+      username={username}
+      phone_num={phone_num}
+      invitationKey={invitationKey}
+      error={error}
+      onEmailChange={(e) => setEmail(e.target.value)}
+      onPasswordChange={(e) => setPassword(e.target.value)}
+      onConfirmPasswordChange={(e) => setConfirmPassword(e.target.value)}
+      onUsernameChange={(e) => setUsername(e.target.value)}
+      onPhoneNumChange={(e) => setPhoneNum(e.target.value)}
+      onInvitationKeyChange={(e) => setInvitationKey(e.target.value)}
+      onSubmit={handleSubmit}
+    />
   );
 };
 
