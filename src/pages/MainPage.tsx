@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 
 import Header from '../components/Header';
+import Main from '../components/main/Main';
 
 const MainPage: React.FC = () => {
   // Redux 상태 예시 (필요 시 사용)
@@ -9,12 +10,9 @@ const MainPage: React.FC = () => {
 
   return (
     <div>
-      {/* 공통 헤더 */}
       <Header />
-
-      {/* 공통 콘텐츠 영역*/}
       <main>
-
+      <Main />
       </main>
     </div>
   );

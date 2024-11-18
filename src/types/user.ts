@@ -9,7 +9,8 @@ export type LoginResponse = {
   status: string;
   message: string;          
   data?: {
-    token?: string;
+    accessToken?: string;
+    refreshToken?: string;
   };
 };
 
@@ -27,6 +28,20 @@ export type SignupResponse = {
   status: string;
   message: string;
 };
+
+export type NewAccessTokenRequest = {
+  type: 'auth/refresh';
+  refreshToken: string;
+}
+
+export type NewAccessTokenResponse = {
+  type: 'auth/refresh';
+  status: string;
+  message: string;
+  data?: {
+    accessToken?: string;
+  };
+}
 
 
 export type User = {
