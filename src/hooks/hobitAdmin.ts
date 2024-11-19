@@ -1,31 +1,31 @@
+// hooks.ts 파일
+
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { HobitAdminApiRequest, HobitAdminApiResponse } from '../types/api';
 import { hobitApi } from '../api/api';
 
 export function useHobitQueryApi<
   T extends HobitAdminApiRequest,
-  R extends { type: T['type'] } & HobitAdminApiResponse,
->(req: T, queryKey?: any[]) {
+  R extends HobitAdminApiResponse,
+>(path: string, req: T, queryKey?: any[]) {
   return useQuery({
-    queryKey: queryKey ?? [req.type],
+    queryKey: queryKey ?? [path],
     queryFn: async () => {
-      return hobitApi<T, R>(req);
+      return hobitApi<T, R>(path, req);
     },
   });
 }
 
 export function useHobitMutateApi<
   T extends HobitAdminApiRequest,
-  C extends T['type'],
-  R extends { type: C } & HobitAdminApiResponse,
->(type: C) {
+  R extends HobitAdminApiResponse,
+>(path: string) {
   const { mutateAsync } = useMutation({
-    mutationFn: async (req?: { type: C } & Omit<T, 'type'>) => {
-      const resp = await hobitApi<T, R>({ type, ...req } as T);
+    mutationFn: async (req?: T) => {
+      const resp = await hobitApi<T, R>(path, req!);
       return resp;
     },
   });
 
   return mutateAsync;
 }
-

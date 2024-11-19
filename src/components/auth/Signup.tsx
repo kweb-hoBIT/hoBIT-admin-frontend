@@ -17,7 +17,7 @@ const Signup: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const mutateSignup = useHobitMutateApi<SignupRequest, 'users', SignupResponse>('users');
+  const mutateSignup = useHobitMutateApi<SignupRequest, SignupResponse>('users');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +44,7 @@ const Signup: React.FC = () => {
 
       try {
         // 회원가입 API 호출
-        const response = await mutateSignup({ type: 'users', email, password, username, phone_num, invitationKey });
+        const response = await mutateSignup({ email, password, username, phone_num, invitationKey });
 
         if (response.payload?.status === 'success') {
           alert('회원가입 성공! 로그인 해주세요.');

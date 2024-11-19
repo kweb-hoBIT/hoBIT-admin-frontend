@@ -15,7 +15,7 @@ interface ProtectedPageProps {
 const ProtectedPage: React.FC<ProtectedPageProps> = ({ children }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const mutateNewAccessToken = useHobitMutateApi<NewAccessTokenRequest, 'auth/refresh', NewAccessTokenResponse>('auth/refresh');
+  const mutateNewAccessToken = useHobitMutateApi<NewAccessTokenRequest, NewAccessTokenResponse>('auth/refresh');
 
   // Redux에서 인증 상태 가져오기
   const { accessToken, refreshToken } = useSelector((state: RootState) => selectAuth(state));
@@ -36,7 +36,7 @@ const ProtectedPage: React.FC<ProtectedPageProps> = ({ children }) => {
               navigate('/login');
             } else {
               // 리프레시 토큰을 사용하여 새로운 accessToken을 요청
-              const response = await mutateNewAccessToken({ type: 'auth/refresh', refreshToken });
+              const response = await mutateNewAccessToken({ refreshToken });
 
               if (response.payload?.status === 'success') {
                 const { accessToken } = response.payload.data ?? {};

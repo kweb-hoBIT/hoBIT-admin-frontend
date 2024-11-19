@@ -1,3 +1,5 @@
+// api.ts 파일
+
 import JSONbig from 'json-bigint';
 import { envs } from '../envs';
 import {
@@ -12,13 +14,11 @@ const endpoint = `${envs.HOBIT_BACKEND_ENDPOINT!}/api`;
 
 export async function hobitApi<
   T extends HobitAdminApiRequest,
-  R extends { type: T['type'] } & HobitAdminApiResponse,
->(req: T): Promise<ApiResponse<R>> {
+  R extends HobitAdminApiResponse,
+>(path: string, req: T): Promise<ApiResponse<R>> {
   const headers: Record<string, string> = {
     'Content-type': 'application/json',
   };
-
-  const path = req.type;
 
   let resp;
   try {

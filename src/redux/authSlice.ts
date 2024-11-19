@@ -5,14 +5,14 @@ import { RootState } from './store';
 interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
-  user_id: number | null;
+  user_id: string | null;
   username: string | null;
 }
 
 const initialState: AuthState = {
   accessToken: localStorage.getItem('accessToken') || null,
   refreshToken: localStorage.getItem('refreshToken') || null,
-  user_id: localStorage.getItem('user_id') ? Number(localStorage.getItem('user_id')) : null,
+  user_id: localStorage.getItem('user_id') || null,
   username: localStorage.getItem('username') || null,
 };
 
@@ -28,9 +28,9 @@ const authSlice = createSlice({
       state.refreshToken = action.payload;
       localStorage.setItem('refreshToken', action.payload);
     },
-    setUserId: (state, action: PayloadAction<number>) => {
+    setUserId: (state, action: PayloadAction<string>) => {
       state.user_id = action.payload;
-      localStorage.setItem('user_id', String(action.payload));
+      localStorage.setItem('user_id', action.payload);
     },
     setUsername: (state, action: PayloadAction<string>) => {
       state.username = action.payload;
