@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAccessToken } from '../redux/authSlice';
 import { RootState } from '../redux/store';
-import { useHobitMutateApi } from '../hooks/hobitAdmin';
+import { useHobitMutatePostApi } from '../hooks/hobitAdmin';
 import { selectAuth } from '../redux/authSlice';
 import { jwtDecode } from 'jwt-decode';
 import { NewAccessTokenRequest, NewAccessTokenResponse } from '../types/user';
@@ -15,7 +15,7 @@ interface ProtectedPageProps {
 const ProtectedPage: React.FC<ProtectedPageProps> = ({ children }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const mutateNewAccessToken = useHobitMutateApi<NewAccessTokenRequest, NewAccessTokenResponse>('auth/refresh');
+  const mutateNewAccessToken = useHobitMutatePostApi<NewAccessTokenRequest, NewAccessTokenResponse>('auth/refresh');
 
   // Redux에서 인증 상태 가져오기
   const { accessToken, refreshToken } = useSelector((state: RootState) => selectAuth(state));

@@ -4,14 +4,20 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { selectAuth } from '../redux/authSlice';
 import Logout from './auth/Logout';
+import DeleteAccount from './auth/DeleteAccount'; // DeleteAccount 컴포넌트 임포트
 
 const Header: React.FC = () => {
   const { username } = useSelector((state: RootState) => selectAuth(state));
   const [showPopup, setShowPopup] = useState(false);
+  const [showDeleteAccount, setShowDeleteAccount] = useState(false); // 회원탈퇴 팝업 상태 추가
   const location = useLocation();
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
+  };
+
+  const toggleDeleteAccountPopup = () => {
+    setShowDeleteAccount(!showDeleteAccount);
   };
 
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
@@ -59,16 +65,11 @@ const Header: React.FC = () => {
                   </p>
                   <div className="mb-2">
                     <Logout
-                      className="text-sm text-blue-600 hover:underline mb-2"
                     />
                   </div>
-                  <div>
-                    <button
-                      className="text-sm text-red-600 hover:underline"
-                      onClick={() => alert('회원탈퇴')}
-                    >
-                      회원탈퇴
-                    </button>
+                  <div className="mb-2">
+                    <DeleteAccount
+                    />
                   </div>
                 </div>
               )}

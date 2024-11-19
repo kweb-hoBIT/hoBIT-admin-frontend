@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setAccessToken, setRefreshToken, setUserId, setUsername } from '../../redux/authSlice'; // setUsername 추가
 import { sendInputValue, clearSentValue } from '../../redux/inputSlice';
-import { useHobitMutateApi } from '../../hooks/hobitAdmin';
+import { useHobitMutatePostApi } from '../../hooks/hobitAdmin';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from './LoginForm';
 import { LoginRequest, LoginResponse } from '../../types/user';
@@ -14,7 +14,7 @@ const Login: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const mutateLogin = useHobitMutateApi<LoginRequest, LoginResponse>('auth');
+  const mutateLogin = useHobitMutatePostApi<LoginRequest, LoginResponse>('auth');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

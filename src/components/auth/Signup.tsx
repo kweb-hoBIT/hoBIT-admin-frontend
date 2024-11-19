@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { sendInputValue } from '../../redux/inputSlice';
-import { useHobitMutateApi } from '../../hooks/hobitAdmin';
+import { useHobitMutatePostApi } from '../../hooks/hobitAdmin';
 import { useNavigate } from 'react-router-dom';
 import SignupForm from './SignupForm';
 import { SignupRequest, SignupResponse } from '../../types/user';
@@ -17,7 +17,7 @@ const Signup: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const mutateSignup = useHobitMutateApi<SignupRequest, SignupResponse>('users');
+  const mutateSignup = useHobitMutatePostApi<SignupRequest, SignupResponse>('users');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
