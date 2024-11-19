@@ -6,8 +6,7 @@ import { selectAuth } from '../redux/authSlice';
 import Logout from './Logout';
 
 const Header: React.FC = () => {
-  const { accessToken } = useSelector((state: RootState) => selectAuth(state));
-  const isLoggedIn = Boolean(accessToken);
+  const { username } = useSelector((state: RootState) => selectAuth(state));
   const [showPopup, setShowPopup] = useState(false);
   const location = useLocation();
 
@@ -23,7 +22,7 @@ const Header: React.FC = () => {
         hoBIT
       </div>
       <nav className="flex items-center gap-4 relative">
-        {isLoggedIn && !isAuthPage && (
+        {!isAuthPage && (
           <>
             <Link to="/faqs" className="text-gray-600 hover:text-gray-800">
               FAQ
@@ -55,9 +54,11 @@ const Header: React.FC = () => {
               </button>
               {showPopup && (
                 <div className="absolute right-0 top-10 bg-pink-100 border border-gray-300 rounded-lg shadow-md p-4 w-40">
-                  <p className="text-gray-700 font-semibold mb-2">000님 반갑습니다</p>
+                  <p className="text-gray-700 font-semibold mb-2">
+                    {username ? `${username}님 반갑습니다` : '반갑습니다'}
+                  </p>
                   <div className="mb-2">
-                    <Logout 
+                    <Logout
                       className="text-sm text-blue-600 hover:underline mb-2"
                     />
                   </div>
