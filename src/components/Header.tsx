@@ -1,42 +1,83 @@
-import { useState } from 'react';
-import { IoClose } from 'react-icons/io5';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { selectAuth } from '../redux/authSlice';
+import Logout from './auth/Logout';
+import DeleteAccount from './auth/DeleteAccount'; // DeleteAccount 컴포넌트 임포트
 
 const Header: React.FC = () => {
-  const [isKorean, setIsKorean] = useState<boolean>(true);
+  const { username } = useSelector((state: RootState) => selectAuth(state));
+  const [showPopup, setShowPopup] = useState(false);
+  const [showDeleteAccount, setShowDeleteAccount] = useState(false); // 회원탈퇴 팝업 상태 추가
+  const location = useLocation();
+
+  const togglePopup = () => {
+    setShowPopup(!showPopup);
+  };
+
+  const toggleDeleteAccountPopup = () => {
+    setShowDeleteAccount(!showDeleteAccount);
+  };
+
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
 
   return (
-    <div className="h-[70px] bg-white fixed top-0 w-full border-b-2 border-[#bbbbbb] flex items-center relative px-[20px] py-[20px]">
-      <div className="relative w-[88px] h-[36px] bg-[#D9D9D9] rounded-[20px] flex items-center">
-        <div
-          className={`absolute h-full rounded-full justify-center transition-transform duration-500 ease-in-out bg-black ${
-            isKorean ? 'translate-x-0 w-[50px]' : 'translate-x-[48px] w-[40px]'
-          }`}
-        ></div>
-
-        <button
-          onClick={() => setIsKorean(true)}
-          className={`w-[50px] h-full z-10 text-[16px] font-6semibold rounded-full transition-colors duration-500 ${
-            isKorean ? 'text-white' : 'text-[#aaaaaa]'
-          }`}
-        >
-          KOR
-        </button>
-
-        <button
-          onClick={() => setIsKorean(false)}
-          className={`w-[38px] h-full z-10 text-[16px] font-6semibold rounded-full transition-colors duration-500 ${
-            !isKorean ? 'text-white' : 'text-[#aaaaaa]'
-          }`}
-        >
-          EN
-        </button>
+    <header className="bg-pink-200 p-4 flex justify-between items-center">
+      <div className="text-2xl font-semibold">
+        hoBIT
       </div>
-
-      <p className="absolute left-1/2 transform -translate-x-1/2 font-7bold text-[26px]">
-        정보대학 챗봇 호빗
-      </p>
-      <IoClose className="text-[#aaaaaa] absolute right-4 text-[28px] hover:text-[#000000]" />
-    </div>
+      <nav className="flex items-center gap-4 relative">
+        {!isAuthPage && (
+          <>
+            <Link to="/faqs" className="text-gray-600 hover:text-gray-800">
+              FAQ
+            </Link>
+            <Link to="/logs" className="text-gray-600 hover:text-gray-800">
+              LOG
+            </Link>
+            <div className="relative">
+              <button onClick={togglePopup} className="text-gray-600 hover:text-gray-800">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4.5 19.5a7.5 7.5 0 0115 0"
+                  />
+                </svg>
+              </button>
+              {showPopup && (
+                <div className="absolute right-0 top-10 bg-pink-100 border border-gray-300 rounded-lg shadow-md p-4 w-40">
+                  <p className="text-gray-700 font-semibold mb-2">
+                    {username ? `${username}님 반갑습니다` : '반갑습니다'}
+                  </p>
+                  <div className="mb-2">
+                    <Logout
+                    />
+                  </div>
+                  <div className="mb-2">
+                    <DeleteAccount
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+      </nav>
+    </header>
   );
 };
 

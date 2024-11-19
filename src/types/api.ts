@@ -1,13 +1,17 @@
-import { LoginRequest, LoginResponse, SignupRequest, SignupResponse } from './user';
+import { LoginRequest, LoginResponse, SignupRequest, SignupResponse, NewAccessTokenRequest, NewAccessTokenResponse, DeleteAccountReqeust, DeleteAccountResponse } from './user';
 
 export type HobitAdminApiRequest =
-  | ({ type: 'auth' } & LoginRequest)
-  | ({ type: 'users' } & SignupRequest);
+  | LoginRequest
+  | SignupRequest
+  | NewAccessTokenRequest
+  | DeleteAccountReqeust;
 
 
 export type HobitAdminApiResponse =
-  | ({ type: 'auth' } & LoginResponse)
-  | ({ type: 'users' } & SignupResponse);
+  | LoginResponse
+  | SignupResponse
+  | NewAccessTokenResponse
+  | DeleteAccountResponse;
 
 export type ApiResponse<P> = {
   error: ApiErrorPayload | null;
