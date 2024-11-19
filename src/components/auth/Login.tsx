@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setAccessToken, setRefreshToken } from '../../redux/authSlice';
+import { setAccessToken, setRefreshToken, setUsername } from '../../redux/authSlice'; // setUsername 추가
 import { sendInputValue, clearSentValue } from '../../redux/inputSlice';
 import { useHobitMutateApi } from '../../hooks/hobitAdmin';
 import { useNavigate } from 'react-router-dom';
@@ -25,11 +25,13 @@ const Login: React.FC = () => {
       try {
         const response = await mutateLogin({ type: 'auth', email, password });
         if (response.payload?.status === 'success') {
-          const { accessToken, refreshToken } = response.payload.data ?? {};
+          const { accessToken, refreshToken, username } = response.payload.data ?? {};
 
-          if (accessToken && refreshToken) {
+          if (accessToken && refreshToken && username) {
             dispatch(setAccessToken(accessToken));
             dispatch(setRefreshToken(refreshToken));
+            dispatch(setUsername(username));
+
             navigate('/main');
             setEmail('');
             setPassword('');
