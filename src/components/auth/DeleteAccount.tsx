@@ -15,7 +15,7 @@ const DeleteAccount: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const mutateDeleteAccount = user_id
+  const mutateDeleteAccount = user_id 
     ? useHobitMutateDeleteApi<DeleteAccountReqeust, DeleteAccountResponse>('users', user_id)
     : null;
 
@@ -56,8 +56,6 @@ const DeleteAccount: React.FC = () => {
         className="text-sm text-red-600 hover:underline"
         >
       </Button>
-
-      // Button 컴포넌트 임포트
       {showPopup && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">

@@ -36,7 +36,7 @@ export function useHobitMutatePostApi<
 export function useHobitMutatePutApi<
   T extends HobitAdminApiRequest,
   R extends HobitAdminApiResponse,
->(path: string, params?: string) {
+>(path: string, params: string) {
   const { mutateAsync } = useMutation({
     mutationFn: async (req: T) => {
       const resp = await hobitApi<T, R>(path, req, params, undefined, 'PUT');
@@ -51,10 +51,9 @@ export function useHobitMutatePutApi<
 export function useHobitMutateDeleteApi<
   T extends HobitAdminApiRequest,
   R extends HobitAdminApiResponse,
->(path: string, params?: string) {
+>(path: string, params: string) {
   const { mutateAsync } = useMutation({
     mutationFn: async () => {
-      // DELETE 요청은 params만 전달
       const resp = await hobitApi<T, R>(path, undefined, params, undefined,'DELETE');
       return resp;
     },
