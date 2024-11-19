@@ -15,7 +15,7 @@ interface ProtectedPageProps {
 const ProtectedPage: React.FC<ProtectedPageProps> = ({ children }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const mutateNewAccessToken = useHobitMutateApi<NewAccessTokenRequest, 'auth/refresh', NewAccessTokenResponse>('auth/refresh', 'POST');
+  const mutateNewAccessToken = useHobitMutateApi<NewAccessTokenRequest, 'auth/refresh', NewAccessTokenResponse>('auth/refresh');
 
   // Redux에서 인증 상태 가져오기
   const { accessToken, refreshToken } = useSelector((state: RootState) => selectAuth(state));
