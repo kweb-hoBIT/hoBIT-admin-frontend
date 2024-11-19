@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { selectAuth } from '../redux/authSlice';
-import Logout from './Logout';
+import Logout from './auth/Logout';
 
 const Header: React.FC = () => {
   const { username } = useSelector((state: RootState) => selectAuth(state));

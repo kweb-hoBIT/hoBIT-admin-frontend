@@ -1,8 +1,8 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { clearTokens } from '../redux/authSlice';
-import Button from './Button';
+import { clearTokens } from '../../redux/authSlice';
+import Button from '../Button';
 
 interface LogoutProps {
   className: string;

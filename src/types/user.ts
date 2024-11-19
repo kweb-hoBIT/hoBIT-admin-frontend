@@ -11,6 +11,7 @@ export type LoginResponse = {
   data?: {
     accessToken?: string;
     refreshToken?: string;
+    user_id?: number;
     username?: string;
   };
 };
@@ -42,6 +43,17 @@ export type NewAccessTokenResponse = {
   data?: {
     accessToken?: string;
   };
+}
+
+
+export type DeleteAccountReqeust = {
+  type: 'users'
+  user_id: number
+}
+
+export type DeleteAccountResponse = {
+  type: 'users'
+  message: string
 }
 
 
