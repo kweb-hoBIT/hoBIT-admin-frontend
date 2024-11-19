@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setAccessToken, setRefreshToken, setUsername } from '../../redux/authSlice'; // setUsername 추가
+import { setAccessToken, setRefreshToken, setUserId, setUsername } from '../../redux/authSlice'; // setUsername 추가
 import { sendInputValue, clearSentValue } from '../../redux/inputSlice';
-import { useHobitMutateApi } from '../../hooks/hobitAdmin';
+import { useHobitMutatePostApi } from '../../hooks/hobitAdmin';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from './LoginForm';
 import { LoginRequest, LoginResponse } from '../../types/user';
@@ -14,7 +14,7 @@ const Login: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const mutateLogin = useHobitMutateApi<LoginRequest, 'auth', LoginResponse>('auth');
+  const mutateLogin = useHobitMutatePostApi<LoginRequest, LoginResponse>('auth');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,13 +23,14 @@ const Login: React.FC = () => {
       dispatch(sendInputValue(`로그인 요청: ${email}`));
 
       try {
-        const response = await mutateLogin({ type: 'auth', email, password });
+        const response = await mutateLogin({ email, password });
         if (response.payload?.status === 'success') {
-          const { accessToken, refreshToken, username } = response.payload.data ?? {};
+          const { accessToken, refreshToken, user_id, username } = response.payload.data ?? {};
 
-          if (accessToken && refreshToken && username) {
+          if (accessToken && refreshToken && user_id && username) {
             dispatch(setAccessToken(accessToken));
             dispatch(setRefreshToken(refreshToken));
+            dispatch(setUserId(user_id))
             dispatch(setUsername(username));
 
             navigate('/main');

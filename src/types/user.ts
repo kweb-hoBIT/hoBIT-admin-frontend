@@ -1,22 +1,20 @@
 export type LoginRequest = {
-  type: 'auth';
   email: string;
   password: string;
 };
 
 export type LoginResponse = {
-  type: 'auth';
   status: string;
   message: string;          
   data?: {
     accessToken?: string;
     refreshToken?: string;
+    user_id?: string;
     username?: string;
   };
 };
 
 export type SignupRequest = {
-  type: 'users';
   email: string;
   password: string;
   username: string;
@@ -25,23 +23,31 @@ export type SignupRequest = {
 };
 
 export type SignupResponse = {
-  type: 'users';
   status: string;
   message: string;
 };
 
 export type NewAccessTokenRequest = {
-  type: 'auth/refresh';
   refreshToken: string;
 }
 
 export type NewAccessTokenResponse = {
-  type: 'auth/refresh';
   status: string;
   message: string;
   data?: {
     accessToken?: string;
   };
+}
+
+
+export type DeleteAccountReqeust = {
+  status: string
+  user_id: string
+}
+
+export type DeleteAccountResponse = {
+  status : string
+  message: string
 }
 
 
