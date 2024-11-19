@@ -4,11 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { clearTokens } from '../../redux/authSlice';
 import Button from '../Button';
 
-interface LogoutProps {
-  className: string;
-}
-
-const Logout: React.FC<LogoutProps> = ({ className }) => {
+const Logout: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -23,7 +19,7 @@ const Logout: React.FC<LogoutProps> = ({ className }) => {
       onClick={handleLogout}
       to="/login"
       children="로그아웃"
-      className={className}
+      className="text-sm text-blue-600 hover:underline mb-2"
     />
   );
 };
