@@ -5,16 +5,28 @@ const useAdjustOtherDate = (
   setFilters: React.Dispatch<React.SetStateAction<LogRequest>>
 ) => {
   const adjustOtherDate = (selectedDate: Date, type: 'start' | 'end'): void => {
+    const formattedDate = selectedDate.toISOString().split('T')[0];
+
     if (type === 'start') {
-      setFilters({
-        ...filters,
-        endDate: selectedDate.toISOString().split('T')[0],
-      });
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        startDate: formattedDate,
+        endDate:
+          prevFilters.endDate &&
+          new Date(formattedDate) > new Date(prevFilters.endDate)
+            ? formattedDate
+            : prevFilters.endDate,
+      }));
     } else if (type === 'end') {
-      setFilters({
-        ...filters,
-        beginDate: selectedDate.toISOString().split('T')[0],
-      });
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        endDate: formattedDate,
+        startDate:
+          prevFilters.startDate &&
+          new Date(formattedDate) < new Date(prevFilters.startDate)
+            ? formattedDate
+            : prevFilters.startDate,
+      }));
     }
   };
 

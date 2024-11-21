@@ -79,7 +79,7 @@ const Filters: React.FC<FiltersProps> = ({
       <label className="block mb-2">
         시작 일자:
         <DatePicker
-          selected={filters.beginDate ? new Date(filters.beginDate) : null}
+          selected={filters.startDate ? new Date(filters.startDate) : null}
           onChange={(date: Date | null) => {
             if (date) {
               if (filters.endDate && date > new Date(filters.endDate)) {
@@ -87,7 +87,7 @@ const Filters: React.FC<FiltersProps> = ({
               }
               setFilters({
                 ...filters,
-                beginDate: date.toISOString().split("T")[0],
+                startDate: date.toISOString().split("T")[0],
               });
             }
           }}
@@ -103,7 +103,7 @@ const Filters: React.FC<FiltersProps> = ({
           selected={filters.endDate ? new Date(filters.endDate) : null}
           onChange={(date: Date | null) => {
             if (date) {
-              if (filters.beginDate && date < new Date(filters.beginDate)) {
+              if (filters.startDate && date < new Date(filters.startDate)) {
                 adjustOtherDate(date, "end");
               }
               setFilters({

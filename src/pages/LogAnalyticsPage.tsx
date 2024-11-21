@@ -3,41 +3,27 @@ import Header from '../components/Header';
 import Filters from '../components/logAnalysis/Filters';
 import ResultsTable from '../components/logAnalysis/ResultsTable';
 import useDisableDates from '../hooks/logAnalysis/useDisableDates';
+import useAdjustOtherDate from '../hooks/logAnalysis/useAdjustOtherDate';
 import { useFetchLogData } from '../hooks/logAnalysis/useFetchLogData';
 import { LogRequest, Mode, LogResponse } from '../types/logAnalysis';
 
 const LogAnalyticsPage: React.FC = () => {
   const [filters, setFilters] = useState<LogRequest>({
-    beginDate: '2024-10-01',
+    startDate: '2024-12-01',
     endDate: '2024-12-31',
     period: 'week',
     sortOrder: 1,
     limit: 10,
   });
 
-  const [mode, setMode] = useState<Mode>('frequency');
-  const [data, setData] = useState<LogResponse['data']['logData']['groupData']>([]);
+  const [mode, setMode] = useState<Mode>('feedback');
 
   const disableDates = useDisableDates(filters.period);
-  const fetchLogData = useFetchLogData(mode);
-
-  const fetchData = async () => {
-    try {
-      const response = await fetchLogData(filters);
-      if (response && response.data && response.data.logData) {
-        setData(response.data.logData.groupData || []);
-      } else {
-        setData([]);
-      }
-    } catch (error) {
-      console.error('Error fetching log data:', error);
-      setData([]);
-    }
-  };
+  const fetchLogData = useFetchLogData(mode, filters);
 
   useEffect(() => {
-    if (filters.beginDate && filters.endDate) {
-      fetchData();
+    if (filters.startDate && filters.endDate) {
+      fetchLogData.refetch();
     }
   }, [filters, mode]);
 
@@ -53,7 +39,7 @@ const LogAnalyticsPage: React.FC = () => {
           setMode={setMode}
           disableDates={disableDates}
         />
-        <ResultsTable data={data} mode={mode} />
+        <ResultsTable data={fetchLogData.data} mode={mode} />
       </main>
     </div>
   );

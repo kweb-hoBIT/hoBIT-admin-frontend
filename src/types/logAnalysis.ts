@@ -1,7 +1,7 @@
 export type Mode = 'frequency' | 'feedback' | 'language';
 
 export type LogRequest = {
-  beginDate: string;
+  startDate: string;
   endDate: string;
   period: string;
   sortOrder?: number;

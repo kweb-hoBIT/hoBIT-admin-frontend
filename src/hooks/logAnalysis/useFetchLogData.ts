@@ -1,36 +1,61 @@
-import { useHobitQueryGetApi } from '../hobitAdmin';
-import { ApiResponse } from '../../types/api';
+import { useState, useEffect } from 'react';
 import { LogRequest, LogResponse, Mode } from '../../types/logAnalysis';
+import { useHobitQueryGetApi } from '../hobitAdmin';
 
-export const useFetchLogData = (mode: Mode) => {
-  const path = `/api/questionlogs/${mode}`;
+interface FetchLogDataResult {
+  data: LogResponse['data']['logData']['groupData'];
+  refetch: () => void;
+}
 
-  const fetchLogData = useHobitQueryGetApi<LogRequest, LogResponse>(path);
+export const useFetchLogData = (
+  mode: Mode,
+  filters: LogRequest
+): FetchLogDataResult => {
+  const [data, setData] = useState<LogResponse['data']['logData']['groupData']>(
+    []
+  );
+  const path = `questionlogs/${mode}`;
 
-  const fetchData = async (
-    filters: LogRequest
-  ): Promise<LogResponse | null> => {
-    const queryObject: Record<string, any> = {
-      startDate: filters.beginDate,
-      endDate: filters.endDate,
-      period: filters.period,
-      sortOrder: filters.sortOrder,
-      limit: filters.limit,
-    };
+  const queryObject: LogRequest =
+    mode === 'language'
+      ? {
+          startDate: filters.startDate,
+          endDate: filters.endDate,
+          period: filters.period,
+        }
+      : {
+          startDate: filters.startDate,
+          endDate: filters.endDate,
+          period: filters.period,
+          sortOrder: filters.sortOrder,
+          limit: filters.limit,
+        };
 
+  const fetchLogData = useHobitQueryGetApi<LogRequest, LogResponse>(
+    path,
+    undefined,
+    queryObject
+  );
+
+  const refetch = async () => {
     try {
-      const response = await fetchLogData(undefined, queryObject);
-      if (response.payload) {
-        return response.payload;
+      const response = await fetchLogData();
+
+      if (response.payload?.status === 'success') {
+        setData(response.payload.data.logData.groupData || []);
       } else {
-        console.error('Error in response:', response.error);
-        return null;
+        console.error('Error fetching log data:', response?.error);
+        setData([]);
       }
     } catch (error) {
-      console.error('Error fetching log data:', error);
-      return null;
+      console.error('Fetch failed:', error);
+      setData([]);
     }
   };
 
-  return fetchData;
+  useEffect(() => {
+    refetch();
+  }, [mode, filters]);
+
+  return { data, refetch };
 };

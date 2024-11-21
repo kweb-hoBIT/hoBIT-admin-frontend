@@ -20,15 +20,11 @@ const ResultsTable: React.FC<ResultsTableProps> = ({ data, mode }) => {
           <tr>
             {mode === "language" ? (
               <>
-                <th className="border p-2">기간 시작</th>
-                <th className="border p-2">기간 끝</th>
                 <th className="border p-2">한국어 횟수</th>
                 <th className="border p-2">영어 횟수</th>
               </>
             ) : (
               <>
-                <th className="border p-2">기간 시작</th>
-                <th className="border p-2">기간 끝</th>
                 <th className="border p-2">순위</th>
                 <th className="border p-2">FAQ ID</th>
                 <th className="border p-2">FAQ 질문 내용</th>
@@ -50,16 +46,12 @@ const ResultsTable: React.FC<ResultsTableProps> = ({ data, mode }) => {
                 </tr>
                 {mode === "language" ? (
                   <tr>
-                    <td className="border p-2">{group.startDate}</td>
-                    <td className="border p-2">{group.endDate}</td>
                     <td className="border p-2">{group.ko_frequency}</td>
                     <td className="border p-2">{group.en_frequency}</td>
                   </tr>
                 ) : (
                   group.data?.map((entry: LogEntry, entryIndex: number) => (
                     <tr key={entryIndex}>
-                      <td className="border p-2">{group.startDate}</td>
-                      <td className="border p-2">{group.endDate}</td>
                       <td className="border p-2">{entry.rank}</td>
                       <td className="border p-2">{entry.faq_id}</td>
                       <td className="border p-2">{entry.question_ko}</td>
