@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { useHobitMutatePostApi, useHobitMutatePutApi, useHobitQueryGetApi } from "../../hooks/hobitAdmin";
 import { FaqGetRequest, FaqGetResponse, FaqPostRequest, FaqPostResponse, FaqPutRequest, FaqPutResponse } from "../../types/faq";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { selectAuth } from "../../redux/authSlice";
 
 export const useFaqCreateLogic = () => {
+    const { user_id } = useSelector((state: RootState) => selectAuth(state));
     const [mainCategory, setMainCategory] = useState('');
     const [subCategory, setSubCategory] = useState('');
     const [question, setQuestion] = useState('');
@@ -96,7 +100,7 @@ export const useFaqCreateLogic = () => {
             );
 
             const faqs = {
-                user_id: 1234,
+                user_id: user_id,
                 maincategory_ko: mainCategory,
                 maincategory_en: MainCategory_en,
                 subcategory_ko: subCategory,

@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import Header from '../components/Header';
 import FaqDetailsTitle from '../components/faqs/FaqDetailsTitle';
 import FaqDetailsMain from '../components/faqs/FaqDetailsMain';
+import ProtectedPage from '../components/ProtectedPage';
 
 const FAQDetailPage: React.FC = () => {
   const isEmpty = useSelector((state: RootState) => state.input?.isEmpty);
@@ -12,14 +13,16 @@ const FAQDetailPage: React.FC = () => {
   const faqId = Number(id);
 
   return (
-    <div>
-      <Header />
-      <main>
-        <FaqDetailsTitle />
-        <FaqDetailsMain faqId={faqId}/>
+    <ProtectedPage>
+      <div>
+        <Header />
+        <main>
+          <FaqDetailsTitle />
+          <FaqDetailsMain faqId={faqId} />
 
-      </main>
-    </div>
+        </main>
+      </div>
+    </ProtectedPage>
   );
 };
 

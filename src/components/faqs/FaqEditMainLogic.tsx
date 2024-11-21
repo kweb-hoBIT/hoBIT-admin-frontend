@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useHobitMutatePostApi, useHobitMutatePutApi, useHobitQueryGetApi } from "../../hooks/hobitAdmin";
 import { FaqGetRequest, FaqGetResponse, FaqPostRequest, FaqPostResponse, FaqPutRequest, FaqPutResponse } from "../../types/faq";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { selectAuth } from "../../redux/authSlice";
 
 export const useFaqEditLogic = (faqId: number) => {
+    const { user_id } = useSelector((state: RootState) => selectAuth(state));
     const [mainCategory, setMainCategory] = useState('');
     const [subCategory, setSubCategory] = useState('');
     const [question, setQuestion] = useState('');
@@ -113,7 +117,7 @@ export const useFaqEditLogic = (faqId: number) => {
             );
 
             const faqs = {
-                user_id: 1234,
+                user_id: user_id,
                 maincategory_ko: mainCategory,
                 maincategory_en: MainCategory_en,
                 subcategory_ko: subCategory,
@@ -129,7 +133,7 @@ export const useFaqEditLogic = (faqId: number) => {
 
             if (!response) {
                 console.error('Failed to add FAQ:', response);
-                console.log('FAQ 추가에 실패했습니다.'); //작동은 함 이유는 모름.
+                console.log('FAQ 추가에 실패했습니다.'); //작동은 함 이유는 모름. 아마 벡엔드 꼬인듯?
             } else {
                 alert('FAQ가 성공적으로 추가되었습니다.');
             }
