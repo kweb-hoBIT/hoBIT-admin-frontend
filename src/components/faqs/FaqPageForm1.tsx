@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import InputField from "../InputField";
-import FaqSearchModal from "./FaqSearchModal";
-import FaqFilter from "./FaqFilter";
+import FaqSearchModal from "./FaqPage1";
+import FaqFilter from "./FaqPage2";
 
 const FaqSearch: React.FC = () => {
     const [searching, setSearching] = useState('');

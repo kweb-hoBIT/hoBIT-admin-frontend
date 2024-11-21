@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import Header from '../components/Header';
-import FaqCreateTitle from '../components/faqs/FaqCreateTitle';
-import FaqCreateMain from '../components/faqs/FaqCreateMain';
+import FaqCreateMain from '../components/faqs/FaqCreateForm';
 import ProtectedPage from '../components/ProtectedPage';
 
 const FAQCreatePage: React.FC = () => {
@@ -14,7 +13,6 @@ const FAQCreatePage: React.FC = () => {
       <div>
         <Header />
         <main>
-          <FaqCreateTitle />
           <FaqCreateMain />
         </main>
       </div>

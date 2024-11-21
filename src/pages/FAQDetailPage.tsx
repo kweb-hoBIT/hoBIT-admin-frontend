@@ -3,8 +3,7 @@ import { RootState } from '../redux/store';
 import { useParams } from 'react-router-dom';
 
 import Header from '../components/Header';
-import FaqDetailsTitle from '../components/faqs/FaqDetailsTitle';
-import FaqDetailsMain from '../components/faqs/FaqDetailsMain';
+import FaqDetailsMain from '../components/faqs/FaqDetailsForm';
 import ProtectedPage from '../components/ProtectedPage';
 
 const FAQDetailPage: React.FC = () => {
@@ -17,7 +16,6 @@ const FAQDetailPage: React.FC = () => {
       <div>
         <Header />
         <main>
-          <FaqDetailsTitle />
           <FaqDetailsMain faqId={faqId} />
 
         </main>

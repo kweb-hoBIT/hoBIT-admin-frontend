@@ -1,18 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHobitMutatePostApi, useHobitMutatePutApi, useHobitQueryGetApi } from "../../hooks/hobitAdmin";
 import { FaqGetRequest, FaqGetResponse, FaqPostRequest, FaqPostResponse, FaqPutRequest, FaqPutResponse } from "../../types/faq";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { selectAuth } from "../../redux/authSlice";
 
-export const useFaqCreateLogic = () => {
+export const useFaqEditLogic = (faqId: number) => {
     const { user_id } = useSelector((state: RootState) => selectAuth(state));
     const [mainCategory, setMainCategory] = useState('');
     const [subCategory, setSubCategory] = useState('');
     const [question, setQuestion] = useState('');
     const [manager, setManager] = useState('');
     const [answers, setAnswers] = useState([{ answer: '', url: '', email: '', phone: '' }]);
-
     const [originalData, setOriginalData] = useState({
         mainCategory: '',
         subCategory: '',
@@ -20,11 +19,29 @@ export const useFaqCreateLogic = () => {
         manager: '',
         answers: [{ answer: '', url: '', email: '', phone: '' }],
     });
-
     const [isTranslated, setIsTranslated] = useState(false);
 
+    const faqGetApi = useHobitQueryGetApi<FaqGetRequest, FaqGetResponse>('faqs', String(faqId));
     const faqTranslateApi = useHobitMutatePostApi<FaqPostRequest, FaqPostResponse>('translate');
-    const faqPostApi = useHobitMutatePostApi<FaqPutRequest, FaqPutResponse>('faqs');
+    const faqPutApi = useHobitMutatePutApi<FaqPutRequest, FaqPutResponse>('faqs', String(faqId));
+
+    async function EditInit() {
+        try {
+            const response: {
+                error: unknown,
+                payload: any
+            } = await faqGetApi();
+            const data = response.payload.faq;
+            setMainCategory(data.maincategory_ko);
+            setSubCategory(data.subcategory_ko);
+            setQuestion(data.question_ko);
+            setManager(data.manager);
+            setAnswers(data.answer_ko);
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
 
     const addAnswer = () => {
         setAnswers([...answers, { answer: '', url: '', email: '', phone: '' }]);
@@ -78,7 +95,7 @@ export const useFaqCreateLogic = () => {
         }
     };
 
-    const addFAQs = async () => {
+    const EditFAQs = async () => {
         if (!mainCategory || !subCategory || !question || !manager || answers.length === 0) {
             alert('모든 필드를 채워주세요.');
             return;
@@ -112,11 +129,12 @@ export const useFaqCreateLogic = () => {
                 manager: manager,
             };
 
-            const response = await faqPostApi(faqs);
+            const response = await faqPutApi(faqs);
 
-            if (response) {
-                console.error('Failed to add FAQ:');
-                console.log('FAQ 추가에 실패했습니다.'); //작동은 함 이유는 모름.
+            if (!response) {
+                console.error('Failed to add FAQ:', response);
+                console.log('FAQ 추가에 실패했습니다.'); 
+                
             } else {
                 alert('FAQ가 성공적으로 추가되었습니다.');
             }
@@ -125,6 +143,12 @@ export const useFaqCreateLogic = () => {
             alert('FAQ 추가 중 오류가 발생했습니다.');
         }
     };
+
+    useEffect(() => {
+        if (faqId) {
+            EditInit();
+        }
+    }, [faqId]);
 
     return {
         mainCategory,
@@ -140,6 +164,6 @@ export const useFaqCreateLogic = () => {
         setAnswers,
         addAnswer,
         translateFAQs,
-        addFAQs,
+        EditFAQs,
     };
 };

@@ -23,37 +23,43 @@ export type Faq = {
 };
 
 export type FaqDeleteRequest = {
-  status: string
-  user_id: string
+  faq_id: string;
+  user_id: string;
 }
 
 export type FaqDeleteResponse = {
-  status : string
-  message: string
+  status: string;
+  message: string;
 }
 
 export type FaqGetRequest = {
-  status: string
-  user_id: string
+  faq_id: string;
+  user_id: string;
 }
 
 export type FaqGetResponse = {
-  
+  faq: Faq;
+  status: string;
+  message: string;
 };
 
 export type FaqPostResponse = {
-  
+  status: string;
+  message: string;
+  text: string;
 };
 
 export type FaqPostRequest = {
-  
+  text: string;
 };
 
 export type FaqPutRequest = {
-  
+
 };
+
 export type FaqPutResponse = {
-  
+    status: string;
+    message: string;
 };
 
 export default Faq;

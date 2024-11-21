@@ -3,11 +3,10 @@ import { RootState } from '../redux/store';
 import Header from '../components/Header';
 import React, { useState } from "react";
 
-import FaqTitle from '../components/faqs/FaqTitle'
-import FaqSearch from '../components/faqs/FaqSearch';
-import FaqSearchModal from '../components/faqs/FaqSearchModal';
-import FaqFilter from '../components/faqs/FaqFilter';
-import FaqMain from '../components/faqs/FaqMain';
+import FaqSearch from '../components/faqs/FaqPageForm1';
+import FaqSearchModal from '../components/faqs/FaqPage1';
+import FaqFilter from '../components/faqs/FaqPage2';
+import FaqMain from '../components/faqs/FaqPageForm2';
 import ProtectedPage from '../components/ProtectedPage';
 
 const FAQsPage: React.FC = () => {
@@ -35,7 +34,7 @@ const FAQsPage: React.FC = () => {
       <ProtectedPage>
         <Header />
         <main>
-          <FaqTitle />
+          <h1 className="text-xl font-bold mb-4">FAQ 검색</h1>
           <FaqSearch />
           <FaqSearchModal
             isModalOpen={isModalOpen}

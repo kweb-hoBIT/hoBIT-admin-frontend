@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import Header from '../components/Header';
-import FaqEditTitle from '../components/faqs/FaqEditTitle';
-import FaqEditMain from '../components/faqs/FaqEditMain';
+import FaqEditMain from '../components/faqs/FaqEditForm';
 import { useParams } from 'react-router-dom';
 import ProtectedPage from '../components/ProtectedPage';
 
@@ -17,7 +16,6 @@ const FAQEditPage: React.FC = () => {
       <div>
         <Header />
         <main>
-          <FaqEditTitle />
           <FaqEditMain faqId={faqId} />
 
         </main>

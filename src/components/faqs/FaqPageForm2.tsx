@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import Button from "../Button";
-import FaqDelete from "./FaqDelete";
+import FaqDelete from "./FaqPage3";
 
 interface FaqMainProps {
     faqs: any[];

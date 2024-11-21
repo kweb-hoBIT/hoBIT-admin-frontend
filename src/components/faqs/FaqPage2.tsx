@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import FaqMain from "./FaqMain";
+import FaqMain from "./FaqPageForm2";
+import { useHobitQueryGetApi } from "../../hooks/hobitAdmin";
+import { FaqGetRequest, FaqGetResponse } from "../../types/faq";
 
 interface FaqFilterProps {
     isModalOpen: boolean;
@@ -19,11 +21,13 @@ const FaqFilter: React.FC<FaqFilterProps> = ({ isModalOpen, setIsModalOpen, filt
     const [faqs, setFaqs] = useState<any[]>([]);
     const [sort_option, setSortOption] = useState<'id' | 'latest'>('id');
     
+    const faqGetApi = useHobitQueryGetApi<FaqGetRequest, FaqGetResponse>('faqs');
+
     useEffect(() => {
         async function fetchFAQs() {
             try {
-                const response = await fetch('http://localhost:5000/api/faqs', { method: 'GET' });
-                const data = await response.json();
+                const response = await faqGetApi();
+                const data: any = response.payload?.faq;
                 setFaqs(data.faqs);
             } catch (error) {
                 console.error('Failed to fetch FAQs:', error);

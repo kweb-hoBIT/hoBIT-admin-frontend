@@ -1,33 +1,37 @@
 import React from "react";
-import { useFaqCreateLogic } from "./FaqCreateMainLogic";
-import InputField from "../InputField";
+import { useFaqDetailsLogic } from "./FaqDetails";
+import FaqReader from "./FaqReader";
 import Button from "../Button";
 
-const FaqCreateMain: React.FC = () => {
+interface FaqDetailsMainProps {
+    faqId: number;
+}
+
+const FaqDetailsMain: React.FC<FaqDetailsMainProps> = ({ faqId }) => {
     const {
         mainCategory,
         subCategory,
         question,
         manager,
         answers,
-        isTranslated,
         setMainCategory,
         setSubCategory,
         setQuestion,
         setManager,
         setAnswers,
-        addAnswer,
-        translateFAQs,
-        addFAQs,
-    } = useFaqCreateLogic();
+        FaqLang,
+        isEn
+    } = useFaqDetailsLogic(faqId);
 
     return (
-        <div className="w-full bg-pink-200 text-black font-semibold text-sm p-2 rounded-md transition-colors duration-300">
-            <div className="createFaqs_back">
+        <div>
+            <h1 className="text-xl font-bold mb-4">FAQ 세부사항</h1>
+            <div className="w-full bg-pink-200 text-black font-semibold text-sm p-2 rounded-md transition-colors duration-300">
                 <div className="mainCategory_inner">
-                    <InputField
+                    <FaqReader
+                        readOnly={true}
                         id="mainCategory"
-                        className="rounded-md"
+                        className="mainCategory"
                         label="메인 카테고리"
                         type="text"
                         value={mainCategory}
@@ -36,9 +40,10 @@ const FaqCreateMain: React.FC = () => {
                     />
                 </div>
                 <div className="subCategory_inner">
-                    <InputField
+                    <FaqReader
                         id="subCategory"
-                        className="rounded-md"
+                        readOnly={true}
+                        className="subCategory"
                         label="서브 카테고리"
                         type="text"
                         value={subCategory}
@@ -47,33 +52,27 @@ const FaqCreateMain: React.FC = () => {
                     />
                 </div>
                 <div className="question_inner">
-                    <InputField
+                    <FaqReader
                         id="question"
                         label="질문"
-                        className="rounded-md"
+                        readOnly={true}
+                        className="question"
                         type="text"
                         value={question}
                         onChange={(e) => setQuestion(e.target.value)}
                         placeholder="enter question"
                     />
                 </div>
-                <div className="parent-container flex items-center h-120 overflow-auto flex-row gap-5">
+                <div className="flex overflow-auto gap-5">
                     {answers.map((answer, index) => (
                         <div
-                            className="rounded-md flex flex-col gap-2 p-2 bg-gray-400 m-2 w-48"
+                            className="rounded-md bg-gray-400 p-2 m-2 w-48 flex flex-col gap-2"
                             key={index}
                         >
-                            {index !== 0 && (
-                                <Button
-                                    onClick={() => setAnswers(answers.filter((_, i) => i !== index))}
-                                    type="button"
-                                    children="삭제"
-                                    className=""
-                                />
-                            )}
-                            <InputField
+                            <FaqReader
                                 id="answer"
-                                className="rounded-md"
+                                readOnly={true}
+                                className="answer"
                                 label="답변"
                                 type="text"
                                 value={answer.answer}
@@ -86,9 +85,10 @@ const FaqCreateMain: React.FC = () => {
                                 }
                                 placeholder="enter answer"
                             />
-                            <InputField
+                            <FaqReader
                                 id="URL"
-                                className="rounded-md"
+                                className="URL"
+                                readOnly={true}
                                 label="URL"
                                 type="text"
                                 value={answer.url}
@@ -101,9 +101,10 @@ const FaqCreateMain: React.FC = () => {
                                 }
                                 placeholder="enter URL"
                             />
-                            <InputField
+                            <FaqReader
                                 id="Email"
-                                className="rounded-md"
+                                className="Email"
+                                readOnly={true}
                                 label="email"
                                 type="text"
                                 value={answer.email}
@@ -116,9 +117,10 @@ const FaqCreateMain: React.FC = () => {
                                 }
                                 placeholder="enter email"
                             />
-                            <InputField
+                            <FaqReader
                                 id="PhoneNum"
-                                className="rounded-md"
+                                className="PhoneNum"
+                                readOnly={true}
                                 label="전화번호"
                                 type="text"
                                 value={answer.phone}
@@ -133,48 +135,30 @@ const FaqCreateMain: React.FC = () => {
                             />
                         </div>
                     ))}
-                    <div className="add_answer flex items-center justify-center h-full">
-                        <Button
-                            onClick={addAnswer}
-                            to=""
-                            type="button"
-                            children="추가하기"
-                            className="a"
-                        />
-                    </div>
                 </div>
                 <div className="manager_inner">
-                    <InputField
+                    <FaqReader
                         type="text"
-                        label="관리자"
-                        className="rounded-md"
                         id="manager"
+                        label="관리자"
+                        className=""
+                        readOnly={true}
                         value={manager}
                         onChange={(e) => setManager(e.target.value)}
                         placeholder="enter manager"
                     />
                 </div>
-                <div className="flex justify-between items-center w-full">
-                    <div className="translate_button">
-                        <Button
-                            onClick={translateFAQs}
-                            type="button"
-                            children={isTranslated ? '원본' : '번역하기'}
-                            className=""
-                        />
-                    </div>
-                    <div className="post_button">
-                        <Button
-                            onClick={addFAQs}
-                            className=""
-                            type="button"
-                            children="FAQ 추가하기"
-                        />
-                    </div>
+                <div>
+                    <Button
+                        className="faqEn_btn"
+                        onClick={FaqLang}
+                        type="button"
+                        children={isEn ? "원문 보기" : "영어 보기"}
+                    />
                 </div>
             </div>
         </div>
     );
 };
 
-export default FaqCreateMain;
+export default FaqDetailsMain;
