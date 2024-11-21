@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useHobitQueryGetApi } from "../../hooks/hobitAdmin";
+import { FaqGetRequest, FaqGetResponse } from "../../types/faq";
 
 export const useFaqDetailsLogic = (faqId: number) => {
     const [mainCategory, setMainCategory] = useState('');
@@ -20,18 +22,19 @@ export const useFaqDetailsLogic = (faqId: number) => {
         manager: ''
     });
 
+    const faqGetApi = useHobitQueryGetApi<FaqGetRequest, FaqGetResponse>('faqs', String(faqId));
+
     const addAnswer = () => {
         setAnswers([...answers, { answer: '', url: '', email: '', phone: '' }]);
     };
 
     async function EditInit() {
         try {
-            const response = await fetch(`http://localhost:5000/api/faqs/${faqId}`, {
-                method: 'GET',
-                headers: { 'content-type': 'application/json' },
-            });
-            const datas = await response.json();
-            const data = datas.faq;
+            const response: {
+                error: unknown,
+                payload: any
+            } = await faqGetApi();
+            const data = response.payload.faq;
             setFaq(data);
             setMainCategory(data.maincategory_ko);
             setSubCategory(data.subcategory_ko);

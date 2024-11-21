@@ -22,4 +22,38 @@ export type Faq = {
   updated_by: number | null;
 };
 
+export type FaqDeleteRequest = {
+  status: string
+  user_id: string
+}
+
+export type FaqDeleteResponse = {
+  status : string
+  message: string
+}
+
+export type FaqGetRequest = {
+  status: string
+  user_id: string
+}
+
+export type FaqGetResponse = {
+  
+};
+
+export type FaqPostResponse = {
+  
+};
+
+export type FaqPostRequest = {
+  
+};
+
+export type FaqPutRequest = {
+  
+};
+export type FaqPutResponse = {
+  
+};
+
 export default Faq;

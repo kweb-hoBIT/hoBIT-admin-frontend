@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useHobitMutatePostApi, useHobitMutatePutApi, useHobitQueryGetApi } from "../../hooks/hobitAdmin";
+import { FaqGetRequest, FaqGetResponse, FaqPostRequest, FaqPostResponse, FaqPutRequest, FaqPutResponse } from "../../types/faq";
 
 export const useFaqEditLogic = (faqId: number) => {
     const [mainCategory, setMainCategory] = useState('');
@@ -15,23 +17,26 @@ export const useFaqEditLogic = (faqId: number) => {
     });
     const [isTranslated, setIsTranslated] = useState(false);
 
+    const faqGetApi = useHobitQueryGetApi<FaqGetRequest, FaqGetResponse>('faqs', String(faqId));
+    const faqTranslateApi = useHobitMutatePostApi<FaqPostRequest, FaqPostResponse>('translate');
+    const faqPutApi = useHobitMutatePutApi<FaqPutRequest, FaqPutResponse>('faqs', String(faqId));
+
     async function EditInit() {
         try {
-            const response = await fetch(`http://localhost:5000/api/faqs/${faqId}`, {
-                method: 'GET',
-                headers: { 'content-type': 'application/json' },
-            });
-            const datas = await response.json();
-            const data = datas.faq;
+            const response: {
+                error: unknown,
+                payload: any
+            } = await faqGetApi();
+            const data = response.payload.faq;
             setMainCategory(data.maincategory_ko);
             setSubCategory(data.subcategory_ko);
             setQuestion(data.question_ko);
             setManager(data.manager);
             setAnswers(data.answer_ko);
-        } catch(error) {
+        } catch (error) {
             console.log(error);
         }
-        
+
     }
 
     const addAnswer = () => {
@@ -40,13 +45,9 @@ export const useFaqEditLogic = (faqId: number) => {
 
     const translateText = async (text: string): Promise<string> => {
         try {
-            const response = await fetch('http://localhost:5000/api/translate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text }),
-            });
-            const data = await response.json();
-            return data.translatedText;
+            const response = await faqTranslateApi({ text });
+            const data: any = response;
+            return data.payload.translatedText;
         } catch (error) {
             console.error('Translation API Error:', error);
             throw error;
@@ -124,14 +125,10 @@ export const useFaqEditLogic = (faqId: number) => {
                 manager: manager,
             };
 
-            const response = await fetch(`http://localhost:5000/api/faqs/${faqId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(faqs),
-            });
+            const response = await faqPutApi(faqs);
 
-            if (!response.ok) {
-                console.error('Failed to add FAQ:', await response.json());
+            if (!response) {
+                console.error('Failed to add FAQ:', response);
                 console.log('FAQ 추가에 실패했습니다.'); //작동은 함 이유는 모름.
             } else {
                 alert('FAQ가 성공적으로 추가되었습니다.');

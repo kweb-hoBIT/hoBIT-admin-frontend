@@ -1,17 +1,26 @@
 import { LoginRequest, LoginResponse, SignupRequest, SignupResponse, NewAccessTokenRequest, NewAccessTokenResponse, DeleteAccountReqeust, DeleteAccountResponse } from './user';
+import { FaqDeleteResponse, FaqDeleteRequest, FaqGetRequest, FaqGetResponse, FaqPostRequest, FaqPostResponse, FaqPutRequest } from './faq';
 
 export type HobitAdminApiRequest =
   | LoginRequest
   | SignupRequest
   | NewAccessTokenRequest
-  | DeleteAccountReqeust;
+  | DeleteAccountReqeust
+  | FaqGetRequest
+  | FaqPostRequest
+  | FaqPutRequest
+  | FaqDeleteRequest;
 
 
 export type HobitAdminApiResponse =
   | LoginResponse
   | SignupResponse
   | NewAccessTokenResponse
-  | DeleteAccountResponse;
+  | DeleteAccountResponse
+  | FaqGetResponse
+  | FaqPostResponse
+  | FaqPostResponse
+  | FaqDeleteResponse;
 
 export type ApiResponse<P> = {
   error: ApiErrorPayload | null;

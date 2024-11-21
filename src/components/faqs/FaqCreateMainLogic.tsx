@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useHobitMutatePostApi, useHobitMutatePutApi, useHobitQueryGetApi } from "../../hooks/hobitAdmin";
+import { FaqGetRequest, FaqGetResponse, FaqPostRequest, FaqPostResponse, FaqPutRequest, FaqPutResponse } from "../../types/faq";
 
 export const useFaqCreateLogic = () => {
     const [mainCategory, setMainCategory] = useState('');
@@ -17,19 +19,18 @@ export const useFaqCreateLogic = () => {
 
     const [isTranslated, setIsTranslated] = useState(false);
 
+    const faqTranslateApi = useHobitMutatePostApi<FaqPostRequest, FaqPostResponse>('translate');
+    const faqPostApi = useHobitMutatePostApi<FaqPutRequest, FaqPutResponse>('faqs');
+
     const addAnswer = () => {
         setAnswers([...answers, { answer: '', url: '', email: '', phone: '' }]);
     };
 
     const translateText = async (text: string): Promise<string> => {
         try {
-            const response = await fetch('http://localhost:5000/api/translate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text }),
-            });
-            const data = await response.json();
-            return data.translatedText;
+            const response = await faqTranslateApi({ text });
+            const data: any = response;
+            return data.payload.translatedText;
         } catch (error) {
             console.error('Translation API Error:', error);
             throw error;
@@ -107,14 +108,10 @@ export const useFaqCreateLogic = () => {
                 manager: manager,
             };
 
-            const response = await fetch('http://localhost:5000/api/faqs/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(faqs),
-            });
+            const response = await faqPostApi(faqs);
 
-            if (!response.ok) {
-                console.error('Failed to add FAQ:', await response.json());
+            if (response) {
+                console.error('Failed to add FAQ:');
                 console.log('FAQ 추가에 실패했습니다.'); //작동은 함 이유는 모름.
             } else {
                 alert('FAQ가 성공적으로 추가되었습니다.');
