@@ -73,7 +73,7 @@ const FaqFilter: React.FC<FaqFilterProps> = ({ isModalOpen, setIsModalOpen, filt
                     <div className="filter_inner">
                         <div className="order_by" style={{ position: 'relative', display: 'inline-block' }}>
                             <label className="order_by_list">
-                                <span>이미지 예정</span>
+                                <span>∇</span>
                                 <select
                                     value={sort_option}
                                     onChange={(e) => setSortOption(e.target.value as 'id' | 'latest')}

@@ -1,19 +1,22 @@
+import React, {useEffect} from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
-
 import Header from '../components/Header';
+import FaqEditTitle from '../components/faqs/FaqEditTitle';
+import FaqEditMain from '../components/faqs/FaqEditMain';
+import { useParams } from 'react-router-dom';
 
 const FAQEditPage: React.FC = () => {
-  // Redux 상태 예시 (필요 시 사용)
   const isEmpty = useSelector((state: RootState) => state.input?.isEmpty);
+  const { id } = useParams<{ id: string }>();
+  const faqId = Number(id);
 
   return (
     <div>
-      {/* 공통 헤더 */}
       <Header />
-
-      {/* 공통 콘텐츠 영역*/}
       <main>
+        <FaqEditTitle />
+        <FaqEditMain faqId={faqId}/>
         
       </main>
     </div>

@@ -1,20 +1,23 @@
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
+import { useParams } from 'react-router-dom';
 
 import Header from '../components/Header';
+import FaqDetailsTitle from '../components/faqs/FaqDetailsTitle';
+import FaqDetailsMain from '../components/faqs/FaqDetailsMain';
 
 const FAQDetailPage: React.FC = () => {
-  // Redux 상태 예시 (필요 시 사용)
   const isEmpty = useSelector((state: RootState) => state.input?.isEmpty);
+  const { id } = useParams<{ id: string }>();
+  const faqId = Number(id);
 
   return (
     <div>
-      {/* 공통 헤더 */}
       <Header />
-
-      {/* 공통 콘텐츠 영역*/}
       <main>
-        
+        <FaqDetailsTitle />
+        <FaqDetailsMain faqId={faqId}/>
+
       </main>
     </div>
   );
