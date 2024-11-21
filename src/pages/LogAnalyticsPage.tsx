@@ -23,11 +23,11 @@ const LogAnalyticsPage: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetchLogData(filters); // 데이터를 가져옴
+      const response = await fetchLogData(filters);
       if (response && response.data && response.data.logData) {
-        setData(response.data.logData.groupData || []); // 데이터 설정
+        setData(response.data.logData.groupData || []);
       } else {
-        setData([]); // 데이터가 없을 경우 빈 배열 설정
+        setData([]);
       }
     } catch (error) {
       console.error('Error fetching log data:', error);

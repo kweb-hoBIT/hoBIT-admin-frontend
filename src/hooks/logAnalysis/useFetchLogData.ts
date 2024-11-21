@@ -3,9 +3,8 @@ import { ApiResponse } from '../../types/api';
 import { LogRequest, LogResponse, Mode } from '../../types/logAnalysis';
 
 export const useFetchLogData = (mode: Mode) => {
-  const path = `/api/questionlogs/${mode}`; // API 경로
+  const path = `/api/questionlogs/${mode}`;
 
-  // Call the hook at the top level (no dynamic usage of filters here)
   const fetchLogData = useHobitQueryGetApi<LogRequest, LogResponse>(path);
 
   const fetchData = async (
@@ -29,9 +28,9 @@ export const useFetchLogData = (mode: Mode) => {
       }
     } catch (error) {
       console.error('Error fetching log data:', error);
-      return null; // Return null on error
+      return null;
     }
   };
 
-  return fetchData; // Return the fetchData function
+  return fetchData;
 };
