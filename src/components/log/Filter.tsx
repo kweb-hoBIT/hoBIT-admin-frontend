@@ -127,10 +127,14 @@ const Filter: React.FC = () => {
         onChange={handleLimitChange}
         className="w-full p-1 border border-gray-300 rounded-md text-sm mb-2"
       />
-
       <button
         onClick={handleApplyFilter}
-        className="w-full p-1 bg-blue-500 text-white rounded-md mt-2 hover:bg-blue-600 text-sm"
+        disabled={!startDate || !endDate || limit == 0}
+        className={`w-full p-1 rounded-md mt-2 text-sm ${
+          !startDate || !endDate || limit == 0
+            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+            : "bg-blue-500 text-white hover:bg-blue-600"
+        }`}
       >
         검색
       </button>
