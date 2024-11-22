@@ -16,7 +16,7 @@ import {
   FeedbackResponse,
   LanguageRequest,
   LanguageResponse,
-} from './question'
+} from './questionLog'
 
 
 export type HobitAdminApiRequest =

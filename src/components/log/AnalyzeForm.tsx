@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FrequencyResponse, FeedbackResponse, LanguageResponse } from '../../types/question';
+import { FrequencyResponse, FeedbackResponse, LanguageResponse } from '../../types/questionLog';
 
 interface AnalyzeFormProps {
   responseData: FrequencyResponse | FeedbackResponse | LanguageResponse;

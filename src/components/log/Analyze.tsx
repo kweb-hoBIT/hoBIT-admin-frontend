@@ -7,7 +7,7 @@ import {
   FeedbackResponse,
   LanguageRequest,
   LanguageResponse,
-} from '../../types/question';
+} from '../../types/questionLog';
 import AnalyzeForm from './AnalyzeForm';
 
 interface AnalyzeProps {
