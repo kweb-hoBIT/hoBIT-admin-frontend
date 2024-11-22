@@ -38,8 +38,6 @@ export async function hobitApi<
         const queryParams = new URLSearchParams(querys).toString();
         path = `${path}?${queryParams}`;
 
-        console.log(`[hobitApi] GET Request URL: ${endpoint}/${path}`);
-
         resp = await fetch(`${endpoint}/${path}`, {
           method: 'GET',
           mode: 'cors',
