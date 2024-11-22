@@ -8,7 +8,7 @@ import {
   LanguageRequest,
   LanguageResponse,
 } from '../../types/question';
-import AnalyzeForm from './AnalyzeForm'; // AnalyzeForm 컴포넌트 import
+import AnalyzeForm from './AnalyzeForm';
 
 interface AnalyzeProps {
   searchSubject: string;

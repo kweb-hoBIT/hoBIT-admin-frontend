@@ -53,6 +53,7 @@ const Filter: React.FC = () => {
     setShowAnalyze(true);
   };
 
+  // 숫자만 입력되도록 처리, 기본값은 0으로 설정, 만약 다른 숫자가 입력되면 앞의 0은 자동으로 사라짐
   const handleLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     value = value.replace(/[^0-9]/g, '');
