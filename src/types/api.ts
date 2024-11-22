@@ -8,21 +8,34 @@ import {
   DeleteAccountReqeust,
   DeleteAccountResponse,
 } from './user';
-import { LogRequest, LogResponse } from './logAnalysis';
+
+import {
+  FrequencyRequest,
+  FrequencyResponse,
+  FeedbackRequest,
+  FeedbackResponse,
+  LanguageRequest,
+  LanguageResponse,
+} from './question'
+
 
 export type HobitAdminApiRequest =
   | LoginRequest
   | SignupRequest
   | NewAccessTokenRequest
   | DeleteAccountReqeust
-  | LogRequest;
+  | FrequencyRequest
+  | FeedbackRequest
+  | LanguageRequest;
 
 export type HobitAdminApiResponse =
   | LoginResponse
   | SignupResponse
   | NewAccessTokenResponse
   | DeleteAccountResponse
-  | LogResponse;
+  | FrequencyResponse
+  | FeedbackResponse
+  | LanguageResponse;
 
 export type ApiResponse<P> = {
   error: ApiErrorPayload | null;
