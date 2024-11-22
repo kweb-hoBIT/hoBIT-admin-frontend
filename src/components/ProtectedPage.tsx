@@ -28,8 +28,7 @@ const ProtectedPage: React.FC<ProtectedPageProps> = ({ children }) => {
           const decodedAccessToken: any = jwtDecode(accessToken);
           const decodedRefreshToken: any = jwtDecode(refreshToken);
           const currentTime = Date.now() / 1000;
-          console.log(decodedAccessToken.exp, currentTime)
-
+          
           if (decodedAccessToken.exp < currentTime) {
             if (decodedRefreshToken.exp < currentTime) {
               // 리프레시 토큰도 만료되었으면 로그인 페이지로 이동
