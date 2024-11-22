@@ -36,6 +36,13 @@ export async function hobitApi<
           mode: 'cors',
           headers,
         });
+      } else {
+        path = `${path}`;
+        resp = await fetch(`${endpoint}/${path}`, {
+          method: 'GET',
+          mode: 'cors',
+          headers,
+        });
       }
     } else if (method === 'POST') {
       path = `${path}`;

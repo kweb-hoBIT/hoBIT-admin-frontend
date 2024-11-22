@@ -26,9 +26,9 @@ const FaqFilter: React.FC<FaqFilterProps> = ({ isModalOpen, setIsModalOpen, filt
     useEffect(() => {
         async function fetchFAQs() {
             try {
-                const response = await faqGetApi();
-                const data: any = response.payload?.faq;
-                setFaqs(data.faqs);
+                const response: any = await faqGetApi();
+                const data = response.payload?.faqs;
+                setFaqs(data);
             } catch (error) {
                 console.error('Failed to fetch FAQs:', error);
             }

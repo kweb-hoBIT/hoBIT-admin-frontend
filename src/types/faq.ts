@@ -42,7 +42,7 @@ export type FaqGetRequest = {
 }
 
 export type FaqGetResponse = {
-  faq: Faq;
+  faqs: any;
   status: string;
   message: string;
 };
