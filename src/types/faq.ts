@@ -25,6 +25,8 @@ export type Faq = {
 export type FaqDeleteRequest = {
   faq_id: string;
   user_id: string;
+  status: string;
+  message: string;
 }
 
 export type FaqDeleteResponse = {
@@ -35,6 +37,8 @@ export type FaqDeleteResponse = {
 export type FaqGetRequest = {
   faq_id: string;
   user_id: string;
+  status: string;
+  message: string;
 }
 
 export type FaqGetResponse = {
@@ -46,20 +50,67 @@ export type FaqGetResponse = {
 export type FaqPostResponse = {
   status: string;
   message: string;
-  text: string;
 };
 
 export type FaqPostRequest = {
-  text: string;
+  user_id: string | null;
+  maincategory_ko: string;
+  maincategory_en: string;
+  subcategory_ko: string;
+  subcategory_en: string;
+  question_ko: string;
+  question_en: string;
+  answer_ko: {
+    answer: string;
+    url: string;
+    email: string;
+    phone: string;
+  }[];
+  answer_en: {
+    answer: string;
+    url: string;
+    email: string;
+    phone: string;
+  }[];
+  manager: string;
 };
 
 export type FaqPutRequest = {
+  user_id: string | null;
+  maincategory_ko: string;
+  maincategory_en: string;
+  subcategory_ko: string;
+  subcategory_en: string;
+  question_ko: string;
+  question_en: string;
+  answer_ko: {
+    answer: string;
+    url: string;
+    email: string;
+    phone: string;
+  }[];
+  answer_en: {
+    answer: string;
+    url: string;
+    email: string;
+    phone: string;
+  }[];
+  manager: string;
+};
 
+export type FaqTranslateRequest = {
+  text: string;
+};
+
+export type FaqTranslateResponse = {
+  translatedText: string;
+  status: string;
+  message: string;
 };
 
 export type FaqPutResponse = {
-    status: string;
-    message: string;
+  status: string;
+  message: string;
 };
 
 export default Faq;

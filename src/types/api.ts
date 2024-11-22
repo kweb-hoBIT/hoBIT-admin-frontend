@@ -1,5 +1,5 @@
 import { LoginRequest, LoginResponse, SignupRequest, SignupResponse, NewAccessTokenRequest, NewAccessTokenResponse, DeleteAccountReqeust, DeleteAccountResponse } from './user';
-import { FaqDeleteResponse, FaqDeleteRequest, FaqGetRequest, FaqGetResponse, FaqPostRequest, FaqPostResponse, FaqPutRequest } from './faq';
+import { FaqDeleteResponse, FaqDeleteRequest, FaqGetRequest, FaqGetResponse, FaqPostRequest, FaqPostResponse, FaqPutRequest, FaqTranslateRequest, FaqTranslateResponse } from './faq';
 
 export type HobitAdminApiRequest =
   | LoginRequest
@@ -9,6 +9,7 @@ export type HobitAdminApiRequest =
   | FaqGetRequest
   | FaqPostRequest
   | FaqPutRequest
+  | FaqTranslateRequest
   | FaqDeleteRequest;
 
 
@@ -20,6 +21,7 @@ export type HobitAdminApiResponse =
   | FaqGetResponse
   | FaqPostResponse
   | FaqPostResponse
+  |FaqTranslateResponse
   | FaqDeleteResponse;
 
 export type ApiResponse<P> = {

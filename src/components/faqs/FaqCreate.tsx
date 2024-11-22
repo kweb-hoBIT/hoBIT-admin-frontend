@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHobitMutatePostApi, useHobitMutatePutApi, useHobitQueryGetApi } from "../../hooks/hobitAdmin";
-import { FaqGetRequest, FaqGetResponse, FaqPostRequest, FaqPostResponse, FaqPutRequest, FaqPutResponse } from "../../types/faq";
+import { FaqGetRequest, FaqGetResponse, FaqPostRequest, FaqPostResponse, FaqPutRequest, FaqPutResponse, FaqTranslateRequest, FaqTranslateResponse } from "../../types/faq";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { selectAuth } from "../../redux/authSlice";
@@ -23,8 +23,8 @@ export const useFaqCreateLogic = () => {
 
     const [isTranslated, setIsTranslated] = useState(false);
 
-    const faqTranslateApi = useHobitMutatePostApi<FaqPostRequest, FaqPostResponse>('translate');
-    const faqPutApi = useHobitMutatePostApi<FaqPutRequest, FaqPutResponse>('faqs');
+    const faqTranslateApi = useHobitMutatePostApi<FaqTranslateRequest, FaqTranslateResponse>('translate');
+    const faqPutApi = useHobitMutatePostApi<FaqPostRequest, FaqPostResponse>('faqs');
 
     const addAnswer = () => {
         setAnswers([...answers, { answer: '', url: '', email: '', phone: '' }]);

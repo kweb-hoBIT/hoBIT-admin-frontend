@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHobitMutatePostApi, useHobitMutatePutApi, useHobitQueryGetApi } from "../../hooks/hobitAdmin";
-import { FaqGetRequest, FaqGetResponse, FaqPostRequest, FaqPostResponse, FaqPutRequest, FaqPutResponse } from "../../types/faq";
+import { FaqGetRequest, FaqGetResponse, FaqPostRequest, FaqPostResponse, FaqPutRequest, FaqPutResponse, FaqTranslateRequest, FaqTranslateResponse } from "../../types/faq";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { selectAuth } from "../../redux/authSlice";
@@ -22,13 +22,12 @@ export const useFaqEditLogic = (faqId: number) => {
     const [isTranslated, setIsTranslated] = useState(false);
 
     const faqGetApi = useHobitQueryGetApi<FaqGetRequest, FaqGetResponse>('faqs', String(faqId));
-    const faqTranslateApi = useHobitMutatePostApi<FaqPostRequest, FaqPostResponse>('translate');
+    const faqTranslateApi = useHobitMutatePostApi<FaqTranslateRequest, FaqTranslateResponse>('translate');
     const faqPutApi = useHobitMutatePutApi<FaqPutRequest, FaqPutResponse>('faqs', String(faqId));
 
     async function EditInit() {
         try {
             const response: {
-                error: unknown,
                 payload: any
             } = await faqGetApi();
             const data = response.payload.faq;
