@@ -1,25 +1,45 @@
 import React, { useState } from 'react';
 import Analyze from './Analyze';
-import InputField from '../InputField';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Filter: React.FC = () => {
   const [searchSubject, setSearchSubject] = useState('frequency');
   const [period, setPeriod] = useState('day');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const [sortOrder, setSortOrder] = useState(1);
-  const [limit, setLimit] = useState(0); // 기본값을 0으로 설정
+  const [limit, setLimit] = useState(0);
   const [filters, setFilters] = useState({
     searchSubject,
     period,
     startDate,
     endDate,
     sortOrder,
-    limit
+    limit,
   });
-  const [showAnalyze, setShowAnalyze] = useState(false); // 버튼을 누르면 Analyze.tsx를 렌더링 하기 위해 설정(기본값 false)
+  const [showAnalyze, setShowAnalyze] = useState(false);
 
-  // 수정하고 버튼 누르면 실행
+  const disableDates = (date: Date, type: "start" | "end"): boolean => {
+    if (!date) return false;
+
+    if (period === "week") {
+      if (type === "start") return date.getDay() !== 1; // 월요일 (시작)
+      if (type === "end") return date.getDay() !== 0; // 일요일 (종료)
+    }
+
+    if (period === "month") {
+      if (type === "start") return date.getDate() !== 1; // 1일 (시작)
+      if (type === "end") {
+        const nextDay = new Date(date);
+        nextDay.setDate(date.getDate() + 1);
+        return nextDay.getDate() !== 1; // 다음 날이 1일 (종료)
+      }
+    }
+
+    return false;
+  };
+
   const handleApplyFilter = () => {
     const newFilters = {
       searchSubject,
@@ -27,13 +47,12 @@ const Filter: React.FC = () => {
       startDate,
       endDate,
       sortOrder,
-      limit
+      limit,
     };
     setFilters(newFilters);
     setShowAnalyze(true);
   };
 
-  // limit 값 처리 (아무것도 없으면 자동으로 0으로 설정, 숫자만 입력가능, 숫자를 입력하면 자동으로 0이 지워지게)
   const handleLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     value = value.replace(/[^0-9]/g, '');
@@ -47,7 +66,7 @@ const Filter: React.FC = () => {
       <select
         value={searchSubject}
         onChange={(e) => setSearchSubject(e.target.value)}
-        className="w-full p-1 border border-gray-300 rounded-md text-sm mb-1"
+        className="w-full p-1 border border-gray-300 rounded-md text-sm mb-2"
       >
         <option value="frequency">FAQ 검색 빈도</option>
         <option value="feedback">FAQ 피드백 점수</option>
@@ -58,34 +77,43 @@ const Filter: React.FC = () => {
       <select
         value={period}
         onChange={(e) => setPeriod(e.target.value)}
-        className="w-full p-1 border border-gray-300 rounded-md text-sm mb-1"
+        className="w-full p-1 border border-gray-300 rounded-md text-sm mb-2"
       >
         <option value="day">일</option>
         <option value="week">주</option>
         <option value="month">달</option>
       </select>
 
-      <label className="font-medium text-gray-700 text-sm">시작 일자</label>
-      <input
-        type="date"
-        value={startDate}
-        onChange={(e) => setStartDate(e.target.value)}
-        className="w-full p-1 border border-gray-300 rounded-md text-sm mb-1"
-      />
+      <div className="mb-2">
+      <label className="font-medium text-gray-700 text-sm block mb-2">시작 일자</label>
+        <DatePicker
+          selected={startDate}
+          onChange={(date: Date | null) => setStartDate(date)}
+          dateFormat="yyyy-MM-dd"
+          className="w-full p-1 border border-gray-300 rounded-md text-sm"
+          filterDate={(date) => !disableDates(date, "start")}
+          placeholderText="시작 일자 선택"
+        />
+      </div>
 
-      <label className="font-medium text-gray-700 text-sm">종료 일자</label>
-      <input
-        type="date"
-        value={endDate}
-        onChange={(e) => setEndDate(e.target.value)}
-        className="w-full p-1 border border-gray-300 rounded-md text-sm mb-1"
-      />
+      <div className="mb-2">
+        <label className="font-medium text-gray-700 text-sm block mb-2">종료 일자</label>
+        <DatePicker
+          selected={endDate}
+          onChange={(date: Date | null) => setEndDate(date)}
+          dateFormat="yyyy-MM-dd"
+          className="w-full p-1 border border-gray-300 rounded-md text-sm"
+          filterDate={(date) => !disableDates(date, "end")}
+          placeholderText="종료 일자 선택"
+          minDate={startDate || undefined}
+        />
+      </div>
 
       <label className="font-medium text-gray-700 text-sm">정렬 순서</label>
       <select
         value={sortOrder}
         onChange={(e) => setSortOrder(Number(e.target.value))}
-        className="w-full p-1 border border-gray-300 rounded-md text-sm mb-1"
+        className="w-full p-1 border border-gray-300 rounded-md text-sm mb-2"
       >
         <option value={1}>내림차순</option>
         <option value={0}>오름차순</option>
@@ -96,7 +124,7 @@ const Filter: React.FC = () => {
         type="text"
         value={limit}
         onChange={handleLimitChange}
-        className="w-full p-1 border border-gray-300 rounded-md text-sm mb-1"
+        className="w-full p-1 border border-gray-300 rounded-md text-sm mb-2"
       />
 
       <button
@@ -109,8 +137,8 @@ const Filter: React.FC = () => {
         <Analyze
           searchSubject={filters.searchSubject}
           period={filters.period}
-          startDate={filters.startDate}
-          endDate={filters.endDate}
+          startDate={String(filters.startDate)}
+          endDate={String(filters.endDate)}
           sortOrder={filters.sortOrder}
           limit={filters.limit}
         />
