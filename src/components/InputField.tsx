@@ -2,11 +2,11 @@ import React from 'react';
 
 interface InputFieldProps {
   id: string;
-  label: string;
+  label?: string;
   type: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder: string;
+  placeholder?: string;
   className: string;
 }
 
