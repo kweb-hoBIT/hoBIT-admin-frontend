@@ -13,7 +13,13 @@ const endpoint = `${envs.HOBIT_BACKEND_ENDPOINT!}/api`;
 export async function hobitApi<
   T extends HobitAdminApiRequest,
   R extends HobitAdminApiResponse,
->(path: string, req?: T, params?: string, querys?: Record<string, any>, method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'POST'): Promise<ApiResponse<R>> {
+>(
+  path: string,
+  req?: T,
+  params?: string,
+  querys?: Record<string, any>,
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'POST'
+): Promise<ApiResponse<R>> {
   const headers: Record<string, string> = {
     'Content-type': 'application/json',
   };
@@ -31,6 +37,9 @@ export async function hobitApi<
       } else if (querys) {
         const queryParams = new URLSearchParams(querys).toString();
         path = `${path}?${queryParams}`;
+
+        console.log(`[hobitApi] GET Request URL: ${endpoint}/${path}`);
+
         resp = await fetch(`${endpoint}/${path}`, {
           method: 'GET',
           mode: 'cors',
