@@ -15,8 +15,8 @@ interface AnalyzeProps {
   period: string;
   startDate: string;
   endDate: string;
-  sortOrder: number;
-  limit: number;
+  sortOrder: string;
+  limit: string;
 }
 
 const Analyze: React.FC<AnalyzeProps> = ({

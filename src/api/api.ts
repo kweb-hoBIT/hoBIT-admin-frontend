@@ -62,14 +62,26 @@ export async function hobitApi<
       }
     } else if (method === 'DELETE') {
       if (req) {
-        const [[paramKey, paramValue]] = Object.entries(req);
+        const [[paramKey, paramValue], ...rest] = Object.entries(req);
+        const remainingBody = Object.fromEntries(rest);
         path = `${path}/${paramValue}`;
+        if(remainingBody) {
+          resp = await fetch(`${endpoint}/${path}`, {
+            method: 'DELETE',
+            mode: 'cors',
+            headers,
+            body: JSONbig.stringify(remainingBody),
+          });
+        } else{
+          resp = await fetch(`${endpoint}/${path}`, {
+            method: 'DELETE',
+            mode: 'cors',
+            headers,
+          });
+        }
+      } else {
+        throw new Error('PUT 요청에는 req가 필요합니다.');
       }
-      resp = await fetch(`${endpoint}/${path}`, {
-        method: 'DELETE',
-        mode: 'cors',
-        headers,
-      });
     }
 
     if (resp) {

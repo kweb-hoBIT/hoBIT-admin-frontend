@@ -27,7 +27,7 @@ const DeleteAccount: React.FC = () => {
 
     if (mutateDeleteAccount) {
       try {
-        const response = await mutateDeleteAccount();
+        const response = await mutateDeleteAccount(undefined); // body값이 없는 DELETE 요청
         if (response.payload?.status === 'success') {
           console.log('hi');
           dispatch(clearTokens());

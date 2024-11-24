@@ -6,7 +6,7 @@ import { hobitApi } from '../api/api';
 export function useHobitQueryGetApi<
   T extends HobitAdminApiRequest,
   R extends HobitAdminApiResponse,
->(path: string, req?: Record<string, any>) {
+>(path: string, req?: T) {
   return useQuery({
     queryKey: req ? [path, req] : [path],
     queryFn: async () => {
@@ -35,10 +35,10 @@ export function useHobitMutatePostApi<
 export function useHobitMutatePutApi<
   T extends HobitAdminApiRequest,
   R extends HobitAdminApiResponse,
->(path: string, params: string) {
+>(path: string, params: T) {
   const { mutateAsync } = useMutation({
     mutationFn: async (req: T) => {
-      const resp = await hobitApi<T, R>(path, {params, ...req} as T, 'PUT');
+      const resp = await hobitApi<T, R>(path, {...params, ...req} as T, 'PUT');
       return resp;
     },
   });
@@ -50,13 +50,14 @@ export function useHobitMutatePutApi<
 export function useHobitMutateDeleteApi<
   T extends HobitAdminApiRequest,
   R extends HobitAdminApiResponse,
->(path: string, req: Record<string, any>) {
+>(path: string, params: T) {
   const { mutateAsync } = useMutation({
-    mutationFn: async () => {
-      const resp = await hobitApi<T, R>(path, req as T,'DELETE');
+    mutationFn: async (req?: T) => {
+      const resp = await hobitApi<T, R>(path, {...params, ...req }, 'DELETE');
       return resp;
     },
   });
 
   return mutateAsync;
 }
+
