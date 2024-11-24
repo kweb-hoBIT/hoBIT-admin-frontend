@@ -38,7 +38,7 @@ const App: React.FC = () => {
 
             {/* FAQ 관련 페이지 */}
             <Route path="/faqs" element={<FAQsPage />} />
-            <Route path="/faqs/new" element={<FAQCreatePage />} />
+            <Route path="/faqs/create" element={<FAQCreatePage />} />
             <Route path="/faqs/edit/:id" element={<FAQEditPage />} />
             <Route path="/faqs/:id" element={<FAQDetailPage />} />
 

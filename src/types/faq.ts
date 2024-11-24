@@ -14,7 +14,7 @@ export type Faq = {
 };
 
 
-export type PostFAQRequest = {
+export type CreateFAQRequest = {
   user_id: number;
   maincategory_ko: string;
   maincategory_en: string;
@@ -37,7 +37,7 @@ export type PostFAQRequest = {
   manager: string;
 };
 
-export type PostFAQResponse = {
+export type CreateFAQResponse = {
   status: string;
   message: string;
 };

@@ -10,8 +10,8 @@ import {
 } from './user';
 
 import {
-  PostFAQRequest ,
-  PostFAQResponse,
+  CreateFAQRequest,
+  CreateFAQResponse,
   GetAllFAQRequest,
   GetAllFAQResponse,
   GetFAQRequest,
@@ -39,7 +39,7 @@ export type HobitAdminApiRequest =
   | SignupRequest
   | NewAccessTokenRequest
   | DeleteAccountReqeust
-  | PostFAQRequest
+  | CreateFAQRequest
   | GetAllFAQRequest
   | GetFAQRequest
   | DeleteFAQRequest
@@ -54,7 +54,7 @@ export type HobitAdminApiResponse =
   | SignupResponse
   | NewAccessTokenResponse
   | DeleteAccountResponse
-  | PostFAQResponse
+  | CreateFAQResponse
   | GetAllFAQResponse
   | GetFAQResponse
   | DeleteFAQResponse
