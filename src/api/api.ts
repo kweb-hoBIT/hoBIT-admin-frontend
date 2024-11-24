@@ -22,7 +22,9 @@ export async function hobitApi<
   try {
     if (method === 'GET') {
       if (req) {
-        const queryParams = new URLSearchParams(req).toString();
+        const queryParams = new URLSearchParams(
+          Object.fromEntries(Object.entries(req).map(([key, value]) => [key, String(value)]))
+        ).toString();
         path = `${path}?${queryParams}`;
         resp = await fetch(`${endpoint}/${path}`, {
           method: 'GET',
