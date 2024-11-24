@@ -15,8 +15,8 @@ interface AnalyzeProps {
   period: string;
   startDate: string;
   endDate: string;
-  sortOrder: number;
-  limit: number;
+  sortOrder: string;
+  limit: string;
 }
 
 const Analyze: React.FC<AnalyzeProps> = ({
@@ -34,36 +34,15 @@ const Analyze: React.FC<AnalyzeProps> = ({
   let queryResult: any;
   if (searchSubject === 'frequency') {
     queryResult = useHobitQueryGetApi<FrequencyRequest, FrequencyResponse>(
-      'questionlogs/frequency',
-      {
-        startDate,
-        endDate,
-        period,
-        sortOrder,
-        limit,
-      }
+      'questionlogs/frequency', { params: {}, query:{startDate, endDate, period, sortOrder, limit}}
     );
   } else if (searchSubject === 'feedback') {
     queryResult = useHobitQueryGetApi<FeedbackRequest, FeedbackResponse>(
-      'questionlogs/feedback',
-      {
-        startDate,
-        endDate,
-        period,
-        sortOrder,
-        limit,
-      }
+      'questionlogs/feedback',  { params: {}, query:{startDate, endDate, period, sortOrder, limit}}
     );
   } else if (searchSubject === 'language') {
     queryResult = useHobitQueryGetApi<LanguageRequest, LanguageResponse>(
-      'questionlogs/language',
-      {
-        startDate,
-        endDate,
-        period,
-        sortOrder,
-        limit,
-      }
+      'questionlogs/language',  { params: {}, query:{startDate, endDate, period, sortOrder, limit}}
     );
   }
 

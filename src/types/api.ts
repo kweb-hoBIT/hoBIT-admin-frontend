@@ -10,6 +10,21 @@ import {
 } from './user';
 
 import {
+  CreateFAQRequest,
+  CreateFAQResponse,
+  GetAllFAQRequest,
+  GetAllFAQResponse,
+  GetFAQRequest,
+  GetFAQResponse,
+  DeleteFAQRequest,
+  DeleteFAQResponse,
+  UpdateFAQRequest,
+  UpdateFAQResponse,
+  TranslateFAQRequest,
+  TranslateFAQResponse,
+} from './faq';
+
+import {
   FrequencyRequest,
   FrequencyResponse,
   FeedbackRequest,
@@ -18,21 +33,39 @@ import {
   LanguageResponse,
 } from './questionLog'
 
-
-export type HobitAdminApiRequest =
-  | LoginRequest
-  | SignupRequest
-  | NewAccessTokenRequest
-  | DeleteAccountReqeust
+export type HobitAdminGetApiRequest =
+  | GetAllFAQRequest
+  | GetFAQRequest
   | FrequencyRequest
   | FeedbackRequest
   | LanguageRequest;
+
+export type HobitAdminPostApiRequest =
+  | LoginRequest
+  | SignupRequest
+  | NewAccessTokenRequest
+  | CreateFAQRequest
+  | TranslateFAQRequest;
+
+export type HobitAdminPutApiRequest =
+  | UpdateFAQRequest;
+
+export type HobitAdminDeleteApiRequest =
+  | DeleteAccountReqeust
+  | DeleteFAQRequest;
+
 
 export type HobitAdminApiResponse =
   | LoginResponse
   | SignupResponse
   | NewAccessTokenResponse
   | DeleteAccountResponse
+  | CreateFAQResponse
+  | GetAllFAQResponse
+  | GetFAQResponse
+  | DeleteFAQResponse
+  | UpdateFAQResponse
+  | TranslateFAQResponse
   | FrequencyResponse
   | FeedbackResponse
   | LanguageResponse;

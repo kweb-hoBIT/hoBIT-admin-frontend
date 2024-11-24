@@ -90,7 +90,7 @@ const Filter: React.FC = () => {
       </select>
 
       <div className="mb-2">
-        <label className="font-medium text-gray-700 text-sm block mb-2">시작 일자</label>
+      <label className="font-medium text-gray-700 text-sm block mb-2">시작 일자</label>
         <DatePicker
           selected={startDate}
           onChange={(date: Date | null) => setStartDate(date)}
@@ -133,9 +133,9 @@ const Filter: React.FC = () => {
       />
       <button
         onClick={handleApplyFilter}
-        disabled={!(startDate && endDate) || (searchSubject !== 'language' && limit === 0)}
+        disabled={!startDate || !endDate || limit == 0}
         className={`w-full p-1 rounded-md mt-2 text-sm ${
-          !(startDate && endDate) || (searchSubject !== 'language' && limit === 0)
+          !startDate || !endDate || limit == 0
             ? "bg-gray-300 text-gray-500 cursor-not-allowed"
             : "bg-blue-500 text-white hover:bg-blue-600"
         }`}
@@ -148,8 +148,8 @@ const Filter: React.FC = () => {
           period={filters.period}
           startDate={String(filters.startDate)}
           endDate={String(filters.endDate)}
-          sortOrder={filters.sortOrder}
-          limit={filters.limit}
+          sortOrder={String(filters.sortOrder)}
+          limit={String(filters.limit)}
         />
       )}
     </div>

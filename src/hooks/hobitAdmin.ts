@@ -1,16 +1,16 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { HobitAdminApiRequest, HobitAdminApiResponse } from '../types/api';
-import { hobitApi } from '../api/api';
+import { HobitAdminGetApiRequest, HobitAdminPostApiRequest, HobitAdminPutApiRequest, HobitAdminDeleteApiRequest, HobitAdminApiResponse } from '../types/api';
+import { hobitGetApi, hobitPostApi, hobitPutApi, hobitDeleteApi } from '../api/api';
 
 // GET 요청을 처리하는 훅
 export function useHobitQueryGetApi<
-  T extends HobitAdminApiRequest,
+  T extends HobitAdminGetApiRequest,
   R extends HobitAdminApiResponse,
->(path: string, req?: Record<string, any>) {
+>(path: string, req?: T) {
   return useQuery({
     queryKey: req ? [path, req] : [path],
     queryFn: async () => {
-      const resp = await hobitApi<T, R>(path, req as T, 'GET');
+      const resp = await hobitGetApi<T, R>(path, req as T);
       return resp;
     },
   });
@@ -18,12 +18,12 @@ export function useHobitQueryGetApi<
 
 // POST 요청을 처리하는 훅
 export function useHobitMutatePostApi<
-  T extends HobitAdminApiRequest,
+  T extends HobitAdminPostApiRequest,
   R extends HobitAdminApiResponse,
 >(path: string) {
   const { mutateAsync } = useMutation({
     mutationFn: async (req: T) => {
-      const resp = await hobitApi<T, R>(path, req as T, 'POST');
+      const resp = await hobitPostApi<T, R>(path, req as T);
       return resp;
     },
   });
@@ -31,32 +31,32 @@ export function useHobitMutatePostApi<
   return mutateAsync;
 }
 
-// PUT 요청을 처리하는 훅 (params와 body를 모두 받음)
+// PUT 요청을 처리하는 훅
 export function useHobitMutatePutApi<
-  T extends HobitAdminApiRequest,
-  R extends HobitAdminApiResponse,
->(path: string, params: string) {
+  T extends HobitAdminPutApiRequest,
+  R extends HobitAdminApiResponse
+>(path: string) {
   const { mutateAsync } = useMutation({
     mutationFn: async (req: T) => {
-      const resp = await hobitApi<T, R>(path, {params, ...req} as T, 'PUT');
+      const resp = await hobitPutApi<T, R>(path, req);
       return resp;
     },
   });
-
   return mutateAsync;
 }
 
-// DELETE 요청을 처리하는 훅 (params만 받음)
+// DELETE 요청을 처리하는 훅
 export function useHobitMutateDeleteApi<
-  T extends HobitAdminApiRequest,
+  T extends HobitAdminDeleteApiRequest,  // DELETE 요청에 맞는 타입
   R extends HobitAdminApiResponse,
->(path: string, req: Record<string, any>) {
+>(path: string) {
   const { mutateAsync } = useMutation({
-    mutationFn: async () => {
-      const resp = await hobitApi<T, R>(path, req as T,'DELETE');
+    mutationFn: async (req: T) => {
+      const resp = await hobitDeleteApi<T, R>(path, req);
       return resp;
     },
   });
-
   return mutateAsync;
 }
+
+

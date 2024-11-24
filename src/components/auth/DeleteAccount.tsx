@@ -15,8 +15,8 @@ const DeleteAccount: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const mutateDeleteAccount = user_id 
-    ? useHobitMutateDeleteApi<DeleteAccountReqeust, DeleteAccountResponse>('users', {user_id})
+  const DeleteAccountApi = user_id 
+    ? useHobitMutateDeleteApi<DeleteAccountReqeust, DeleteAccountResponse>('users')
     : null;
 
   const handleDeleteAccount = async () => {
@@ -25,11 +25,13 @@ const DeleteAccount: React.FC = () => {
       return;
     }
 
-    if (mutateDeleteAccount) {
+    if (DeleteAccountApi) {
       try {
-        const response = await mutateDeleteAccount();
+        const response = await DeleteAccountApi({
+          params: { user_id: String(user_id) },
+          body: {},
+        });
         if (response.payload?.status === 'success') {
-          console.log('hi');
           dispatch(clearTokens());
           navigate('/login');
           alert('회원 탈퇴가 완료되었습니다.');

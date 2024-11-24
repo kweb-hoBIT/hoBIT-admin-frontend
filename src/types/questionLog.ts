@@ -2,11 +2,14 @@
 
 
 export type FrequencyRequest = {
-  startDate: string;
-  endDate: string;
-  period: string;
-  sortOrder: string;
-  limit: string;
+  params: {};
+  query: {
+    startDate: string;
+    endDate: string;
+    period: string;
+    sortOrder: string;
+    limit : string;
+  };
 };
 
 export type FrequencyResponse = {
@@ -31,11 +34,14 @@ export type FrequencyResponse = {
 };
 
 export type FeedbackRequest = {
-  startDate: string;
-  endDate: string;
-  period: string;
-  sortOrder: string;
-  limit: string;
+  params: {};
+  query: {
+    startDate: string;
+    endDate: string;
+    period: string;
+    sortOrder: string;
+    limit: string;
+  };
 };
 
 export type FeedbackResponse = {
@@ -60,11 +66,14 @@ export type FeedbackResponse = {
 };
 
 export type LanguageRequest = {
-  startDate: string;
-  endDate: string;
-  period: string;
-  sortOrder: string;
-  limit: string;
+  params: {};
+  query: {
+    startDate: string;
+    endDate: string;
+    period: string;
+    sortOrder: string;
+    limit: string;
+  };
 };
 
 export type LanguageResponse = {
