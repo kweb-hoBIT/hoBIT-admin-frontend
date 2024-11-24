@@ -17,7 +17,8 @@ const FAQCreate: React.FC = () => {
   const [answersKo, setAnswersKo] = useState<{ answer: string; url: string; email: string; phone: string }[]>([{ answer: '', url: '', email: '', phone: '' }]);
   const [answersEn, setAnswersEn] = useState<{ answer: string; url: string; email: string; phone: string }[]>([{ answer: '', url: '', email: '', phone: '' }]);
   const [manager, setManager] = useState<string>('');
-  const mutateFAQCreate = useHobitMutatePostApi<CreateFAQRequest, CreateFAQResponse>('faqs');
+  
+  const FAQCreateApi = useHobitMutatePostApi<CreateFAQRequest, CreateFAQResponse>('faqs');
 
   const handleAddAnswer = () => {
     setAnswersKo([...answersKo, { answer: '', url: '', email: '', phone: '' }]);
@@ -45,17 +46,19 @@ const FAQCreate: React.FC = () => {
     }
 
     try {
-      const response = await mutateFAQCreate({
-        user_id: Number(user_id),
-        maincategory_ko: maincategory_ko,
-        maincategory_en: maincategory_en,
-        subcategory_ko: subcategory_ko,
-        subcategory_en: subcategory_en,
-        question_ko: question_ko,
-        question_en: question_en,
-        answer_ko: answersKo,
-        answer_en: answersEn,
-        manager,
+      const response = await FAQCreateApi({
+        body : {
+          user_id: Number(user_id),
+          maincategory_ko: maincategory_ko,
+          maincategory_en: maincategory_en,
+          subcategory_ko: subcategory_ko,
+          subcategory_en: subcategory_en,
+          question_ko: question_ko,
+          question_en: question_en,
+          answer_ko: answersKo,
+          answer_en: answersEn,
+          manager
+      }
       });
 
       if (response.payload?.status === 'success') {

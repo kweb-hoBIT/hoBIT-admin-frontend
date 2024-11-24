@@ -14,7 +14,7 @@ const Login: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const mutateLogin = useHobitMutatePostApi<LoginRequest, LoginResponse>('auth');
+  const LoginApi = useHobitMutatePostApi<LoginRequest, LoginResponse>('auth');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,8 +23,9 @@ const Login: React.FC = () => {
       dispatch(sendInputValue(`로그인 요청: ${email}`));
 
       try {
-        const response = await mutateLogin({ email, password });
-        console.log(response);
+        const response = await LoginApi({
+          body : { email, password }
+        });
         if (response.payload?.status === 'success') {
           const { accessToken, refreshToken, user_id, username } = response.payload.data ?? {};
 

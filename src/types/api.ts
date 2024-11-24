@@ -33,21 +33,27 @@ import {
   LanguageResponse,
 } from './questionLog'
 
-
-export type HobitAdminApiRequest =
-  | LoginRequest
-  | SignupRequest
-  | NewAccessTokenRequest
-  | DeleteAccountReqeust
-  | CreateFAQRequest
+export type HobitAdminGetApiRequest =
   | GetAllFAQRequest
   | GetFAQRequest
-  | DeleteFAQRequest
-  | UpdateFAQRequest
-  | TranslateFAQRequest
   | FrequencyRequest
   | FeedbackRequest
   | LanguageRequest;
+
+export type HobitAdminPostApiRequest =
+  | LoginRequest
+  | SignupRequest
+  | NewAccessTokenRequest
+  | CreateFAQRequest
+  | TranslateFAQRequest;
+
+export type HobitAdminPutApiRequest =
+  | UpdateFAQRequest;
+
+export type HobitAdminDeleteApiRequest =
+  | DeleteAccountReqeust
+  | DeleteFAQRequest;
+
 
 export type HobitAdminApiResponse =
   | LoginResponse

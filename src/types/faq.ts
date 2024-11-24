@@ -15,26 +15,28 @@ export type Faq = {
 
 
 export type CreateFAQRequest = {
-  user_id: number;
-  maincategory_ko: string;
-  maincategory_en: string;
-  subcategory_ko: string;
-  subcategory_en: string;
-  question_ko: string;
-  question_en: string;
-  answer_ko: {
-    answer: string;
-    url: string;
-    email: string;
-    phone: string;
-  }[];
-  answer_en: {
-    answer: string;
-    url: string;
-    email: string;
-    phone: string;
-  }[];
-  manager: string;
+  body: {
+    user_id: number;
+    maincategory_ko: string;
+    maincategory_en: string;
+    subcategory_ko: string;
+    subcategory_en: string;
+    question_ko: string;
+    question_en: string;
+    answer_ko: {
+      answer: string;
+      url: string;
+      email: string;
+      phone: string;
+    }[];
+    answer_en: {
+      answer: string;
+      url: string;
+      email: string;
+      phone: string;
+    }[];
+    manager: string;
+  }
 };
 
 export type CreateFAQResponse = {
@@ -44,7 +46,8 @@ export type CreateFAQResponse = {
 
 
 export type GetAllFAQRequest = {
-  user_id: string;
+  params: {};
+  query: {};
 }
 
 export type GetAllFAQResponse = {
@@ -79,7 +82,10 @@ export type GetAllFAQResponse = {
 };
 
 export type GetFAQRequest = {
-  faq_id: number;
+  params: {
+    faq_id: string;
+  };
+  query: {};
 }
 
 export type GetFAQResponse = {
@@ -115,8 +121,12 @@ export type GetFAQResponse = {
 
 
 export type DeleteFAQRequest = {
-  faq_id: string;
-  user_id: number;
+  params: {
+    faq_id: string;
+  }
+  body: {
+    user_id: number;
+  }
 }
 
 
@@ -125,28 +135,33 @@ export type DeleteFAQResponse = {
   message: string;
 };
 
+
 export type UpdateFAQRequest = {
-  faq_id: string;
-  user_id: number;
-  maincategory_ko: string;
-  maincategory_en: string;
-  subcategory_ko: string;
-  subcategory_en: string;
-  question_ko: string;
-  question_en: string;
-  answer_ko: {
-    answer: string;
-    url: string;
-    email: string;
-    phone: string;
-  }[];
-  answer_en: {
-    answer: string;
-    url: string;
-    email: string;
-    phone: string;
-  }[];
-  manager: string;
+  params: {
+    faq_id: string;
+  }
+  body: {
+    user_id: number;
+    maincategory_ko: string;
+    maincategory_en: string;
+    subcategory_ko: string;
+    subcategory_en: string;
+    question_ko: string;
+    question_en: string;
+    answer_ko: {
+      answer: string;
+      url: string;
+      email: string;
+      phone: string;
+    }[];
+    answer_en: {
+      answer: string;
+      url: string;
+      email: string;
+      phone: string;
+    }[];
+    manager: string;
+  }
 }
 
 export type UpdateFAQResponse = {
@@ -155,7 +170,9 @@ export type UpdateFAQResponse = {
 }
 
 export type TranslateFAQRequest = {
-  text: string;
+  body: {
+    text: string;
+  }
 }
 
 export type TranslateFAQResponse = {
