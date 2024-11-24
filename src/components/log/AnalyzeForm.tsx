@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { FrequencyResponse, FeedbackResponse, LanguageResponse } from '../../types/questionLog';
+import ErrorMessage from '../ErrorMessage'; // ErrorMessage 컴포넌트를 import
 
 interface AnalyzeFormProps {
   responseData: FrequencyResponse | FeedbackResponse | LanguageResponse;
   searchSubject: string;
+  error: string | null;
 }
 
-const AnalyzeForm: React.FC<AnalyzeFormProps> = ({ responseData, searchSubject }) => {
+const AnalyzeForm: React.FC<AnalyzeFormProps> = ({ responseData, searchSubject, error }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 1;
 
@@ -15,7 +17,6 @@ const AnalyzeForm: React.FC<AnalyzeFormProps> = ({ responseData, searchSubject }
   const startIndex = currentPage * itemsPerPage;
   const currentPageData = data.slice(startIndex, startIndex + itemsPerPage);
 
-  // 페이지 이동 함수
   const goToNextPage = () => {
     if (currentPage < Math.ceil(data.length / itemsPerPage) - 1) {
       setCurrentPage(currentPage + 1);
@@ -28,8 +29,7 @@ const AnalyzeForm: React.FC<AnalyzeFormProps> = ({ responseData, searchSubject }
     }
   };
 
-
-  // Field 이름 한글로 변환
+  // 필드 이름 한글로 변환
   const fieldTranslations: { [key: string]: string } = {
     rank: '순위',
     faq_id: 'FAQ 번호',
@@ -52,6 +52,8 @@ const AnalyzeForm: React.FC<AnalyzeFormProps> = ({ responseData, searchSubject }
           {searchSubject === 'feedback' && 'FAQ 피드백 점수 분석 결과'}
           {searchSubject === 'language' && '사용 언어 빈도 분석 결과'}
         </h2>
+
+        {error && <ErrorMessage message={error} />}
 
         <div className="space-y-4">
           <div className="flex justify-between mb-4">

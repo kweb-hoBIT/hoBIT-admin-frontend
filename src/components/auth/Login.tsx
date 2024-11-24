@@ -24,6 +24,7 @@ const Login: React.FC = () => {
 
       try {
         const response = await mutateLogin({ email, password });
+        console.log(response);
         if (response.payload?.status === 'success') {
           const { accessToken, refreshToken, user_id, username } = response.payload.data ?? {};
 
