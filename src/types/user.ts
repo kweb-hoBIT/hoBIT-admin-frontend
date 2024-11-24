@@ -41,7 +41,6 @@ export type NewAccessTokenResponse = {
 
 
 export type DeleteAccountReqeust = {
-  status: string
   user_id: string
 }
 

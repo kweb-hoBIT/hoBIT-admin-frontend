@@ -13,13 +13,7 @@ const endpoint = `${envs.HOBIT_BACKEND_ENDPOINT!}/api`;
 export async function hobitApi<
   T extends HobitAdminApiRequest,
   R extends HobitAdminApiResponse,
->(
-  path: string,
-  req?: T,
-  params?: string,
-  querys?: Record<string, any>,
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'POST'
-): Promise<ApiResponse<R>> {
+>(path: string, req?: T, method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'POST'): Promise<ApiResponse<R>> {
   const headers: Record<string, string> = {
     'Content-type': 'application/json',
   };
@@ -27,17 +21,16 @@ export async function hobitApi<
   let resp: Response | undefined;
   try {
     if (method === 'GET') {
-      if (params) {
-        path = `${path}/${params}`;
+      if (req) {
+        const queryParams = new URLSearchParams(req).toString();
+        path = `${path}?${queryParams}`;
         resp = await fetch(`${endpoint}/${path}`, {
           method: 'GET',
           mode: 'cors',
           headers,
         });
-      } else if (querys) {
-        const queryParams = new URLSearchParams(querys).toString();
-        path = `${path}?${queryParams}`;
-
+      } else {
+        path = `${path}`;
         resp = await fetch(`${endpoint}/${path}`, {
           method: 'GET',
           mode: 'cors',
@@ -53,20 +46,29 @@ export async function hobitApi<
         body: JSONbig.stringify(req),
       });
     } else if (method === 'PUT') {
-      path = `${path}/${params}`;
-      resp = await fetch(`${endpoint}/${path}`, {
-        method: 'PUT',
-        mode: 'cors',
-        headers,
-        body: JSONbig.stringify(req),
-      });
+      if (req) {
+        const [[paramKey, paramValue], ...rest] = Object.entries(req);
+        const remainingBody = Object.fromEntries(rest);
+
+        path = `${path}/${paramValue}`;
+        resp = await fetch(`${endpoint}/${path}`, {
+          method: 'PUT',
+          mode: 'cors',
+          headers,
+          body: JSONbig.stringify(remainingBody),
+        });
+      } else {
+        throw new Error('PUT 요청에는 req가 필요합니다.');
+      }
     } else if (method === 'DELETE') {
-      path = `${path}/${params}`;
+      if (req) {
+        const [[paramKey, paramValue]] = Object.entries(req);
+        path = `${path}/${paramValue}`;
+      }
       resp = await fetch(`${endpoint}/${path}`, {
         method: 'DELETE',
         mode: 'cors',
         headers,
-        body: JSONbig.stringify(req),
       });
     }
 

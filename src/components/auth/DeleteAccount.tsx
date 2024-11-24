@@ -16,7 +16,7 @@ const DeleteAccount: React.FC = () => {
   const navigate = useNavigate();
 
   const mutateDeleteAccount = user_id 
-    ? useHobitMutateDeleteApi<DeleteAccountReqeust, DeleteAccountResponse>('users', user_id)
+    ? useHobitMutateDeleteApi<DeleteAccountReqeust, DeleteAccountResponse>('users', {user_id})
     : null;
 
   const handleDeleteAccount = async () => {
