@@ -13,7 +13,7 @@ import MainPage from './pages/MainPage';
 import FAQsPage from './pages/FAQsPage';
 import FAQDetailPage from './pages/FAQDetailPage';
 import FAQCreatePage from './pages/FAQCreatePage';
-import FAQEditPage from './pages/FAQUpdatePage';
+import FAQUpdatePage from './pages/FAQUpdatePage';
 import LogsPage from './pages/LogsPage';
 import FAQLogDetailPage from './pages/FAQLogDetailPage';
 import LogAnalyticsPage from './pages/LogAnalyticsPage';
@@ -39,7 +39,7 @@ const App: React.FC = () => {
             {/* FAQ 관련 페이지 */}
             <Route path="/faqs" element={<FAQsPage />} />
             <Route path="/faqs/create" element={<FAQCreatePage />} />
-            <Route path="/faqs/update/:id" element={<FAQEditPage />} />
+            <Route path="/faqs/update/:id" element={<FAQUpdatePage />} />
             <Route path="/faqs/:id" element={<FAQDetailPage />} />
 
             {/* 로그 관련 페이지 */}
