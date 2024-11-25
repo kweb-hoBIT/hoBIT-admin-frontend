@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { GetAllFAQResponse } from '../../types/faq';
 import { useNavigate } from 'react-router-dom';
-import FAQDelete from './FAQDelete'; // FAQDelete 컴포넌트 import
+import FAQDelete from './FAQDelete';
 
-interface FAQsGetFormProps {
+interface FAQMainFormProps {
   faqs: GetAllFAQResponse['data']['faqs'];
 }
 
-const FAQsGetForm: React.FC<FAQsGetFormProps> = ({ faqs }) => {
+const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -40,6 +40,11 @@ const FAQsGetForm: React.FC<FAQsGetFormProps> = ({ faqs }) => {
     return date.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
   };
 
+  // FAQDetail 페이지로 이동하는 함수
+  const handleDetailClick = (faq_id: String) => {
+    navigate(`/faqs/${faq_id}`);
+  };
+
   // 수정 버튼 클릭 핸들러
   const handleEditClick = (faq_id: String) => {
     navigate(`/faqs/update/${faq_id}`);
@@ -66,9 +71,17 @@ const FAQsGetForm: React.FC<FAQsGetFormProps> = ({ faqs }) => {
           <div className="mb-2">
             <span className="text-lg text-gray-500">ID: {faq.faq_id}</span>
           </div>
-          <div className="mb-2">
-            <h5 className="text-lg font-semibold text-gray-800">{faq.question_ko}</h5>
+
+          {/* Question 부분 클릭 이벤트 추가 */}
+          <div
+            className="mb-2 cursor-pointer"
+            onClick={() => handleDetailClick(String(faq.faq_id))}
+          >
+            <h5 className="text-lg font-semibold text-gray-800 hover:underline">
+              {faq.question_ko}
+            </h5>
           </div>
+
           <div className="flex flex-col">
             <div className="mb-1 text-sm text-gray-600">
               <strong>주요 카테고리:</strong> {faq.maincategory_ko}
@@ -105,7 +118,9 @@ const FAQsGetForm: React.FC<FAQsGetFormProps> = ({ faqs }) => {
             <button
               key={page}
               onClick={() => handlePageClick(page)}
-              className={`px-3 py-2 text-sm font-semibold rounded-md ${currentPage === page ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+              className={`px-3 py-2 text-sm font-semibold rounded-md ${
+                currentPage === page ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+              }`}
             >
               {page}
             </button>
@@ -124,4 +139,4 @@ const FAQsGetForm: React.FC<FAQsGetFormProps> = ({ faqs }) => {
   );
 };
 
-export default FAQsGetForm;
+export default FAQMainForm;

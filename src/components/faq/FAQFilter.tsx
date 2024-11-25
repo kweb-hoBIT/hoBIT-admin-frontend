@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import FAQsGet from './FAQsGet'; // FAQs 컴포넌트를 import
+import FAQMain from './FAQMain';
 
 const FAQFilter: React.FC = () => {
   const [filter, setFilter] = useState('');
@@ -39,7 +39,7 @@ const FAQFilter: React.FC = () => {
         />
       </div>
       
-      <FAQsGet filter={filter} selectedFilter={selectedFilter} />
+      <FAQMain filter={filter} selectedFilter={selectedFilter} />
     </div>
   );
 };

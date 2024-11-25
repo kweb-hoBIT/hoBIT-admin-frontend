@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useHobitQueryGetApi } from '../../hooks/hobitAdmin';
 import { GetAllFAQRequest, GetAllFAQResponse } from '../../types/faq';
-import FAQsGetForm from './FAQsGetForm';  // FAQsGetForm import
+import FAQMainForm from './FAQMainForm';
 
-interface FAQsProps {
+interface FAQMainProps {
   filter: string;
   selectedFilter: 'faq_id' | 'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager';
 }
 
-const FAQsGet: React.FC<FAQsProps> = ({ filter, selectedFilter }) => {
+const FAQMain: React.FC<FAQMainProps> = ({ filter, selectedFilter }) => {
   const [faqData, setFaqData] = useState<GetAllFAQResponse['data']['faqs']>([]);
   const [filteredData, setFilteredData] = useState<GetAllFAQResponse['data']['faqs']>([]);
   const [error, setError] = useState<string | null>(null);
@@ -56,9 +56,9 @@ const FAQsGet: React.FC<FAQsProps> = ({ filter, selectedFilter }) => {
 
   return (
     <div>
-      <FAQsGetForm faqs={filteredData} />
+      <FAQMainForm faqs={filteredData} />
     </div>
   );
 };
 
-export default FAQsGet;
+export default FAQMain;
