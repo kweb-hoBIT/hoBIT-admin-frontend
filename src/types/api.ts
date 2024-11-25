@@ -25,6 +25,8 @@ import {
 } from './faq';
 
 import {
+  GetAllQuestionLogRequest,
+  GetAllQuestionLogResponse,
   FrequencyRequest,
   FrequencyResponse,
   FeedbackRequest,
@@ -33,12 +35,25 @@ import {
   LanguageResponse,
 } from './questionLog'
 
+import {
+  GetAllFAQLogRequest,
+  GetAllFAQLogResponse,
+  GetFAQLogRequest,
+  GetFAQLogResponse,
+  CompareFAQLogRequest,
+  CompareFAQLogResponse,
+} from './faqLog'
+
 export type HobitAdminGetApiRequest =
   | GetAllFAQRequest
   | GetFAQRequest
+  | GetAllQuestionLogRequest
   | FrequencyRequest
   | FeedbackRequest
-  | LanguageRequest;
+  | LanguageRequest
+  | GetAllFAQLogRequest
+  | GetFAQLogRequest
+  | CompareFAQLogRequest;
 
 export type HobitAdminPostApiRequest =
   | LoginRequest
@@ -66,9 +81,13 @@ export type HobitAdminApiResponse =
   | DeleteFAQResponse
   | UpdateFAQResponse
   | TranslateFAQResponse
+  | GetAllQuestionLogResponse
   | FrequencyResponse
   | FeedbackResponse
-  | LanguageResponse;
+  | LanguageResponse
+  | GetAllFAQLogResponse
+  | GetFAQLogResponse
+  | CompareFAQLogResponse;
 
 export type ApiResponse<P> = {
   error: ApiErrorPayload | null;

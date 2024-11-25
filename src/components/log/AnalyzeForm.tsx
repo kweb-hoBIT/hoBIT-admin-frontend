@@ -45,9 +45,9 @@ const AnalyzeForm: React.FC<AnalyzeFormProps> = ({ responseData, searchSubject, 
   };
 
   return (
-    <div className="flex justify-center items-center py-8 bg-gray-100 min-h-screen">
-      <div className="bg-white p-0 rounded-lg shadow-lg w-full max-w-full">
-        <h2 className="text-2xl font-semibold mb-4 text-center">
+    <div className="p-1 rounded-3xl max-w-2xl mx-auto space-y-8">
+      <div className="p-1 rounded-lg w-full max-w-4xl">
+        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
           {searchSubject === 'frequency' && 'FAQ 검색 빈도 분석 결과'}
           {searchSubject === 'feedback' && 'FAQ 피드백 점수 분석 결과'}
           {searchSubject === 'language' && '사용 언어 빈도 분석 결과'}
@@ -55,37 +55,37 @@ const AnalyzeForm: React.FC<AnalyzeFormProps> = ({ responseData, searchSubject, 
 
         {error && <ErrorMessage message={error} />}
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div className="flex justify-between mb-4">
             <button
               onClick={goToPreviousPage}
               disabled={currentPage === 0}
-              className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
+              className="px-6 py-3 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-all duration-300 ease-in-out disabled:opacity-50"
             >
               이전
             </button>
             <button
               onClick={goToNextPage}
               disabled={currentPage >= Math.ceil(data.length / itemsPerPage) - 1}
-              className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
+              className="px-6 py-3 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-all duration-300 ease-in-out disabled:opacity-50"
             >
               다음
             </button>
           </div>
 
           {currentPageData.length > 0 ? (
-            <div>
+            <div className="overflow-x-auto">
               {currentPageData.map((groupData: any, index: number) => (
-                <div key={index}>
-                  <div className="flex justify-center mb-2">
-                    <h3 className="text-lg font-semibold">{`날짜: ${groupData.startDate} ~ ${groupData.endDate}`}</h3>
+                <div key={index} className="mb-6">
+                  <div className="flex justify-center mb-4">
+                    <h3 className="text-xl font-semibold text-gray-700">{`날짜: ${groupData.startDate} ~ ${groupData.endDate}`}</h3>
                   </div>
-                  <div className="flex justify-center mt-2">
-                    <table className="min-w-full table-fixed border-collapse border border-gray-200 text-left text-sm">
-                      <thead className="bg-gray-50">
+                  <div className="overflow-x-auto rounded-lg border border-gray-200">
+                    <table className="min-w-full table-auto">
+                      <thead>
                         <tr>
                           {groupData.data?.length > 0 && Object.keys(groupData.data[0]).map((key, idx) => (
-                            <th key={idx} className="border border-gray-200 px-6 py-4 font-medium text-gray-600">
+                            <th key={idx} className="px-6 py-4 text-left text-sm font-medium text-gray-600 border-b">
                               {renderField(key)}
                             </th>
                           ))}
@@ -93,9 +93,9 @@ const AnalyzeForm: React.FC<AnalyzeFormProps> = ({ responseData, searchSubject, 
                       </thead>
                       <tbody>
                         {groupData.data?.map((row: any, rowIndex: number) => (
-                          <tr key={rowIndex} className="even:bg-gray-50">
+                          <tr key={rowIndex} className="hover:bg-gray-50">
                             {Object.values(row).map((value, cellIndex) => (
-                              <td key={cellIndex} className="border border-gray-200 px-6 py-4 text-gray-700">
+                              <td key={cellIndex} className="px-6 py-4 text-sm text-gray-700 border-b">
                                 {String(value)}
                               </td>
                             ))}
