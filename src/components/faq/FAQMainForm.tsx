@@ -39,6 +39,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
     const date = new Date(dateStr);
     return date.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
   };
+  
 
   // FAQDetail 페이지로 이동하는 함수
   const handleDetailClick = (faq_id: String) => {
