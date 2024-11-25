@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import ProtectedPage from '../components/ProtectedPage';
-import Filter from '../components/log/Filter';
+import AnalyzeFilter from '../components/log/AnalyzeFilter';
 
 const LogAnalyticsPage: React.FC = () => {
   return (
@@ -12,7 +12,7 @@ const LogAnalyticsPage: React.FC = () => {
 
       {/* 공통 콘텐츠 영역*/}
       <main>
-        <Filter />
+        <AnalyzeFilter />
 
       </main>
     </div>

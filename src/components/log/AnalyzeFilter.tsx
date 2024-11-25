@@ -3,7 +3,7 @@ import Analyze from './Analyze';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const Filter: React.FC = () => {
+const AnalyzeFilter: React.FC = () => {
   const [searchSubject, setSearchSubject] = useState('frequency');
   const [period, setPeriod] = useState('day');
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -156,4 +156,4 @@ const Filter: React.FC = () => {
   );
 };
 
-export default Filter;
+export default AnalyzeFilter;

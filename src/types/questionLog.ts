@@ -1,5 +1,25 @@
+export type GetAllQuestionLogRequest = {
+  params: {};
+  query: {};
+}
 
-
+export type GetAllQuestionLogResponse = {
+  status: string;
+  message: string;
+  data: {
+    questionLogs: {
+      question_log_id: number;
+      user_question: string;
+      feedback_score: number;
+      feedback: string;
+      created_at: string;
+      faq_id: number;
+      faq_question: string;
+      faq_maincategory: string;
+      faq_subcategory: string;
+    }[];
+  };
+}
 
 export type FrequencyRequest = {
   params: {};
