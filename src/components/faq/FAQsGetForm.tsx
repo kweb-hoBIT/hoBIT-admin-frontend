@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { GetAllFAQResponse } from '../../types/faq';
+import { useNavigate } from 'react-router-dom';
+import FAQDelete from './FAQDelete'; // FAQDelete 컴포넌트 import
 
 interface FAQsGetFormProps {
   faqs: GetAllFAQResponse['data']['faqs'];
 }
 
 const FAQsGetForm: React.FC<FAQsGetFormProps> = ({ faqs }) => {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -37,11 +40,29 @@ const FAQsGetForm: React.FC<FAQsGetFormProps> = ({ faqs }) => {
     return date.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
   };
 
+  // 수정 버튼 클릭 핸들러
+  const handleEditClick = (faq_id: String) => {
+    navigate(`/faqs/update/${faq_id}`);
+  };
+
   return (
     <div className="p-6 bg-gray-50">
       <h4 className="text-2xl font-bold mb-6 text-gray-800">FAQ 리스트</h4>
       {currentItems.map((faq) => (
-        <div key={faq.faq_id} className="bg-red-100 p-4 mb-3 rounded-lg shadow-sm">
+        <div key={faq.faq_id} className="relative bg-red-100 p-4 mb-3 rounded-lg shadow-sm">
+          {/* 수정 버튼 */}
+          <button
+            onClick={() => handleEditClick(String(faq.faq_id))}
+            className="absolute top-2 right-2 bg-blue-500 text-white text-xs px-3 py-1 rounded-md hover:bg-blue-600"
+          >
+            수정
+          </button>
+
+          {/* 삭제 버튼 (오른쪽 아래) */}
+          <div className="absolute bottom-2 right-2">
+            <FAQDelete faq_id={String(faq.faq_id)} onSuccess={() => window.location.reload()} />
+          </div>
+
           <div className="mb-2">
             <span className="text-lg text-gray-500">ID: {faq.faq_id}</span>
           </div>
