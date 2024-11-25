@@ -55,7 +55,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
     <div className="p-6 bg-gray-50">
       <h4 className="text-2xl font-bold mb-6 text-gray-800">FAQ 리스트</h4>
       {currentItems.map((faq) => (
-        <div key={faq.faq_id} className="relative bg-red-100 p-4 mb-3 rounded-lg shadow-sm">
+        <div key={faq.faq_id} className="relative bg-red-100 p-4 mb-3 rounded-lg">
           {/* 수정 버튼 */}
           <button
             onClick={() => handleEditClick(String(faq.faq_id))}

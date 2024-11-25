@@ -19,8 +19,8 @@ const LoginForm: React.FC<{
   onSubmit,
 }) => {
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+    <div className="flex justify-center items-center min-h-screen p-1 rounded-3xl max-w-2xl mx-auto space-y-8">
+      <div className="bg-white p-6 rounded-lg w-96">
         <h2 className="text-2xl font-semibold mb-4 text-center">로그인</h2>
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
           <ErrorMessage message={error} />
@@ -48,6 +48,14 @@ const LoginForm: React.FC<{
             className="w-full bg-pink-200 text-gray-600 font-semibold text-xl p-2 rounded-md transition-colors duration-300"
           />
         </form>
+        <div className="mt-4 text-center">
+          <a
+            href="/signup"
+            className="text-indigo-600 hover:underline text-lg font-medium"
+          >
+            회원가입
+          </a>
+        </div>
       </div>
     </div>
   );

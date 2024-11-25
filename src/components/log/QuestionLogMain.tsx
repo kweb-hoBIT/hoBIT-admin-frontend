@@ -37,10 +37,6 @@ const QuestionLogMain: React.FC = () => {
     return <div className="error-message">{error}</div>;
   }
 
-  if (!questionLogData?.length) {
-    return <div>!uestion 로그 데이터가 없습니다.</div>;
-  }
-
   return (
     <div>
       <QuestionLogMainForm questionLogs={questionLogData} />

@@ -13,7 +13,6 @@ const LogAnalyticsPage: React.FC = () => {
       {/* 공통 콘텐츠 영역*/}
       <main>
         <AnalyzeFilter />
-
       </main>
     </div>
     </ProtectedPage>

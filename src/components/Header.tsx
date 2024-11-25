@@ -25,7 +25,9 @@ const Header: React.FC = () => {
   return (
     <header className="bg-pink-200 p-4 flex justify-between items-center">
       <div className="text-2xl font-semibold">
-        hoBIT
+        <Link to="/main" className="text-gray-600 hover:text-gray-800">
+          hoBIT
+        </Link>
       </div>
       <nav className="flex items-center gap-4 relative">
         {!isAuthPage && (

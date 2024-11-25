@@ -21,15 +21,15 @@ const FAQFilter: React.FC = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-50 rounded-lg shadow-md">
+    <div className="p-6 bg-gray-50 rounded-lg">
       <div className="flex justify-between items-center mb-6">
-      <h4 className="text-2xl font-bold mb-6 text-gray-800">FAQ 검색</h4>
+        <h4 className="text-2xl font-bold mb-6 text-gray-800">FAQ 검색</h4>
         {/* FAQ 추가 버튼 */}
         <button
           onClick={handleCreateClick}
           className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
         >
-        추가
+          추가
         </button>
       </div>
       <div className="mb-4 flex space-x-4">
