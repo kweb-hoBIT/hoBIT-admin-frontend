@@ -53,8 +53,8 @@ export type GetAllFAQRequest = {
 export type GetAllFAQResponse = {
   status: string;
   message: string;
-  data? : {
-    faqs? : {
+  data : {
+    faqs : {
       faq_id: number;
       maincategory_ko: string;
       maincategory_en: string;
@@ -91,8 +91,8 @@ export type GetFAQRequest = {
 export type GetFAQResponse = {
   status: string;
   message: string;
-  data?: {
-    faq? : {
+  data: {
+    faq : {
       faq_id: number;
       maincategory_ko: string;
       maincategory_en: string;
@@ -178,7 +178,7 @@ export type TranslateFAQRequest = {
 export type TranslateFAQResponse = {
   status: string;
   message: string;
-  data?: {
+  data: {
     translatedText: string;
   }
 }
