@@ -1,14 +1,14 @@
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 
+import ProtectedPage from '../components/ProtectedPage';
 import Header from '../components/Header';
 import FAQCreate from '../components/faq/FAQCreate';
 
 const FAQCreatePage: React.FC = () => {
-  // Redux 상태 예시 (필요 시 사용)
-  const isEmpty = useSelector((state: RootState) => state.input?.isEmpty);
 
   return (
+    <ProtectedPage>
     <div>
       {/* 공통 헤더 */}
       <Header />
@@ -18,6 +18,7 @@ const FAQCreatePage: React.FC = () => {
         <FAQCreate />
       </main>
     </div>
+    </ProtectedPage>
   );
 };
 

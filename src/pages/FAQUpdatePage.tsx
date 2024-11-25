@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom';
+import ProtectedPage from '../components/ProtectedPage';
 import Header from '../components/Header';
 import FAQUpdate from '../components/faq/FAQUpdate';
 
@@ -7,6 +8,7 @@ const FAQUpdatePage: React.FC = () => {
  
 
   return (
+    <ProtectedPage>
     <div>
       {/* 공통 헤더 */}
       <Header />
@@ -16,6 +18,7 @@ const FAQUpdatePage: React.FC = () => {
       {id ? <FAQUpdate faq_id={id} /> : <p>FAQ ID가 제공되지 않았습니다.</p>}
       </main>
     </div>
+    </ProtectedPage>
   );
 };
 
