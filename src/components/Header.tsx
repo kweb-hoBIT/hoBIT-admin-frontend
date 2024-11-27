@@ -38,14 +38,14 @@ const Header: React.FC = () => {
       <nav className="flex items-center gap-4 relative">
         {!isAuthPage && (
           <>
-            <Link to="/faqs" className="text-crimson hover:text-gray-600">
+            <Link to="/faqs" className="text-white hover:text-gray-600">
               FAQ
             </Link>
-            <Link to="/logs" className="text-crimson hover:text-gray-600">
+            <Link to="/logs" className="text-white hover:text-gray-600">
               LOG
             </Link>
             <div className="relative">
-              <button onClick={togglePopup} className="text-crimson hover:text-gray-600">
+              <button onClick={togglePopup} className="text-white hover:text-gray-600">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -68,7 +68,7 @@ const Header: React.FC = () => {
               </button>
               {showPopup && (
                 <div
-                  className="absolute right-0 top-10 bg-crimson border border-gray-300 rounded-lg shadow-md p-4 w-40"
+                  className="absolute right-0 top-10 bg-white border border-gray-300 rounded-lg shadow-md p-4 w-40"
                   style={{
                     zIndex: 1000, // 팝업을 다른 요소보다 위로 표시
                   }}
