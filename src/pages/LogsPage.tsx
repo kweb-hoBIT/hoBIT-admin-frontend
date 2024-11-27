@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 
 const LogsPage: React.FC = () => {
 
-  const [selectedLog, setSelectedLog] = useState<'FAQ' | 'Question'>('Question');
+  const [selectedLog, setSelectedLog] = useState<'FAQ' | 'Question'>('FAQ');
 
   return (
     <ProtectedPage>
