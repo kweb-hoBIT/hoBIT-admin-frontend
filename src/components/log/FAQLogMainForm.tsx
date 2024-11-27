@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { GetAllFAQLogResponse } from '../../types/faqLog';
+import { useNavigate } from 'react-router-dom';
 
 interface FAQLogMainFormProps {
   faqLogs: GetAllFAQLogResponse['data']['faqLogs'];
 }
 
 const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
+  const navigate = useNavigate(); // useNavigate 훅 사용
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -37,13 +39,26 @@ const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
     return date.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
   };
 
+  const handleLogClick = (id: string) => {
+    navigate(`/logs/${id}`);
+  };
+
   return (
     <div className="p-6 bg-gray-50">
       <h4 className="text-2xl font-bold mb-6 text-gray-800">관리자 로그 리스트</h4>
       {currentItems.map((log) => (
-        <div key={log.faq_log_id} className="relative bg-red-100 p-4 mb-3 rounded-lg shadow-sm">
-          <div className="mb-2">
-            <span className="text-lg text-gray-500">FAQLog ID: {log.faq_log_id}</span>
+        <div
+          key={log.faq_log_id}
+          className="relative bg-red-100 p-4 mb-3 rounded-lg shadow-sm"
+        >
+          {/* FAQLog ID 클릭 이벤트 추가 */}
+          <div
+            className="mb-2 cursor-pointer"
+            onClick={() => handleLogClick(String(log.faq_log_id))}
+          >
+            <span className="text-lg text-gray-500 hover:underline">
+              FAQLog ID: {log.faq_log_id}
+            </span>
           </div>
           <div className="flex flex-col">
             <div className="mb-1 text-sm text-gray-600">
