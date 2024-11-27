@@ -7,8 +7,8 @@ interface FAQDetailFormProps {
   subcategory_en: string;
   question_ko: string;
   question_en: string;
-  answersKo: { answer: string; url: string; email: string; phone: string }[];
-  answersEn: { answer: string; url: string; email: string; phone: string }[];
+  answer_ko: { answer: string; url: string; email: string; phone: string }[];
+  answer_en: { answer: string; url: string; email: string; phone: string }[];
   manager: string;
 }
 
@@ -19,8 +19,8 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
   subcategory_en,
   question_ko,
   question_en,
-  answersKo,
-  answersEn,
+  answer_ko,
+  answer_en,
   manager,
 }) => {
   return (
@@ -90,11 +90,11 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
         </div>
       </div>
 
-            {/* 번갈아가며 답변 필드 */}
-            <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
+      {/* 번갈아가며 답변 필드 */}
+      <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
         <h3 className="text-xl font-bold text-gray-800">FAQ 답변</h3>
-        {answersKo.map((answer, index) => {
-          const answerEn = answersEn[index] || {};
+        {answer_ko.map((answer, index) => {
+          const answerEn = answer_en[index] || {};
           return (
             <div key={index} className="p-4 border border-gray-300 rounded-lg bg-white space-y-2">
               {/* 한글 답변 */}

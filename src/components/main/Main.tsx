@@ -8,19 +8,19 @@ const Main: React.FC = () => {
         <div className="flex flex-col gap-4">
           <a
             href="/faqs"
-            className="w-full bg-pink-200 text-gray-600 font-semibold text-xl p-2 rounded-md transition-colors duration-300 text-center"
+            className="w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 text-center"
           >
             FAQ로 이동
           </a>
           <a
             href="/logs"
-            className="w-full bg-pink-200 text-gray-600 font-semibold text-xl p-2 rounded-md transition-colors duration-300 text-center"
+            className="w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 text-center"
           >
             로그로 이동
           </a>
           <a
             href="/logs/analytics"
-            className="w-full bg-pink-200 text-gray-600 font-semibold text-xl p-2 rounded-md transition-colors duration-300 text-center"
+            className="w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 text-center"
           >
             로그 분석 페이지로 이동
           </a>

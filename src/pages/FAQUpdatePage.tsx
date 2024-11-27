@@ -10,10 +10,7 @@ const FAQUpdatePage: React.FC = () => {
   return (
     <ProtectedPage>
     <div>
-      {/* 공통 헤더 */}
       <Header />
-
-      {/* 공통 콘텐츠 영역*/}
       <main>
       {id ? <FAQUpdate faq_id={id} /> : <p>FAQ ID가 제공되지 않았습니다.</p>}
       </main>

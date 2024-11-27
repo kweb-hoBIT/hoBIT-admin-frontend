@@ -1,22 +1,19 @@
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-
+import { useParams } from 'react-router-dom';
+import ProtectedPage from '../components/ProtectedPage';
 import Header from '../components/Header';
+import FAQLogDetail from '../components/log/FAQLogDetail';
 
 const FAQLogDetailPage: React.FC = () => {
-  // Redux 상태 예시 (필요 시 사용)
-  const isEmpty = useSelector((state: RootState) => state.input?.isEmpty);
-
+  const { id } = useParams<{ id: string }>();
   return (
+    <ProtectedPage>
     <div>
-      {/* 공통 헤더 */}
       <Header />
-
-      {/* 공통 콘텐츠 영역*/}
       <main>
-
+      {id ? <FAQLogDetail faq_log_id={id} /> : <p>FAQ ID가 제공되지 않았습니다.</p>}
       </main>
     </div>
+    </ProtectedPage>
   );
 };
 

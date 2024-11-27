@@ -16,10 +16,10 @@ const FAQDetail: React.FC<FAQUpdateProps> = ({ faq_id }) => {
   const [subcategory_en, setSubcategoryEn] = useState<string>('');
   const [question_ko, setQuestionKo] = useState<string>('');
   const [question_en, setQuestionEn] = useState<string>('');
-  const [answersKo, setAnswersKo] = useState<
+  const [answer_ko, setAnswersKo] = useState<
     { answer: string; url: string; email: string; phone: string }[]
   >([]);
-  const [answersEn, setAnswersEn] = useState<
+  const [answer_en, setAnswersEn] = useState<
     { answer: string; url: string; email: string; phone: string }[]
   >([]);
   const [manager, setManager] = useState<string>('');
@@ -71,8 +71,8 @@ const FAQDetail: React.FC<FAQUpdateProps> = ({ faq_id }) => {
       subcategory_en={subcategory_en}
       question_ko={question_ko}
       question_en={question_en}
-      answersKo={answersKo}
-      answersEn={answersEn}
+      answer_ko={answer_ko}
+      answer_en={answer_en}
       manager={manager}
     />
   );
