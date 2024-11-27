@@ -23,23 +23,29 @@ const Header: React.FC = () => {
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
 
   return (
-    <header className="bg-pink-200 p-4 flex justify-between items-center">
+    <header className="bg-crimson p-4 flex justify-between items-center">
       <div className="text-2xl font-semibold">
-        <Link to="/main" className="text-gray-600 hover:text-gray-800">
+        {isAuthPage ? (
+          <span className="text-white">
+            hoBIT
+          </span>
+        ):(
+        <Link to="/main" className="text-white hover:text-gray-600">
           hoBIT
         </Link>
+        )}
       </div>
       <nav className="flex items-center gap-4 relative">
         {!isAuthPage && (
           <>
-            <Link to="/faqs" className="text-gray-600 hover:text-gray-800">
+            <Link to="/faqs" className="text-crimson hover:text-gray-600">
               FAQ
             </Link>
-            <Link to="/logs" className="text-gray-600 hover:text-gray-800">
+            <Link to="/logs" className="text-crimson hover:text-gray-600">
               LOG
             </Link>
             <div className="relative">
-              <button onClick={togglePopup} className="text-gray-600 hover:text-gray-800">
+              <button onClick={togglePopup} className="text-crimson hover:text-gray-600">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -62,12 +68,12 @@ const Header: React.FC = () => {
               </button>
               {showPopup && (
                 <div
-                  className="absolute right-0 top-10 bg-pink-100 border border-gray-300 rounded-lg shadow-md p-4 w-40"
+                  className="absolute right-0 top-10 bg-crimson border border-gray-300 rounded-lg shadow-md p-4 w-40"
                   style={{
                     zIndex: 1000, // 팝업을 다른 요소보다 위로 표시
                   }}
                 >
-                  <p className="text-gray-700 font-semibold mb-2">
+                  <p className="text-white font-semibold mb-2">
                     {username ? `${username}님 반갑습니다` : '반갑습니다'}
                   </p>
                   <div className="mb-2">

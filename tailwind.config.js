@@ -14,6 +14,13 @@ module.exports = {
         '2extralight': ['Freesentation-2ExtraLight', 'sans-serif'],
         '1thin': ['Freesentation-1Thin', 'sans-serif'],
       },
+      colors: {
+        crimson: {
+          DEFAULT: '#862633',
+          light: '#9b2d40',
+          dark: '#6e202b',
+        }
+      }
     },
   },
   plugins: [],

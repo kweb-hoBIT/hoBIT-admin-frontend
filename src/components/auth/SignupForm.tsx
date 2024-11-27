@@ -97,7 +97,7 @@ const SignupForm: React.FC<{
           <Button 
             type="submit" 
             children="회원가입"
-            className="w-full bg-pink-200 text-gray-600 font-semibold text-xl p-2 rounded-md transition-colors duration-300"
+            className="w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300"
           />
         </form>
         <div className="mt-4 text-center">
