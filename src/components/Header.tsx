@@ -25,7 +25,9 @@ const Header: React.FC = () => {
   return (
     <header className="bg-pink-200 p-4 flex justify-between items-center">
       <div className="text-2xl font-semibold">
-        hoBIT
+        <Link to="/main" className="text-gray-600 hover:text-gray-800">
+          hoBIT
+        </Link>
       </div>
       <nav className="flex items-center gap-4 relative">
         {!isAuthPage && (
@@ -59,17 +61,20 @@ const Header: React.FC = () => {
                 </svg>
               </button>
               {showPopup && (
-                <div className="absolute right-0 top-10 bg-pink-100 border border-gray-300 rounded-lg shadow-md p-4 w-40">
+                <div
+                  className="absolute right-0 top-10 bg-pink-100 border border-gray-300 rounded-lg shadow-md p-4 w-40"
+                  style={{
+                    zIndex: 1000, // 팝업을 다른 요소보다 위로 표시
+                  }}
+                >
                   <p className="text-gray-700 font-semibold mb-2">
                     {username ? `${username}님 반갑습니다` : '반갑습니다'}
                   </p>
                   <div className="mb-2">
-                    <Logout
-                    />
+                    <Logout />
                   </div>
                   <div className="mb-2">
-                    <DeleteAccount
-                    />
+                    <DeleteAccount />
                   </div>
                 </div>
               )}

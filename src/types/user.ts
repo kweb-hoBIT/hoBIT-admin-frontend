@@ -1,6 +1,8 @@
 export type LoginRequest = {
-  email: string;
-  password: string;
+  body: {
+    email: string;
+    password: string;
+  }
 };
 
 export type LoginResponse = {
@@ -15,11 +17,13 @@ export type LoginResponse = {
 };
 
 export type SignupRequest = {
-  email: string;
-  password: string;
-  username: string;
-  phone_num: string;
-  invitationKey: string;
+  body: {
+    email: string;
+    password: string;
+    username: string;
+    phone_num: string;
+    invitationKey: string;
+  }
 };
 
 export type SignupResponse = {
@@ -28,7 +32,9 @@ export type SignupResponse = {
 };
 
 export type NewAccessTokenRequest = {
-  refreshToken: string;
+  body: {
+    refreshToken: string;
+  }
 }
 
 export type NewAccessTokenResponse = {
@@ -41,8 +47,11 @@ export type NewAccessTokenResponse = {
 
 
 export type DeleteAccountReqeust = {
-  status: string
-  user_id: string
+  params: {
+    user_id: string
+  }
+  body: {
+  }
 }
 
 export type DeleteAccountResponse = {

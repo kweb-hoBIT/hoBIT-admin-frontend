@@ -10,7 +10,7 @@ const LoginPage: React.FC = () => {
   return (
     <div>
       <Header />
-      <main className="flex justify-center items-center h-screen">
+      <main>
         <Login />
       </main>
     </div>

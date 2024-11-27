@@ -1,16 +1,73 @@
-import { LoginRequest, LoginResponse, SignupRequest, SignupResponse, NewAccessTokenRequest, NewAccessTokenResponse, DeleteAccountReqeust, DeleteAccountResponse } from './user';
-import { FaqDeleteResponse, FaqDeleteRequest, FaqGetRequest, FaqGetResponse, FaqPostRequest, FaqPostResponse, FaqPutRequest, FaqTranslateRequest, FaqTranslateResponse } from './faq';
+import {
+  LoginRequest,
+  LoginResponse,
+  SignupRequest,
+  SignupResponse,
+  NewAccessTokenRequest,
+  NewAccessTokenResponse,
+  DeleteAccountReqeust,
+  DeleteAccountResponse,
+} from './user';
 
-export type HobitAdminApiRequest =
+import {
+  CreateFAQRequest,
+  CreateFAQResponse,
+  GetAllFAQRequest,
+  GetAllFAQResponse,
+  GetFAQRequest,
+  GetFAQResponse,
+  DeleteFAQRequest,
+  DeleteFAQResponse,
+  UpdateFAQRequest,
+  UpdateFAQResponse,
+  TranslateFAQRequest,
+  TranslateFAQResponse,
+} from './faq';
+
+import {
+  GetAllQuestionLogRequest,
+  GetAllQuestionLogResponse,
+  FrequencyRequest,
+  FrequencyResponse,
+  FeedbackRequest,
+  FeedbackResponse,
+  LanguageRequest,
+  LanguageResponse,
+} from './questionLog'
+
+import {
+  GetAllFAQLogRequest,
+  GetAllFAQLogResponse,
+  GetFAQLogRequest,
+  GetFAQLogResponse,
+  CompareFAQLogRequest,
+  CompareFAQLogResponse,
+} from './faqLog'
+
+export type HobitAdminGetApiRequest =
+  | GetAllFAQRequest
+  | GetFAQRequest
+  | GetAllQuestionLogRequest
+  | FrequencyRequest
+  | FeedbackRequest
+  | LanguageRequest
+  | GetAllFAQLogRequest
+  | GetFAQLogRequest
+  | CompareFAQLogRequest;
+
+export type HobitAdminPostApiRequest =
   | LoginRequest
   | SignupRequest
   | NewAccessTokenRequest
+  | CreateFAQRequest
+  | TranslateFAQRequest;
+
+export type HobitAdminPutApiRequest =
+  | UpdateFAQRequest;
+
+export type HobitAdminDeleteApiRequest =
   | DeleteAccountReqeust
-  | FaqGetRequest
-  | FaqPostRequest
-  | FaqPutRequest
-  | FaqTranslateRequest
-  | FaqDeleteRequest;
+  | DeleteFAQRequest;
 
 
 export type HobitAdminApiResponse =
@@ -18,11 +75,19 @@ export type HobitAdminApiResponse =
   | SignupResponse
   | NewAccessTokenResponse
   | DeleteAccountResponse
-  | FaqGetResponse
-  | FaqPostResponse
-  | FaqPostResponse
-  |FaqTranslateResponse
-  | FaqDeleteResponse;
+  | CreateFAQResponse
+  | GetAllFAQResponse
+  | GetFAQResponse
+  | DeleteFAQResponse
+  | UpdateFAQResponse
+  | TranslateFAQResponse
+  | GetAllQuestionLogResponse
+  | FrequencyResponse
+  | FeedbackResponse
+  | LanguageResponse
+  | GetAllFAQLogResponse
+  | GetFAQLogResponse
+  | CompareFAQLogResponse;
 
 export type ApiResponse<P> = {
   error: ApiErrorPayload | null;

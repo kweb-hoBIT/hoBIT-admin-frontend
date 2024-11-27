@@ -11,7 +11,7 @@ const SignupPage: React.FC = () => {
     <div>
       <Header />
       <main>
-      <main className="flex justify-center items-center h-screen">
+      <main>
         <Signup/>
       </main>
       </main>

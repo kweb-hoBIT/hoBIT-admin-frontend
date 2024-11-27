@@ -15,7 +15,7 @@ interface ProtectedPageProps {
 const ProtectedPage: React.FC<ProtectedPageProps> = ({ children }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const mutateNewAccessToken = useHobitMutatePostApi<NewAccessTokenRequest, NewAccessTokenResponse>('auth/refresh');
+  const NewAccessTokenApi = useHobitMutatePostApi<NewAccessTokenRequest, NewAccessTokenResponse>('auth/refresh');
 
   // Redux에서 인증 상태 가져오기
   const { accessToken, refreshToken } = useSelector((state: RootState) => selectAuth(state));
@@ -28,15 +28,16 @@ const ProtectedPage: React.FC<ProtectedPageProps> = ({ children }) => {
           const decodedAccessToken: any = jwtDecode(accessToken);
           const decodedRefreshToken: any = jwtDecode(refreshToken);
           const currentTime = Date.now() / 1000;
-          console.log(decodedAccessToken.exp, currentTime)
-
+          
           if (decodedAccessToken.exp < currentTime) {
             if (decodedRefreshToken.exp < currentTime) {
               // 리프레시 토큰도 만료되었으면 로그인 페이지로 이동
               navigate('/login');
             } else {
               // 리프레시 토큰을 사용하여 새로운 accessToken을 요청
-              const response = await mutateNewAccessToken({ refreshToken });
+              const response = await NewAccessTokenApi({ 
+                body : { refreshToken }
+              });
 
               if (response.payload?.status === 'success') {
                 const { accessToken } = response.payload.data ?? {};
@@ -57,7 +58,7 @@ const ProtectedPage: React.FC<ProtectedPageProps> = ({ children }) => {
     };
 
     checkTokenExpiration();
-  }, [accessToken, refreshToken, navigate, mutateNewAccessToken]);
+  }, [accessToken, refreshToken, navigate, NewAccessTokenApi]);
 
   return accessToken ? <>{children}</> : null; // 인증된 사용자만 children을 렌더링
 };

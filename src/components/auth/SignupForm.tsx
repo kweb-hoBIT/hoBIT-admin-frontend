@@ -35,7 +35,7 @@ const SignupForm: React.FC<{
   onSubmit,
 }) => {
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="flex justify-center items-center min-h-screen p-1 rounded-3xl max-w-2xl mx-auto space-y-8">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-semibold mb-4 text-center">회원가입</h2>
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
@@ -49,7 +49,7 @@ const SignupForm: React.FC<{
             placeholder="이메일을 입력하세요"
             className="w-full p-2 border border-gray-300 rounded-md text-base"
           />
-            <InputField
+          <InputField
             id="password"
             label="비밀번호"
             type="password"
@@ -100,6 +100,14 @@ const SignupForm: React.FC<{
             className="w-full bg-pink-200 text-gray-600 font-semibold text-xl p-2 rounded-md transition-colors duration-300"
           />
         </form>
+        <div className="mt-4 text-center">
+          <a
+            href="/login"
+            className="text-indigo-600 hover:underline text-lg font-medium"
+          >
+            이미 계정이 있나요? 로그인
+          </a>
+        </div>
       </div>
     </div>
   );
