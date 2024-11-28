@@ -9,15 +9,10 @@ import DeleteAccount from './auth/DeleteAccount'; // DeleteAccount 컴포넌트 
 const Header: React.FC = () => {
   const { username } = useSelector((state: RootState) => selectAuth(state));
   const [showPopup, setShowPopup] = useState(false);
-  const [showDeleteAccount, setShowDeleteAccount] = useState(false); // 회원탈퇴 팝업 상태 추가
   const location = useLocation();
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
-  };
-
-  const toggleDeleteAccountPopup = () => {
-    setShowDeleteAccount(!showDeleteAccount);
   };
 
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';

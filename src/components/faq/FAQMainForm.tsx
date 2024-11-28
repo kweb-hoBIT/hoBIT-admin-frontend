@@ -10,7 +10,7 @@ interface FAQMainFormProps {
 const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -55,7 +55,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
     <div className="p-6 bg-gray-50">
       <h4 className="text-2xl font-bold mb-6 text-gray-800">FAQ 리스트</h4>
       {currentItems.map((faq) => (
-        <div key={faq.faq_id} className="relative bg-red-100 p-4 mb-3 rounded-lg">
+        <div key={faq.faq_id} className="relative bg-gray-200 p-4 mb-3 rounded-lg">
           {/* 수정 버튼 */}
           <button
             onClick={() => handleEditClick(String(faq.faq_id))}
@@ -119,7 +119,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
               key={page}
               onClick={() => handlePageClick(page)}
               className={`px-3 py-2 text-sm font-semibold rounded-md ${
-                currentPage === page ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700'
+                currentPage === page ? 'bg-crimson text-white' : 'bg-gray-200 text-gray-700'
               }`}
             >
               {page}

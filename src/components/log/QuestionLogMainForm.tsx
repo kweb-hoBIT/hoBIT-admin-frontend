@@ -7,7 +7,7 @@ interface QuestionLogMainFormProps {
 
 const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -41,7 +41,7 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
     <div className="p-6 bg-gray-50">
       <h4 className="text-2xl font-bold mb-6 text-gray-800">유저 로그 리스트</h4>
       {currentItems.map((log) => (
-        <div key={log.question_log_id} className="relative bg-red-100 p-4 mb-3 rounded-lg shadow-sm">
+        <div key={log.question_log_id} className="relative bg-gray-200 p-4 mb-3 rounded-lg shadow-sm">
           <div className="mb-2">
             <span className="mb-1 text-m text-gray-600"><strong>유저 로그 ID: {log.question_log_id}</strong></span>
           </div>
@@ -85,7 +85,7 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
               key={page}
               onClick={() => handlePageClick(page)}
               className={`px-3 py-2 text-sm font-semibold rounded-md ${
-                currentPage === page ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700'
+                currentPage === page ? 'bg-crimson text-white' : 'bg-gray-200 text-gray-700'
               }`}
             >
               {page}
