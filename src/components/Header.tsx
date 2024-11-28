@@ -70,10 +70,10 @@ const Header: React.FC = () => {
                 <div
                   className="absolute right-0 top-10 bg-white border border-gray-300 rounded-lg shadow-md p-4 w-40"
                   style={{
-                    zIndex: 1000, // 팝업을 다른 요소보다 위로 표시
+                    zIndex: 1000,
                   }}
                 >
-                  <p className="text-white font-semibold mb-2">
+                  <p className="text-black font-semibold mb-2">
                     {username ? `${username}님 반갑습니다` : '반갑습니다'}
                   </p>
                   <div className="mb-2">
