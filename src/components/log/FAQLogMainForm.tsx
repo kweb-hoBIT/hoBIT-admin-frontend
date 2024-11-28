@@ -9,7 +9,7 @@ interface FAQLogMainFormProps {
 const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
   const navigate = useNavigate(); // useNavigate 훅 사용
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -49,7 +49,7 @@ const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
       {currentItems.map((log) => (
         <div
           key={log.faq_log_id}
-          className="relative bg-red-100 p-4 mb-3 rounded-lg shadow-sm"
+          className="relative bg-gray-200 p-4 mb-3 rounded-lg shadow-sm"
         >
           {/* FAQLog ID 클릭 이벤트 추가 */}
           <div
@@ -62,7 +62,7 @@ const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
           </div>
           <div className="flex flex-col">
             <div className="mb-1 text-sm text-gray-600">
-              <strong>수정한 유저:</strong> {log.username}
+              <strong>수정 유저:</strong> {log.username}
             </div>
             <div className="mb-1 text-sm text-gray-600">
               <strong>FAQ ID:</strong> {log.faq_id}
@@ -77,10 +77,10 @@ const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
               <strong>질문:</strong> {log.faq_question}
             </div>
             <div className="mb-1 text-sm text-gray-600">
-              <strong>액션 타입:</strong> {log.action_type}
+              <strong>변경 목적:</strong> {log.action_type}
             </div>
             <div className="mb-1 text-sm text-gray-600">
-              <strong>생성일:</strong> {formatDateToKST(log.created_at)}
+              <strong>변경 시각:</strong> {formatDateToKST(log.created_at)}
             </div>
           </div>
         </div>
@@ -103,7 +103,7 @@ const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
               key={page}
               onClick={() => handlePageClick(page)}
               className={`px-3 py-2 text-sm font-semibold rounded-md ${
-                currentPage === page ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700'
+                currentPage === page ? 'bg-crimson text-white' : 'bg-gray-200 text-gray-700'
               }`}
             >
               {page}
