@@ -56,8 +56,8 @@ const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
             className="mb-2 cursor-pointer"
             onClick={() => handleLogClick(String(log.faq_log_id))}
           >
-            <span className="text-lg text-gray-500 hover:underline">
-              FAQLog ID: {log.faq_log_id}
+            <span className="mb-1 text-m text-gray-600">
+            <strong>관리자 로그 ID: {log.faq_log_id}</strong>
             </span>
           </div>
           <div className="flex flex-col">

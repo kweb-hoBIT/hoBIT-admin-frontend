@@ -69,18 +69,14 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
             <FAQDelete faq_id={String(faq.faq_id)} onSuccess={() => window.location.reload()} />
           </div>
 
-          <div className="mb-2">
-            <span className="text-lg text-gray-500">FAQ ID: {faq.faq_id}</span>
-          </div>
-
-          {/* Question 부분 클릭 이벤트 추가 */}
+          {/* FAQ ID 클릭 이벤트 추가 */}
           <div
             className="mb-2 cursor-pointer"
             onClick={() => handleDetailClick(String(faq.faq_id))}
           >
-            <h5 className="text-lg font-semibold text-gray-800 hover:underline">
-              {faq.question_ko}
-            </h5>
+            <span className="mb-1 text-m text-gray-600">
+            <strong>FAQ ID: {faq.faq_id}</strong>
+            </span>
           </div>
 
           <div className="flex flex-col">
@@ -89,6 +85,9 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
             </div>
             <div className="mb-1 text-sm text-gray-600">
               <strong>하위 카테고리:</strong> {faq.subcategory_ko}
+            </div>
+            <div className="mb-1 text-sm text-gray-600">
+              <strong>질문:</strong> {faq.question_ko}
             </div>
             <div className="mb-1 text-sm text-gray-600">
               <strong>관리자:</strong> {faq.manager}
