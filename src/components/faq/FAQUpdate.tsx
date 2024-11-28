@@ -66,7 +66,35 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
     setAnswersEn([...answersEn, { answer: '', url: '', email: '', phone: '' }]);
   };
 
+  const handleDeleteAnswer = async (index: number) => {
+    if (answersKo.length === 1) {
+      alert('하나 이상의 답변을 입력해야 합니다!')
+    } else {
+      setAnswersKo(answersKo.filter((_, i) => i !== index));
+      setAnswersEn(answersEn.filter((_, i) => i !== index));
+    }
+  }
+
   const handleUpdate = async () => {
+    if (
+      !maincategory_ko ||
+      !maincategory_en ||
+      !subcategory_ko ||
+      !subcategory_en ||
+      !question_ko ||
+      !question_en ||
+      !manager ||
+      answersKo.some(
+        (ans) => !ans.answer || !ans.url || !ans.email || !ans.phone
+      ) ||
+      answersEn.some(
+        (ans) => !ans.answer || !ans.url || !ans.email || !ans.phone
+      )
+    ) {
+      alert('모든 필드를 채워주세요.');
+      return;
+    }
+
     try {
       const response = await FAQUpdateApi({
         params: { faq_id },
@@ -122,6 +150,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
       setManager={setManager}
       handleAddAnswer={handleAddAnswer}
       handleUpdate={handleUpdate}
+      handleDeleteAnswer={handleDeleteAnswer}
     />
   );
 };

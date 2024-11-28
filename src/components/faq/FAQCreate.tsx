@@ -17,13 +17,22 @@ const FAQCreate: React.FC = () => {
   const [answersKo, setAnswersKo] = useState<{ answer: string; url: string; email: string; phone: string }[]>([{ answer: '', url: '', email: '', phone: '' }]);
   const [answersEn, setAnswersEn] = useState<{ answer: string; url: string; email: string; phone: string }[]>([{ answer: '', url: '', email: '', phone: '' }]);
   const [manager, setManager] = useState<string>('');
-  
+
   const FAQCreateApi = useHobitMutatePostApi<CreateFAQRequest, CreateFAQResponse>('faqs');
 
   const handleAddAnswer = () => {
     setAnswersKo([...answersKo, { answer: '', url: '', email: '', phone: '' }]);
     setAnswersEn([...answersEn, { answer: '', url: '', email: '', phone: '' }]);
   };
+
+  const handleDeleteAnswer = async (index: number) => {
+    if (answersKo.length === 1) {
+      alert('하나 이상의 답변을 입력해야 합니다!')
+    } else {
+      setAnswersKo(answersKo.filter((_, i) => i !== index));
+      setAnswersEn(answersEn.filter((_, i) => i !== index));
+    }
+  }
 
   const handleSubmit = async () => {
     if (
@@ -47,7 +56,7 @@ const FAQCreate: React.FC = () => {
 
     try {
       const response = await FAQCreateApi({
-        body : {
+        body: {
           user_id: Number(user_id),
           maincategory_ko: maincategory_ko,
           maincategory_en: maincategory_en,
@@ -58,7 +67,7 @@ const FAQCreate: React.FC = () => {
           answer_ko: answersKo,
           answer_en: answersEn,
           manager
-      }
+        }
       });
 
       if (response.payload?.status === 'success') {
@@ -104,6 +113,7 @@ const FAQCreate: React.FC = () => {
       setManager={setManager}
       handleAddAnswer={handleAddAnswer}
       handleSubmit={handleSubmit}
+      handleDeleteAnswer={handleDeleteAnswer}
     />
   );
 };
