@@ -43,7 +43,7 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
       {currentItems.map((log) => (
         <div key={log.question_log_id} className="relative bg-red-100 p-4 mb-3 rounded-lg shadow-sm">
           <div className="mb-2">
-            <span className="text-lg text-gray-500">QuestionLog ID: {log.question_log_id}</span>
+            <span className="mb-1 text-m text-gray-600"><strong>유저 로그 ID: {log.question_log_id}</strong></span>
           </div>
           <div className="flex flex-col">
             <div className="mb-1 text-sm text-gray-600">
