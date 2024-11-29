@@ -18,7 +18,6 @@ import LogsPage from './pages/LogsPage';
 import FAQLogDetailPage from './pages/FAQLogDetailPage';
 import LogAnalyticsPage from './pages/LogAnalyticsPage';
 
-
 const queryClient = new QueryClient();
 
 const App: React.FC = () => {
@@ -53,6 +52,5 @@ const App: React.FC = () => {
     </Provider>
   );
 };
-
 
 export default App;

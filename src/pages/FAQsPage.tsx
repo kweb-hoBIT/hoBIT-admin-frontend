@@ -5,12 +5,12 @@ import FAQFilter from '../components/faq/FAQFilter';
 const FAQsPage: React.FC = () => {
   return (
     <ProtectedPage>
-      <div>
-        <Header />
-        <main>
-          <FAQFilter />
-        </main>
-      </div>
+    <div>
+      <Header />
+      <main>
+        <FAQFilter />
+      </main>
+    </div>
     </ProtectedPage>
   );
 };
