@@ -45,7 +45,7 @@ const LoginForm: React.FC<{
           <Button 
             type="submit" 
             children="로그인"
-            className="w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300"
+            className="w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 hover:bg-crimson-dark"
           />
         </form>
         <div className="mt-4 text-center">
