@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHobitQueryGetApi } from '../../hooks/hobitAdmin';
 import { GetAllFAQRequest, GetAllFAQResponse } from '../../types/faq';
 import FAQMainForm from './FAQMainForm';
+import FAQDelete from './FAQDelete'
 
 interface FAQMainProps {
   filter: string;
@@ -57,6 +58,7 @@ const FAQMain: React.FC<FAQMainProps> = ({ filter, selectedFilter }) => {
   return (
     <div>
       <FAQMainForm faqs={filteredData} />
+      <FAQDelete faq_id="123" />
     </div>
   );
 };

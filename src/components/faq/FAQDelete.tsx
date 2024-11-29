@@ -61,13 +61,13 @@ const FAQDelete: React.FC<FAQDeleteProps> = ({ faq_id, onSuccess }) => {
                 type="button"
                 onClick={handleDeleteFAQ}
                 children="삭제"
-                className="mt-4 w-full text-center bg-red-500 text-white text-xs p-2 rounded-lg hover:bg-red-600"
+                className="mt-4 w-full h-20 text-center bg-red-500 text-white text-xs leading-none p-2 rounded-lg hover:bg-red-600"
               />
               <Button
                 type="button"
                 onClick={togglePopup}
                 children="취소"
-                className="mt-4 w-full text-center bg-gray-300 p-2 rounded-lg"
+                className="mt-4 w-full h-20 text-center bg-gray-300 p-2 rounded-lg"
               />
             </div>
           </div>
