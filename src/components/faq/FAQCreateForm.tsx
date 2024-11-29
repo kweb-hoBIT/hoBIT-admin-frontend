@@ -137,7 +137,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
               <button
                 type="button"
                 onClick={() => handleDeleteAnswer(index)}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg mb-2"
+                className="bg-red-500 text-white px-4 py-2 rounded-lg mb-2 hover:bg-red-600"
               >
                 답변 제거
               </button>

@@ -28,7 +28,7 @@ const FAQDelete: React.FC<FAQDeleteProps> = ({ faq_id, onSuccess }) => {
       if (response.payload?.status === 'success') {
         alert('FAQ가 성공적으로 삭제되었습니다.');
         setShowPopup(false);
-        if (onSuccess) onSuccess(); // 성공 시 콜백 호출
+        if (onSuccess) onSuccess();
       } else {
         setError('FAQ 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
       }
@@ -40,7 +40,7 @@ const FAQDelete: React.FC<FAQDeleteProps> = ({ faq_id, onSuccess }) => {
   // 팝업 토글 함수
   const togglePopup = () => {
     setShowPopup(!showPopup);
-    setError(null); // 팝업 열 때 이전 에러 초기화
+    setError(null);
   };
 
   return (
@@ -61,13 +61,13 @@ const FAQDelete: React.FC<FAQDeleteProps> = ({ faq_id, onSuccess }) => {
                 type="button"
                 onClick={handleDeleteFAQ}
                 children="삭제"
-                className="mt-4 w-full text-center bg-red-500 text-white text-xs p-2 rounded-lg hover:bg-red-600"
+                className="mt-4 w-full h-15 text-center bg-red-500 p-2 rounded-lg hover:bg-red-600"
               />
               <Button
                 type="button"
                 onClick={togglePopup}
                 children="취소"
-                className="mt-4 w-full text-center bg-gray-300 p-2 rounded-lg"
+                className="mt-4 w-full h-15 text-center bg-gray-300 p-2 rounded-lg hover:bg-gray-400"
               />
             </div>
           </div>

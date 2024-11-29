@@ -35,7 +35,7 @@ const Translate: React.FC<TranslateProps> = ({ sourceText, setTargetText }) => {
     <button
       type="button"
       onClick={handleTranslate}
-      className="bg-gray-500 text-white px-4 py-2 rounded-lg mt-2"
+      className="bg-gray-500 text-white px-4 py-2 rounded-lg mt-2 hover:bg-gray-600"
       disabled={loading}
     >
       {loading ? '번역 중...' : '번역하기'}
