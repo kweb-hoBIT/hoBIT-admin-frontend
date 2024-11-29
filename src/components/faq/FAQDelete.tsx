@@ -47,9 +47,9 @@ const FAQDelete: React.FC<FAQDeleteProps> = ({ faq_id, onSuccess }) => {
     <div>
       <Button
         type="button"
-        onClick={togglePopup}
+        onClick={handleDeleteFAQ}
         children="삭제"
-        className="text-sm text-red-600 hover:underline"
+        className="bg-red-500 text-white text-xs px-3 py-1 rounded-md hover:bg-red-600"
       />
       {showPopup && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">

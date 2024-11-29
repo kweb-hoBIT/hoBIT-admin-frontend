@@ -58,7 +58,6 @@ const FAQMain: React.FC<FAQMainProps> = ({ filter, selectedFilter }) => {
   return (
     <div>
       <FAQMainForm faqs={filteredData} />
-      <FAQDelete faq_id="123" />
     </div>
   );
 };
