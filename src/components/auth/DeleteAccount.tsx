@@ -68,13 +68,13 @@ const DeleteAccount: React.FC = () => {
                 type="button"
                 onClick={handleDeleteAccount}
                 children="회원탈퇴"
-                className="mt-4 w-full text-center bg-red-600 text-white p-2 rounded-lg hover:bg-red-700"
+                className="mt-4 w-full text-center bg-red-500 p-2 rounded-lg hover:bg-red-600"
               />
               <Button
                 type="button"
                 onClick={togglePopup}
                 children="닫기"
-                className="mt-4 w-full text-center bg-gray-300 p-2 rounded-lg"
+                className="mt-4 w-full text-center bg-gray-300 p-2 rounded-lg hover:bg-gray-400"
               >
               </Button>
             </div>
