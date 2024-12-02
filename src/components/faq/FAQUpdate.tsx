@@ -5,14 +5,15 @@ import FAQUpdateForm from './FAQUpdateForm';
 import { selectAuth } from '../../redux/authSlice';
 import { GetFAQRequest, GetFAQResponse, UpdateFAQRequest, UpdateFAQResponse } from '../../types/faq';
 import { RootState } from '../../redux/store';
+import { useNavigate } from 'react-router-dom';
 
 interface FAQUpdateProps {
   faq_id: string;
 }
 
 const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
+  const navigate = useNavigate();
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
-
   const [maincategory_ko, setMaincategoryKo] = useState<string>('');
   const [maincategory_en, setMaincategoryEn] = useState<string>('');
   const [subcategory_ko, setSubcategoryKo] = useState<string>('');
@@ -114,6 +115,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
 
       if (response.payload?.status === 'success') {
         alert('FAQ가 성공적으로 수정되었습니다!');
+        navigate('/faqs');
       } else {
         alert('FAQ 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
       }

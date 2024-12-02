@@ -142,8 +142,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                 답변 제거
               </button>
             </div>
-            <input
-              type="text"
+            <textarea
               placeholder="답변을 입력하세요"
               value={answer.answer}
               onChange={(e) =>
@@ -151,7 +150,8 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                   prev.map((ans, i) => (i === index ? { ...ans, answer: e.target.value } : ans))
                 )
               }
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 resize-y"
+              rows={6}
             />
             <Translate
               sourceText={answer.answer}
@@ -164,8 +164,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
               }}
             />
             <label className="block text-lg font-medium text-gray-700 mb-2">Answer (영어)</label>
-            <input
-              type="text"
+            <textarea
               placeholder="Enter Answer"
               value={answersEn[index]?.answer || ''}
               onChange={(e) =>
@@ -173,7 +172,8 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                   prev.map((ans, i) => (i === index ? { ...ans, answer: e.target.value } : ans))
                 )
               }
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 resize-y"
+              rows={6}
             />
             <div className="grid grid-cols-3 gap-4">
               <input
