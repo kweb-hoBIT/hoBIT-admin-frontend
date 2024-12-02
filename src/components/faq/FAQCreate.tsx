@@ -5,8 +5,10 @@ import FAQCreateForm from './FAQCreateForm';
 import { selectAuth } from '../../redux/authSlice';
 import { CreateFAQRequest, CreateFAQResponse } from '../../types/faq';
 import { RootState } from '../../redux/store';
+import { useNavigate } from 'react-router-dom';
 
 const FAQCreate: React.FC = () => {
+  const navigate = useNavigate();
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
   const [maincategory_ko, setMaincategoryKo] = useState<string>('');
   const [maincategory_en, setMaincategoryEn] = useState<string>('');
@@ -82,6 +84,7 @@ const FAQCreate: React.FC = () => {
         setAnswersKo([{ answer: '', url: '', email: '', phone: '' }]);
         setAnswersEn([{ answer: '', url: '', email: '', phone: '' }]);
         setManager('');
+        navigate('/faqs');
       } else {
         alert('FAQ 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
       }
