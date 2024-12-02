@@ -142,8 +142,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
                 답변 제거
               </button>
             </div>
-            <input
-              type="text"
+            <textarea
               placeholder="답변을 입력하세요"
               value={answer.answer}
               onChange={(e) =>
@@ -151,7 +150,8 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
                   prev.map((ans, i) => (i === index ? { ...ans, answer: e.target.value } : ans))
                 )
               }
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 resize-y"
+              rows={3}
             />
             <Translate
               sourceText={answer.answer}
@@ -164,8 +164,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
               }}
             />
             <label className="block text-lg font-medium text-gray-700 mb-2">Answer (영어)</label>
-            <input
-              type="text"
+            <textarea
               placeholder="Enter Answer"
               value={answersEn[index]?.answer || ''}
               onChange={(e) =>
@@ -173,7 +172,8 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
                   prev.map((ans, i) => (i === index ? { ...ans, answer: e.target.value } : ans))
                 )
               }
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 resize-y"
+              rows={3}
             />
             <div className="grid grid-cols-3 gap-4">
               <input
@@ -191,7 +191,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
                 className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
               />
               <input
-                type="email"
+                type="text"
                 placeholder="Email"
                 value={answer.email}
                 onChange={(e) => {
@@ -205,7 +205,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
                 className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
               />
               <input
-                type="tel"
+                type="text"
                 placeholder="Phone"
                 value={answer.phone}
                 onChange={(e) => {
@@ -221,38 +221,35 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
             </div>
           </div>
         ))}
-
         <button
           type="button"
           onClick={handleAddAnswer}
-          className="mt-4 w-full py-2 px-4 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+          className="w-full mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
         >
           답변 추가
         </button>
       </div>
 
-      {/* 관리자 정보 필드 */}
+      {/* 관리자 필드 */}
       <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">관리자 정보</h3>
-        <div>
-          <label className="block text-lg font-medium text-gray-700 mb-2">관리자</label>
-          <input
-            type="text"
-            value={manager}
-            onChange={(e) => setManager(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="관리자 이름을 입력하세요"
-          />
-        </div>
+        <h3 className="text-xl font-bold text-gray-800">관리자</h3>
+        <input
+          type="text"
+          value={manager}
+          onChange={(e) => setManager(e.target.value)}
+          className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          placeholder="관리자명을 입력하세요"
+        />
       </div>
 
       {/* 제출 버튼 */}
-      <div className="flex justify-center">
+      <div className="flex justify-center mt-8">
         <button
+          type="button"
           onClick={handleSubmit}
-          className="py-2 px-6 text-white bg-green-500 rounded-lg hover:bg-green-600"
+          className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600"
         >
-          FAQ 생성
+          제출
         </button>
       </div>
     </form>
