@@ -44,10 +44,10 @@ const FAQCreate: React.FC = () => {
       !question_en ||
       !manager ||
       answersKo.some(
-        (ans) => !ans.answer || !ans.url || !ans.email || !ans.phone
+        (ans) => !ans.answer
       ) ||
       answersEn.some(
-        (ans) => !ans.answer || !ans.url || !ans.email || !ans.phone
+        (ans) => !ans.answer
       )
     ) {
       alert('모든 필드를 채워주세요.');
