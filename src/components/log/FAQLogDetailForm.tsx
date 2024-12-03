@@ -106,18 +106,18 @@ const FAQLogDetailForm: React.FC<FAQLogDetailFormProps> = ({
               return (
                 <div key={index} className="p-4 border border-gray-300 rounded-lg bg-white space-y-2">
                   {/* 한글 답변 */}
-                  <input
-                    type="text"
+                  <textarea
                     value={answer.answer || ''}
                     readOnly
                     className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2"
+                    rows = {6}
                   />
                   {/* 영어 답변 */}
-                  <input
-                    type="text"
+                  <textarea
                     value={answerEn.answer || ''}
                     readOnly
                     className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2"
+                    rows = {6}
                   />
 
                   {/* 공통 필드 (URL, 이메일, 전화번호) */}
@@ -224,18 +224,18 @@ const FAQLogDetailForm: React.FC<FAQLogDetailFormProps> = ({
               return (
                 <div key={index} className="p-4 border border-gray-300 rounded-lg bg-white space-y-2">
                   {/* 한글 답변 */}
-                  <input
-                    type="text"
+                  <textarea
                     value={answer.answer || ''}
                     readOnly
                     className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2"
+                    rows = {6}
                   />
                   {/* 영어 답변 */}
-                  <input
-                    type="text"
+                  <textarea
                     value={answerEn.answer || ''}
                     readOnly
                     className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2"
+                    rows = {6}
                   />
 
                   {/* 공통 필드 (URL, 이메일, 전화번호) */}

@@ -69,7 +69,14 @@ const Header: React.FC = () => {
                   }}
                 >
                   <p className="text-black font-semibold mb-2">
-                    {username ? `${username}님 반갑습니다` : '반갑습니다'}
+                    {username ? (
+                      <>
+                        {username}님<br />
+                        반갑습니다
+                      </>
+                    ) : (
+                      '반갑습니다'
+                    )}
                   </p>
                   <div className="mb-2">
                     <Logout />
