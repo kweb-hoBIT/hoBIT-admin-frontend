@@ -1,5 +1,5 @@
-import Header from '../components/Header';
-import Login from '../components/auth/Login';
+import Header from '../components/Header/Header';
+import Login from '../components/Login/Login';
 
 const LoginPage: React.FC = () => {
   return (
