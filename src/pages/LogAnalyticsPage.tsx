@@ -1,6 +1,6 @@
-import Header from '../components/Header';
+import Header from '../components/Header/Header';
 import ProtectedPage from '../components/ProtectedPage';
-import AnalyzeFilter from '../components/log/AnalyzeFilter';
+import AnalyzeMain from '../components/AnalyzeMain/AnalyzeMain';
 
 const LogAnalyticsPage: React.FC = () => {
   return (
@@ -8,7 +8,7 @@ const LogAnalyticsPage: React.FC = () => {
     <div>
       <Header />
       <main>
-        <AnalyzeFilter />
+        <AnalyzeMain />
       </main>
     </div>
     </ProtectedPage>

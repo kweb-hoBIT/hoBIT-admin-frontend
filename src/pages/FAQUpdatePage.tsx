@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import ProtectedPage from '../components/ProtectedPage';
-import Header from '../components/Header';
-import FAQUpdate from '../components/faq/FAQUpdate';
+import Header from '../components/Header/Header';
+import FAQUpdate from '../components/FAQUpdate/FAQUpdate';
 
 const FAQUpdatePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();

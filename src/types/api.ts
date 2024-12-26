@@ -38,8 +38,6 @@ import {
 import {
   GetAllFAQLogRequest,
   GetAllFAQLogResponse,
-  GetFAQLogRequest,
-  GetFAQLogResponse,
   CompareFAQLogRequest,
   CompareFAQLogResponse,
 } from './faqLog'
@@ -52,7 +50,6 @@ export type HobitAdminGetApiRequest =
   | FeedbackRequest
   | LanguageRequest
   | GetAllFAQLogRequest
-  | GetFAQLogRequest
   | CompareFAQLogRequest;
 
 export type HobitAdminPostApiRequest =
@@ -86,7 +83,6 @@ export type HobitAdminApiResponse =
   | FeedbackResponse
   | LanguageResponse
   | GetAllFAQLogResponse
-  | GetFAQLogResponse
   | CompareFAQLogResponse;
 
 export type ApiResponse<P> = {

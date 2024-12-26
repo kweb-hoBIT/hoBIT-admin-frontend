@@ -10,7 +10,7 @@ import store from './redux/store';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import MainPage from './pages/MainPage';
-import FAQsPage from './pages/FAQsPage';
+import FAQsPage from './pages/FAQMainPage';
 import FAQDetailPage from './pages/FAQDetailPage';
 import FAQCreatePage from './pages/FAQCreatePage';
 import FAQUpdatePage from './pages/FAQUpdatePage';

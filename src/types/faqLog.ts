@@ -4,7 +4,7 @@ export type GetAllFAQLogRequest = {
 }
 
 export type GetAllFAQLogResponse = {
-  status: string;
+  statusCode: number;
   message: string;
   data: {
     faqLogs: {
@@ -21,31 +21,6 @@ export type GetAllFAQLogResponse = {
   };
 }
 
-export type GetFAQLogRequest = {
-  params: {
-    faq_log_id: string;
-  };
-  query: {};
-}
-
-export type GetFAQLogResponse = {
-  status: string;
-  message: string;
-  data: {
-    faqLog: {
-      faq_log_id: number;
-      user_id: number;
-      username: string;
-      faq_id: number;
-      maincategory_ko: string;
-      subcategory_ko: string;
-      question_ko: string;
-      action_type: string;
-      created_at: string;
-    };
-  };
-}
-
 export type CompareFAQLogRequest = {
   params: {
     faq_log_id: string;
@@ -54,7 +29,7 @@ export type CompareFAQLogRequest = {
 }
 
 export type CompareFAQLogResponse = {
-  status: string;
+  statusCode: number;
   message: string;
   data: {
     prev_faq: {

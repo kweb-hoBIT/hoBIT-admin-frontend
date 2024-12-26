@@ -1,19 +1,18 @@
 import ProtectedPage from '../components/ProtectedPage';
 import Header from '../components/Header/Header';
-import FAQCreate from '../components/FAQCreate/FAQCreate';
+import FAQMain from '../components/FAQMain/FAQMain';
 
-const FAQCreatePage: React.FC = () => {
-
+const FAQsPage: React.FC = () => {
   return (
     <ProtectedPage>
     <div>
       <Header />
       <main>
-        <FAQCreate />
+        <FAQMain />
       </main>
     </div>
     </ProtectedPage>
   );
 };
 
-export default FAQCreatePage;
+export default FAQsPage;

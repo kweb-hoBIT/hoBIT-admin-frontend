@@ -2,7 +2,7 @@ import React from 'react';
 
 const Main: React.FC = () => {
   return (
-    <div className="flex justify-center items-center min-h-screen p-1 rounded-3xl max-w-2xl mx-auto space-y-8">
+    <div className="flex justify-center items-center min-h-screen p-2 rounded-3xl max-w-2xl mx-auto space-y-8">
       <div className="bg-white p-6 rounded-lg w-96">
         <h2 className="text-2xl font-semibold mb-4 text-center">메인 페이지</h2>
         <div className="flex flex-col gap-4">
