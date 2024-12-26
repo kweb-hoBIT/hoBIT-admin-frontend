@@ -28,7 +28,7 @@ const FAQDetail: React.FC<FAQDetailProps> = ({ faq_id }) => {
   useEffect(() => {
     const fetchFAQ = async () => {
       try {
-        if (FAQFetchApi.data?.payload?.status === 'success') {
+        if (FAQFetchApi.data?.payload?.statusCode === 200) {
           const faq = FAQFetchApi.data?.payload?.data?.faq;
           if (faq) {
             setFaqData(faq);

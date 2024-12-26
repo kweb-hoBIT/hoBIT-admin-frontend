@@ -6,13 +6,13 @@ export type LoginRequest = {
 };
 
 export type LoginResponse = {
-  status: string;
+  statusCode: number;
   message: string;          
-  data?: {
-    accessToken?: string;
-    refreshToken?: string;
-    user_id?: string;
-    username?: string;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+    user_id: number;
+    username: string;
   };
 };
 
@@ -27,7 +27,7 @@ export type SignupRequest = {
 };
 
 export type SignupResponse = {
-  status: string;
+  statusCode: number;
   message: string;
 };
 
@@ -38,9 +38,9 @@ export type NewAccessTokenRequest = {
 }
 
 export type NewAccessTokenResponse = {
-  status: string;
+  statusCode: number;
   message: string;
-  data?: {
+  data: {
     accessToken?: string;
   };
 }
@@ -55,8 +55,22 @@ export type DeleteAccountReqeust = {
 }
 
 export type DeleteAccountResponse = {
-  status : string
+  statusCode: number;
   message: string
+}
+
+export type RefreshTokenRequest = {
+  body: {
+    refreshToken: string;
+  }
+}
+
+export type RefreshTokenResponse = {
+  statusCode: number;
+  message: string;
+  data: {
+    accessToken?: string;
+  };
 }
 
 

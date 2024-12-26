@@ -80,9 +80,8 @@ const FAQCreate: React.FC = () => {
         body: newFAQ,
       });
 
-      if (response.payload?.status === 'success') {
+      if (response.payload?.statusCode === 201) {
         alert('FAQ가 성공적으로 생성되었습니다!');
-        // 폼 초기화
         setnewFAQ({
           user_id: user_id ? Number(user_id) : 0,
           maincategory_ko: '',
@@ -100,7 +99,6 @@ const FAQCreate: React.FC = () => {
         alert('FAQ 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
       }
     } catch (error) {
-      console.error(error);
       alert('FAQ 생성에 실패했습니다.');
     }
   };

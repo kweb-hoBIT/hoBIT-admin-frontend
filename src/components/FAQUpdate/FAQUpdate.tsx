@@ -34,7 +34,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
   useEffect(() => {
     const fetchFAQ = async () => {
       try {
-        if (FAQFetchApi.data?.payload?.status === 'success') {
+        if (FAQFetchApi.data?.payload?.statusCode === 200) {
           const faq = FAQFetchApi.data?.payload?.data?.faq;
           if (faq) {
             setupdatedFAQ({
@@ -119,7 +119,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
         body: updatedFAQ,
       });
 
-      if (response.payload?.status === 'success') {
+      if (response.payload?.statusCode === 200) {
         alert('FAQ가 성공적으로 수정되었습니다!');
         navigate('/faqs');
       } else {

@@ -29,7 +29,7 @@ const FAQDelete: React.FC<FAQDeleteProps> = ({ faq_id, question_ko, onSuccess })
         body: { user_id: Number(user_id) },
       });
 
-      if (response.payload?.status === 'success') {
+      if (response.payload?.statusCode === 200) {
         alert('FAQ가 성공적으로 삭제되었습니다.');
         setShowPopup(false);
         if (onSuccess) onSuccess();

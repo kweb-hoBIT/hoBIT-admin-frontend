@@ -38,7 +38,7 @@ const FAQLogDetail: React.FC<FAQLogDetailProps> = ({ faq_log_id }) => {
   });
 
   useEffect(() => {
-    if (!FAQCompareApi.isLoading && FAQCompareApi.data?.payload?.status === "success") {
+    if (!FAQCompareApi.isLoading && FAQCompareApi.data?.payload?.statusCode === 200) {
       const data = FAQCompareApi.data.payload.data;
       setPrevFaq({
         ...data.prev_faq,

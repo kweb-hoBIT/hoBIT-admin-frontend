@@ -9,7 +9,7 @@ interface TranslateProps {
 
 const Translate: React.FC<TranslateProps> = ({ sourceText, setTargetText }) => {
   const [loading, setLoading] = useState(false);
-  const translateFAQApi = useHobitMutatePostApi<TranslateFAQRequest, TranslateFAQResponse>('translate');
+  const translateFAQApi = useHobitMutatePostApi<TranslateFAQRequest, TranslateFAQResponse>('faqs/translate');
 
   const handleTranslate = async () => {
     setLoading(true);
@@ -18,7 +18,7 @@ const Translate: React.FC<TranslateProps> = ({ sourceText, setTargetText }) => {
         body :{ text: sourceText }
       });
 
-      if (response.payload?.status === 'success') {
+      if (response.payload?.statusCode === 200) {
         const translatedText = response.payload.data?.translatedText ?? '';
         setTargetText(translatedText);
       } else {

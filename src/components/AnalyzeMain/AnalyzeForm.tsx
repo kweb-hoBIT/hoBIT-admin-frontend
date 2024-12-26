@@ -10,7 +10,7 @@ interface AnalyzeFormProps {
 const AnalyzeForm: React.FC<AnalyzeFormProps> = ({ analyzeData, searchSubject, error }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 1;
-
+  
   const data = analyzeData?.data?.logData?.groupData || [];
 
   const startIndex = currentPage * itemsPerPage;
@@ -35,6 +35,8 @@ const AnalyzeForm: React.FC<AnalyzeFormProps> = ({ analyzeData, searchSubject, e
     question_ko: 'FAQ 질문',
     count: '횟수',
     score_average: '평균점수',
+    score_like_count: '좋아요 개수',
+    score_dislike_count: '싫어요 개수',
     ko_frequency: '한국어 빈도',
     en_frequency: '영어 빈도',
   };

@@ -39,7 +39,7 @@ const ProtectedPage: React.FC<ProtectedPageProps> = ({ children }) => {
                 body : { refreshToken }
               });
 
-              if (response.payload?.status === 'success') {
+              if (response.payload?.statusCode === 200) {
                 const { accessToken } = response.payload.data ?? {};
                 if (accessToken) {
                   dispatch(setAccessToken(accessToken));

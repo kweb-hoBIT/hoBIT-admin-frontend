@@ -30,7 +30,7 @@ const DeleteAccount: React.FC = () => {
           params: { user_id: String(user_id) },
           body: {},
         });
-        if (response.payload?.status === 'success') {
+        if (response.payload?.statusCode === 200) {
           dispatch(clearTokens());
           navigate('/login');
           alert('회원 탈퇴가 완료되었습니다.');

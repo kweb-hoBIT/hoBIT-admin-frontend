@@ -31,38 +31,38 @@ const Analyze: React.FC<AnalyzeProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   // 조건에 따라 사용할 API 훅을 설정
-  let queryResult: any;
+  let analyzeApi: any;
   if (searchSubject === 'frequency') {
-    queryResult = useHobitQueryGetApi<FrequencyRequest, FrequencyResponse>(
+    analyzeApi = useHobitQueryGetApi<FrequencyRequest, FrequencyResponse>(
       'questionlogs/frequency', { params: {}, query:{startDate, endDate, period, sortOrder, limit}}
     );
   } else if (searchSubject === 'feedback') {
-    queryResult = useHobitQueryGetApi<FeedbackRequest, FeedbackResponse>(
+    analyzeApi = useHobitQueryGetApi<FeedbackRequest, FeedbackResponse>(
       'questionlogs/feedback',  { params: {}, query:{startDate, endDate, period, sortOrder, limit}}
     );
   } else if (searchSubject === 'language') {
-    queryResult = useHobitQueryGetApi<LanguageRequest, LanguageResponse>(
+    analyzeApi = useHobitQueryGetApi<LanguageRequest, LanguageResponse>(
       'questionlogs/language',  { params: {}, query:{startDate, endDate, period, sortOrder, limit}}
     );
   }
 
   useEffect(() => {
     const fetchanalyzeData = async () => {
-      if (queryResult?.data?.payload?.status === 'success') {
-        setanalyzeData(queryResult.data.payload ?? null);
+      if (analyzeApi?.data?.payload?.statusCode === 200) {
+        setanalyzeData(analyzeApi.data.payload ?? null);
       } else {
         setError('데이터를 가져오는 데 실패했습니다. 다시 시도해주세요.');
       }
     };
 
     if (startDate && endDate) {
-      if (!queryResult?.isLoading && queryResult?.isSuccess) {
+      if (!analyzeApi?.isLoading && analyzeApi?.isSuccess) {
         fetchanalyzeData();
       }
     }
-  }, [searchSubject, period, startDate, endDate, sortOrder, limit, queryResult]);
+  }, [searchSubject, period, startDate, endDate, sortOrder, limit, analyzeApi]);
 
-  if (queryResult?.isLoading) {
+  if (analyzeApi?.isLoading) {
     return <div>데이터를 불러오는 중입니다...</div>;
   }
 

@@ -40,7 +40,7 @@ export type CreateFAQRequest = {
 };
 
 export type CreateFAQResponse = {
-  status: string;
+  statusCode: number;
   message: string;
 };
 
@@ -51,7 +51,7 @@ export type GetAllFAQRequest = {
 }
 
 export type GetAllFAQResponse = {
-  status: string;
+  statusCode: number;
   message: string;
   data : {
     faqs : {
@@ -89,7 +89,7 @@ export type GetFAQRequest = {
 }
 
 export type GetFAQResponse = {
-  status: string;
+  statusCode: number;
   message: string;
   data: {
     faq : {
@@ -131,7 +131,7 @@ export type DeleteFAQRequest = {
 
 
 export type DeleteFAQResponse = {
-  status: string;
+  statusCode: number;
   message: string;
 };
 
@@ -165,7 +165,7 @@ export type UpdateFAQRequest = {
 }
 
 export type UpdateFAQResponse = {
-  status: string;
+  statusCode: number;
   message: string;
 }
 
@@ -176,7 +176,7 @@ export type TranslateFAQRequest = {
 }
 
 export type TranslateFAQResponse = {
-  status: string;
+  statusCode: number;
   message: string;
   data: {
     translatedText: string;

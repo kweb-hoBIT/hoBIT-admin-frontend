@@ -11,12 +11,11 @@ const QuestionLogMain: React.FC = () => {
     params: {},
     query: {},
   });
-  console.log(GetQuestionLogsApi.data?.payload);
 
   // Question 로그 데이터 가져오기
   useEffect(() => {
     const fetchQuestionLogData = async () => {
-      if (GetQuestionLogsApi.data?.payload?.status === 'success') {
+      if (GetQuestionLogsApi.data?.payload?.statusCode === 200) {
         const data = GetQuestionLogsApi.data.payload.data.questionLogs;
         setQuestionLogData(data);
       } else {

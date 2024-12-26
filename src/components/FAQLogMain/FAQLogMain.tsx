@@ -15,7 +15,7 @@ const FAQLogMain: React.FC = () => {
   // FAQ 로그 데이터 가져오기
   useEffect(() => {
     const fetchFAQLogData = async () => {
-      if (GetFAQLogsApi.data?.payload?.status === 'success') {
+      if (GetFAQLogsApi.data?.payload?.statusCode === 200) {
         const data = GetFAQLogsApi.data.payload.data.faqLogs;
         console.log(data);
         setFaqLogData(data);

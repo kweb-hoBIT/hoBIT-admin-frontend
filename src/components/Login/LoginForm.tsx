@@ -1,15 +1,14 @@
 import React from 'react';
+import { LoginRequest, LoginResponse } from '../../types/user';
 
 const LoginForm: React.FC<{
-  email: string;
-  password: string;
+  userData: LoginRequest['body'];
   error: string | null;
   onEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent) => void;
 }> = ({
-  email,
-  password,
+  userData,
   error,
   onEmailChange,
   onPasswordChange,
@@ -28,7 +27,7 @@ const LoginForm: React.FC<{
             <input
               id="email"
               type="email"
-              value={email}
+              value={userData.email}
               onChange={onEmailChange}
               placeholder="이메일을 입력하세요"
               className="w-full p-2 border border-gray-300 rounded-md text-base"
@@ -41,7 +40,7 @@ const LoginForm: React.FC<{
             <input
               id="password"
               type="password"
-              value={password}
+              value={userData.password}
               onChange={onPasswordChange}
               placeholder="비밀번호를 입력하세요"
               className="w-full p-2 border border-gray-300 rounded-md text-base"

@@ -4,7 +4,7 @@ export type GetAllQuestionLogRequest = {
 }
 
 export type GetAllQuestionLogResponse = {
-  status: string;
+  statusCode: number;
   message: string;
   data: {
     questionLogs: {
@@ -33,20 +33,20 @@ export type FrequencyRequest = {
 };
 
 export type FrequencyResponse = {
-  status: string;
+  statusCode: number;
   message: string;          
-  data?: {
-    logData?: {
-      startDate?: string;
-      endDate?: string;
-      groupData?: {
-          startDate?: string;
-          endDate?: string;
-          data?: {
-              rank?: number;
-              faq_id?: number;
-              question_ko?: string;
-              count?: number;
+  data: {
+    logData: {
+      startDate: string;
+      endDate: string;
+      groupData: {
+          startDate: string;
+          endDate: string;
+          data: {
+              rank: number;
+              faq_id: number;
+              question_ko: string;
+              count: number;
           }[];
       }[];
     };
@@ -65,20 +65,22 @@ export type FeedbackRequest = {
 };
 
 export type FeedbackResponse = {
-  status: string;
+  statusCode: number;
   message: string;          
-  data?: {
-    logData?: {
-      startDate?: string;
-      endDate?: string;
-      groupData?: {
-          startDate?: string;
-          endDate?: string;
-          data?: {
-              rank?: number;
-              faq_id?: number;
-              question_ko?: string;
-              count?: number;
+  data: {
+    logData: {
+      startDate: string;
+      endDate: string;
+      groupData: {
+          startDate: string;
+          endDate: string;
+          data: {
+              rank: number;
+              faq_id: number;
+              question_ko: string;
+              score_average: number;
+              score_like_count: number;
+              score_dislike_count: number;
           }[];
       }[];
     };
@@ -97,19 +99,19 @@ export type LanguageRequest = {
 };
 
 export type LanguageResponse = {
-  status: string;
+  statusCode: number;
   message: string;          
-  data?: {
-    logData?: {
-      startDate?: string;
-      endDate?: string;
-      groupData?: {
-        startDate?: string;
-        endDate?: string;
-        data?: {
-          ko_frequency?: number;
-          en_frequency?: number;
-        }
+  data: {
+    logData: {
+      startDate: string;
+      endDate: string;
+      groupData: {
+        startDate: string;
+        endDate: string;
+        data: {
+          ko_frequency: number;
+          en_frequency: number;
+        }[];
       }[];
     }
   };

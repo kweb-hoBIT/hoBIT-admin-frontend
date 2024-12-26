@@ -20,7 +20,7 @@ const FAQList: React.FC<FAQListProps> = ({ filter, selectedFilter }) => {
   // FAQ 데이터 가져오기
   useEffect(() => {
     const fetchFAQData = async () => {
-      if (GetFAQsApi.data?.payload?.status === 'success') {
+      if (GetFAQsApi.data?.payload?.statusCode === 200) {
         const data = GetFAQsApi.data.payload.data.faqs;
         setFaqData(data);
       } else {
