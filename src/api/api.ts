@@ -69,7 +69,7 @@ export async function hobitGetApi<
 export async function hobitPostApi<
   T extends HobitAdminPostApiRequest,
   R extends HobitAdminApiResponse,
->(path: string, req?: T): Promise<ApiResponse<R>> {
+>(path: string, req: T): Promise<ApiResponse<R>> {
   const headers: Record<string, string> = {
     'Content-type': 'application/json',
   };
@@ -82,6 +82,7 @@ export async function hobitPostApi<
         method: 'POST',
         mode: 'cors',
         headers,
+        credentials: 'include',
         body: JSONbig.stringify(body),
       });
     }
