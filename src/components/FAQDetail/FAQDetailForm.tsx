@@ -33,14 +33,14 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
             type="text"
             value={maincategory_ko}
             readOnly
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
           />
           <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Category (English)</label>
           <input
             type="text"
             value={maincategory_en}
             readOnly
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
           />
         </div>
       </div>
@@ -54,14 +54,14 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
             type="text"
             value={subcategory_ko}
             readOnly
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
           />
           <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Subcategory (English)</label>
           <input
             type="text"
             value={subcategory_en}
             readOnly
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
           />
         </div>
       </div>
@@ -75,14 +75,14 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
             type="text"
             value={question_ko}
             readOnly
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
           />
           <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Question (English)</label>
           <input
             type="text"
             value={question_en}
             readOnly
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
           />
         </div>
       </div>
@@ -99,7 +99,7 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
                 placeholder="답변"
                 value={answer.answer}
                 readOnly
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
+                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
                 rows={6}
               />
               {/* 영어 답변 */}
@@ -107,7 +107,7 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
                 placeholder="Answer"
                 value={answerEn.answer || ''}
                 readOnly
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
+                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
                 rows={6}
               />
 
@@ -118,21 +118,21 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
                   placeholder="URL"
                   value={answer.url}
                   readOnly
-                  className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2"
+                  className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500 mb-2"
                 />
                 <input
                   type="email"
                   placeholder="Email"
                   value={answer.email}
                   readOnly
-                  className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2"
+                  className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500 mb-2"
                 />
                 <input
                   type="tel"
                   placeholder="Phone"
                   value={answer.phone}
                   readOnly
-                  className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2"
+                  className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500 mb-2"
                 />
               </div>
             </div>
@@ -149,7 +149,7 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
             type="text"
             value={manager}
             readOnly
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
           />
         </div>
       </div>
