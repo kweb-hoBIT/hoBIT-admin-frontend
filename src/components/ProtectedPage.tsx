@@ -1,10 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { setAccessToken } from '../redux/authSlice';
-import { RootState } from '../redux/store';
 import { useHobitMutatePostApi } from '../hooks/hobitAdmin';
-import { selectAuth } from '../redux/authSlice';
 import { jwtDecode } from 'jwt-decode';
 import { NewAccessTokenRequest, NewAccessTokenResponse } from '../types/user';
 
@@ -13,54 +9,59 @@ interface ProtectedPageProps {
 }
 
 const ProtectedPage: React.FC<ProtectedPageProps> = ({ children }) => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const NewAccessTokenApi = useHobitMutatePostApi<NewAccessTokenRequest, NewAccessTokenResponse>('auth/refresh');
-
-  // Redux에서 인증 상태 가져오기
-  const { accessToken, refreshToken } = useSelector((state: RootState) => selectAuth(state));
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
     const checkTokenExpiration = async () => {
-      if (accessToken && refreshToken) {
-        try {
-          // JWT 디코딩하여 만료 시간 확인
+      const accessToken = document.cookie.replace(
+        /(?:(?:^|.*;\s*)accessToken\s*=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
+
+      try {
+        if (accessToken) {
           const decodedAccessToken: any = jwtDecode(accessToken);
-          const decodedRefreshToken: any = jwtDecode(refreshToken);
           const currentTime = Date.now() / 1000;
-          
+
           if (decodedAccessToken.exp < currentTime) {
-            if (decodedRefreshToken.exp < currentTime) {
-              // 리프레시 토큰도 만료되었으면 로그인 페이지로 이동
+            const response = await NewAccessTokenApi({ body: {} });
+            if (response.payload?.statusCode === 400 || response.payload?.statusCode === 500) {
+              alert("세션이 만료되어 다시 로그인 부탁드립니다.");
+              setIsAuthenticated(false);
               navigate('/login');
             } else {
-              // 리프레시 토큰을 사용하여 새로운 accessToken을 요청
-              const response = await NewAccessTokenApi({ 
-                body : { refreshToken }
-              });
-
-              if (response.payload?.statusCode === 200) {
-                const { accessToken } = response.payload.data ?? {};
-                if (accessToken) {
-                  dispatch(setAccessToken(accessToken));
-                }
-              } else {
-                navigate('/login');
-              }
+              setIsAuthenticated(true);
             }
+          } else {
+            setIsAuthenticated(true);
           }
-        } catch (error) {
-          navigate('/login');
+        } else {
+          const response = await NewAccessTokenApi({ body: {} });
+          if (response.payload?.statusCode === 400 || response.payload?.statusCode === 500) {
+            alert("세션이 만료되어 다시 로그인 부탁드립니다.");
+            setIsAuthenticated(false);
+            navigate('/login');
+          } else {
+            setIsAuthenticated(true);
+          }
         }
-      } else {
+      } catch (error) {
+        setIsAuthenticated(false);
         navigate('/login');
       }
     };
 
     checkTokenExpiration();
-  }, [accessToken, refreshToken, navigate, NewAccessTokenApi]);
+  }, [NewAccessTokenApi]);
 
-  return accessToken ? <>{children}</> : null; // 인증된 사용자만 children을 렌더링
+  if (isAuthenticated === false) {
+    // 인증되지 않은 경우 아무것도 렌더링하지 않음
+    return null;
+  }
+
+  return <>{children}</>; // 인증된 사용자만 자식 컴포넌트를 렌더링
 };
 
 export default ProtectedPage;

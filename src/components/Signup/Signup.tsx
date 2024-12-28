@@ -7,7 +7,7 @@ import SignupForm from './SignupForm';
 import { SignupRequest, SignupResponse } from '../../types/user';
 
 const Signup: React.FC = () => {
-  const [userData, setUserData] = useState< SignupRequest['body'] & { confirmPassword: string }>({
+  const [userData, setUserData] = useState<SignupRequest['body'] & { confirmPassword: string }>({
     email: '',
     password: '',
     confirmPassword: '',
@@ -27,6 +27,12 @@ const Signup: React.FC = () => {
 
     const { email, password, confirmPassword, username, phone_num, invitationKey } = userData;
 
+    // 모든 값이 존재하는지 확인
+    if (!email || !password || !username || !phone_num || !invitationKey) {
+      setError('모든 필드를 입력해주세요.');
+      return;
+    }
+
     // 유효성 검사
     if (password.length < 6) {
       setError('비밀번호는 6자 이상이어야 합니다.');
@@ -43,31 +49,26 @@ const Signup: React.FC = () => {
       return;
     }
 
-    // 모든 값이 존재하는지 확인
-    if (email && password && username && phone_num && invitationKey) {
+    // 회원가입 API 호출
+    try {
       dispatch(sendInputValue(`회원가입 요청: ${email}`));
+      
+      const response = await SignupApi({
+        body: { email, password, username, phone_num, invitationKey }
+      });
 
-      try {
-        // 회원가입 API 호출
-        const response = await SignupApi({
-          body: { email, password, username, phone_num, invitationKey }
-        });
-
-        if (response.payload?.statusCode === 201) {
-          alert('회원가입 성공! 로그인 해주세요.');
-          navigate('/login');
-        } else {
-          if (response.payload?.statusCode === 403) {
-            setError('초대키가 올바르지 않습니다. 다시 확인해주세요.');
-          } else if (response.payload?.statusCode === 400) {
-            setError('이미 존재하는 이메일입니다. 다른 이메일로 시도해주세요.');
-          }
+      if (response.payload?.statusCode === 201) {
+        alert('회원가입 성공! 로그인 해주세요.');
+        navigate('/login');
+      } else {
+        if (response.payload?.statusCode === 403) {
+          setError('초대키가 올바르지 않습니다. 다시 확인해주세요.');
+        } else if (response.payload?.statusCode === 400) {
+          setError('이미 존재하는 이메일입니다. 다른 이메일로 시도해주세요.');
         }
-      } catch {
-        setError('회원가입에 실패했습니다. 다시 시도해주세요.');
       }
-    } else {
-      alert('모든 필드를 입력해주세요.');
+    } catch {
+      setError('회원가입에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
