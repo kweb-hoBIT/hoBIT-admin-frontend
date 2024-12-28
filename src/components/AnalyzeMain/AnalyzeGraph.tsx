@@ -12,8 +12,8 @@ const AnalyzeGraph: React.FC<AnalyzeGraphProps> = ({ searchSubject, currentPageD
       if (searchSubject === 'language') {
         return {
           date: `${item.startDate}`,
-          한국어: parseInt(item.ko_frequency || '0', 10),
-          영어: parseInt(item.en_frequency || '0', 10),
+          한국어: parseInt(item.data[0].ko_frequency || '0', 10),
+          영어: parseInt(item.data[0].en_frequency || '0', 10),
         };
       } else if (searchSubject === 'frequency' && item.data) {
         return item.data.map((subItem: any) => ({
