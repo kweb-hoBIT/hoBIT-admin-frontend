@@ -10,7 +10,6 @@ const FAQLogDetailForm: React.FC<FAQLogDetailFormProps> = ({
   prev_faq,
   new_faq,
 }) => {
-  // 빈 객체를 넣는 대신 빈 문자열로 초기화
   const prevAnswersKo = prev_faq.answer_ko.length > 0 ? prev_faq.answer_ko : [{ answer: '', url: '', email: '', phone: '' }];
   const prevAnswersEn = prev_faq.answer_en.length > 0 ? prev_faq.answer_en : [{ answer: '', url: '', email: '', phone: '' }];
   const newAnswersKo = new_faq.answer_ko.length > 0 ? new_faq.answer_ko : [{ answer: '', url: '', email: '', phone: '' }];
@@ -28,55 +27,37 @@ const FAQLogDetailForm: React.FC<FAQLogDetailFormProps> = ({
           {/* 카테고리 및 질문 필드 */}
           <div>
             <label className="block text-lg font-medium text-gray-700 mb-2">카테고리 (한글)</label>
-            <input
-              type="text"
-              value={prev_faq.maincategory_ko}
-              readOnly
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
-            />
+            <p className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500">
+              <span dangerouslySetInnerHTML={{ __html: prev_faq.maincategory_ko }} />
+            </p>
             <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Category (English)</label>
-            <input
-              type="text"
-              value={prev_faq.maincategory_en}
-              readOnly
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
-            />
+            <p className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500">
+              <span dangerouslySetInnerHTML={{ __html: prev_faq.maincategory_en }} />
+            </p>
           </div>
 
           {/* 서브카테고리 필드 */}
           <div>
             <label className="block text-lg font-medium text-gray-700 mb-2">서브카테고리 (한글)</label>
-            <input
-              type="text"
-              value={prev_faq.subcategory_ko}
-              readOnly
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
-            />
+            <p className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500">
+              <span dangerouslySetInnerHTML={{ __html: prev_faq.subcategory_ko }} />
+            </p>
             <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Subcategory (English)</label>
-            <input
-              type="text"
-              value={prev_faq.subcategory_en}
-              readOnly
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
-            />
+            <p className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500">
+              <span dangerouslySetInnerHTML={{ __html: prev_faq.subcategory_en }} />
+            </p>
           </div>
 
           {/* 질문 필드 */}
           <div>
             <label className="block text-lg font-medium text-gray-700 mb-2">질문 (한글)</label>
-            <input
-              type="text"
-              value={prev_faq.question_ko}
-              readOnly
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
-            />
+            <p className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500">
+              <span dangerouslySetInnerHTML={{ __html: prev_faq.question_ko }} />
+            </p>
             <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Question (English)</label>
-            <input
-              type="text"
-              value={prev_faq.question_en}
-              readOnly
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
-            />
+            <p className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500">
+              <span dangerouslySetInnerHTML={{ __html: prev_faq.question_en }} />
+            </p>
           </div>
 
           {/* FAQ 답변 */}
@@ -87,40 +68,25 @@ const FAQLogDetailForm: React.FC<FAQLogDetailFormProps> = ({
               return (
                 <div key={index} className="p-4 border border-gray-300 rounded-lg bg-white space-y-2">
                   {/* 한글 답변 */}
-                  <textarea
-                    value={answer.answer || ''}
-                    readOnly
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2"
-                    rows = {6}
-                  />
+                  <p className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2">
+                    <span dangerouslySetInnerHTML={{ __html: answer.answer || '' }} />
+                  </p>
                   {/* 영어 답변 */}
-                  <textarea
-                    value={answerEn.answer || ''}
-                    readOnly
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2"
-                    rows = {6}
-                  />
+                  <p className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2">
+                    <span dangerouslySetInnerHTML={{ __html: answerEn.answer || '' }} />
+                  </p>
 
                   {/* 공통 필드 (URL, 이메일, 전화번호) */}
                   <div className="flex space-x-4">
-                    <input
-                      type="text"
-                      value={answer.url || ''}
-                      readOnly
-                      className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2"
-                    />
-                    <input
-                      type="email"
-                      value={answer.email || ''}
-                      readOnly
-                      className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2"
-                    />
-                    <input
-                      type="tel"
-                      value={answer.phone || ''}
-                      readOnly
-                      className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2"
-                    />
+                    <p className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2">
+                      <span dangerouslySetInnerHTML={{ __html: answer.url }} />
+                    </p>
+                    <p className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2">
+                      <span dangerouslySetInnerHTML={{ __html: answer.email }} />
+                    </p>
+                    <p className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2">
+                      <span dangerouslySetInnerHTML={{ __html: answer.phone }} />
+                    </p>
                   </div>
                 </div>
               );
@@ -130,12 +96,9 @@ const FAQLogDetailForm: React.FC<FAQLogDetailFormProps> = ({
           {/* 관리자 정보 */}
           <div>
             <label className="block text-lg font-medium text-gray-700 mb-2">관리자 이름</label>
-            <input
-              type="text"
-              value={prev_faq.manager}
-              readOnly
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
-            />
+            <p className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500">
+              <span dangerouslySetInnerHTML={{ __html: prev_faq.manager }} />
+            </p>
           </div>
         </div>
 
@@ -146,55 +109,37 @@ const FAQLogDetailForm: React.FC<FAQLogDetailFormProps> = ({
           {/* 카테고리 및 질문 필드 */}
           <div>
             <label className="block text-lg font-medium text-gray-700 mb-2">카테고리 (한글)</label>
-            <input
-              type="text"
-              value={new_faq.maincategory_ko}
-              readOnly
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
-            />
+            <p className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500">
+              <span dangerouslySetInnerHTML={{ __html: new_faq.maincategory_ko }} />
+            </p>
             <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Category (English)</label>
-            <input
-              type="text"
-              value={new_faq.maincategory_en}
-              readOnly
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
-            />
+            <p className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500">
+              <span dangerouslySetInnerHTML={{ __html: new_faq.maincategory_en }} />
+            </p>
           </div>
 
           {/* 서브카테고리 필드 */}
           <div>
             <label className="block text-lg font-medium text-gray-700 mb-2">서브카테고리 (한글)</label>
-            <input
-              type="text"
-              value={new_faq.subcategory_ko}
-              readOnly
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
-            />
+            <p className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500">
+              <span dangerouslySetInnerHTML={{ __html: new_faq.subcategory_ko }} />
+            </p>
             <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Subcategory (English)</label>
-            <input
-              type="text"
-              value={new_faq.subcategory_en}
-              readOnly
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
-            />
+            <p className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500">
+              <span dangerouslySetInnerHTML={{ __html: new_faq.subcategory_en }} />
+            </p>
           </div>
 
           {/* 질문 필드 */}
           <div>
             <label className="block text-lg font-medium text-gray-700 mb-2">질문 (한글)</label>
-            <input
-              type="text"
-              value={new_faq.question_ko}
-              readOnly
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
-            />
+            <p className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500">
+              <span dangerouslySetInnerHTML={{ __html: new_faq.question_ko }} />
+            </p>
             <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Question (English)</label>
-            <input
-              type="text"
-              value={new_faq.question_en}
-              readOnly
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
-            />
+            <p className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500">
+              <span dangerouslySetInnerHTML={{ __html: new_faq.question_en }} />
+            </p>
           </div>
 
           {/* FAQ 답변 */}
@@ -205,40 +150,25 @@ const FAQLogDetailForm: React.FC<FAQLogDetailFormProps> = ({
               return (
                 <div key={index} className="p-4 border border-gray-300 rounded-lg bg-white space-y-2">
                   {/* 한글 답변 */}
-                  <textarea
-                    value={answer.answer || ''}
-                    readOnly
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2"
-                    rows = {6}
-                  />
+                  <p className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2">
+                    <span dangerouslySetInnerHTML={{ __html: answer.answer || '' }} />
+                  </p>
                   {/* 영어 답변 */}
-                  <textarea
-                    value={answerEn.answer || ''}
-                    readOnly
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2"
-                    rows = {6}
-                  />
+                  <p className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2">
+                    <span dangerouslySetInnerHTML={{ __html: answerEn.answer || '' }} />
+                  </p>
 
                   {/* 공통 필드 (URL, 이메일, 전화번호) */}
                   <div className="flex space-x-4">
-                    <input
-                      type="text"
-                      value={answer.url || ''}
-                      readOnly
-                      className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2"
-                    />
-                    <input
-                      type="email"
-                      value={answer.email || ''}
-                      readOnly
-                      className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2"
-                    />
-                    <input
-                      type="tel"  
-                      value={answer.phone || ''}
-                      readOnly
-                      className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2"
-                    />
+                    <p className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2">
+                      <span dangerouslySetInnerHTML={{ __html: answer.url }} />
+                    </p>
+                    <p className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2">
+                      <span dangerouslySetInnerHTML={{ __html: answer.email }} />
+                    </p>
+                    <p className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500 mb-2">
+                      <span dangerouslySetInnerHTML={{ __html: answer.phone }} />
+                    </p>
                   </div>
                 </div>
               );
@@ -248,12 +178,9 @@ const FAQLogDetailForm: React.FC<FAQLogDetailFormProps> = ({
           {/* 관리자 정보 */}
           <div>
             <label className="block text-lg font-medium text-gray-700 mb-2">관리자 이름</label>
-            <input
-              type="text"
-              value={new_faq.manager}
-              readOnly
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500"
-            />
+            <p className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-500">
+              <span dangerouslySetInnerHTML={{ __html: new_faq.manager }} />
+            </p>
           </div>
         </div>
       </div>
