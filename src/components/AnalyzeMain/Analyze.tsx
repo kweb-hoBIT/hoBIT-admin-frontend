@@ -48,7 +48,8 @@ const Analyze: React.FC<AnalyzeProps> = ({
 
   useEffect(() => {
     const fetchanalyzeData = async () => {
-      if (analyzeApi?.data?.payload?.status === 'success') {
+      if (analyzeApi?.data?.payload?.statusCode === 200) {
+        console.log(analyzeApi.data.payload.data);
         setanalyzeData(analyzeApi.data.payload ?? null);
       } else {
         setError('데이터를 가져오는 데 실패했습니다. 다시 시도해주세요.');
