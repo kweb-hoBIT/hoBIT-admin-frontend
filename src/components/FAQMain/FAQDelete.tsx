@@ -52,7 +52,7 @@ const FAQDelete: React.FC<FAQDeleteProps> = ({ faq_id, question_ko, onSuccess })
       <button
         type="button"
         onClick={togglePopup}
-        className="bg-red-500 text-white text-xs px-3 py-1 rounded-md hover:bg-red-600"
+        className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
       >
         삭제
       </button>
