@@ -4,14 +4,14 @@ import AnalyzeMain from '../components/AnalyzeMain/AnalyzeMain';
 
 const LogAnalyticsPage: React.FC = () => {
   return (
-    <ProtectedPage>
+    //<ProtectedPage>
     <div>
       <Header />
       <main>
         <AnalyzeMain />
       </main>
     </div>
-    </ProtectedPage>
+    //</ProtectedPage>
   );
 };
 
