@@ -48,7 +48,7 @@ const Analyze: React.FC<AnalyzeProps> = ({
 
   useEffect(() => {
     const fetchanalyzeData = async () => {
-      if (analyzeApi?.data?.payload?.statusCode === 200) {
+      if (analyzeApi?.data?.payload?.status === 'success') {
         setanalyzeData(analyzeApi.data.payload ?? null);
       } else {
         setError('데이터를 가져오는 데 실패했습니다. 다시 시도해주세요.');
@@ -80,6 +80,7 @@ const Analyze: React.FC<AnalyzeProps> = ({
         analyzeData={analyzeData} 
         searchSubject={searchSubject}
         error={error} 
+        limit={limit} // 이거 추가해서 사용 언어 빈도에도 limit 값 사용할 수 있도록 넘겨줌
       />
     </div>
   );
