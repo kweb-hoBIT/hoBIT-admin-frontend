@@ -52,6 +52,9 @@ const AnalyzeFilter: React.FC<AnalyzeFilterProps> = ({ onApplyFilter }) => {
     if (value.startsWith('0') && value.length > 1) {
       value = value.replace(/^0+/, '');
     }
+    if (parseInt(value, 10) > 10) {
+      value = '10';
+    }
     if (value === '') value = '0';
     setLimit(value);
   };
