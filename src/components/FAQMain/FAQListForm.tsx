@@ -78,13 +78,13 @@ const FAQListForm: React.FC<FAQListFormProps> = ({ faqs }) => {
           {/* 수정 버튼 */}
           <button
             onClick={() => handleEditClick(String(faq.faq_id))}
-            className="absolute top-2 right-2 bg-blue-500 text-white text-xs px-3 py-1 rounded-md hover:bg-blue-600"
+            className="absolute top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
           >
             수정
           </button>
 
           {/* 삭제 버튼 (오른쪽 아래) */}
-          <div className="absolute bottom-2 right-2">
+          <div className="absolute bottom-5 right-5">
             <FAQDelete faq_id={String(faq.faq_id)} question_ko={faq.question_ko} onSuccess={() => window.location.reload()} />
           </div>
 
