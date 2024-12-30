@@ -10,10 +10,14 @@ import store from './redux/store';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import MainPage from './pages/MainPage';
-import FAQsPage from './pages/FAQMainPage';
+import FAQMainPage from './pages/FAQMainPage';
 import FAQDetailPage from './pages/FAQDetailPage';
 import FAQCreatePage from './pages/FAQCreatePage';
 import FAQUpdatePage from './pages/FAQUpdatePage';
+import SeniorFAQMainPage from './pages/SeniorFAQMainPage';
+import SeniorFAQDetailPage from './pages/SeniorFAQDetailPage';
+import SeniorFAQCreatePage from './pages/SeniorFAQCreatePage';
+import SeniorFAQUpdatePage from './pages/SeniorFAQUpdatePage';
 import LogsPage from './pages/LogsPage';
 import FAQLogDetailPage from './pages/FAQLogDetailPage';
 import LogAnalyticsPage from './pages/LogAnalyticsPage';
@@ -37,10 +41,16 @@ const App: React.FC = () => {
             <Route path="/main" element={<MainPage />} />
 
             {/* FAQ 관련 페이지 */}
-            <Route path="/faqs" element={<FAQsPage />} />
+            <Route path="/faqs" element={<FAQMainPage />} />
+            <Route path="/faqs/:id" element={<FAQDetailPage />} />
             <Route path="/faqs/create" element={<FAQCreatePage />} />
             <Route path="/faqs/update/:id" element={<FAQUpdatePage />} />
-            <Route path="/faqs/:id" element={<FAQDetailPage />} />
+
+            {/* Senior FAQ 관련 페이지 */}
+            <Route path="/seniorfaqs" element={<SeniorFAQMainPage />} />
+            <Route path="/seniorfaqs/:id" element={<SeniorFAQDetailPage />} />
+            <Route path="/seniorfaqs/create" element={<SeniorFAQCreatePage />} />
+            <Route path="/seniorfaqs/update/:id" element={<SeniorFAQUpdatePage />} />
 
             {/* 로그 관련 페이지 */}
             <Route path="/logs" element={<LogsPage />} />
