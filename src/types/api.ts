@@ -20,9 +20,20 @@ import {
   DeleteFAQResponse,
   UpdateFAQRequest,
   UpdateFAQResponse,
-  TranslateFAQRequest,
-  TranslateFAQResponse,
 } from './faq';
+
+import {
+  CreateSeniorFAQRequest,
+  CreateSeniorFAQResponse,
+  GetAllSeniorFAQRequest,
+  GetAllSeniorFAQResponse,
+  GetSeniorFAQRequest,
+  GetSeniorFAQResponse,
+  DeleteSeniorFAQRequest,
+  DeleteSeniorFAQResponse,
+  UpdateSeniorFAQRequest,
+  UpdateSeniorFAQResponse,
+} from './seniorfaq'
 
 import {
   GetAllQuestionLogRequest,
@@ -42,9 +53,16 @@ import {
   CompareFAQLogResponse,
 } from './faqLog'
 
+import {
+  TranslateFAQRequest,
+  TranslateFAQResponse,
+} from './translate'
+
 export type HobitAdminGetApiRequest =
   | GetAllFAQRequest
   | GetFAQRequest
+  | GetAllSeniorFAQRequest
+  | GetSeniorFAQRequest
   | GetAllQuestionLogRequest
   | FrequencyRequest
   | FeedbackRequest
@@ -57,14 +75,17 @@ export type HobitAdminPostApiRequest =
   | SignupRequest
   | NewAccessTokenRequest
   | CreateFAQRequest
+  | CreateSeniorFAQRequest
   | TranslateFAQRequest;
 
 export type HobitAdminPutApiRequest =
-  | UpdateFAQRequest;
+  | UpdateFAQRequest
+  | UpdateSeniorFAQRequest;
 
 export type HobitAdminDeleteApiRequest =
   | DeleteAccountReqeust
-  | DeleteFAQRequest;
+  | DeleteFAQRequest
+  | DeleteSeniorFAQRequest;
 
 
 export type HobitAdminApiResponse =
@@ -77,6 +98,11 @@ export type HobitAdminApiResponse =
   | GetFAQResponse
   | DeleteFAQResponse
   | UpdateFAQResponse
+  | CreateSeniorFAQResponse
+  | GetAllSeniorFAQResponse
+  | GetSeniorFAQResponse
+  | DeleteSeniorFAQResponse
+  | UpdateSeniorFAQResponse
   | TranslateFAQResponse
   | GetAllQuestionLogResponse
   | FrequencyResponse

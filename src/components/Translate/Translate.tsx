@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHobitMutatePostApi } from '../../hooks/hobitAdmin';
-import { TranslateFAQRequest, TranslateFAQResponse } from '../../types/faq';
+import { TranslateFAQRequest, TranslateFAQResponse } from '../../types/translate';
 
 interface TranslateProps {
   sourceText: string;
@@ -9,7 +9,7 @@ interface TranslateProps {
 
 const Translate: React.FC<TranslateProps> = ({ sourceText, setTargetText }) => {
   const [loading, setLoading] = useState(false);
-  const translateFAQApi = useHobitMutatePostApi<TranslateFAQRequest, TranslateFAQResponse>('faqs/translate');
+  const translateFAQApi = useHobitMutatePostApi<TranslateFAQRequest, TranslateFAQResponse>('translate');
 
   const handleTranslate = async () => {
     setLoading(true);

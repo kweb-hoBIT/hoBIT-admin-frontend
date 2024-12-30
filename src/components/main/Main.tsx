@@ -13,6 +13,12 @@ const Main: React.FC = () => {
             FAQ로 이동
           </a>
           <a
+            href="/seniorfaqs"
+            className="w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 text-center hover:bg-crimson-dark"
+          >
+            선배 FAQ로 이동
+          </a>
+          <a
             href="/logs"
             className="w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 text-center hover:bg-crimson-dark"
           >
