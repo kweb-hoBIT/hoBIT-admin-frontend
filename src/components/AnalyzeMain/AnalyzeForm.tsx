@@ -6,19 +6,19 @@ interface AnalyzeFormProps {
   analyzeData: FrequencyResponse | FeedbackResponse | LanguageResponse;
   searchSubject: string;
   error: string | null;
-  limit: string; // limit 값 사용 위해 추가
+  limit: string;
 }
 
 const AnalyzeForm: React.FC<AnalyzeFormProps> = ({ analyzeData, searchSubject, error, limit }) => {
   const [currentPage, setCurrentPage] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);//이거 안써야 transition animation이 더 부드러운데, 안쓰면 아주 가끔 버그 발생해서 일단 사용중
+  const [isLoading, setIsLoading] = useState(true);
   const itemsPerPage = searchSubject === 'language' ? parseInt(limit || '1', 10) : 1;
 
   const data = analyzeData?.data?.logData?.groupData || [];
   const startIndex = currentPage * itemsPerPage;
   const currentPageData = data.slice(startIndex, startIndex + itemsPerPage) || [];
 
-  useEffect(() => { // 가끔 검색 주제를 사용 언어 빈도로 변경하고 검색하면 currentPage data 값이 업데이트가 안돼서 로딩이 안되는 버그 방지하려고 넣음
+  useEffect(() => { 
     setCurrentPage(0);
     setIsLoading(true);
     const timer = setTimeout(() => setIsLoading(false), 50);
@@ -52,9 +52,22 @@ const AnalyzeForm: React.FC<AnalyzeFormProps> = ({ analyzeData, searchSubject, e
   const renderField = (fieldName: string) => fieldTranslations[fieldName] || fieldName;
 
   return (
-    <div className="flex flex-col space-y-6 md:flex-row md:space-y-0 md:space-x-6">
-      {/* 그래프를 옆에 두고 비교할 수 있게 따로 컨테이너 하나씩 생성하고 크기 고정해서 불필요한 스터터링 방지 */}
-      <div className="flex-1 min-h-[500px] h-[500px] overflow-y-auto rounded-lg border border-gray-200 p-4">
+    <div
+      className="flex flex-col space-y-6"
+      style={{
+        minHeight: '1000px',
+        padding: '2rem',
+      }}
+    >
+      {/* 분석 결과 */}
+      <div
+        className="min-h-[500px] h-auto overflow-y-auto rounded-lg border border-gray-200 p-4"
+        style={{
+          flex: '1',
+          backgroundColor: '#fff',
+          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+        }}
+      >
         <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
           {searchSubject === 'frequency' && 'FAQ 검색 빈도 분석 결과'}
           {searchSubject === 'feedback' && 'FAQ 피드백 점수 분석 결과'}
@@ -143,8 +156,15 @@ const AnalyzeForm: React.FC<AnalyzeFormProps> = ({ analyzeData, searchSubject, e
         )}
       </div>
 
-      {/* 그래프 추가 */}
-      <div className="flex-1 min-h-[500px] h-[500px] overflow-hidden rounded-lg border border-gray-200 pt-5">
+      {/* 분석 결과 그래프 */}
+      <div
+        className="min-h-[500px] h-auto overflow-hidden rounded-lg border border-gray-200 pt-5"
+        style={{
+          flex: '1',
+          backgroundColor: '#fff',
+          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+        }}
+      >
         <AnalyzeGraph currentPageData={currentPageData} searchSubject={searchSubject} />
       </div>
     </div>

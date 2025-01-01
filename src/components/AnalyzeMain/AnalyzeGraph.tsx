@@ -17,13 +17,13 @@ const AnalyzeGraph: React.FC<AnalyzeGraphProps> = ({ searchSubject, currentPageD
         };
       } else if (searchSubject === 'frequency' && item.data) {
         return item.data.map((subItem: any) => ({
-          faq_id_label: `${subItem.faq_id}번 FAQ`,
+          faq_id_label: `${subItem.faq_id}번`,
           횟수: subItem.count,
           question: subItem.question_ko,
         }));
       } else if (searchSubject === 'feedback' && item.data) {
         return item.data.map((subItem: any) => ({
-          faq_id_label: `${subItem.faq_id}번 FAQ`,
+          faq_id_label: `${subItem.faq_id}번`,
           평균점수: parseFloat(subItem.score_average), 
           question: subItem.question_ko,
         }));
@@ -34,17 +34,22 @@ const AnalyzeGraph: React.FC<AnalyzeGraphProps> = ({ searchSubject, currentPageD
     .filter(Boolean); 
 
   return (
-    <div className="analyze-graph">
+    <div className="analyze-graph"
+      style={{
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
       <h2 className="text-xl font-semibold text-center mb-4">분석 결과 그래프</h2>
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="95%" height={400}>
         <BarChart data={transformedData}>
           <CartesianGrid strokeDasharray="3 3" />
           <YAxis
-            domain={searchSubject === 'feedback' ? [-1, 1] : [0, 'auto']} // Y축 범위 설정
+            domain={searchSubject === 'feedback' ? [-1, 1] : [0, 'auto']} 
             label={{
-              value: searchSubject === 'feedback' ? '평균 점수' : '횟수',
-              angle: -90,
+              value: searchSubject === 'feedback' ? '점수' : '횟수',
               position: 'insideLeft',
+              offset: 0,
             }}
           />
           <Tooltip />
