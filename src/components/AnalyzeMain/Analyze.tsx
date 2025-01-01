@@ -34,15 +34,15 @@ const Analyze: React.FC<AnalyzeProps> = ({
   let analyzeApi: any;
   if (searchSubject === 'frequency') {
     analyzeApi = useHobitQueryGetApi<FrequencyRequest, FrequencyResponse>(
-      'questionlogs/frequency', { params: {}, query:{startDate, endDate, period, sortOrder, limit}}
+      'questionlogs/frequency', { query:{startDate, endDate, period, sortOrder, limit}}
     );
   } else if (searchSubject === 'feedback') {
     analyzeApi = useHobitQueryGetApi<FeedbackRequest, FeedbackResponse>(
-      'questionlogs/feedback',  { params: {}, query:{startDate, endDate, period, sortOrder, limit}}
+      'questionlogs/feedback',  { query:{startDate, endDate, period, sortOrder, limit}}
     );
   } else if (searchSubject === 'language') {
     analyzeApi = useHobitQueryGetApi<LanguageRequest, LanguageResponse>(
-      'questionlogs/language',  { params: {}, query:{startDate, endDate, period, sortOrder, limit}}
+      'questionlogs/language',  { query:{startDate, endDate, period, sortOrder, limit}}
     );
   }
 

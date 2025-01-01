@@ -73,7 +73,7 @@ export type HobitAdminGetApiRequest =
 export type HobitAdminPostApiRequest =
   | LoginRequest
   | SignupRequest
-  | NewAccessTokenRequest
+  | NewAccessTokenRequest 
   | CreateFAQRequest
   | CreateSeniorFAQRequest
   | TranslateFAQRequest;

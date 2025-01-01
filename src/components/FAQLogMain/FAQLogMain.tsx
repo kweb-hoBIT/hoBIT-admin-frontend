@@ -7,10 +7,7 @@ const FAQLogMain: React.FC = () => {
   const [faqLogData, setFaqLogData] = useState<GetAllFAQLogResponse['data']['faqLogs']>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const GetFAQLogsApi = useHobitQueryGetApi<GetAllFAQLogRequest, GetAllFAQLogResponse>('faqlogs', {
-    params: {},
-    query: {},
-  });
+  const GetFAQLogsApi = useHobitQueryGetApi<GetAllFAQLogRequest, GetAllFAQLogResponse>('faqlogs');
 
   // FAQ 로그 데이터 가져오기
   useEffect(() => {

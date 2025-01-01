@@ -21,8 +21,7 @@ const SeniorFAQDelete: React.FC<SeniorFAQDeleteProps> = ({ senior_faq_id, detail
   const handleDeleteSeniorFAQ = async () => {
     try {
       const response = await deleteSeniorFAQApi({
-        params: { senior_faq_id },
-        body: {}
+        params: { senior_faq_id }
       });
 
       if (response.payload?.statusCode === 200) {

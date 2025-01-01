@@ -13,9 +13,7 @@ const FAQList: React.FC<FAQListProps> = ({ filter, selectedFilter }) => {
   const [filteredData, setFilteredData] = useState<GetAllFAQResponse['data']['faqs']>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const GetFAQsApi = useHobitQueryGetApi<GetAllFAQRequest, GetAllFAQResponse>('faqs', {
-    params: {}, query: {},
-  });
+  const GetFAQsApi = useHobitQueryGetApi<GetAllFAQRequest, GetAllFAQResponse>('faqs');
 
   // FAQ 데이터 가져오기
   useEffect(() => {

@@ -28,7 +28,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
     manager: '',
   });
 
-  const FAQFetchApi = useHobitQueryGetApi<GetFAQRequest, GetFAQResponse>('faqs', { params: { faq_id }, query: {} });
+  const FAQFetchApi = useHobitQueryGetApi<GetFAQRequest, GetFAQResponse>('faqs', { params: { faq_id } });
   const FAQUpdateApi = useHobitMutatePutApi<UpdateFAQRequest, UpdateFAQResponse>('faqs');
 
   useEffect(() => {

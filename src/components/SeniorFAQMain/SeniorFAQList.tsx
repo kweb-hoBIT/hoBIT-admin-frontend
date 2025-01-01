@@ -13,9 +13,7 @@ const SeniorFAQList: React.FC<SeniorFAQListProps> = ({ filter, selectedFilter })
   const [filteredData, setFilteredData] = useState<GetAllSeniorFAQResponse['data']['seniorFaqs']>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const GetSeniorFAQsApi = useHobitQueryGetApi<GetAllSeniorFAQRequest, GetAllSeniorFAQResponse>('seniorfaqs', {
-    params: {}, query: {},
-  });
+  const GetSeniorFAQsApi = useHobitQueryGetApi<GetAllSeniorFAQRequest, GetAllSeniorFAQResponse>('seniorfaqs');
 
   // Senior FAQ 데이터 가져오기
   useEffect(() => {

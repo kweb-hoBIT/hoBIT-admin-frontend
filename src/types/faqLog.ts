@@ -1,6 +1,4 @@
 export type GetAllFAQLogRequest = {
-  params: {};
-  query: {};
 }
 
 export type GetAllFAQLogResponse = {
@@ -25,7 +23,6 @@ export type CompareFAQLogRequest = {
   params: {
     faq_log_id: string;
   }
-  query: {};
 }
 
 export type CompareFAQLogResponse = {

@@ -23,7 +23,7 @@ const FAQDetail: React.FC<FAQDetailProps> = ({ faq_id }) => {
     updated_at: '',
   });
 
-  const FAQFetchApi = useHobitQueryGetApi<GetFAQRequest, GetFAQResponse>('faqs', { params: { faq_id }, query: {} });
+  const FAQFetchApi = useHobitQueryGetApi<GetFAQRequest, GetFAQResponse>('faqs', { params: { faq_id } });
 
   useEffect(() => {
     const fetchFAQ = async () => {

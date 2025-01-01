@@ -50,8 +50,7 @@ const SeniorFAQDetail: React.FC<SeniorFAQDetailProps> = ({ senior_faq_id }) => {
   });
 
   const seniorFAQFetchApi = useHobitQueryGetApi<GetSeniorFAQRequest, GetSeniorFAQResponse>('seniorfaqs', {
-    params: { senior_faq_id },
-    query: {},
+    params: { senior_faq_id }
   });
 
   useEffect(() => {

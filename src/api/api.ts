@@ -14,35 +14,37 @@ import {
 const endpoint = `${envs.HOBIT_BACKEND_ENDPOINT!}/api`;
 
 export async function hobitGetApi<
-  T extends HobitAdminGetApiRequest,
+  T extends HobitAdminGetApiRequest & { params?: Record<string, string>, query?: Record<string, string | number> },
   R extends HobitAdminApiResponse,
 >(path: string, req?: T): Promise<ApiResponse<R>> {
   const headers: Record<string, string> = {
     'Content-type': 'application/json',
   };
 
+
   let resp: Response | undefined;
   try {
-    if (req) {
-      const {params, query} = req;
-      if(Object.keys(params).length !== 0){
-        path = `${path}/${Object.values(params)}`;
-      } else if(Object.keys(query).length !== 0){
-        const queryParams = new URLSearchParams(
-          Object.fromEntries(Object.entries(query).map(([key, value]) => [key, String(value)]))
-        ).toString();
-        path = `${path}?${queryParams}`;
-      } else {
-        path = `${path}`;
-      }
-      resp = await fetch(`${endpoint}/${path}`, {
-        method: 'GET',
-        mode: 'cors',
-        headers,
-      });
+    const params = req?.params ? req.params : {};
+    const query = req?.query ? req.query : {};
+    if (req?.params && Object.keys(params).length > 0) {
+      path = `${path}/${Object.values(params).join('/')}`;
+    }
+    // 쿼리 처리
+    if (Object.keys(query).length > 0) {
+      const queryParams = new URLSearchParams(
+        Object.entries(query).map(([key, value]) => [key, String(value)])
+      ).toString();
+      path = `${path}?${queryParams}`;
     }
     
-    if (resp) {
+    resp = await fetch(`${endpoint}/${path}`, {
+      method: 'GET',
+      mode: 'cors',
+      headers,
+    });
+    
+    
+    if (resp.ok) {
       try {
         const json = await resp.json();
         return {
@@ -67,26 +69,26 @@ export async function hobitGetApi<
 }
 
 export async function hobitPostApi<
-  T extends HobitAdminPostApiRequest,
+  T extends HobitAdminPostApiRequest & { body?: Record<string, any>; credentials?: RequestCredentials },
   R extends HobitAdminApiResponse,
->(path: string, req: T): Promise<ApiResponse<R>> {
+>(path: string, req?: T): Promise<ApiResponse<R>> {
   const headers: Record<string, string> = {
     'Content-type': 'application/json',
   };
 
   let resp: Response | undefined;
   try {
-    if (req) {
-      const {body} = req;
-      resp = await fetch(`${endpoint}/${path}`, {
-        method: 'POST',
-        mode: 'cors',
-        headers,
-        credentials: 'include',
-        body: JSONbig.stringify(body),
-      });
-    }
-    
+    const body = req?.body ?? {};
+    const credential = req?.credentials ?? 'omit';
+
+    resp = await fetch(`${endpoint}/${path}`, {
+      method: 'POST',
+      mode: 'cors',
+      headers,
+      credentials: credential,
+      body: JSONbig.stringify(body),
+    });
+
     if (resp) {
       try {
         const json = await resp.json();
@@ -113,7 +115,7 @@ export async function hobitPostApi<
 
 
 export async function hobitPutApi<
-  T extends HobitAdminPutApiRequest,
+  T extends HobitAdminPutApiRequest & { params: Record<string, string>, body: Record<string, any> },
   R extends HobitAdminApiResponse,
 >(path: string, req: T): Promise<ApiResponse<R>> {
   const headers: Record<string, string> = {
@@ -122,17 +124,15 @@ export async function hobitPutApi<
 
   let resp: Response | undefined;
   try {
-    if (req) {
-      const {params, body} = req;
-      console.log(params, body);
-      path = `${path}/${Object.values(params)}`;
-      resp = await fetch(`${endpoint}/${path}`, {
-        method: 'PUT',
-        mode: 'cors',
-        headers,
-        body: JSONbig.stringify(body),
-      });
-    }
+    const {params, body} = req;
+    path = `${path}/${Object.values(params)}`;
+    resp = await fetch(`${endpoint}/${path}`, {
+      method: 'PUT',
+      mode: 'cors',
+      headers,
+      body: JSONbig.stringify(body),
+    });
+    
     if (resp) {
       try {
         const json = await resp.json();
@@ -158,34 +158,33 @@ export async function hobitPutApi<
 }
 
 export async function hobitDeleteApi<
-  T extends HobitAdminDeleteApiRequest,
+  T extends HobitAdminDeleteApiRequest & { params: Record<string, string>, body?: Record<string, any> },
   R extends HobitAdminApiResponse,
->(path: string, req?: T): Promise<ApiResponse<R>> {
+>(path: string, req: T): Promise<ApiResponse<R>> {
   const headers: Record<string, string> = {
     'Content-type': 'application/json',
   };
 
   let resp: Response | undefined;
   try {
-    if (req) {
-      const {params, body} = req;
-      path = `${path}/${Object.values(params)}`;
-      if(Object.keys(body).length !== 0){
-        resp = await fetch(`${endpoint}/${path}`, {
-          method: 'DELETE',
-          mode: 'cors',
-          headers,
-          body: JSONbig.stringify(body),
-        });
-      } else{
-        resp = await fetch(`${endpoint}/${path}`, {
-          method: 'DELETE',
-          mode: 'cors',
-          headers,
-        });
-      }
-
+    const {params} = req;
+    const body = req.body ?? {};
+    path = `${path}/${Object.values(params)}`;
+    if(Object.keys(body).length !== 0){
+      resp = await fetch(`${endpoint}/${path}`, {
+        method: 'DELETE',
+        mode: 'cors',
+        headers,
+        body: JSONbig.stringify(body),
+      });
+    } else{
+      resp = await fetch(`${endpoint}/${path}`, {
+        method: 'DELETE',
+        mode: 'cors',
+        headers,
+      });
     }
+
     if (resp) {
       try {
         const json = await resp.json();
