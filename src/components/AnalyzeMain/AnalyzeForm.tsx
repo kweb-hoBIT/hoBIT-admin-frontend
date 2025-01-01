@@ -102,11 +102,10 @@ const AnalyzeForm: React.FC<AnalyzeFormProps> = ({ analyzeData, searchSubject, e
                   key={index}
                   className="rounded-lg border border-gray-200 p-4 mb-4"
                 >
-                  <p>
-                    <strong>날짜: {groupData.startDate} ~ {groupData.endDate}</strong>
-                  </p>
-                  <p>한국어 빈도: {groupData.ko_frequency}</p>
-                  <p>영어 빈도: {groupData.en_frequency}</p>
+                  {/* 사용 언어 빈도를 사용하면 페이지별로 하나씩 표시하는거 너무 비효율적이라서 최대 개수 값 사용하기 위해 변경 */}
+                  <p><strong>날짜: {groupData.startDate} ~ {groupData.endDate}</strong></p> 
+                  <p>한국어 빈도: {groupData.data[0].ko_frequency}</p>
+                  <p>영어 빈도: {groupData.data[0].en_frequency}</p>
                 </div>
               ))
             ) : (

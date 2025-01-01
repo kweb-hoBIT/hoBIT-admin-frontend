@@ -44,6 +44,16 @@ const AnalyzeFilter: React.FC<AnalyzeFilterProps> = ({ onApplyFilter }) => {
     onApplyFilter(newFilters);
   };
 
+  const handleLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    value = value.replace(/[^0-9]/g, '');
+    if (value.startsWith('0') && value.length > 1) {
+      value = value.replace(/^0+/, '');
+    }
+    if (value === '') value = '0';
+    setLimit(value);
+  };
+
   return (
   <div className="p-8 rounded-3xl max-w-3xl mx-auto space-y-10">
     <h4 className="text-3xl font-semibold text-gray-800">분석 필터 설정</h4>
