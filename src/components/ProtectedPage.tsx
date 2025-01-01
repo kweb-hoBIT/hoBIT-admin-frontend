@@ -26,7 +26,7 @@ const ProtectedPage: React.FC<ProtectedPageProps> = ({ children }) => {
           const currentTime = Date.now() / 1000;
 
           if (decodedAccessToken.exp < currentTime) {
-            const response = await NewAccessTokenApi({ body: {} });
+            const response = await NewAccessTokenApi({ credentials: 'include' });
             if (response.payload?.statusCode === 400 || response.payload?.statusCode === 500) {
               alert("세션이 만료되어 다시 로그인 부탁드립니다.");
               setIsAuthenticated(false);
@@ -38,7 +38,7 @@ const ProtectedPage: React.FC<ProtectedPageProps> = ({ children }) => {
             setIsAuthenticated(true);
           }
         } else {
-          const response = await NewAccessTokenApi({ body: {} });
+          const response = await NewAccessTokenApi({ credentials: 'include'} );
           if (response.payload?.statusCode === 400 || response.payload?.statusCode === 500) {
             alert("세션이 만료되어 다시 로그인 부탁드립니다.");
             setIsAuthenticated(false);

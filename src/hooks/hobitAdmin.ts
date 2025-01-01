@@ -4,13 +4,13 @@ import { hobitGetApi, hobitPostApi, hobitPutApi, hobitDeleteApi } from '../api/a
 
 // GET 요청을 처리하는 훅
 export function useHobitQueryGetApi<
-  T extends HobitAdminGetApiRequest,
+  T extends HobitAdminGetApiRequest &  { params?: Record<string, string>, query?: Record<string, string | number> },
   R extends HobitAdminApiResponse,
 >(path: string, req?: T) {
   return useQuery({
     queryKey: req ? [path, req] : [path],
     queryFn: async () => {
-      const resp = await hobitGetApi<T, R>(path, req as T);
+      const resp = await hobitGetApi<T, R>(path, req);
       return resp;
     },
   });
@@ -18,12 +18,12 @@ export function useHobitQueryGetApi<
 
 // POST 요청을 처리하는 훅
 export function useHobitMutatePostApi<
-  T extends HobitAdminPostApiRequest,
+  T extends HobitAdminPostApiRequest  & { body?: Record<string, any>; credentials?: RequestCredentials },
   R extends HobitAdminApiResponse,
 >(path: string) {
   const { mutateAsync } = useMutation({
-    mutationFn: async (req: T) => {
-      const resp = await hobitPostApi<T, R>(path, req as T);
+    mutationFn: async (req?: T) => {
+      const resp = await hobitPostApi<T, R>(path, req);
       return resp;
     },
   });
@@ -33,7 +33,7 @@ export function useHobitMutatePostApi<
 
 // PUT 요청을 처리하는 훅
 export function useHobitMutatePutApi<
-  T extends HobitAdminPutApiRequest,
+  T extends HobitAdminPutApiRequest & { params: Record<string, string>, body: Record<string, any> },
   R extends HobitAdminApiResponse
 >(path: string) {
   const { mutateAsync } = useMutation({
@@ -47,7 +47,7 @@ export function useHobitMutatePutApi<
 
 // DELETE 요청을 처리하는 훅
 export function useHobitMutateDeleteApi<
-  T extends HobitAdminDeleteApiRequest,  // DELETE 요청에 맞는 타입
+  T extends HobitAdminDeleteApiRequest & { params: Record<string, string>, body?: Record<string, any> },
   R extends HobitAdminApiResponse,
 >(path: string) {
   const { mutateAsync } = useMutation({

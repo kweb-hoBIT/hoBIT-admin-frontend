@@ -34,7 +34,6 @@ const FAQLogDetail: React.FC<FAQLogDetailProps> = ({ faq_log_id }) => {
 
   const FAQCompareApi = useHobitQueryGetApi<CompareFAQLogRequest, CompareFAQLogResponse>("faqlogs/compare", {
     params: { faq_log_id },
-    query: {},
   });
 
   useEffect(() => {

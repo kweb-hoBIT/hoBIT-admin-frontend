@@ -30,7 +30,7 @@ export type SignupResponse = {
 };
 
 export type NewAccessTokenRequest = {
-  body: {}
+  credentials: RequestCredentials;
 }
 
 export type NewAccessTokenResponse = {
