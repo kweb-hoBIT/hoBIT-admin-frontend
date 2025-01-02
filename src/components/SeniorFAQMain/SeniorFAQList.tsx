@@ -48,9 +48,6 @@ const SeniorFAQList: React.FC<SeniorFAQListProps> = ({ filter, selectedFilter })
     return <div className="error-message">{error}</div>;
   }
 
-  if (!filteredData?.length) {
-    return <div>Senior FAQ 데이터가 없습니다.</div>;
-  }
 
   return (
     <div>

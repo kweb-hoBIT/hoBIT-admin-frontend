@@ -48,10 +48,6 @@ const FAQList: React.FC<FAQListProps> = ({ filter, selectedFilter }) => {
     return <div className="error-message">{error}</div>;
   }
 
-  if (!filteredData?.length) {
-    return <div>FAQ 데이터가 없습니다.</div>;
-  }
-
   return (
     <div>
       <FAQListForm faqs={filteredData} />
