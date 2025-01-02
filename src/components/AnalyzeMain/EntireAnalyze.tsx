@@ -8,9 +8,9 @@ import {
   LanguageRequest,
   LanguageResponse,
 } from '../../types/questionLog';
-import AnalyzeForm from './AnalyzeForm';
+import EntireAnalyzeForm from './EntireAnalyzeForm';
 
-interface AnalyzeProps {
+interface EntireAnalyzeProps {
   searchSubject: string;
   period: string;
   startDate: string;
@@ -19,7 +19,7 @@ interface AnalyzeProps {
   limit: string;
 }
 
-const Analyze: React.FC<AnalyzeProps> = ({
+const EntireAnalyze: React.FC<EntireAnalyzeProps> = ({
   searchSubject,
   period,
   startDate,
@@ -76,7 +76,7 @@ const Analyze: React.FC<AnalyzeProps> = ({
 
   return (
     <div>
-      <AnalyzeForm 
+      <EntireAnalyzeForm 
         analyzeData={analyzeData} 
         searchSubject={searchSubject}
         error={error} 
@@ -86,4 +86,4 @@ const Analyze: React.FC<AnalyzeProps> = ({
   );
 };
 
-export default Analyze;
+export default EntireAnalyze;

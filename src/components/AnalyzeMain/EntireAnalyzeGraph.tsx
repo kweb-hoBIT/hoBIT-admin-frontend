@@ -1,12 +1,12 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid } from 'recharts';
 
-interface AnalyzeGraphProps {
+interface EntireAnalyzeGraphProps {
   searchSubject: string;
   currentPageData: any[];
 }
 
-const AnalyzeGraph: React.FC<AnalyzeGraphProps> = ({ searchSubject, currentPageData }) => {
+const EntireAnalyzeGraph: React.FC<EntireAnalyzeGraphProps> = ({ searchSubject, currentPageData }) => {
   const transformedData = currentPageData
     .map((item) => {
       if (searchSubject === 'language') {
@@ -79,4 +79,4 @@ const AnalyzeGraph: React.FC<AnalyzeGraphProps> = ({ searchSubject, currentPageD
   );
 };
 
-export default AnalyzeGraph;
+export default EntireAnalyzeGraph;
