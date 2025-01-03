@@ -59,6 +59,7 @@ const AnalyzeMain: React.FC = () => {
               <div className="text-center text-[#888]">
                 <h2>검색 결과가 여기에 표시됩니다</h2>
                 <p>검색 조건을 설정한 후 결과를 확인하세요.</p>
+                <p>조건에 맞는 Top 10의 FAQ를 보여줍니다.</p>
               </div>
             )}
           </div>
@@ -81,6 +82,7 @@ const AnalyzeMain: React.FC = () => {
               <div className="text-center text-[#888]">
                 <h2>검색 결과가 여기에 표시됩니다</h2>
                 <p>검색 조건을 설정한 후 결과를 확인하세요.</p>
+                <p>해당 FAQ에 대한 분석 결과를 보여줍니다.</p>
               </div>
             )}
           </div>
