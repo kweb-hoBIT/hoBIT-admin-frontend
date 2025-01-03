@@ -18,7 +18,7 @@ export function useHobitQueryGetApi<
 
 // POST 요청을 처리하는 훅
 export function useHobitMutatePostApi<
-  T extends HobitAdminPostApiRequest  & { body?: Record<string, any>; credentials?: RequestCredentials },
+  T extends HobitAdminPostApiRequest  & { body?: Record<string, any>, credentials?: RequestCredentials },
   R extends HobitAdminApiResponse,
 >(path: string) {
   const { mutateAsync } = useMutation({
