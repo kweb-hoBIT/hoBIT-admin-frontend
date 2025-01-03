@@ -19,7 +19,6 @@ const ProtectedPage: React.FC<ProtectedPageProps> = ({ children }) => {
         /(?:(?:^|.*;\s*)accessToken\s*=\s*([^;]*).*$)|^.*$/,
         "$1"
       );
-
       try {
         if (accessToken) {
           const decodedAccessToken: any = jwtDecode(accessToken);
@@ -38,7 +37,7 @@ const ProtectedPage: React.FC<ProtectedPageProps> = ({ children }) => {
             setIsAuthenticated(true);
           }
         } else {
-          const response = await NewAccessTokenApi({ credentials: 'include'} );
+          const response = await NewAccessTokenApi( { credentials: 'include' });
           if (response.payload?.statusCode === 400 || response.payload?.statusCode === 500) {
             alert("세션이 만료되어 다시 로그인 부탁드립니다.");
             setIsAuthenticated(false);
