@@ -69,7 +69,7 @@ export async function hobitGetApi<
 }
 
 export async function hobitPostApi<
-  T extends HobitAdminPostApiRequest & { body?: Record<string, any>; credentials?: RequestCredentials },
+  T extends HobitAdminPostApiRequest & { body?: Record<string, any>, credentials?: RequestCredentials },
   R extends HobitAdminApiResponse,
 >(path: string, req?: T): Promise<ApiResponse<R>> {
   const headers: Record<string, string> = {
@@ -80,7 +80,6 @@ export async function hobitPostApi<
   try {
     const body = req?.body ?? {};
     const credential = req?.credentials ?? 'omit';
-
     resp = await fetch(`${endpoint}/${path}`, {
       method: 'POST',
       mode: 'cors',

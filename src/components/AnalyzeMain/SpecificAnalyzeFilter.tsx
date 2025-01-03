@@ -9,13 +9,14 @@ interface SpecificAnalyzeFilterProps {
 }
 
 const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFilter }) => {
-  const [searchSubject, setSearchSubject] = useState('');
+  const [searchSubject, setSearchSubject] = useState('frequency');
+  const [faq, setFaq] = useState('');
   const [period, setPeriod] = useState('day');
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [faqData, setFaqData] = useState<GetAllFAQResponse['data']['faqs']>([]);
   const [filteredFAQ, setFilteredFAQ] = useState<GetAllFAQResponse['data']['faqs']>([]);
-  const [isSearchInputFocused, setIsSearchInputFocused] = useState(false);
+  const [isFaqInputFocused, setIsFaqInputFocused] = useState(false);
   const [error, setError] = useState<string | null>(null);  // 오류 상태 추가
 
   const GetFAQsApi = useHobitQueryGetApi<GetAllFAQRequest, GetAllFAQResponse>('faqs');
@@ -38,15 +39,15 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
 
   // 연관검색어 업데이트
   useEffect(() => {
-    if (searchSubject) {
-      const filtered = faqData.filter((faq) =>
-        faq.question_ko.includes(searchSubject)
+    if (faq) {
+      const filtered = faqData.filter((faqItem) =>
+        faqItem.question_ko.includes(faq)
       );
       setFilteredFAQ(filtered);
     } else {
       setFilteredFAQ(faqData);
     }
-  }, [searchSubject, faqData]);
+  }, [faq, faqData]);
 
   const disableDates = (date: Date, type: "start" | "end"): boolean => {
     if (!date) return false;
@@ -69,24 +70,22 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
   };
 
   const handleApplyFilter = () => {
-    const selectedFAQ = faqData.find(faq => faq.question_ko === searchSubject);
+    const selectedFAQ = faqData.find(faqItem => faqItem.question_ko === faq);
     const faq_id = selectedFAQ ? selectedFAQ.faq_id : null;
   
     const newFilters = {
       faq_id,
+      searchSubject,
       period,
       startDate: startDate ? startDate.toISOString() : '',
       endDate: endDate ? endDate.toISOString() : '',
     };
-  
-    console.log(newFilters);
     onApplyFilter(newFilters);
   };
-  
 
   // 검색 버튼 활성화 조건: 검색어가 FAQ 질문 목록에 존재해야 함
-  const isSearchButtonEnabled = faqData.some(faq =>
-    faq.question_ko === searchSubject
+  const isSearchButtonEnabled = faqData.some(faqItem =>
+    faqItem.question_ko === faq
   );
 
   return (
@@ -107,30 +106,44 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
             <label className="block text-lg font-medium text-gray-700">FAQ 질문 검색</label>
             <input
               type="text"
-              value={searchSubject}
-              onChange={(e) => setSearchSubject(e.target.value)}
-              onFocus={() => setIsSearchInputFocused(true)}
+              value={faq}
+              onChange={(e) => setFaq(e.target.value)}
+              onFocus={() => setIsFaqInputFocused(true)}
               onBlur={() => {
                 setTimeout(() => {
-                  setIsSearchInputFocused(false);
+                  setIsFaqInputFocused(false);
                 }, 100);
               }}
               placeholder="FAQ 질문을 입력하세요"
               className="w-full p-2 rounded-xl border border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-600 transition ease-in-out"
             />
-            {isSearchInputFocused && filteredFAQ.length > 0 && (
+            {isFaqInputFocused && filteredFAQ.length > 0 && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {filteredFAQ.map(faq => (
+                {filteredFAQ.map(faqItem => (
                   <li
-                    key={faq.faq_id}
-                    onClick={() => setSearchSubject(faq.question_ko)}
+                    key={faqItem.faq_id}
+                    onClick={() => setFaq(faqItem.question_ko)}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
                   >
-                    {faq.question_ko}
+                    {faqItem.question_ko}
                   </li>
                 ))}
               </ul>
             )}
+          </div>
+
+          {/* 검색 주제 */}
+          <div>
+            <label className="block text-lg font-medium text-gray-700">검색 주제</label>
+            <select
+              value={searchSubject}
+              onChange={(e) => setSearchSubject(e.target.value)}
+              className="w-full p-2 rounded-xl border border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-600 transition ease-in-out"
+            >
+              <option value="frequency">FAQ 검색 빈도</option>
+              <option value="feedback">FAQ 피드백 점수</option>
+              <option value="language">사용 언어 빈도</option>
+            </select>
           </div>
 
           {/* 검색 주기 */}

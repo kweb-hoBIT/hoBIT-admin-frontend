@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import EntireAnalyzeGraph from './EntireAnalyzeGraph';
-import { FrequencyResponse, FeedbackResponse, LanguageResponse } from '../../types/questionLog';
+import { EntireFrequencyResponse, EntireFeedbackResponse, EntireLanguageResponse } from '../../types/questionLog';
 
 interface EntireAnalyzeFormProps {
-  analyzeData: FrequencyResponse | FeedbackResponse | LanguageResponse;
+  analyzeData: EntireFrequencyResponse | EntireFeedbackResponse | EntireLanguageResponse;
   searchSubject: string;
   error: string | null;
   limit: string;

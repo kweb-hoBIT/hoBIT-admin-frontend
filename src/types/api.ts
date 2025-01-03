@@ -38,12 +38,18 @@ import {
 import {
   GetAllQuestionLogRequest,
   GetAllQuestionLogResponse,
-  FrequencyRequest,
-  FrequencyResponse,
-  FeedbackRequest,
-  FeedbackResponse,
-  LanguageRequest,
-  LanguageResponse,
+  EntireFrequencyRequest,
+  EntireFrequencyResponse,
+  EntireFeedbackRequest,
+  EntireFeedbackResponse,
+  EntireLanguageRequest,
+  EntireLanguageResponse,
+  SpecificFrequencyRequest,
+  SpecificFrequencyResponse,
+  SpecificFeedbackRequest,
+  SpecificFeedbackResponse,
+  SpecificLanguageRequest,
+  SpecificLanguageResponse,
 } from './questionLog'
 
 import {
@@ -64,9 +70,12 @@ export type HobitAdminGetApiRequest =
   | GetAllSeniorFAQRequest
   | GetSeniorFAQRequest
   | GetAllQuestionLogRequest
-  | FrequencyRequest
-  | FeedbackRequest
-  | LanguageRequest
+  | EntireFrequencyRequest
+  | EntireFeedbackRequest
+  | EntireLanguageRequest
+  | SpecificFrequencyRequest
+  | SpecificFeedbackRequest
+  | SpecificLanguageRequest
   | GetAllFAQLogRequest
   | CompareFAQLogRequest;
 
@@ -105,9 +114,12 @@ export type HobitAdminApiResponse =
   | UpdateSeniorFAQResponse
   | TranslateFAQResponse
   | GetAllQuestionLogResponse
-  | FrequencyResponse
-  | FeedbackResponse
-  | LanguageResponse
+  | EntireFrequencyResponse
+  | EntireFeedbackResponse
+  | EntireLanguageResponse
+  | SpecificFrequencyResponse
+  | SpecificFeedbackResponse
+  | SpecificLanguageResponse
   | GetAllFAQLogResponse
   | CompareFAQLogResponse;
 
