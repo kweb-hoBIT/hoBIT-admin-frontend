@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import AnalyzeGraph from './AnalyzeGraph';
-import { FrequencyResponse, FeedbackResponse, LanguageResponse } from '../../types/questionLog';
+import EntireAnalyzeGraph from './EntireAnalyzeGraph';
+import { EntireFrequencyResponse, EntireFeedbackResponse, EntireLanguageResponse } from '../../types/questionLog';
 
-interface AnalyzeFormProps {
-  analyzeData: FrequencyResponse | FeedbackResponse | LanguageResponse;
+interface EntireAnalyzeFormProps {
+  analyzeData: EntireFrequencyResponse | EntireFeedbackResponse | EntireLanguageResponse;
   searchSubject: string;
   error: string | null;
   limit: string;
 }
 
-const AnalyzeForm: React.FC<AnalyzeFormProps> = ({ analyzeData, searchSubject, error, limit }) => {
+const EntireAnalyzeForm: React.FC<EntireAnalyzeFormProps> = ({ analyzeData, searchSubject, error, limit }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const itemsPerPage = searchSubject === 'language' ? parseInt(limit || '1', 10) : 1;
@@ -52,22 +52,9 @@ const AnalyzeForm: React.FC<AnalyzeFormProps> = ({ analyzeData, searchSubject, e
   const renderField = (fieldName: string) => fieldTranslations[fieldName] || fieldName;
 
   return (
-    <div
-      className="flex flex-col space-y-6"
-      style={{
-        minHeight: '1000px',
-        padding: '2rem',
-      }}
-    >
+    <div className="flex flex-col space-y-6 min-h-[1000px] p-8">
       {/* 분석 결과 */}
-      <div
-        className="min-h-[500px] h-auto overflow-y-auto rounded-lg border border-gray-200 p-4"
-        style={{
-          flex: '1',
-          backgroundColor: '#fff',
-          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
-        }}
-      >
+      <div className="min-h-[500px] h-auto overflow-y-auto rounded-lg border border-gray-200 p-4 flex-1 bg-white shadow-[0_2px_6px_rgba(0,0,0,0.1)]">
         <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
           {searchSubject === 'frequency' && 'FAQ 검색 빈도 분석 결과'}
           {searchSubject === 'feedback' && 'FAQ 피드백 점수 분석 결과'}
@@ -157,18 +144,11 @@ const AnalyzeForm: React.FC<AnalyzeFormProps> = ({ analyzeData, searchSubject, e
       </div>
 
       {/* 분석 결과 그래프 */}
-      <div
-        className="min-h-[500px] h-auto overflow-hidden rounded-lg border border-gray-200 pt-5"
-        style={{
-          flex: '1',
-          backgroundColor: '#fff',
-          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        <AnalyzeGraph currentPageData={currentPageData} searchSubject={searchSubject} />
+      <div className="flex-1 min-h-[500px] h-auto overflow-hidden rounded-lg border border-gray-200 pt-5 bg-white shadow-[0_2px_6px_rgba(0,0,0,0.1)]">
+        <EntireAnalyzeGraph currentPageData={currentPageData} searchSubject={searchSubject} />
       </div>
     </div>
   );
 };
 
-export default AnalyzeForm;
+export default EntireAnalyzeForm;

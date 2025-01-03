@@ -26,6 +26,7 @@ const Login: React.FC = () => {
       try {
         const response = await LoginApi({
           body: userData,
+          credentials: 'include'
         });
 
         if (response.payload?.statusCode === 200) {

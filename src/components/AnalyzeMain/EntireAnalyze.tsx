@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useHobitQueryGetApi } from '../../hooks/hobitAdmin';
 import {
-  FrequencyRequest,
-  FrequencyResponse,
-  FeedbackRequest,
-  FeedbackResponse,
-  LanguageRequest,
-  LanguageResponse,
+  EntireFrequencyRequest,
+  EntireFrequencyResponse,
+  EntireFeedbackRequest,
+  EntireFeedbackResponse,
+  EntireLanguageRequest,
+  EntireLanguageResponse,
 } from '../../types/questionLog';
-import AnalyzeForm from './AnalyzeForm';
+import EntireAnalyzeForm from './EntireAnalyzeForm';
 
-interface AnalyzeProps {
+interface EntireAnalyzeProps {
   searchSubject: string;
   period: string;
   startDate: string;
@@ -19,7 +19,7 @@ interface AnalyzeProps {
   limit: string;
 }
 
-const Analyze: React.FC<AnalyzeProps> = ({
+const EntireAnalyze: React.FC<EntireAnalyzeProps> = ({
   searchSubject,
   period,
   startDate,
@@ -27,21 +27,21 @@ const Analyze: React.FC<AnalyzeProps> = ({
   sortOrder,
   limit,
 }) => {
-  const [analyzeData, setanalyzeData] = useState<FrequencyResponse | FeedbackResponse | LanguageResponse | null>(null);
+  const [analyzeData, setanalyzeData] = useState<EntireFrequencyResponse | EntireFeedbackResponse | EntireLanguageResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   // 조건에 따라 사용할 API 훅을 설정
   let analyzeApi: any;
   if (searchSubject === 'frequency') {
-    analyzeApi = useHobitQueryGetApi<FrequencyRequest, FrequencyResponse>(
+    analyzeApi = useHobitQueryGetApi<EntireFrequencyRequest, EntireFrequencyResponse>(
       'questionlogs/frequency', { query:{startDate, endDate, period, sortOrder, limit}}
     );
   } else if (searchSubject === 'feedback') {
-    analyzeApi = useHobitQueryGetApi<FeedbackRequest, FeedbackResponse>(
+    analyzeApi = useHobitQueryGetApi<EntireFeedbackRequest, EntireFeedbackResponse>(
       'questionlogs/feedback',  { query:{startDate, endDate, period, sortOrder, limit}}
     );
   } else if (searchSubject === 'language') {
-    analyzeApi = useHobitQueryGetApi<LanguageRequest, LanguageResponse>(
+    analyzeApi = useHobitQueryGetApi<EntireLanguageRequest, EntireLanguageResponse>(
       'questionlogs/language',  { query:{startDate, endDate, period, sortOrder, limit}}
     );
   }
@@ -49,9 +49,12 @@ const Analyze: React.FC<AnalyzeProps> = ({
   useEffect(() => {
     const fetchanalyzeData = async () => {
       if (analyzeApi?.data?.payload?.statusCode === 200) {
+        console.log(1);
         setanalyzeData(analyzeApi.data.payload ?? null);
+        setError(null);
       } else {
         setError('데이터를 가져오는 데 실패했습니다. 다시 시도해주세요.');
+        setanalyzeData(null);
       }
     };
 
@@ -60,7 +63,7 @@ const Analyze: React.FC<AnalyzeProps> = ({
         fetchanalyzeData();
       }
     }
-  }, [searchSubject, period, startDate, endDate, sortOrder, limit, analyzeApi]);
+  }, [analyzeApi]);
 
   if (analyzeApi?.isLoading) {
     return <div>데이터를 불러오는 중입니다...</div>;
@@ -76,7 +79,7 @@ const Analyze: React.FC<AnalyzeProps> = ({
 
   return (
     <div>
-      <AnalyzeForm 
+      <EntireAnalyzeForm 
         analyzeData={analyzeData} 
         searchSubject={searchSubject}
         error={error} 
@@ -86,4 +89,4 @@ const Analyze: React.FC<AnalyzeProps> = ({
   );
 };
 
-export default Analyze;
+export default EntireAnalyze;
