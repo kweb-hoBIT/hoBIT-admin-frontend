@@ -34,7 +34,7 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
       onSubmit={(e) => e.preventDefault()}
       className="max-w-4xl mx-auto p-8 bg-white rounded-xl shadow-lg space-y-8"
     >
-      <h2 className="text-2xl font-bold text-gray-800 text-center">선배 FAQ 수정정</h2>
+      <h2 className="text-2xl font-bold text-gray-800 text-center">선배 FAQ 수정</h2>
 
       {/* 카테고리 필드 */}
       <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
