@@ -49,7 +49,7 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
   };
 
   return (
-    <div className="p-6 bg-gray-50">
+    <div className="p-6 bg-white-50">
       <h4 className="text-2xl font-bold mb-6 text-gray-800">유저 로그 리스트</h4>
       {currentItems.map((log) => (
         <div key={log.question_log_id} className="relative bg-gray-200 p-4 mb-3 rounded-lg shadow-sm">

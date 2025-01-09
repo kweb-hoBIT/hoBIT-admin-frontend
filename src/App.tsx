@@ -21,6 +21,7 @@ import SeniorFAQUpdatePage from './pages/SeniorFAQUpdatePage';
 import LogsPage from './pages/LogsPage';
 import FAQLogDetailPage from './pages/FAQLogDetailPage';
 import LogAnalyticsPage from './pages/LogAnalyticsPage';
+import UserFeedbackPage from './pages/UserFeedbackPage';
 
 const queryClient = new QueryClient();
 
@@ -56,6 +57,10 @@ const App: React.FC = () => {
             <Route path="/logs" element={<LogsPage />} />
             <Route path="/logs/:id" element={<FAQLogDetailPage />} />
             <Route path="/logs/analytics" element={<LogAnalyticsPage />} />
+
+            {/* 유저 피드백 관련 페이지 */}
+            <Route path="/userfeedbacks" element={<UserFeedbackPage />} />
+            
           </Routes>
         </Router>
       </QueryClientProvider>

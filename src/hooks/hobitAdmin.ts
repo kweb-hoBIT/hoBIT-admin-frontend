@@ -33,7 +33,7 @@ export function useHobitMutatePostApi<
 
 // PUT 요청을 처리하는 훅
 export function useHobitMutatePutApi<
-  T extends HobitAdminPutApiRequest & { params: Record<string, string>, body: Record<string, any> },
+  T extends HobitAdminPutApiRequest & { params: Record<string, string>, body?: Record<string, any> },
   R extends HobitAdminApiResponse
 >(path: string) {
   const { mutateAsync } = useMutation({

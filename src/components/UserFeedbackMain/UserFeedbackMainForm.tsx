@@ -1,18 +1,27 @@
 import React, { useState } from 'react';
-import { GetAllFAQLogResponse } from '../../types/faqLog';
-import { useNavigate } from 'react-router-dom';
+import { GetAllUserFeedbackResponse } from '../../types/feedback';
+import UserFeedbackResolvedUpdate from './UserFeedbackResolvedUpdate';
+import UserFeedbackFilter from './UserFeedbackFilter';
 
-interface FAQLogMainFormProps {
-  faqLogs: GetAllFAQLogResponse['data']['faqLogs'];
+interface UserFeedbackMainFormProps {
+  userFeedbacks: GetAllUserFeedbackResponse['data']['userFeedbacks'];
 }
 
-const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
-  const navigate = useNavigate();
+const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbacks }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [filter, setFilter] = useState<'all' | 'unresolved'>('all');
   const itemsPerPage = 5;
-  const pagesPerGroup = 10; // 한 그룹에 표시할 페이지 수
+  const pagesPerGroup = 10;
 
-  const totalPages = Math.ceil(faqLogs.length / itemsPerPage);
+  // 필터링된 피드백
+  const filteredFeedbacks = userFeedbacks.filter(feedback => {
+    if (filter === 'unresolved') {
+      return feedback.resolved === 0;
+    }
+    return true;
+  });
+
+  const totalPages = Math.ceil(filteredFeedbacks.length / itemsPerPage);
 
   // 현재 페이지 그룹 (1-10, 11-20 등)
   const currentPageGroup = Math.floor((currentPage - 1) / pagesPerGroup);
@@ -26,7 +35,7 @@ const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = faqLogs.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filteredFeedbacks.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -44,53 +53,49 @@ const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
     setCurrentPage(page);
   };
 
+  const handleFilterChange = (filterValue: 'all' | 'unresolved') => {
+    setFilter(filterValue);
+    setCurrentPage(1);
+  };
+
   // 한국 시간으로 변환하는 함수
   const formatDateToKST = (dateStr: string) => {
     const date = new Date(dateStr);
     return date.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
   };
 
-  const handleLogClick = (id: string) => {
-    navigate(`/logs/${id}`);
-  };
-
   return (
     <div className="p-6 bg-white-50">
-      <h4 className="text-2xl font-bold mb-6 text-gray-800">관리자 로그 리스트</h4>
-      {currentItems.map((log) => (
-        <div
-          key={log.faq_log_id}
-          className="relative bg-gray-200 p-4 mb-3 rounded-lg shadow-sm"
-        >
-          <div
-            className="mb-2 cursor-pointer"
-            onClick={() => handleLogClick(String(log.faq_log_id))}
-          >
-            <span className="mb-1 text-m text-gray-600">
-            <strong>관리자 로그 ID: {log.faq_log_id}</strong>
-            </span>
+      <h4 className="text-2xl font-bold mb-6 text-gray-800">유저 피드백 리스트</h4>
+
+      <UserFeedbackFilter filter={filter} onFilterChange={handleFilterChange} />
+
+      {currentItems.map((feedback) => (
+        <div key={feedback.user_feedback_id} className="relative bg-gray-200 p-4 mb-3 rounded-lg shadow-sm">
+          <div className="mb-2">
+            <span className="mb-1 text-m text-gray-600"><strong>피드백 ID: {feedback.user_feedback_id}</strong></span>
           </div>
           <div className="flex flex-col">
             <div className="mb-1 text-sm text-gray-600">
-              <strong>수정 유저:</strong> {log.username}
+              <strong>피드백 사유:</strong> {feedback.feedback_reason}
             </div>
             <div className="mb-1 text-sm text-gray-600">
-              <strong>FAQ ID:</strong> {log.faq_id}
+              <strong>피드백 상세:</strong> {feedback.feedback_detail}
             </div>
             <div className="mb-1 text-sm text-gray-600">
-              <strong>주요 카테고리:</strong> {log.faq_maincategory}
+              <strong>사용 언어:</strong> {feedback.language === 'ko' ? '한국어' : feedback.language === 'en' ? '영어' : '기타'}
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="mb-1 text-sm text-gray-600 flex items-center">
+                <strong>해결 여부: </strong>
+                <UserFeedbackResolvedUpdate
+                  user_feedback_id={feedback.user_feedback_id}
+                  initialResolved={feedback.resolved ? 1 : 0}
+                />
+              </div>
             </div>
             <div className="mb-1 text-sm text-gray-600">
-              <strong>하위 카테고리:</strong> {log.faq_subcategory}
-            </div>
-            <div className="mb-1 text-sm text-gray-600">
-              <strong>질문:</strong> {log.faq_question}
-            </div>
-            <div className="mb-1 text-sm text-gray-600">
-              <strong>변경 목적:</strong> {log.action_type}
-            </div>
-            <div className="mb-1 text-sm text-gray-600">
-              <strong>변경 시각:</strong> {formatDateToKST(log.created_at)}
+              <strong>생성 시각:</strong> {formatDateToKST(feedback.created_at)}
             </div>
           </div>
         </div>
@@ -115,7 +120,7 @@ const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
               className={`px-3 py-2 text-sm font-semibold rounded-md ${
                 currentPage === page ? 'bg-crimson text-white' : 'bg-gray-200 text-gray-700'
               }`}
-              style={{ width: '40px', textAlign: 'center' }} // 버튼 크기 고정
+              style={{ width: '40px', textAlign: 'center' }}
             >
               {page}
             </button>
@@ -134,4 +139,4 @@ const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
   );
 };
 
-export default FAQLogMainForm;
+export default UserFeedbackMainForm;

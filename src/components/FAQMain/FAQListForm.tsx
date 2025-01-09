@@ -63,7 +63,7 @@ const FAQListForm: React.FC<FAQListFormProps> = ({ faqs }) => {
   };
 
   return (
-    <div className="p-6 bg-gray-50">
+    <div className="p-6 bg-white-50">
       <div className="flex justify-center items-center mb-6">
         <h4 className="text-2xl font-bold text-gray-800 flex-grow">FAQ 리스트</h4>
         <button
@@ -112,10 +112,10 @@ const FAQListForm: React.FC<FAQListFormProps> = ({ faqs }) => {
               <strong>관리자:</strong> {faq.manager}
             </div>
             <div className="mb-1 text-sm text-gray-600">
-              <strong>생성일:</strong> {formatDateToKST(faq.created_at)}
+              <strong>생성 시간:</strong> {formatDateToKST(faq.created_at)}
             </div>
             <div className="mb-1 text-sm text-gray-600">
-              <strong>수정일:</strong> {formatDateToKST(faq.updated_at)}
+              <strong>수정 시간:</strong> {formatDateToKST(faq.updated_at)}
             </div>
           </div>
         </div>
