@@ -81,9 +81,8 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
   };
 
   return (
-    <div className="p-6 bg-white-50">
+    <div className="p-6 bg-white-50 rounded-lg mt-4">
       <h4 className="text-2xl font-bold mb-6 text-gray-800">유저 피드백 리스트</h4>
-
 
       <UserFeedbackFilter filter={filter} onFilterChange={handleFilterChange} />
 
