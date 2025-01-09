@@ -5,11 +5,13 @@ import { UpdateUserFeedbackRequest, UpdateUserFeedbackResponse } from '../../typ
 type UserFeedbackResolvedUpdateProps = {
   user_feedback_id: number;
   initialResolved: number;
+  onResolvedChange: (id: number, resolved: number) => void;
 };
 
 const UserFeedbackResolvedUpdate: React.FC<UserFeedbackResolvedUpdateProps> = ({
   user_feedback_id,
   initialResolved,
+  onResolvedChange
 }) => {
   const [isResolved, setIsResolved] = useState<number>(initialResolved);
   const [loading, setLoading] = useState(false);
@@ -27,7 +29,9 @@ const UserFeedbackResolvedUpdate: React.FC<UserFeedbackResolvedUpdateProps> = ({
       });
 
       if (response.payload?.statusCode === 200) {
-        setIsResolved((prevState) => (prevState === 0 ? 1 : 0));
+        const newResolvedStatus = isResolved === 0 ? 1 : 0;
+        setIsResolved(newResolvedStatus);
+        onResolvedChange(user_feedback_id, newResolvedStatus);
       } else {
         throw new Error('Resolved 상태를 업데이트하는 데 실패했습니다.');
       }

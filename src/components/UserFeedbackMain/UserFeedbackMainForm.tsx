@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GetAllUserFeedbackResponse } from '../../types/feedback';
 import UserFeedbackResolvedUpdate from './UserFeedbackResolvedUpdate';
 import UserFeedbackFilter from './UserFeedbackFilter';
@@ -10,11 +10,17 @@ interface UserFeedbackMainFormProps {
 const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbacks }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilter] = useState<'all' | 'unresolved'>('all');
+  const [feedbacks, setFeedbacks] = useState(userFeedbacks);
+
+  useEffect(() => {
+    setFeedbacks(userFeedbacks);
+  }, [userFeedbacks]);
+
   const itemsPerPage = 5;
   const pagesPerGroup = 10;
 
   // 필터링된 피드백
-  const filteredFeedbacks = userFeedbacks.filter(feedback => {
+  const filteredFeedbacks = feedbacks.filter(feedback => {
     if (filter === 'unresolved') {
       return feedback.resolved === 0;
     }
@@ -58,6 +64,16 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
     setCurrentPage(1);
   };
 
+  const handleResolvedChange = (id: number, resolved: number) => {
+    setFeedbacks(prevFeedbacks => 
+      prevFeedbacks.map(feedback => 
+        feedback.user_feedback_id === id 
+          ? { ...feedback, resolved }
+          : feedback
+      )
+    );
+  };
+
   // 한국 시간으로 변환하는 함수
   const formatDateToKST = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -67,6 +83,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
   return (
     <div className="p-6 bg-white-50">
       <h4 className="text-2xl font-bold mb-6 text-gray-800">유저 피드백 리스트</h4>
+
 
       <UserFeedbackFilter filter={filter} onFilterChange={handleFilterChange} />
 
@@ -91,6 +108,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                 <UserFeedbackResolvedUpdate
                   user_feedback_id={feedback.user_feedback_id}
                   initialResolved={feedback.resolved ? 1 : 0}
+                  onResolvedChange={handleResolvedChange}
                 />
               </div>
             </div>
