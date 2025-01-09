@@ -36,8 +36,14 @@ const Header: React.FC = () => {
             <Link to="/faqs" className="text-white hover:text-gray-600">
               FAQ
             </Link>
+            <Link to="/seniorfaqs" className="text-white hover:text-gray-600">
+              SENIORFAQ
+            </Link>
             <Link to="/logs" className="text-white hover:text-gray-600">
               LOG
+            </Link>
+            <Link to="/userfeedbacks" className="text-white hover:text-gray-600">
+              FEEDBACK
             </Link>
             <div className="relative">
               <button onClick={togglePopup} className="text-white hover:text-gray-600">

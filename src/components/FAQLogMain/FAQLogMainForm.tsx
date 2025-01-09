@@ -55,8 +55,8 @@ const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
   };
 
   return (
-    <div className="p-6 bg-gray-50">
-      <h4 className="text-2xl font-bold mb-6 text-gray-800">관리자 로그 리스트</h4>
+    <div className="p-6 bg-white-50">
+      <h4 className="text-2xl font-bold mb-6 text-gray-800">관리자 로그 리스트(FAQ 수정사항만 반영)</h4>
       {currentItems.map((log) => (
         <div
           key={log.faq_log_id}

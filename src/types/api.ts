@@ -60,6 +60,14 @@ import {
 } from './faqLog'
 
 import {
+  GetAllUserFeedbackRequest,
+  GetAllUserFeedbackResponse,
+  UpdateUserFeedbackRequest,
+  UpdateUserFeedbackResponse
+} from './feedback'
+
+
+import {
   TranslateFAQRequest,
   TranslateFAQResponse,
 } from './translate'
@@ -77,7 +85,9 @@ export type HobitAdminGetApiRequest =
   | SpecificFeedbackRequest
   | SpecificLanguageRequest
   | GetAllFAQLogRequest
-  | CompareFAQLogRequest;
+  | CompareFAQLogRequest
+  | GetAllUserFeedbackRequest;
+
 
 export type HobitAdminPostApiRequest =
   | LoginRequest
@@ -89,7 +99,8 @@ export type HobitAdminPostApiRequest =
 
 export type HobitAdminPutApiRequest =
   | UpdateFAQRequest
-  | UpdateSeniorFAQRequest;
+  | UpdateSeniorFAQRequest
+  | UpdateUserFeedbackRequest;
 
 export type HobitAdminDeleteApiRequest =
   | DeleteAccountReqeust
@@ -121,7 +132,9 @@ export type HobitAdminApiResponse =
   | SpecificFeedbackResponse
   | SpecificLanguageResponse
   | GetAllFAQLogResponse
-  | CompareFAQLogResponse;
+  | CompareFAQLogResponse
+  | GetAllUserFeedbackResponse
+  | UpdateUserFeedbackResponse;
 
 export type ApiResponse<P> = {
   error: ApiErrorPayload | null;

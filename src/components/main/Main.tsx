@@ -30,6 +30,12 @@ const Main: React.FC = () => {
           >
             로그 분석 페이지로 이동
           </a>
+          <a
+            href="/userfeedbacks"
+            className="w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 text-center hover:bg-crimson-dark"
+          >
+            유저 피드백 페이지로 이동
+          </a>
         </div>
       </div>
     </div>

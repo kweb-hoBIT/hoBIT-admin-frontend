@@ -114,7 +114,7 @@ export async function hobitPostApi<
 
 
 export async function hobitPutApi<
-  T extends HobitAdminPutApiRequest & { params: Record<string, string>, body: Record<string, any> },
+  T extends HobitAdminPutApiRequest & { params: Record<string, string>, body?: Record<string, any> },
   R extends HobitAdminApiResponse,
 >(path: string, req: T): Promise<ApiResponse<R>> {
   const headers: Record<string, string> = {
@@ -123,7 +123,8 @@ export async function hobitPutApi<
 
   let resp: Response | undefined;
   try {
-    const {params, body} = req;
+    const {params} = req;
+    const body = req?.body ?? {};
     path = `${path}/${Object.values(params)}`;
     resp = await fetch(`${endpoint}/${path}`, {
       method: 'PUT',
