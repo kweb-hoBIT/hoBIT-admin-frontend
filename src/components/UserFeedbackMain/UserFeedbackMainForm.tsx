@@ -9,7 +9,7 @@ interface UserFeedbackMainFormProps {
 
 const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbacks }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [filter, setFilter] = useState<'all' | 'unresolved'>('all');
+  const [filter, setFilter] = useState<'unresolved' | 'all'>('unresolved');
   const [feedbacks, setFeedbacks] = useState(userFeedbacks);
 
   useEffect(() => {
@@ -59,7 +59,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
     setCurrentPage(page);
   };
 
-  const handleFilterChange = (filterValue: 'all' | 'unresolved') => {
+  const handleFilterChange = (filterValue: 'unresolved' | 'all') => {
     setFilter(filterValue);
     setCurrentPage(1);
   };
@@ -112,7 +112,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
               </div>
             </div>
             <div className="mb-1 text-sm text-gray-600">
-              <strong>생성 시각:</strong> {formatDateToKST(feedback.created_at)}
+              <strong>피드백 시각:</strong> {formatDateToKST(feedback.created_at)}
             </div>
           </div>
         </div>
