@@ -37,7 +37,7 @@ const Header: React.FC = () => {
               FAQ
             </Link>
             <Link to="/seniorfaqs" className="text-white hover:text-gray-600">
-              SeniorFAQ
+              SENIORFAQ
             </Link>
             <Link to="/logs" className="text-white hover:text-gray-600">
               LOG
