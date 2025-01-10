@@ -80,11 +80,12 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
         alert('Senior FAQ 데이터를 가져오는 중 오류가 발생했습니다.');
       }
     };
-
+  
     if (!seniorFAQFetchApi.isLoading && seniorFAQFetchApi.data) {
       fetchSeniorFAQ();
     }
   }, [senior_faq_id, seniorFAQFetchApi.data, seniorFAQFetchApi.isLoading, user_id]);
+  
 
   const handleAddAnswer = () => {
     setUpdatedSeniorFAQ({

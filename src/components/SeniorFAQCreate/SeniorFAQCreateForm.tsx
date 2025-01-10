@@ -1,6 +1,8 @@
 import React from 'react';
 import { CreateSeniorFAQRequest } from '../../types/seniorfaq';
 import Translate from '../Translate/Translate';
+import { useHobitMutatePostApi } from '../../hooks/hobitAdmin';
+import { UploadSeniorFAQImageRequest, UploadSeniorFAQImageResponse } from '../../types/seniorfaq';
 
 interface SeniorFAQCreateFormProps {
   newSeniorFAQ: CreateSeniorFAQRequest['body'];
@@ -28,6 +30,64 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
     answer_en,
     manager,
   } = newSeniorFAQ;
+
+  // const imageUploadApi = useHobitMutatePostApi<UploadSeniorFAQImageRequest, UploadSeniorFAQImageResponse>('seniorfaqs/upload');
+
+
+  // 이미지 업로드 처리 함수
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const files = e.target.files;
+    // 파일이 없으면 아무 것도 하지 않음
+    if (!files || files.length === 0) return;
+
+    // test용 이미지 URL
+    const image_url = 'test'
+    if (image_url) {
+      setNewSeniorFAQ({
+        ...newSeniorFAQ,
+        answer_ko: answer_ko.map((ans, i) =>
+          i === index ? { ...ans, image: image_url } : ans
+        ),
+        answer_en: answer_en.map((ans, i) =>
+          i === index ? { ...ans, image: image_url } : ans
+        ),
+      });
+    }
+    // test용 이미지 URL 끝끝
+
+    // // FormData에 파일 추가
+    // const formData = new FormData();
+    // formData.append('image', files[0]);
+    
+    // try {
+    //   const response = await imageUploadApi({ body: formData });
+    //   console.log(response)
+    //   // 응답 처리
+    //   if (response.payload?.statusCode === 201) {
+    //     const { image_url } = response.payload.data || {};
+        
+    //     if (image_url) {
+    //       setNewSeniorFAQ({
+    //         ...newSeniorFAQ,
+    //         answer_ko: answer_ko.map((ans, i) =>
+    //           i === index ? { ...ans, image: image_url } : ans
+    //         ),
+    //         answer_en: answer_en.map((ans, i) =>
+    //           i === index ? { ...ans, image: image_url } : ans
+    //         ),
+    //       });
+    //     } else {
+    //       alert('이미지 URL을 받지 못했습니다. 다시 시도해주세요.');
+    //     }
+    //   } else {
+    //     alert('FAQ 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
+    //   }
+    // } catch (error) {
+    //   console.error('Error uploading image:', error);
+    //   alert('이미지 업로드 중 오류가 발생했습니다. 다시 시도해주세요.');
+    // }
+  };  
+  
 
   return (
     <form
@@ -268,40 +328,40 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
               />
             </div>
             <div className="grid grid-cols-3 gap-4">
-              <input
-                type="text"
-                placeholder="이미지 링크"
-                value={answer.image}
-                onChange={(e) => {
-                  setNewSeniorFAQ({
-                    ...newSeniorFAQ,
-                    answer_ko: answer_ko.map((ans, i) =>
-                      i === index ? { ...ans, image: e.target.value } : ans
-                    ),
-                    answer_en: answer_en.map((ans, i) =>
-                      i === index ? { ...ans, image: e.target.value } : ans
-                    ),
-                  });
-                }}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              />
-              <input
-                type="text"
-                placeholder="위도"
-                value={answer.map.latitude}
-                onChange={(e) => {
-                  setNewSeniorFAQ({
-                    ...newSeniorFAQ,
-                    answer_ko: answer_ko.map((ans, i) =>
-                      i === index ? { ...ans, map: { ...ans.map, latitude: e.target.value } } : ans
-                    ),
-                    answer_en: answer_en.map((ans, i) =>
-                      i === index ? { ...ans, map: { ...ans.map, latitude: e.target.value } } : ans
-                    ),
-                  });
-                }}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              />
+              <div className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                <div className="flex items-center justify-between">
+                  <label htmlFor={`file-${index}`}>
+                    {answer.image !== '' ? '첨부파일 있음' : '첨부파일 없음'}
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setNewSeniorFAQ({
+                        ...newSeniorFAQ,
+                        answer_ko: answer_ko.map((ans, i) =>
+                          i === index ? { ...ans, image: '' } : ans
+                        ),
+                        answer_en: answer_en.map((ans, i) =>
+                          i === index ? { ...ans, image: '' } : ans
+                        ),
+                      });
+                    }}
+                    className="text-sm bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-600"
+                  >
+                    첨부파일 제거
+                  </button>
+                </div>
+                <input
+                  id={`file-${index}`}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    console.log(index);
+                    handleImageUpload(e, index);
+                  }}
+                  className="hidden"
+                />
+              </div>
               <input
                 type="text"
                 placeholder="경도"
