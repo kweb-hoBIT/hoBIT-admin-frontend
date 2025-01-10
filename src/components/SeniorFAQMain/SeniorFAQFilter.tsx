@@ -4,7 +4,7 @@ interface SeniorFAQFilterProps {
   filter: string;
   selectedFilter: 'senior_faq_id' | 'maincategory_ko' | 'subcategory_ko' | 'detailcategory_ko' | 'manager';
   onFilterChange: (newFilter: string) => void;
-  onSelectedFilterChange: (newSelectedFilter: 'senior_faq_id' | 'maincategory_ko' | 'subcategory_ko' | 'detailcategory_ko' | 'manager') => void;
+  onSelectedFilterChange: (newSelectedFilter: SeniorFAQFilterProps['selectedFilter']) => void;
 }
 
 const SeniorFAQFilter: React.FC<SeniorFAQFilterProps> = ({

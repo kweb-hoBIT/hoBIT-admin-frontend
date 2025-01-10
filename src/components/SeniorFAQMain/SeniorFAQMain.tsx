@@ -1,26 +1,43 @@
-import React, { useState } from 'react';
-import SeniorFAQFilter from './SeniorFAQFilter';
-import SeniorFAQList from './SeniorFAQList';
+import React, { useEffect, useState } from 'react';
+import { useHobitQueryGetApi } from '../../hooks/hobitAdmin';
+import { GetAllSeniorFAQRequest, GetAllSeniorFAQResponse } from '../../types/seniorfaq';
+import SeniorFAQMainForm from './SeniorFAQMainForm';
 
-const SeniorFAQMainComponent: React.FC = () => {
-  const [filter, setFilter] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<'senior_faq_id' | 'maincategory_ko' | 'subcategory_ko' | 'detailcategory_ko' | 'manager'>('detailcategory_ko');
-  
-  const handleFilterChange = (newFilter: string) => setFilter(newFilter);
-  const handleSelectedFilterChange = (newSelectedFilter: 'senior_faq_id' | 'maincategory_ko' | 'subcategory_ko' | 'detailcategory_ko' | 'manager') =>
-    setSelectedFilter(newSelectedFilter);
+const SeniorFAQMain: React.FC = () => {
+  const [seniorFaqData, setSeniorFaqData] = useState<GetAllSeniorFAQResponse['data']['seniorFaqs']>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  const GetSeniorFAQsApi = useHobitQueryGetApi<GetAllSeniorFAQRequest, GetAllSeniorFAQResponse>('seniorfaqs');
+
+  // Senior FAQ 데이터 가져오기
+  useEffect(() => {
+    const fetchSeniorFAQData = async () => {
+      if (GetSeniorFAQsApi.data?.payload?.statusCode === 200) {
+        const data = GetSeniorFAQsApi.data.payload.data.seniorFaqs;
+        setSeniorFaqData(data);
+      } else {
+        setError('Senior FAQ 데이터를 가져오는 중 오류 발생');
+      }
+    };
+
+    if (GetSeniorFAQsApi.isSuccess) {
+      fetchSeniorFAQData();
+    }
+  }, [GetSeniorFAQsApi.isSuccess]);
+
+  if (GetSeniorFAQsApi.isLoading) {
+    return <div>Senior FAQ 데이터를 불러오는 중입니다...</div>;
+  }
+
+  if (error) {
+    return <div className="error-message">{error}</div>;
+  }
 
   return (
-    <div className="senior-faq-main-component p-6 bg-gray-50 rounded-lg">
-      <SeniorFAQFilter
-        filter={filter}
-        selectedFilter={selectedFilter}
-        onFilterChange={handleFilterChange}
-        onSelectedFilterChange={handleSelectedFilterChange}
-      />
-      <SeniorFAQList filter={filter} selectedFilter={selectedFilter} />
+    <div>
+      <SeniorFAQMainForm seniorFaqs={seniorFaqData} />
     </div>
   );
 };
 
-export default SeniorFAQMainComponent;
+export default SeniorFAQMain;
