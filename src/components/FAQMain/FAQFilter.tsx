@@ -1,11 +1,11 @@
 import React from 'react';
 
-interface FAQFilterProps {
+type FAQFilterProps = {
   filter: string;
   selectedFilter: 'faq_id' | 'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager';
-  onFilterChange: (newFilter: string) => void;
-  onSelectedFilterChange: (newSelectedFilter: 'faq_id' | 'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager') => void;
-}
+  onFilterChange: (value: string) => void;
+  onSelectedFilterChange: (value: FAQFilterProps['selectedFilter']) => void;
+};
 
 const FAQFilter: React.FC<FAQFilterProps> = ({
   filter,
@@ -14,8 +14,8 @@ const FAQFilter: React.FC<FAQFilterProps> = ({
   onSelectedFilterChange,
 }) => {
   return (
-    <div className="p-6 bg-white-50 rounded-lg">
-        <h4 className="text-2xl font-bold mb-6 text-gray-800">FAQ 검색</h4>
+    <div className="p-6 bg-gray-50 rounded-lg">
+      <h4 className="text-2xl font-bold mb-6 text-gray-800">FAQ 검색</h4>
       <div className="mb-4 flex space-x-4">
         <select
           value={selectedFilter}

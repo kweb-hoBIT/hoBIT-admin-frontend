@@ -234,59 +234,6 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
               />
               <input
                 type="text"
-                placeholder="Email"
-                value={answer.email}
-                onChange={(e) => {
-                  setupdatedFAQ({
-                    ...updatedFAQ,
-                    answer_ko: answer_ko.map((ans, i) =>
-                      i === index ? { ...ans, email: e.target.value } : ans
-                    ),
-                    answer_en: answer_en.map((ans, i) =>
-                      i === index ? { ...ans, email: e.target.value } : ans
-                    ),
-                  });
-                }}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              />
-              <input
-                type="text"
-                placeholder="Phone"
-                value={answer.phone}
-                onChange={(e) => {
-                  setupdatedFAQ({
-                    ...updatedFAQ,
-                    answer_ko: answer_ko.map((ans, i) =>
-                      i === index ? { ...ans, phone: e.target.value } : ans
-                    ),
-                    answer_en: answer_en.map((ans, i) =>
-                      i === index ? { ...ans, phone: e.target.value } : ans
-                    ),
-                  });
-                }}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              <input
-                type="text"
-                placeholder="이미지 링크"
-                value={answer.image}
-                onChange={(e) => {
-                  setupdatedFAQ({
-                    ...updatedFAQ,
-                    answer_ko: answer_ko.map((ans, i) =>
-                      i === index ? { ...ans, image: e.target.value } : ans
-                    ),
-                    answer_en: answer_en.map((ans, i) =>
-                      i === index ? { ...ans, image: e.target.value } : ans
-                    ),
-                  });
-                }}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              />
-              <input
-                type="text"
                 placeholder="위도"
                 value={answer.map.latitude}
                 onChange={(e) => {

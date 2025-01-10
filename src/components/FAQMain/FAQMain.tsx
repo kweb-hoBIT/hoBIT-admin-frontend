@@ -1,25 +1,43 @@
-import React, { useState } from 'react';
-import FAQFilter from './FAQFilter';
-import FAQList from './FAQList';
+import React, { useEffect, useState } from 'react';
+import { useHobitQueryGetApi } from '../../hooks/hobitAdmin';
+import { GetAllFAQRequest, GetAllFAQResponse } from '../../types/faq';
+import FAQMainForm from './FAQMainForm';
 
-const FAQMainComponent: React.FC = () => {
-  const [filter, setFilter] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<'faq_id' | 'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager'>('question_ko');
-  const handleFilterChange = (newFilter: string) => setFilter(newFilter);
-  const handleSelectedFilterChange = (newSelectedFilter: 'faq_id' | 'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager') =>
-    setSelectedFilter(newSelectedFilter);
+const FAQMain: React.FC = () => {
+  const [faqData, setFaqData] = useState<GetAllFAQResponse['data']['faqs']>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  const GetFAQsApi = useHobitQueryGetApi<GetAllFAQRequest, GetAllFAQResponse>('faqs');
+
+  // FAQ 데이터 가져오기
+  useEffect(() => {
+    const fetchFAQData = async () => {
+      if (GetFAQsApi.data?.payload?.statusCode === 200) {
+        const data = GetFAQsApi.data.payload.data.faqs;
+        setFaqData(data);
+      } else {
+        setError('FAQ 데이터를 가져오는 중 오류 발생');
+      }
+    };
+
+    if (GetFAQsApi.isSuccess) {
+      fetchFAQData();
+    }
+  }, [GetFAQsApi.isSuccess]);
+
+  if (GetFAQsApi.isLoading) {
+    return <div>FAQ 데이터를 불러오는 중입니다...</div>;
+  }
+
+  if (error) {
+    return <div className="error-message">{error}</div>;
+  }
 
   return (
-    <div className="faq-main-component p-6 bg-gray-50 rounded-lg">
-      <FAQFilter
-        filter={filter}
-        selectedFilter={selectedFilter}
-        onFilterChange={handleFilterChange}
-        onSelectedFilterChange={handleSelectedFilterChange}
-      />
-      <FAQList filter={filter} selectedFilter={selectedFilter} />
+    <div>
+      <FAQMainForm faqs={faqData} />
     </div>
   );
 };
 
-export default FAQMainComponent;
+export default FAQMain;

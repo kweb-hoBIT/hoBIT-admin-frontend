@@ -134,7 +134,7 @@ const SeniorFAQDetailForm: React.FC<SeniorFAQDetailFormProps> = ({
                 rows={6}
               />
 
-              {/* 공통 필드 (URL, 이메일, 전화번호) */}
+              {/* 공통 필드 (URL, 위도, 경도도) */}
               <div className="flex space-x-4">
                 <input
                   type="text"
@@ -144,43 +144,18 @@ const SeniorFAQDetailForm: React.FC<SeniorFAQDetailFormProps> = ({
                   className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500 mb-2"
                 />
                 <input
-                  type="email"
-                  placeholder="Email"
-                  value={answer.email}
-                  readOnly
-                  className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500 mb-2"
-                />
-                <input
-                  type="tel"
-                  placeholder="Phone"
-                  value={answer.phone}
-                  readOnly
-                  className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500 mb-2"
-                />
-              </div>
-
-              {/* 추가 필드 (이미지 링크, 지도) */}
-              <div className="flex space-x-4">
-                <input
-                  type="text"
-                  placeholder="이미지 링크"
-                  value={answer.image}
-                  readOnly
-                  className="w-1/2 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500 mb-2"
-                />
-                <input
                   type="text"
                   placeholder="위도"
                   value={answer.map.latitude}
                   readOnly
-                  className="w-1/4 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500 mb-2"
+                  className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500 mb-2"
                 />
                 <input
                   type="text"
                   placeholder="경도"
                   value={answer.map.longitude}
                   readOnly
-                  className="w-1/4 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500 mb-2"
+                  className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500 mb-2"
                 />
               </div>
             </div>

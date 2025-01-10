@@ -136,7 +136,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
               </button>
             </div>
             <input
-              placeholder='답변 제목을 입력하세요'
+              placeholder="답변 제목을 입력하세요"
               value={answer.title}
               onChange={(e) =>
                 setNewSeniorFAQ({
@@ -161,7 +161,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
             />
             <label className="block text-lg font-medium text-gray-700 mb-2">Answer Title (영어)</label>
             <input
-              placeholder='Enter Answer Title'
+              placeholder="Enter Answer Title"
               value={answer_en[index]?.title || ''}
               onChange={(e) =>
                 setNewSeniorFAQ({
@@ -234,59 +234,6 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
               />
               <input
                 type="text"
-                placeholder="Email"
-                value={answer.email}
-                onChange={(e) => {
-                  setNewSeniorFAQ({
-                    ...newSeniorFAQ,
-                    answer_ko: answer_ko.map((ans, i) =>
-                      i === index ? { ...ans, email: e.target.value } : ans
-                    ),
-                    answer_en: answer_en.map((ans, i) =>
-                      i === index ? { ...ans, email: e.target.value } : ans
-                    ),
-                  });
-                }}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              />
-              <input
-                type="text"
-                placeholder="Phone"
-                value={answer.phone}
-                onChange={(e) => {
-                  setNewSeniorFAQ({
-                    ...newSeniorFAQ,
-                    answer_ko: answer_ko.map((ans, i) =>
-                      i === index ? { ...ans, phone: e.target.value } : ans
-                    ),
-                    answer_en: answer_en.map((ans, i) =>
-                      i === index ? { ...ans, phone: e.target.value } : ans
-                    ),
-                  });
-                }}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              <input
-                type="text"
-                placeholder="이미지 링크"
-                value={answer.image}
-                onChange={(e) => {
-                  setNewSeniorFAQ({
-                    ...newSeniorFAQ,
-                    answer_ko: answer_ko.map((ans, i) =>
-                      i === index ? { ...ans, image: e.target.value } : ans
-                    ),
-                    answer_en: answer_en.map((ans, i) =>
-                      i === index ? { ...ans, image: e.target.value } : ans
-                    ),
-                  });
-                }}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              />
-              <input
-                type="text"
                 placeholder="위도"
                 value={answer.map.latitude}
                 onChange={(e) => {
@@ -322,6 +269,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
             </div>
           </div>
         ))}
+
         <button
           type="button"
           onClick={handleAddAnswer}

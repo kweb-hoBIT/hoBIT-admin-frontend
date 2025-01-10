@@ -9,7 +9,7 @@ interface FAQLogMainFormProps {
 const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 4; // 한 페이지에 4개 항목 표시
   const pagesPerGroup = 10; // 한 그룹에 표시할 페이지 수
 
   const totalPages = Math.ceil(faqLogs.length / itemsPerPage);
@@ -55,46 +55,48 @@ const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
   };
 
   return (
-    <div className="p-6 bg-white-50">
+    <div className="p-6 bg-gray-50 rounded-lg" style={{ transform: 'scale(0.80)', transformOrigin: 'top center' }}>
       <h4 className="text-2xl font-bold mb-6 text-gray-800">관리자 로그 리스트(FAQ 수정사항만 반영)</h4>
-      {currentItems.map((log) => (
-        <div
-          key={log.faq_log_id}
-          className="relative bg-gray-200 p-4 mb-3 rounded-lg shadow-sm"
-        >
+      <div className="grid grid-cols-2 gap-4"> {/* 두 개씩 가로로 배치 */}
+        {currentItems.map((log) => (
           <div
-            className="mb-2 cursor-pointer"
-            onClick={() => handleLogClick(String(log.faq_log_id))}
+            key={log.faq_log_id}
+            className="relative bg-gray-200 p-4 mb-3 rounded-lg shadow-sm"
           >
-            <span className="mb-1 text-m text-gray-600">
-            <strong>관리자 로그 ID: {log.faq_log_id}</strong>
-            </span>
+            <div
+              className="mb-2 cursor-pointer"
+              onClick={() => handleLogClick(String(log.faq_log_id))}
+            >
+              <span className="mb-1 text-m text-gray-600">
+                <strong>관리자 로그 ID: {log.faq_log_id}</strong>
+              </span>
+            </div>
+            <div className="flex flex-col">
+              <div className="mb-1 text-sm text-gray-600">
+                <strong>수정 유저:</strong> {log.username}
+              </div>
+              <div className="mb-1 text-sm text-gray-600">
+                <strong>FAQ ID:</strong> {log.faq_id}
+              </div>
+              <div className="mb-1 text-sm text-gray-600">
+                <strong>주요 카테고리:</strong> {log.faq_maincategory}
+              </div>
+              <div className="mb-1 text-sm text-gray-600">
+                <strong>하위 카테고리:</strong> {log.faq_subcategory}
+              </div>
+              <div className="mb-1 text-sm text-gray-600">
+                <strong>질문:</strong> {log.faq_question}
+              </div>
+              <div className="mb-1 text-sm text-gray-600">
+                <strong>변경 목적:</strong> {log.action_type}
+              </div>
+              <div className="mb-1 text-sm text-gray-600">
+                <strong>변경 시각:</strong> {formatDateToKST(log.created_at)}
+              </div>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <div className="mb-1 text-sm text-gray-600">
-              <strong>수정 유저:</strong> {log.username}
-            </div>
-            <div className="mb-1 text-sm text-gray-600">
-              <strong>FAQ ID:</strong> {log.faq_id}
-            </div>
-            <div className="mb-1 text-sm text-gray-600">
-              <strong>주요 카테고리:</strong> {log.faq_maincategory}
-            </div>
-            <div className="mb-1 text-sm text-gray-600">
-              <strong>하위 카테고리:</strong> {log.faq_subcategory}
-            </div>
-            <div className="mb-1 text-sm text-gray-600">
-              <strong>질문:</strong> {log.faq_question}
-            </div>
-            <div className="mb-1 text-sm text-gray-600">
-              <strong>변경 목적:</strong> {log.action_type}
-            </div>
-            <div className="mb-1 text-sm text-gray-600">
-              <strong>변경 시각:</strong> {formatDateToKST(log.created_at)}
-            </div>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
       {/* 페이지네이션 */}
       <div className="flex justify-center mt-4 items-center space-x-4">
