@@ -21,9 +21,6 @@ const SeniorFAQDetail: React.FC<SeniorFAQDetailProps> = ({ senior_faq_id }) => {
         title: '',
         answer: '',
         url: '',
-        email: '',
-        phone: '',
-        image: '',
         map: {
           latitude: '',
           longitude: '',
@@ -35,9 +32,6 @@ const SeniorFAQDetail: React.FC<SeniorFAQDetailProps> = ({ senior_faq_id }) => {
         title: '',
         answer: '',
         url: '',
-        email: '',
-        phone: '',
-        image: '',
         map: {
           latitude: '',
           longitude: '',

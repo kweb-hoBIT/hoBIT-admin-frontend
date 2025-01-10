@@ -33,8 +33,6 @@ import {
   DeleteSeniorFAQResponse,
   UpdateSeniorFAQRequest,
   UpdateSeniorFAQResponse,
-  UploadSeniorFAQImageRequest,
-  UploadSeniorFAQImageResponse
 } from './seniorfaq'
 
 import {
@@ -97,8 +95,7 @@ export type HobitAdminPostApiRequest =
   | NewAccessTokenRequest 
   | CreateFAQRequest
   | CreateSeniorFAQRequest
-  | TranslateFAQRequest
-  | UploadSeniorFAQImageRequest;
+  | TranslateFAQRequest;
 
 export type HobitAdminPutApiRequest =
   | UpdateFAQRequest
@@ -137,8 +134,7 @@ export type HobitAdminApiResponse =
   | GetAllFAQLogResponse
   | CompareFAQLogResponse
   | GetAllUserFeedbackResponse
-  | UpdateUserFeedbackResponse
-  | UploadSeniorFAQImageResponse;
+  | UpdateUserFeedbackResponse;
 
 export type ApiResponse<P> = {
   error: ApiErrorPayload | null;

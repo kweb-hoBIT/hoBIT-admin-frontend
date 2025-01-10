@@ -28,9 +28,6 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
         title: '',
         answer: '',
         url: '',
-        email: '',
-        phone: '',
-        image: '',
         map: { latitude: '', longitude: '' },
       },
     ],
@@ -39,9 +36,6 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
         title: '',
         answer: '',
         url: '',
-        email: '',
-        phone: '',
-        image: '',
         map: { latitude: '', longitude: '' },
       },
     ],
@@ -67,8 +61,8 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
               subcategory_en: seniorFAQ.subcategory_en || '',
               detailcategory_ko: seniorFAQ.detailcategory_ko || '',
               detailcategory_en: seniorFAQ.detailcategory_en || '',
-              answer_ko: seniorFAQ.answer_ko || [{ answer: '', url: '', email: '', phone: '', image: '', map: {latitude: '', longitude: ''} }],
-              answer_en: seniorFAQ.answer_en || [{ answer: '', url: '', email: '', phone: '', image: '', map: {latitude: '', longitude: ''} }],
+              answer_ko: seniorFAQ.answer_ko || [{ answer: '', url: '', map: {latitude: '', longitude: ''} }],
+              answer_en: seniorFAQ.answer_en || [{ answer: '', url: '', map: {latitude: '', longitude: ''} }],
               manager: seniorFAQ.manager || '',
             });
           }
@@ -92,11 +86,11 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
       ...updatedSeniorFAQ,
       answer_ko: [
         ...updatedSeniorFAQ.answer_ko,
-        { title: '', answer: '', url: '', email: '', phone: '', image: '', map: { latitude: '', longitude: '' } },
+        { title: '', answer: '', url: '', map: { latitude: '', longitude: '' } },
       ],
       answer_en: [
         ...updatedSeniorFAQ.answer_en,
-        { title: '', answer: '', url: '', email: '', phone: '', image: '', map: { latitude: '', longitude: '' } },
+        { title: '', answer: '', url: '', map: { latitude: '', longitude: '' } },
       ],
     });
   };
