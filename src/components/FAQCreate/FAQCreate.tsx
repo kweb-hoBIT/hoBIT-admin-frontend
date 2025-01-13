@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 const FAQCreate: React.FC = () => {
   const navigate = useNavigate();
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
+  const [isCreating, setIsCreating] = useState(false);
 
   const [newFAQ, setnewFAQ] = useState<CreateFAQRequest["body"]>({
     user_id: user_id ? Number(user_id) : 0,
@@ -47,7 +48,10 @@ const FAQCreate: React.FC = () => {
     });
   };
 
-  const handleSubmit = async () => {
+  const handleCreate = async () => {
+    if (isCreating) return;
+    setIsCreating(true);
+
     const {
       maincategory_ko,
       maincategory_en,
@@ -72,6 +76,7 @@ const FAQCreate: React.FC = () => {
       answer_en.some((ans) => !ans.answer)
     ) {
       alert('모든 필드를 채워주세요.');
+      setIsCreating(false);
       return;
     }
 
@@ -100,6 +105,8 @@ const FAQCreate: React.FC = () => {
       }
     } catch (error) {
       alert('FAQ 생성에 실패했습니다.');
+    } finally {
+      setIsCreating(false); // 생성 완료
     }
   };
 
@@ -108,8 +115,9 @@ const FAQCreate: React.FC = () => {
       newFAQ={newFAQ}
       setnewFAQ={setnewFAQ}
       handleAddAnswer={handleAddAnswer}
-      handleSubmit={handleSubmit}
+      handleCreate={handleCreate}
       handleDeleteAnswer={handleDeleteAnswer}
+      isCreating={isCreating}
     />
   );
 };

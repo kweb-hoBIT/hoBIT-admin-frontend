@@ -14,7 +14,7 @@ interface FAQUpdateProps {
 const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
   const navigate = useNavigate();
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
-
+  const [isUpdating, setIsUpdating] = useState(false);
   const [updatedFAQ, setupdatedFAQ] = useState<UpdateFAQRequest['body']>({
     user_id: user_id ? Number(user_id) : 0,
     maincategory_ko: '',
@@ -86,6 +86,8 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
   };
 
   const handleUpdate = async () => {
+    if (isUpdating) return;
+    setIsUpdating(true);
     const {
       maincategory_ko,
       maincategory_en,
@@ -128,7 +130,9 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
     } catch (error) {
       console.error(error);
       alert('FAQ 수정에 실패했습니다.');
-    }
+    } finally {
+      setIsUpdating(false);
+    }     
   };
 
   // 로딩 상태일 때 로딩 스피너나 메시지를 표시
@@ -143,6 +147,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
       handleAddAnswer={handleAddAnswer}
       handleDeleteAnswer={handleDeleteAnswer}
       handleUpdate={handleUpdate}
+      isUpdating={isUpdating}
     />
   );
 };

@@ -8,6 +8,7 @@ interface FAQUpdateFormProps {
   handleAddAnswer: () => void;
   handleUpdate: () => void;
   handleDeleteAnswer: (index: number) => void;
+  isUpdating: boolean;
 }
 
 const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
@@ -16,6 +17,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
   handleAddAnswer,
   handleUpdate,
   handleDeleteAnswer,
+  isUpdating,
 }) => {
   const {
     maincategory_ko,
@@ -276,9 +278,12 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
         <button
           type="button"
           onClick={handleUpdate}
-          className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600"
+          className={`px-6 py-3 rounded-lg ${
+            isUpdating ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600 text-white'
+          }`}
+          disabled={isUpdating}
         >
-          FAQ 수정
+          {isUpdating ? '수정 중...' : '수정'}
         </button>
       </div>
     </form>
