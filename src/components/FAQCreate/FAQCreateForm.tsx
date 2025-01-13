@@ -8,6 +8,7 @@ interface FAQCreateFormProps {
   handleAddAnswer: () => void;
   handleSubmit: () => void;
   handleDeleteAnswer: (index: number) => void;
+  isSubmitting: boolean;
 }
 
 const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
@@ -16,6 +17,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
   handleAddAnswer,
   handleSubmit,
   handleDeleteAnswer,
+  isSubmitting,
 }) => {
   const {
     maincategory_ko,
@@ -258,9 +260,14 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
       <div className="flex justify-center">
         <button
           onClick={handleSubmit}
-          className="py-3 px-6 bg-green-500 text-white rounded-lg hover:bg-green-600"
+          disabled={isSubmitting} // 버튼 비활성화
+          className={`py-3 px-6 rounded-lg ${
+            isSubmitting
+              ? 'bg-gray-400 text-white cursor-not-allowed'
+              : 'bg-green-500 text-white hover:bg-green-600'
+          }`}
         >
-          추가
+          {isSubmitting ? '추가 중...' : '추가'}
         </button>
       </div>
     </form>
