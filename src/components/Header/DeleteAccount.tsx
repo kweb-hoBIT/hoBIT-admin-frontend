@@ -11,12 +11,11 @@ const DeleteAccount: React.FC = () => {
   const { user_id, username } = useSelector((state: RootState) => selectAuth(state));
   const [error, setError] = useState<string | null>(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [deleteKey, setDeleteKey] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const DeleteAccountApi = user_id 
-    ? useHobitMutateDeleteApi<DeleteAccountReqeust, DeleteAccountResponse>('users')
-    : null;
+  const DeleteAccountApi = useHobitMutateDeleteApi<DeleteAccountReqeust, DeleteAccountResponse>('users');
 
   const handleDeleteAccount = async () => {
     if (!user_id) {
@@ -28,12 +27,14 @@ const DeleteAccount: React.FC = () => {
       try {
         const response = await DeleteAccountApi({
           params: { user_id: String(user_id) },
-          body: {},
+          body: { deleteKey },
         });
         if (response.payload?.statusCode === 200) {
           dispatch(clearTokens());
           navigate('/login');
           alert('회원 탈퇴가 완료되었습니다.');
+        } else if (response.payload?.statusCode === 403) {
+          setError('관리자 키가 잘못 입력됐습니다.');
         } else {
           setError('회원 탈퇴 중 오류가 발생했습니다. 다시 시도해주세요.');
         }
@@ -43,9 +44,9 @@ const DeleteAccount: React.FC = () => {
     }
   };
 
-  // 팝업 토글 함수
   const togglePopup = () => {
     setShowPopup(!showPopup);
+    setError(null);
   };
 
   return (
@@ -63,6 +64,13 @@ const DeleteAccount: React.FC = () => {
             <div className="text-center">
               {error && <p className="text-red-600 mb-2">{error}</p>}
               <p>{username ? `${username}님, 정말 회원 탈퇴를 하시겠습니까?` : '정말 회원 탈퇴를 하시겠습니까?'}</p>
+              <input
+                type="password"
+                value={deleteKey}
+                onChange={(e) => setDeleteKey(e.target.value)}
+                placeholder="관리자 키를 입력하세요"
+                className="mt-4 w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+              />
               <button
                 type="button"
                 onClick={handleDeleteAccount}
