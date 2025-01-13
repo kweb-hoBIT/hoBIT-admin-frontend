@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 const FAQCreate: React.FC = () => {
   const navigate = useNavigate();
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
+  const [isCreating, setIsCreating] = useState(false);
 
   const [newFAQ, setnewFAQ] = useState<CreateFAQRequest["body"]>({
     user_id: user_id ? Number(user_id) : 0,
@@ -24,7 +25,6 @@ const FAQCreate: React.FC = () => {
     manager: '',
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const FAQCreateApi = useHobitMutatePostApi<CreateFAQRequest, CreateFAQResponse>('faqs');
 
   const handleAddAnswer = () => {
@@ -48,9 +48,9 @@ const FAQCreate: React.FC = () => {
     });
   };
 
-  const handleSubmit = async () => {
-    if (isSubmitting) return; // 이미 생성 중일 때 방지
-    setIsSubmitting(true); // 생성 시작
+  const handleCreate = async () => {
+    if (isCreating) return;
+    setIsCreating(true);
 
     const {
       maincategory_ko,
@@ -76,7 +76,7 @@ const FAQCreate: React.FC = () => {
       answer_en.some((ans) => !ans.answer)
     ) {
       alert('모든 필드를 채워주세요.');
-      setIsSubmitting(false);
+      setIsCreating(false);
       return;
     }
 
@@ -106,7 +106,7 @@ const FAQCreate: React.FC = () => {
     } catch (error) {
       alert('FAQ 생성에 실패했습니다.');
     } finally {
-      setIsSubmitting(false); // 생성 완료
+      setIsCreating(false); // 생성 완료
     }
   };
 
@@ -115,9 +115,9 @@ const FAQCreate: React.FC = () => {
       newFAQ={newFAQ}
       setnewFAQ={setnewFAQ}
       handleAddAnswer={handleAddAnswer}
-      handleSubmit={handleSubmit}
+      handleCreate={handleCreate}
       handleDeleteAnswer={handleDeleteAnswer}
-      isSubmitting={isSubmitting}
+      isCreating={isCreating}
     />
   );
 };

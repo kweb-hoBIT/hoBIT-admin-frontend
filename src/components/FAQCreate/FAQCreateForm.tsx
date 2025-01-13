@@ -6,18 +6,18 @@ interface FAQCreateFormProps {
   newFAQ: CreateFAQRequest['body'];
   setnewFAQ: React.Dispatch<React.SetStateAction<CreateFAQRequest['body']>>;
   handleAddAnswer: () => void;
-  handleSubmit: () => void;
+  handleCreate: () => void;
   handleDeleteAnswer: (index: number) => void;
-  isSubmitting: boolean;
+  isCreating: boolean;
 }
 
 const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
   newFAQ,
   setnewFAQ,
   handleAddAnswer,
-  handleSubmit,
+  handleCreate,
   handleDeleteAnswer,
-  isSubmitting,
+  isCreating,
 }) => {
   const {
     maincategory_ko,
@@ -259,15 +259,15 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
       {/* 생성버튼 */}
       <div className="flex justify-center">
         <button
-          onClick={handleSubmit}
-          disabled={isSubmitting} // 버튼 비활성화
+          onClick={handleCreate}
+          disabled={isCreating}
           className={`py-3 px-6 rounded-lg ${
-            isSubmitting
+            isCreating
               ? 'bg-gray-400 text-white cursor-not-allowed'
               : 'bg-green-500 text-white hover:bg-green-600'
           }`}
         >
-          {isSubmitting ? '추가 중...' : '추가'}
+          {isCreating ? '추가 중...' : '추가'}
         </button>
       </div>
     </form>

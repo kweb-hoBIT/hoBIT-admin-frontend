@@ -86,6 +86,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
   };
 
   const handleUpdate = async () => {
+    if (isUpdating) return;
     setIsUpdating(true);
     const {
       maincategory_ko,

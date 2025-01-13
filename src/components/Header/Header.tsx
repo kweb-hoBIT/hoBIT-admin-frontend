@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { selectAuth } from '../../redux/authSlice';
 import Logout from './Logout';
-import DeleteAccount from './DeleteAccount'; // DeleteAccount 컴포넌트 임포트
+import DeleteAccount from './DeleteAccount';
 
 const Header: React.FC = () => {
   const { username } = useSelector((state: RootState) => selectAuth(state));
@@ -15,19 +15,21 @@ const Header: React.FC = () => {
     setShowPopup(!showPopup);
   };
 
+  const closePopup = () => {
+    setShowPopup(false);
+  };
+
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
 
   return (
     <header className="bg-crimson p-4 flex justify-between items-center">
       <div className="text-2xl font-semibold">
         {isAuthPage ? (
-          <span className="text-white">
+          <span className="text-white">hoBIT</span>
+        ) : (
+          <Link to="/main" className="text-white hover:text-gray-600">
             hoBIT
-          </span>
-        ):(
-        <Link to="/main" className="text-white hover:text-gray-600">
-          hoBIT
-        </Link>
+          </Link>
         )}
       </div>
       <nav className="flex items-center gap-4 relative">
@@ -74,16 +76,34 @@ const Header: React.FC = () => {
                     zIndex: 1000,
                   }}
                 >
-                  <p className="text-black font-semibold mb-2">
-                    {username ? (
-                      <>
-                        {username}님<br />
-                        반갑습니다
-                      </>
-                    ) : (
-                      '반갑습니다'
-                    )}
-                  </p>
+                  <div className="flex justify-between items-center mb-2">
+                    <p className="text-black font-semibold">
+                      {username ? (
+                        <>
+                          {username}님<br />
+                          반갑습니다
+                        </>
+                      ) : (
+                        '반갑습니다'
+                      )}
+                    </p>
+                    <button onClick={closePopup} className="absolute top-3 right-2 text-gray-500 hover:text-gray-800">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="2"
+                        stroke="currentColor"
+                        className="w-4 h-4"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                   <div className="mb-2">
                     <Logout />
                   </div>
