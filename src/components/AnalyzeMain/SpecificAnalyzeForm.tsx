@@ -49,10 +49,10 @@ const SpecificAnalyzeForm: React.FC<SpecificAnalyzeFormProps> = ({ analyzeData, 
   const renderField = (fieldName: string) => fieldTranslations[fieldName] || fieldName;
 
   return (
-    <div className="flex flex-col space-y-6 min-h-[630px] p-8">
-      {/* 분석 결과 */}
-      <div className="min-h-[500px] h-auto overflow-y-auto rounded-lg border border-gray-200 p-4 flex-1 bg-white shadow-[0_2px_6px_rgba(0,0,0,0.1)]">
-        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
+    <div className="flex flex-col space-y-6 max-h-[1000px] p-8">
+    {/* 분석 결과 */}
+    <div className="min-h-[400px] max-h-[800px] h-auto overflow-y-auto rounded-lg border border-gray-200 p-4 flex-1 bg-white shadow-[0_2px_6px_rgba(0,0,0,0.1)]">
+      <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
           {searchSubject === 'frequency' && 'FAQ 검색 빈도 분석 결과'}
           {searchSubject === 'feedback' && 'FAQ 피드백 점수 분석 결과'}
           {searchSubject === 'language' && '사용 언어 빈도 분석 결과'}

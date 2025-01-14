@@ -49,72 +49,75 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
   };
 
   return (
-    <div className="p-6 bg-gray-50 rounded-lg" style={{ transform: 'scale(0.80)', transformOrigin: 'top center' }}>
-      <h4 className="text-2xl font-bold mb-6 text-gray-800">유저 로그 리스트</h4>
-
-      <div className="grid grid-cols-2 gap-4">
-        {currentItems.map((log) => (
-          <div key={log.question_log_id} className="relative bg-gray-200 p-4 mb-3 rounded-lg shadow-sm">
-            <div className="mb-2">
-              <span className="mb-1 text-m text-gray-600"><strong>유저 로그 ID: {log.question_log_id}</strong></span>
-            </div>
-            <div className="flex flex-col">
-              <div className="mb-1 text-sm text-gray-600">
-                <strong>유저 질문:</strong> {log.user_question}
+    <div className="p-6 bg-white-50 rounded-lg" style={{ transform: 'scale(0.85)', transformOrigin: 'top center' }}>
+      <div className="p-6">
+        <h4 className="text-2xl font-bold mb-4 text-gray-800">유저 로그 리스트</h4>
+        <div style={{ minHeight: '505px' }}>
+          <div className="grid grid-cols-2 gap-4">
+            {currentItems.map((log) => (
+              <div key={log.question_log_id} className="relative bg-gray-200 p-4 mb-3 rounded-lg shadow-sm">
+                <div className="mb-2">
+                  <span className="mb-1 text-m text-gray-600"><strong>유저 로그 ID: {log.question_log_id}</strong></span>
+                </div>
+                <div className="flex flex-col">
+                  <div className="mb-1 text-sm text-gray-600">
+                    <strong>유저 질문:</strong> {log.user_question}
+                  </div>
+                  <div className="mb-1 text-sm text-gray-600">
+                    <strong>피드백 점수:</strong> {log.feedback_score}
+                  </div>
+                  <div className="mb-1 text-sm text-gray-600">
+                    <strong>피드백:</strong> {log.feedback}
+                  </div>
+                  <div className="mb-1 text-sm text-gray-600">
+                    <strong>매칭된 FAQ ID:</strong> {log.faq_id}
+                  </div>
+                  <div className="mb-1 text-sm text-gray-600">
+                    <strong>매칭된 질문:</strong> {log.faq_question}
+                  </div>
+                  <div className="mb-1 text-sm text-gray-600">
+                    <strong>질문 시각:</strong> {formatDateToKST(log.created_at)}
+                  </div>
+                </div>
               </div>
-              <div className="mb-1 text-sm text-gray-600">
-                <strong>피드백 점수:</strong> {log.feedback_score}
-              </div>
-              <div className="mb-1 text-sm text-gray-600">
-                <strong>피드백:</strong> {log.feedback}
-              </div>
-              <div className="mb-1 text-sm text-gray-600">
-                <strong>매칭된 FAQ ID:</strong> {log.faq_id}
-              </div>
-              <div className="mb-1 text-sm text-gray-600">
-                <strong>매칭된 질문:</strong> {log.faq_question}
-              </div>
-              <div className="mb-1 text-sm text-gray-600">
-                <strong>질문 시각:</strong> {formatDateToKST(log.created_at)}
-              </div>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
-
-      {/* 페이지네이션 */}
-      <div className="flex justify-center mt-4 items-center space-x-4">
-        <button
-          onClick={handlePrevPage}
-          className="px-4 py-2 bg-gray-300 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-400"
-          disabled={currentPage === 1}
-        >
-          이전
-        </button>
-
-        {/* 페이지 번호 */}
-        <div className="flex space-x-2">
-          {pageNumbers.map((page) => (
-            <button
-              key={page}
-              onClick={() => handlePageClick(page)}
-              className={`px-3 py-2 text-sm font-semibold rounded-md ${
-                currentPage === page ? 'bg-crimson text-white' : 'bg-gray-200 text-gray-700'
-              }`}
-              style={{ width: '40px', textAlign: 'center' }}
-            >
-              {page}
-            </button>
-          ))}
         </div>
 
-        <button
-          onClick={handleNextPage}
-          className="px-4 py-2 bg-gray-300 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-400"
-          disabled={currentPage === totalPages}
-        >
-          다음
-        </button>
+        {/* 페이지네이션 */}
+        <div className="flex justify-center mt-4 items-center space-x-4">
+          <button
+            onClick={handlePrevPage}
+            className="px-4 py-2 bg-gray-300 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-400"
+            disabled={currentPage === 1}
+          >
+            이전
+          </button>
+
+          {/* 페이지 번호 */}
+          <div className="flex space-x-2">
+            {pageNumbers.map((page) => (
+              <button
+                key={page}
+                onClick={() => handlePageClick(page)}
+                className={`px-3 py-2 text-sm font-semibold rounded-md ${
+                  currentPage === page ? 'bg-crimson text-white' : 'bg-gray-200 text-gray-700'
+                }`}
+                style={{ width: '40px', textAlign: 'center' }}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={handleNextPage}
+            className="px-4 py-2 bg-gray-300 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-400"
+            disabled={currentPage === totalPages}
+          >
+            다음
+          </button>
+        </div>
       </div>
     </div>
   );

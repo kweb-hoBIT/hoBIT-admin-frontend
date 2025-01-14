@@ -20,6 +20,8 @@ import {
   DeleteFAQResponse,
   UpdateFAQRequest,
   UpdateFAQResponse,
+  GetAllFAQCategoryRequest,
+  GetAllFAQCategoryResponse,
 } from './faq';
 
 import {
@@ -33,6 +35,8 @@ import {
   DeleteSeniorFAQResponse,
   UpdateSeniorFAQRequest,
   UpdateSeniorFAQResponse,
+  GetAllSeniorFAQCategoryRequest,
+  GetAllSeniorFAQCategoryResponse,
 } from './seniorfaq'
 
 import {
@@ -86,7 +90,9 @@ export type HobitAdminGetApiRequest =
   | SpecificLanguageRequest
   | GetAllFAQLogRequest
   | CompareFAQLogRequest
-  | GetAllUserFeedbackRequest;
+  | GetAllUserFeedbackRequest
+  | GetAllFAQCategoryRequest
+  | GetAllSeniorFAQCategoryRequest;
 
 
 export type HobitAdminPostApiRequest =
@@ -134,7 +140,9 @@ export type HobitAdminApiResponse =
   | GetAllFAQLogResponse
   | CompareFAQLogResponse
   | GetAllUserFeedbackResponse
-  | UpdateUserFeedbackResponse;
+  | UpdateUserFeedbackResponse
+  | GetAllFAQCategoryResponse
+  | GetAllSeniorFAQCategoryResponse;
 
 export type ApiResponse<P> = {
   error: ApiErrorPayload | null;

@@ -68,7 +68,7 @@ const AnalyzeMain: React.FC = () => {
         </div>
       ) : (
         <div className="max-w-[1500px] mx-auto p-8 flex justify-between items-start gap-8">
-          <div className="flex-[0.75] flex flex-col gap-6 min-h-[665px] min-w-[300px] border border-[#ddd] rounded-lg p-4 bg-white shadow-[0_2px_6px_rgba(0,0,0,0.1)]">
+          <div className="flex-[0.75] flex flex-col gap-6 min-h-[500px] min-w-[300px] border border-[#ddd] rounded-lg p-4 bg-white shadow-[0_2px_6px_rgba(0,0,0,0.1)]">
             {/* Analysis Results and Graph Section */}
             {showSpeicificAnalyze ? (
               <SpecificAnalyze

@@ -57,7 +57,11 @@ const SeniorFAQDelete: React.FC<SeniorFAQDeleteProps> = ({ senior_faq_id, detail
             <div className="text-center">
               {error && <p className="text-red-600 mb-2">{error}</p>}
               <p>정말 이 Senior FAQ를 삭제하시겠습니까?<br />이 질문과 관련된 모든 정보가 삭제됩니다.</p>
-              <p className="mt-4 text-sm text-gray-600">삭제하려면 아래에 질문을 입력하세요:</p>
+              <p className="mt-4 text-sm text-gray-600">
+                삭제하려면 "{detailcategory_ko}"
+                <br />
+                세부카테고리를 입력하세요:
+              </p>
               <input
                 type="text"
                 value={inputText}
