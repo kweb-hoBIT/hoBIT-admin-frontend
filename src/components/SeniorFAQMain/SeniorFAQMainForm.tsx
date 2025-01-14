@@ -68,14 +68,14 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
   };
 
   return (
-    <div className="p-6 bg-gray-50 rounded-lg" style={{ transform: 'scale(0.80)', transformOrigin: 'top center' }}>
+    <div className="p-6 bg-white-50 rounded-lg" style={{ transform: 'scale(0.85)', transformOrigin: 'top center' }}>
       <SeniorFAQFilter
         filter={filter}
         selectedFilter={selectedFilter}
         onFilterChange={setFilter}
         onSelectedFilterChange={setSelectedFilter}
       />
-      <div className="p-6 bg-gray-50 rounded-lg">
+      <div className="p-6">
         <div className="flex justify-center items-center mb-6">
           <h4 className="text-2xl font-bold text-gray-800 flex-grow">선배 FAQ 리스트</h4>
           <button
@@ -85,66 +85,66 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
             추가
           </button>
         </div>
+          <div style={{ minHeight: '430px' }}>
+            <div className="grid grid-cols-2 gap-4">
+              {currentItems.map((seniorFaq) => (
+                <div key={seniorFaq.senior_faq_id} className="relative bg-gray-200 p-4 rounded-lg">
+                  <button
+                    onClick={() => handleEditClick(String(seniorFaq.senior_faq_id))}
+                    className="absolute top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                  >
+                    수정
+                  </button>
 
-        <div className="grid grid-cols-2 gap-4">
-          {currentItems.map((seniorFaq) => (
-            <div key={seniorFaq.senior_faq_id} className="relative bg-gray-200 p-4 rounded-lg">
-              <button
-                onClick={() => handleEditClick(String(seniorFaq.senior_faq_id))}
-                className="absolute top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-              >
-                수정
-              </button>
+                  <div className="absolute bottom-5 right-5">
+                    <SeniorFAQDelete
+                      senior_faq_id={String(seniorFaq.senior_faq_id)}
+                      detailcategory_ko={seniorFaq.detailcategory_ko}
+                      onSuccess={() => window.location.reload()}
+                    />
+                  </div>
 
-              <div className="absolute bottom-5 right-5">
-                <SeniorFAQDelete
-                  senior_faq_id={String(seniorFaq.senior_faq_id)}
-                  detailcategory_ko={seniorFaq.detailcategory_ko}
-                  onSuccess={() => window.location.reload()}
-                />
-              </div>
+                  <div
+                    className="mb-2 cursor-pointer"
+                    onClick={() => handleDetailClick(String(seniorFaq.senior_faq_id))}
+                  >
+                    <span className="mb-1 text-m text-gray-600">
+                      <strong>Senior FAQ ID: {seniorFaq.senior_faq_id}</strong>
+                    </span>
+                  </div>
 
-              <div
-                className="mb-2 cursor-pointer"
-                onClick={() => handleDetailClick(String(seniorFaq.senior_faq_id))}
-              >
-                <span className="mb-1 text-m text-gray-600">
-                  <strong>Senior FAQ ID: {seniorFaq.senior_faq_id}</strong>
-                </span>
-              </div>
-
-              <div className="flex flex-col">
-                <div className="mb-1 text-sm text-gray-600">
-                  <strong>주요 카테고리:</strong> {seniorFaq.maincategory_ko}
+                  <div className="flex flex-col">
+                    <div className="mb-1 text-sm text-gray-600">
+                      <strong>주요 카테고리:</strong> {seniorFaq.maincategory_ko}
+                    </div>
+                    <div className="mb-1 text-sm text-gray-600">
+                      <strong>하위 카테고리:</strong> {seniorFaq.subcategory_ko}
+                    </div>
+                    <div className="mb-1 text-sm text-gray-600">
+                      <strong>세부 카테고리:</strong> {seniorFaq.detailcategory_ko}
+                    </div>
+                    <div className="mb-1 text-sm text-gray-600">
+                      <strong>관리자:</strong> {seniorFaq.manager}
+                    </div>
+                    <div className="mb-1 text-sm text-gray-600">
+                      <strong>생성 시간:</strong> {formatDateToKST(seniorFaq.created_at)}
+                    </div>
+                    <div className="mb-1 text-sm text-gray-600">
+                      <strong>수정 시간:</strong> {formatDateToKST(seniorFaq.updated_at)}
+                    </div>
+                  </div>
                 </div>
-                <div className="mb-1 text-sm text-gray-600">
-                  <strong>하위 카테고리:</strong> {seniorFaq.subcategory_ko}
-                </div>
-                <div className="mb-1 text-sm text-gray-600">
-                  <strong>세부 카테고리:</strong> {seniorFaq.detailcategory_ko}
-                </div>
-                <div className="mb-1 text-sm text-gray-600">
-                  <strong>관리자:</strong> {seniorFaq.manager}
-                </div>
-                <div className="mb-1 text-sm text-gray-600">
-                  <strong>생성 시간:</strong> {formatDateToKST(seniorFaq.created_at)}
-                </div>
-                <div className="mb-1 text-sm text-gray-600">
-                  <strong>수정 시간:</strong> {formatDateToKST(seniorFaq.updated_at)}
-                </div>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
-
-        <div className="flex justify-center mt-4 items-center space-x-4">
-          <button
-            onClick={handlePrevPage}
-            className="px-4 py-2 bg-gray-300 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-400"
-            disabled={currentPage === 1}
-          >
-            이전
-          </button>
+          </div>
+          <div className="flex justify-center mt-4 items-center space-x-4">
+            <button
+              onClick={handlePrevPage}
+              className="px-4 py-2 bg-gray-300 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-400"
+              disabled={currentPage === 1}
+            >
+              이전
+            </button>
 
           <div className="flex space-x-2">
             {pageNumbers.map((page) => (

@@ -68,14 +68,14 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
   };
 
   return (
-    <div className="p-6 bg-gray-50 rounded-lg" style={{ transform: 'scale(0.80)', transformOrigin: 'top center' }}>
+    <div className="p-6 bg-white-50 rounded-lg" style={{ transform: 'scale(0.85)', transformOrigin: 'top center' }}>
       <FAQFilter
         filter={filter}
         selectedFilter={selectedFilter}
         onFilterChange={setFilter}
         onSelectedFilterChange={setSelectedFilter}
       />
-      <div className="p-6 bg-gray-50 rounded-lg">
+      <div className="p-6" >
         <div className="flex justify-center items-center mb-6">
           <h4 className="text-2xl font-bold text-gray-800 flex-grow">FAQ 리스트</h4>
           <button
@@ -85,52 +85,53 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
             추가
           </button>
         </div>
+        <div style={{ minHeight: '430px' }}>
+          <div className="grid grid-cols-2 gap-4">
+            {currentItems.map((faq) => (
+              <div key={faq.faq_id} className="relative bg-gray-200 p-4 rounded-lg">
+                <button
+                  onClick={() => handleEditClick(String(faq.faq_id))}
+                  className="absolute top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                >
+                  수정
+                </button>
 
-        <div className="grid grid-cols-2 gap-4">
-          {currentItems.map((faq) => (
-            <div key={faq.faq_id} className="relative bg-gray-200 p-4 rounded-lg">
-              <button
-                onClick={() => handleEditClick(String(faq.faq_id))}
-                className="absolute top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-              >
-                수정
-              </button>
+                <div className="absolute bottom-5 right-5">
+                  <FAQDelete faq_id={String(faq.faq_id)} question_ko={faq.question_ko} onSuccess={() => window.location.reload()} />
+                </div>
 
-              <div className="absolute bottom-5 right-5">
-                <FAQDelete faq_id={String(faq.faq_id)} question_ko={faq.question_ko} onSuccess={() => window.location.reload()} />
+                <div
+                  className="mb-2 cursor-pointer"
+                  onClick={() => handleDetailClick(String(faq.faq_id))}
+                >
+                  <span className="mb-1 text-m text-gray-600">
+                    <strong>FAQ ID: {faq.faq_id}</strong>
+                  </span>
+                </div>
+
+                <div className="flex flex-col">
+                  <div className="mb-1 text-sm text-gray-600">
+                    <strong>주요 카테고리:</strong> {faq.maincategory_ko}
+                  </div>
+                  <div className="mb-1 text-sm text-gray-600">
+                    <strong>하위 카테고리:</strong> {faq.subcategory_ko}
+                  </div>
+                  <div className="mb-1 text-sm text-gray-600">
+                    <strong>질문:</strong> {faq.question_ko}
+                  </div>
+                  <div className="mb-1 text-sm text-gray-600">
+                    <strong>관리자:</strong> {faq.manager}
+                  </div>
+                  <div className="mb-1 text-sm text-gray-600">
+                    <strong>생성 시간:</strong> {formatDateToKST(faq.created_at)}
+                  </div>
+                  <div className="mb-1 text-sm text-gray-600">
+                    <strong>수정 시간:</strong> {formatDateToKST(faq.updated_at)}
+                  </div>
+                </div>
               </div>
-
-              <div
-                className="mb-2 cursor-pointer"
-                onClick={() => handleDetailClick(String(faq.faq_id))}
-              >
-                <span className="mb-1 text-m text-gray-600">
-                  <strong>FAQ ID: {faq.faq_id}</strong>
-                </span>
-              </div>
-
-              <div className="flex flex-col">
-                <div className="mb-1 text-sm text-gray-600">
-                  <strong>주요 카테고리:</strong> {faq.maincategory_ko}
-                </div>
-                <div className="mb-1 text-sm text-gray-600">
-                  <strong>하위 카테고리:</strong> {faq.subcategory_ko}
-                </div>
-                <div className="mb-1 text-sm text-gray-600">
-                  <strong>질문:</strong> {faq.question_ko}
-                </div>
-                <div className="mb-1 text-sm text-gray-600">
-                  <strong>관리자:</strong> {faq.manager}
-                </div>
-                <div className="mb-1 text-sm text-gray-600">
-                  <strong>생성 시간:</strong> {formatDateToKST(faq.created_at)}
-                </div>
-                <div className="mb-1 text-sm text-gray-600">
-                  <strong>수정 시간:</strong> {formatDateToKST(faq.updated_at)}
-                </div>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         <div className="flex justify-center mt-4 items-center space-x-4">
