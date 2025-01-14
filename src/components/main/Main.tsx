@@ -2,40 +2,25 @@ import React from 'react';
 
 const Main: React.FC = () => {
   return (
-    <div className="flex justify-center items-center min-h-screen p-2 rounded-3xl max-w-2xl mx-auto space-y-8">
-      <div className="bg-white p-6 rounded-lg w-96">
-        <h2 className="text-2xl font-semibold mb-4 text-center">메인 페이지</h2>
-        <div className="flex flex-col gap-4">
-          <a
-            href="/faqs"
-            className="w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 text-center hover:bg-crimson-dark"
-          >
-            FAQ로 이동
-          </a>
-          <a
-            href="/seniorfaqs"
-            className="w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 text-center hover:bg-crimson-dark"
-          >
-            선배 FAQ로 이동
-          </a>
-          <a
-            href="/logs"
-            className="w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 text-center hover:bg-crimson-dark"
-          >
-            로그로 이동
-          </a>
-          <a
-            href="/logs/analytics"
-            className="w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 text-center hover:bg-crimson-dark"
-          >
-            로그 분석 페이지로 이동
-          </a>
-          <a
-            href="/userfeedbacks"
-            className="w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 text-center hover:bg-crimson-dark"
-          >
-            유저 피드백 페이지로 이동
-          </a>
+    <div className="flex justify-center items-center min-h-screen bg-white-50">
+      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">메인 페이지</h2>
+        <div className="space-y-4">
+          {[
+            { href: "/faqs", text: "FAQ로 이동" },
+            { href: "/seniorfaqs", text: "선배 FAQ로 이동" },
+            { href: "/logs", text: "로그로 이동" },
+            { href: "/logs/analytics", text: "로그 분석으로 이동" },
+            { href: "/userfeedbacks", text: "유저 피드백으로 이동" },
+          ].map((link, index) => (
+            <a
+              key={index}
+              href={link.href}
+              className="block w-full bg-crimson hover:bg-crimson-dark text-white font-semibold text-lg py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-crimson focus:ring-opacity-50 shadow-md"
+            >
+              {link.text}
+            </a>
+          ))}
         </div>
       </div>
     </div>
