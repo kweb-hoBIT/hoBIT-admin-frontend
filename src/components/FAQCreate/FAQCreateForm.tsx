@@ -1,10 +1,14 @@
-import React from 'react';
-import { CreateFAQRequest } from '../../types/faq';
+import React, { useState } from 'react';
+import { CreateFAQRequest, GetAllFAQCategoryResponse } from '../../types/faq';
 import Translate from '../Translate/Translate';
 
 interface FAQCreateFormProps {
   newFAQ: CreateFAQRequest['body'];
   setnewFAQ: React.Dispatch<React.SetStateAction<CreateFAQRequest['body']>>;
+  filteredMaincategoryKo: GetAllFAQCategoryResponse['data']['categories']['maincategory_ko'];
+  filteredMaincategoryEn: GetAllFAQCategoryResponse['data']['categories']['maincategory_en'];
+  filteredSubcategoryKo: GetAllFAQCategoryResponse['data']['categories']['subcategory_ko'];
+  filteredSubcategoryEn: GetAllFAQCategoryResponse['data']['categories']['subcategory_en'];
   handleAddAnswer: () => void;
   handleCreate: () => void;
   handleDeleteAnswer: (index: number) => void;
@@ -14,6 +18,10 @@ interface FAQCreateFormProps {
 const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
   newFAQ,
   setnewFAQ,
+  filteredMaincategoryKo,
+  filteredMaincategoryEn,
+  filteredSubcategoryKo,
+  filteredSubcategoryEn,
   handleAddAnswer,
   handleCreate,
   handleDeleteAnswer,
@@ -31,6 +39,11 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
     manager,
   } = newFAQ;
 
+  const [isMainCateogoryKoInputFocused, setIsMainCateogoryKoInputInputFocused] = useState(false);
+  const [isMainCateogoryEnInputFocused, setIsMainCateogoryEnInputInputFocused] = useState(false);
+  const [isSubCateogoryKoInputFocused, setIsSubCateogoryKoInputInputFocused] = useState(false);
+  const [isSubCateogoryEnInputFocused, setIsSubCateogoryEnInputInputFocused] = useState(false);
+
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
@@ -41,28 +54,70 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
       {/* 카테고리 필드 */}
       <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
         <h3 className="text-xl font-bold text-gray-800">카테고리</h3>
-        <div>
+        <div className="relative">
           <label className="block text-lg font-medium text-gray-700 mb-2">카테고리 (한글)</label>
-          <input
-            type="text"
-            value={maincategory_ko}
-            onChange={(e) =>
-              setnewFAQ({ ...newFAQ, maincategory_ko: e.target.value })
-            }
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="카테고리를 입력하세요"
-          />
+          <div>
+            <input
+              type="text"
+              value={maincategory_ko}
+              onChange={(e) =>
+                setnewFAQ({ ...newFAQ, maincategory_ko: e.target.value })
+              }
+              onFocus={() => setIsMainCateogoryKoInputInputFocused(true)}
+              onBlur={() => {
+                setTimeout(() => {
+                  setIsMainCateogoryKoInputInputFocused(false);
+                }, 100);
+              }}
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="카테고리를 입력하세요"
+            />
+            {isMainCateogoryKoInputFocused && filteredMaincategoryKo.length > 0 && (
+              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+                {filteredMaincategoryKo.map((category) => (
+                  <li
+                    key={category}
+                    onClick={() => setnewFAQ({ ...newFAQ, maincategory_ko: category })}
+                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                  >
+                    {category}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
           <Translate sourceText={maincategory_ko} setTargetText={(text) => setnewFAQ({ ...newFAQ, maincategory_en: text })} />
           <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Category (English)</label>
-          <input
-            type="text"
-            value={maincategory_en}
-            onChange={(e) =>
-              setnewFAQ({ ...newFAQ, maincategory_en: e.target.value })
-            }
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter category"
-          />
+          <div>
+            <input
+              type="text"
+              value={maincategory_en}
+              onChange={(e) =>
+                setnewFAQ({ ...newFAQ, maincategory_en: e.target.value })
+              }
+              onFocus={() => setIsMainCateogoryEnInputInputFocused(true)}
+              onBlur={() => {
+                setTimeout(() => {
+                  setIsMainCateogoryEnInputInputFocused(false);
+                }, 100);
+              }}
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter category"
+            />
+            {isMainCateogoryEnInputFocused && filteredMaincategoryEn.length > 0 && (
+              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+                {filteredMaincategoryEn.map((category) => (
+                  <li
+                    key={category}
+                    onClick={() => setnewFAQ({ ...newFAQ, maincategory_en: category })}
+                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                  >
+                    {category}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
 
@@ -71,26 +126,68 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
         <h3 className="text-xl font-bold text-gray-800">서브카테고리</h3>
         <div>
           <label className="block text-lg font-medium text-gray-700 mb-2">서브카테고리 (한글)</label>
-          <input
-            type="text"
-            value={subcategory_ko}
-            onChange={(e) =>
-              setnewFAQ({ ...newFAQ, subcategory_ko: e.target.value })
-            }
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="서브카테고리를 입력하세요"
-          />
+          <div>
+            <input
+              type="text"
+              value={subcategory_ko}
+              onChange={(e) =>
+                setnewFAQ({ ...newFAQ, subcategory_ko: e.target.value })
+              }
+              onFocus={() => setIsSubCateogoryKoInputInputFocused(true)}
+              onBlur={() => {
+                setTimeout(() => {
+                  setIsSubCateogoryKoInputInputFocused(false);
+                }, 100);
+              }}
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="서브카테고리를 입력하세요"
+            />
+            {isSubCateogoryKoInputFocused && filteredSubcategoryKo.length > 0 && (
+              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+                {filteredSubcategoryKo.map((category) => (
+                  <li
+                    key={category}
+                    onClick={() => setnewFAQ({ ...newFAQ, subcategory_ko: category })}
+                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                  >
+                    {category}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
           <Translate sourceText={subcategory_ko} setTargetText={(text) => setnewFAQ({ ...newFAQ, subcategory_en: text })} />
           <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Subcategory (English)</label>
-          <input
-            type="text"
-            value={subcategory_en}
-            onChange={(e) =>
-              setnewFAQ({ ...newFAQ, subcategory_en: e.target.value })
-            }
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter subcategory"
-          />
+          <div>
+            <input
+              type="text"
+              value={subcategory_en}
+              onChange={(e) =>
+                setnewFAQ({ ...newFAQ, subcategory_en: e.target.value })
+              }
+              onFocus={() => setIsSubCateogoryEnInputInputFocused(true)}
+              onBlur={() => {
+                setTimeout(() => {
+                  setIsSubCateogoryEnInputInputFocused(false);
+                }, 100);
+              }}
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter subcategory"
+            />
+            {isSubCateogoryEnInputFocused && filteredSubcategoryEn.length > 0 && (
+              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+                {filteredSubcategoryEn.map((category) => (
+                  <li
+                    key={category}
+                    onClick={() => setnewFAQ({ ...newFAQ, subcategory_en: category })}
+                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                  >
+                    {category}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
 

@@ -165,4 +165,21 @@ export type UpdateFAQResponse = {
   message: string;
 }
 
+
+export type GetAllFAQCategoryRequest = {}
+
+export type GetAllFAQCategoryResponse = {
+  statusCode: number;
+  message: string;
+  data : {
+    categories : {
+      maincategory_ko: string[];
+      maincategory_en: string[];
+      subcategory_ko: string[];
+      subcategory_en: string[];
+    };
+  }
+}
+
+
 export default Faq;

@@ -1,18 +1,30 @@
-import React from 'react';
-import { UpdateSeniorFAQRequest } from '../../types/seniorfaq';
+import React, { useState } from 'react';
+import { UpdateSeniorFAQRequest, GetAllSeniorFAQCategoryResponse } from '../../types/seniorfaq';
 import Translate from '../Translate/Translate';
 
 interface SeniorFAQUpdateFormProps {
-  updatedFAQ: UpdateSeniorFAQRequest['body'];
-  setupdatedFAQ: React.Dispatch<React.SetStateAction<UpdateSeniorFAQRequest['body']>>;
+  updatedSeniorFAQ: UpdateSeniorFAQRequest['body'];
+  setupdatedSeniorFAQ: React.Dispatch<React.SetStateAction<UpdateSeniorFAQRequest['body']>>;
+  filteredMaincategoryKo: GetAllSeniorFAQCategoryResponse['data']['categories']['maincategory_ko'];
+  filteredMaincategoryEn: GetAllSeniorFAQCategoryResponse['data']['categories']['maincategory_en'];
+  filteredSubcategoryKo: GetAllSeniorFAQCategoryResponse['data']['categories']['subcategory_ko'];
+  filteredSubcategoryEn: GetAllSeniorFAQCategoryResponse['data']['categories']['subcategory_en'];
+  filteredDetailcategoryKo: GetAllSeniorFAQCategoryResponse['data']['categories']['detailcategory_ko'];
+  filteredDetailcategoryEn: GetAllSeniorFAQCategoryResponse['data']['categories']['detailcategory_en'];
   handleAddAnswer: () => void;
   handleUpdate: () => void;
   handleDeleteAnswer: (index: number) => void;
 }
 
 const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
-  updatedFAQ,
-  setupdatedFAQ,
+  updatedSeniorFAQ,
+  setupdatedSeniorFAQ,
+  filteredMaincategoryKo,
+  filteredMaincategoryEn,
+  filteredSubcategoryKo,
+  filteredSubcategoryEn,
+  filteredDetailcategoryKo,
+  filteredDetailcategoryEn,
   handleAddAnswer,
   handleUpdate,
   handleDeleteAnswer,
@@ -27,7 +39,14 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
     answer_ko,
     answer_en,
     manager,
-  } = updatedFAQ;
+  } = updatedSeniorFAQ;
+
+  const [isMainCateogoryKoInputFocused, setIsMainCateogoryKoInputInputFocused] = useState(false);
+  const [isMainCateogoryEnInputFocused, setIsMainCateogoryEnInputInputFocused] = useState(false);
+  const [isSubCateogoryKoInputFocused, setIsSubCateogoryKoInputInputFocused] = useState(false);
+  const [isSubCateogoryEnInputFocused, setIsSubCateogoryEnInputInputFocused] = useState(false);
+  const [isDetailCateogoryKoInputFocused, setIsDetailCateogoryKoInputInputFocused] = useState(false);
+  const [isDetailCateogoryEnInputFocused, setIsDetailCateogoryEnInputInputFocused] = useState(false);
 
   return (
     <form
@@ -41,26 +60,68 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
         <h3 className="text-xl font-bold text-gray-800">카테고리</h3>
         <div>
           <label className="block text-lg font-medium text-gray-700 mb-2">카테고리 (한글)</label>
-          <input
-            type="text"
-            value={maincategory_ko}
-            onChange={(e) =>
-              setupdatedFAQ({ ...updatedFAQ, maincategory_ko: e.target.value })
-            }
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="카테고리를 입력하세요"
-          />
-          <Translate sourceText={maincategory_ko} setTargetText={(text) => setupdatedFAQ({ ...updatedFAQ, maincategory_en: text })} />
+          <div>
+            <input
+              type="text"
+              value={maincategory_ko}
+              onChange={(e) =>
+                setupdatedSeniorFAQ({ ...updatedSeniorFAQ, maincategory_ko: e.target.value })
+              }
+              onFocus={() => setIsMainCateogoryKoInputInputFocused(true)}
+              onBlur={() => {
+                setTimeout(() => {
+                  setIsMainCateogoryKoInputInputFocused(false);
+                }, 100);
+              }}
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="카테고리를 입력하세요"
+            />
+            {isMainCateogoryKoInputFocused && filteredMaincategoryKo.length > 0 && (
+              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+                {filteredMaincategoryKo.map((category) => (
+                  <li
+                    key={category}
+                    onClick={() => setupdatedSeniorFAQ({ ...updatedSeniorFAQ, maincategory_ko: category })}
+                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                  >
+                    {category}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <Translate sourceText={maincategory_ko} setTargetText={(text) => setupdatedSeniorFAQ({ ...updatedSeniorFAQ, maincategory_en: text })} />
           <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Category (English)</label>
-          <input
-            type="text"
-            value={maincategory_en}
-            onChange={(e) =>
-              setupdatedFAQ({ ...updatedFAQ, maincategory_en: e.target.value })
-            }
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter category"
-          />
+          <div>
+            <input
+              type="text"
+              value={maincategory_en}
+              onChange={(e) =>
+                setupdatedSeniorFAQ({ ...updatedSeniorFAQ, maincategory_en: e.target.value })
+              }
+              onFocus={() => setIsMainCateogoryEnInputInputFocused(true)}
+              onBlur={() => {
+                setTimeout(() => {
+                  setIsMainCateogoryEnInputInputFocused(false);
+                }, 100);
+              }}
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter category"
+            />
+            {isMainCateogoryEnInputFocused && filteredMaincategoryEn.length > 0 && (
+              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+                {filteredMaincategoryEn.map((category) => (
+                  <li
+                    key={category}
+                    onClick={() => setupdatedSeniorFAQ({ ...updatedSeniorFAQ, maincategory_en: category })}
+                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                  >
+                    {category}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
 
@@ -69,26 +130,68 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
         <h3 className="text-xl font-bold text-gray-800">서브카테고리</h3>
         <div>
           <label className="block text-lg font-medium text-gray-700 mb-2">서브카테고리 (한글)</label>
-          <input
-            type="text"
-            value={subcategory_ko}
-            onChange={(e) =>
-              setupdatedFAQ({ ...updatedFAQ, subcategory_ko: e.target.value })
-            }
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="서브카테고리를 입력하세요"
-          />
-          <Translate sourceText={subcategory_ko} setTargetText={(text) => setupdatedFAQ({ ...updatedFAQ, subcategory_en: text })} />
+          <div>
+            <input
+              type="text"
+              value={subcategory_ko}
+              onChange={(e) =>
+                setupdatedSeniorFAQ({ ...updatedSeniorFAQ, subcategory_ko: e.target.value })
+              }
+              onFocus={() => setIsSubCateogoryKoInputInputFocused(true)}
+              onBlur={() => {
+                setTimeout(() => {
+                  setIsSubCateogoryKoInputInputFocused(false);
+                }, 100);
+              }}
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="서브카테고리를 입력하세요"
+            />
+            {isSubCateogoryKoInputFocused && filteredSubcategoryKo.length > 0 && (
+              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+                {filteredSubcategoryKo.map((category) => (
+                  <li
+                    key={category}
+                    onClick={() => setupdatedSeniorFAQ({ ...updatedSeniorFAQ, subcategory_ko: category })}
+                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                  >
+                    {category}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <Translate sourceText={subcategory_ko} setTargetText={(text) => setupdatedSeniorFAQ({ ...updatedSeniorFAQ, subcategory_en: text })} />
           <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Subcategory (English)</label>
-          <input
-            type="text"
-            value={subcategory_en}
-            onChange={(e) =>
-              setupdatedFAQ({ ...updatedFAQ, subcategory_en: e.target.value })
-            }
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter subcategory"
-          />
+          <div>
+            <input
+              type="text"
+              value={subcategory_en}
+              onChange={(e) =>
+                setupdatedSeniorFAQ({ ...updatedSeniorFAQ, subcategory_en: e.target.value })
+              }
+              onFocus={() => setIsSubCateogoryEnInputInputFocused(true)}
+              onBlur={() => {
+                setTimeout(() => {
+                  setIsSubCateogoryEnInputInputFocused(false);
+                }, 100);
+              }}
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter subcategory"
+            />
+            {isSubCateogoryEnInputFocused && filteredSubcategoryEn.length > 0 && (
+              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+                {filteredSubcategoryEn.map((category) => (
+                  <li
+                    key={category}
+                    onClick={() => setupdatedSeniorFAQ({ ...updatedSeniorFAQ, subcategory_en: category })}
+                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                  >
+                    {category}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
 
@@ -97,26 +200,68 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
         <h3 className="text-xl font-bold text-gray-800">세부카테고리</h3>
         <div>
           <label className="block text-lg font-medium text-gray-700 mb-2">세부카테고리 (한글)</label>
-          <input
-            type="text"
-            value={detailcategory_ko}
-            onChange={(e) =>
-              setupdatedFAQ({ ...updatedFAQ, detailcategory_ko: e.target.value })
-            }
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="세부 카테고리를 입력하세요"
-          />
-          <Translate sourceText={detailcategory_ko} setTargetText={(text) => setupdatedFAQ({ ...updatedFAQ, detailcategory_en: text })} />
+          <div>
+            <input
+              type="text"
+              value={detailcategory_ko}
+              onChange={(e) =>
+                setupdatedSeniorFAQ({ ...updatedSeniorFAQ, detailcategory_ko: e.target.value })
+              }
+              onFocus={() => setIsDetailCateogoryKoInputInputFocused(true)}
+              onBlur={() => {
+                setTimeout(() => {
+                  setIsDetailCateogoryKoInputInputFocused(false);
+                }, 100);
+              }}
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="세부카테고리를 입력하세요"
+            />
+            {isDetailCateogoryKoInputFocused && filteredDetailcategoryKo.length > 0 && (
+              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+                {filteredDetailcategoryKo.map((category) => (
+                  <li
+                    key={category}
+                    onClick={() => setupdatedSeniorFAQ({ ...updatedSeniorFAQ, detailcategory_ko: category })}
+                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                  >
+                    {category}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <Translate sourceText={detailcategory_ko} setTargetText={(text) => setupdatedSeniorFAQ({ ...updatedSeniorFAQ, detailcategory_en: text })} />
           <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">DetailCategory (English)</label>
-          <input
-            type="text"
-            value={detailcategory_en}
-            onChange={(e) =>
-              setupdatedFAQ({ ...updatedFAQ, detailcategory_en: e.target.value })
-            }
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter detail category"
-          />
+          <div>
+            <input
+              type="text"
+              value={detailcategory_en}
+              onChange={(e) =>
+                setupdatedSeniorFAQ({ ...updatedSeniorFAQ, detailcategory_en: e.target.value })
+              }
+              onFocus={() => setIsDetailCateogoryEnInputInputFocused(true)}
+              onBlur={() => {
+                setTimeout(() => {
+                  setIsDetailCateogoryEnInputInputFocused(false);
+                }, 100);
+              }}
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter detailcategory"
+            />
+            {isDetailCateogoryEnInputFocused && filteredDetailcategoryEn.length > 0 && (
+              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+                {filteredDetailcategoryEn.map((category) => (
+                  <li
+                    key={category}
+                    onClick={() => setupdatedSeniorFAQ({ ...updatedSeniorFAQ, detailcategory_en: category })}
+                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                  >
+                    {category}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
 
@@ -139,8 +284,8 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
               placeholder='답변 제목을 입력하세요'
               value={answer.title}
               onChange={(e) =>
-                setupdatedFAQ({
-                  ...updatedFAQ,
+                setupdatedSeniorFAQ({
+                  ...updatedSeniorFAQ,
                   answer_ko: answer_ko.map((ans, i) =>
                     i === index ? { ...ans, title: e.target.value } : ans
                   ),
@@ -151,8 +296,8 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
             <Translate
               sourceText={answer.title}
               setTargetText={(translatedText) => {
-                setupdatedFAQ({
-                  ...updatedFAQ,
+                setupdatedSeniorFAQ({
+                  ...updatedSeniorFAQ,
                   answer_en: answer_en.map((ans, i) =>
                     i === index ? { ...ans, title: translatedText } : ans
                   ),
@@ -164,8 +309,8 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
               placeholder='Enter Answer Title'
               value={answer_en[index]?.title || ''}
               onChange={(e) =>
-                setupdatedFAQ({
-                  ...updatedFAQ,
+                setupdatedSeniorFAQ({
+                  ...updatedSeniorFAQ,
                   answer_en: answer_en.map((ans, i) =>
                     i === index ? { ...ans, title: e.target.value } : ans
                   ),
@@ -178,8 +323,8 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
               placeholder="답변을 입력하세요"
               value={answer.answer}
               onChange={(e) =>
-                setupdatedFAQ({
-                  ...updatedFAQ,
+                setupdatedSeniorFAQ({
+                  ...updatedSeniorFAQ,
                   answer_ko: answer_ko.map((ans, i) =>
                     i === index ? { ...ans, answer: e.target.value } : ans
                   ),
@@ -191,8 +336,8 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
             <Translate
               sourceText={answer.answer}
               setTargetText={(translatedText) => {
-                setupdatedFAQ({
-                  ...updatedFAQ,
+                setupdatedSeniorFAQ({
+                  ...updatedSeniorFAQ,
                   answer_en: answer_en.map((ans, i) =>
                     i === index ? { ...ans, answer: translatedText } : ans
                   ),
@@ -204,8 +349,8 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
               placeholder="Enter Answer"
               value={answer_en[index]?.answer || ''}
               onChange={(e) =>
-                setupdatedFAQ({
-                  ...updatedFAQ,
+                setupdatedSeniorFAQ({
+                  ...updatedSeniorFAQ,
                   answer_en: answer_en.map((ans, i) =>
                     i === index ? { ...ans, answer: e.target.value } : ans
                   ),
@@ -220,8 +365,8 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
                 placeholder="URL"
                 value={answer.url}
                 onChange={(e) => {
-                  setupdatedFAQ({
-                    ...updatedFAQ,
+                  setupdatedSeniorFAQ({
+                    ...updatedSeniorFAQ,
                     answer_ko: answer_ko.map((ans, i) =>
                       i === index ? { ...ans, url: e.target.value } : ans
                     ),
@@ -237,8 +382,8 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
                 placeholder="위도"
                 value={answer.map.latitude}
                 onChange={(e) => {
-                  setupdatedFAQ({
-                    ...updatedFAQ,
+                  setupdatedSeniorFAQ({
+                    ...updatedSeniorFAQ,
                     answer_ko: answer_ko.map((ans, i) =>
                       i === index ? { ...ans, map: { ...ans.map, latitude: e.target.value } } : ans
                     ),
@@ -254,8 +399,8 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
                 placeholder="경도"
                 value={answer.map.longitude}
                 onChange={(e) => {
-                  setupdatedFAQ({
-                    ...updatedFAQ,
+                  setupdatedSeniorFAQ({
+                    ...updatedSeniorFAQ,
                     answer_ko: answer_ko.map((ans, i) =>
                       i === index ? { ...ans, map: { ...ans.map, longitude: e.target.value } } : ans
                     ),
@@ -286,7 +431,7 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
           type="text"
           value={manager}
           onChange={(e) =>
-            setupdatedFAQ({ ...updatedFAQ, manager: e.target.value })
+            setupdatedSeniorFAQ({ ...updatedSeniorFAQ, manager: e.target.value })
           }
           className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
           placeholder="관리자 이름을 입력하세요"
