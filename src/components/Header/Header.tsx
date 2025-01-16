@@ -27,7 +27,7 @@ const Header: React.FC = () => {
         {isAuthPage ? (
           <span className="text-white">hoBIT</span>
         ) : (
-          <Link to="/main" className="text-white hover:text-gray-600">
+          <Link to="/home" className="text-white hover:text-gray-600">
             hoBIT
           </Link>
         )}

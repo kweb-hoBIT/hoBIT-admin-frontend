@@ -24,7 +24,7 @@ const SelectLog: React.FC<SelectLogProps> = ({ onSelectLog }) => {
         <div className="flex items-center justify-center mt-8 text-2xl">
           <button
             onClick={handleAnalyticsRedirect}
-            className="absolute -top-4 right-0 mt-4 text-2xl font-semibold text-blue-600 hover:text-blue-800"
+            className="absolute -top-4 right-5 mt-4 text-2xl font-semibold text-blue-600 hover:text-blue-800"
           >
             로그 분석하기
           </button>
