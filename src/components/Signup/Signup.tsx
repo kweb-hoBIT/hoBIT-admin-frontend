@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { sendInputValue } from '../../redux/inputSlice';
 import { useHobitMutatePostApi } from '../../hooks/hobitAdmin';
 import { useNavigate } from 'react-router-dom';
 import SignupForm from './SignupForm';
@@ -51,8 +50,6 @@ const Signup: React.FC = () => {
 
     // 회원가입 API 호출
     try {
-      dispatch(sendInputValue(`회원가입 요청: ${email}`));
-      
       const response = await SignupApi({
         body: { email, password, username, phone_num, invitationKey }
       });

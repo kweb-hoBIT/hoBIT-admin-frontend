@@ -58,16 +58,11 @@ const SpecificAnalyze: React.FC<SpecificAnalyzeProps> = ({
     };
   
     if (startDate!= '' && endDate != '' && analyzeApi) {
-      // analyzeApi 상태가 변경될 때마다 데이터 가져오기
       if (!analyzeApi?.isLoading && analyzeApi?.isSuccess) {
         fetchAnalyzeData();
       }
     }
   }, [analyzeApi]);
-  
-  if (analyzeApi?.isLoading) {
-    return <div>데이터를 불러오는 중입니다...</div>;
-  }
   
   if (error) {
     return <div className="error-message">{error}</div>;

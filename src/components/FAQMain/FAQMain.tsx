@@ -25,10 +25,6 @@ const FAQMain: React.FC = () => {
     }
   }, [GetFAQsApi.isSuccess]);
 
-  if (GetFAQsApi.isLoading) {
-    return <div>FAQ 데이터를 불러오는 중입니다...</div>;
-  }
-
   if (error) {
     return <div className="error-message">{error}</div>;
   }

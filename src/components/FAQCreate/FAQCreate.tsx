@@ -184,7 +184,7 @@ const FAQCreate: React.FC = () => {
     } catch (error) {
       alert('FAQ 생성에 실패했습니다.');
     } finally {
-      setIsCreating(false); // 생성 완료
+      setIsCreating(false);
     }
   };
 

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setUserId, setUsername } from '../../redux/authSlice'; // setUsername 추가
-import { sendInputValue, clearSentValue } from '../../redux/inputSlice';
+import { setUserId, setUsername } from '../../redux/authSlice';
 import { useHobitMutatePostApi } from '../../hooks/hobitAdmin';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from './LoginForm';
@@ -21,8 +20,6 @@ const Login: React.FC = () => {
     const { email, password } = userData;
 
     if (email && password) {
-      dispatch(sendInputValue(`로그인 요청: ${email}`));
-
       try {
         const response = await LoginApi({
           body: userData,
@@ -39,10 +36,6 @@ const Login: React.FC = () => {
             navigate('/home');
             setUserData({ email: '', password: '' });
             setError(null);
-
-            setTimeout(() => {
-              dispatch(clearSentValue());
-            }, 100);
           } else {
             setError('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
           }

@@ -211,11 +211,6 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
     }     
   };
 
-  // 로딩 상태일 때 로딩 스피너나 메시지를 표시
-  if (FAQFetchApi.isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <FAQUpdateForm
       updatedFAQ={updatedFAQ}

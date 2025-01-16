@@ -257,10 +257,6 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
     }
   };
 
-  if (seniorFAQFetchApi.isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <FAQUpdateForm
       updatedSeniorFAQ={updatedSeniorFAQ}

@@ -69,11 +69,6 @@ const SeniorFAQDetail: React.FC<SeniorFAQDetailProps> = ({ senior_faq_id }) => {
     }
   }, [senior_faq_id, seniorFAQFetchApi.data, seniorFAQFetchApi.isLoading]);
 
-  // 로딩 상태일 때 로딩 스피너나 메시지를 표시
-  if (seniorFAQFetchApi.isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return <SeniorFAQDetailForm seniorFaqData={seniorFaqData} />;
 };
 
