@@ -9,7 +9,7 @@ import store from './redux/store';
 // 페이지 컴포넌트 임포트
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
-import MainPage from './pages/MainPage';
+import HomePage from './pages/HomePage';
 import FAQMainPage from './pages/FAQMainPage';
 import FAQDetailPage from './pages/FAQDetailPage';
 import FAQCreatePage from './pages/FAQCreatePage';
@@ -39,7 +39,7 @@ const App: React.FC = () => {
             <Route path="/signup" element={<SignupPage />} />
             
             {/* 메인 페이지 */}
-            <Route path="/main" element={<MainPage />} />
+            <Route path="/home" element={<HomePage />} />
 
             {/* FAQ 관련 페이지 */}
             <Route path="/faqs" element={<FAQMainPage />} />

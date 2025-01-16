@@ -1,6 +1,6 @@
 import ProtectedPage from '../components/ProtectedPage';
 import Header from '../components/Header/Header';
-import Main from '../components/Main/Main';
+import Home from '../components/Home/Home';
 
 const MainPage: React.FC = () => {
   return (
@@ -8,7 +8,7 @@ const MainPage: React.FC = () => {
     <div>
       <Header />
       <main>
-      <Main />
+      <Home />
       </main>
     </div>
     </ProtectedPage>
