@@ -25,10 +25,6 @@ const QuestionLogMain: React.FC = () => {
     }
   }, [GetQuestionLogsApi]);
 
-  if (GetQuestionLogsApi.isLoading) {
-    return <div>Question 로그 데이터를 불러오는 중입니다...</div>;
-  }
-
   if (error) {
     return <div className="error-message">{error}</div>;
   }

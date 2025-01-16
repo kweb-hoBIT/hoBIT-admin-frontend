@@ -64,10 +64,7 @@ const EntireAnalyze: React.FC<EntireAnalyzeProps> = ({
       }
     }
   }, [analyzeApi]);
-
-  if (analyzeApi?.isLoading) {
-    return <div>데이터를 불러오는 중입니다...</div>;
-  }
+  
 
   if (error) {
     return <div className="error-message">{error}</div>;
