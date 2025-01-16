@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Main: React.FC = () => {
+const Home: React.FC = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-white-50">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
@@ -27,4 +27,4 @@ const Main: React.FC = () => {
   );
 };
 
-export default Main;
+export default Home;
