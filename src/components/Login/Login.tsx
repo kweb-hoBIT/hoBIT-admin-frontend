@@ -36,7 +36,7 @@ const Login: React.FC = () => {
             dispatch(setUserId(String(user_id)));
             dispatch(setUsername(username));
 
-            navigate('/main');
+            navigate('/home');
             setUserData({ email: '', password: '' });
             setError(null);
 
