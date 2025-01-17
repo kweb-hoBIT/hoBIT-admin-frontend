@@ -85,7 +85,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
             추가
           </button>
         </div>
-          <div style={{ minHeight: '430px' }}>
+          <div style={{ minHeight: '435px' }}>
             <div className="grid grid-cols-2 gap-4">
               {currentItems.map((seniorFaq) => (
                 <div key={seniorFaq.senior_faq_id} className="relative bg-gray-200 p-4 rounded-lg">

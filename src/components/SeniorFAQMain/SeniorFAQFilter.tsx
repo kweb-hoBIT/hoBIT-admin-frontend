@@ -22,7 +22,7 @@ const SeniorFAQFilter: React.FC<SeniorFAQFilterProps> = ({
           onChange={(e) => onSelectedFilterChange(e.target.value as SeniorFAQFilterProps['selectedFilter'])}
           className="p-2 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <option value="senior_faq_id">FAQ ID</option>
+          <option value="senior_faq_id">Senior FAQ ID</option>
           <option value="maincategory_ko">주요 카테고리</option>
           <option value="subcategory_ko">하위 카테고리</option>
           <option value="detailcategory_ko">세부 카테고리</option>
