@@ -24,7 +24,7 @@ const Signup: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const { email, password, confirmPassword, username, phone_num, invitationKey } = userData;
+    let { email, password, confirmPassword, username, phone_num, invitationKey } = userData;
 
     // 모든 값이 존재하는지 확인
     if (!email || !password || !username || !phone_num || !invitationKey) {
@@ -43,9 +43,16 @@ const Signup: React.FC = () => {
     }
 
     const phoneRegex = /^[0]{1}[1]{1}[0-9]{1}[-]?[0-9]{4}[-]?[0-9]{4}$/;
-    if (!phoneRegex.test(phone_num)) {
-      setError('전화번호 형식이 올바르지 않습니다. 010-XXXX-XXXX 형식으로 입력해주세요.');
+    const compactPhoneRegex = /^[0]{1}[1]{1}[0-9]{1}[0-9]{4}[0-9]{4}$/;
+
+    if (!phoneRegex.test(phone_num) && !compactPhoneRegex.test(phone_num)) {
+      setError('전화번호 형식이 올바르지 않습니다.');
       return;
+    }
+
+    // `01012345678` 형식인 경우 `010-1234-5678`로 변환
+    if (compactPhoneRegex.test(phone_num)) {
+      phone_num = phone_num.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
     }
 
     // 회원가입 API 호출
