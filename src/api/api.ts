@@ -1,5 +1,5 @@
 import JSONbig from 'json-bigint';
-import { envs } from '../envs';
+import envs from '../config/envs';
 import {
   ApiResponse,
   fetchErrorPayload,
@@ -11,7 +11,7 @@ import {
   jsonParseFailPayload,
 } from '../types/api';
 
-const endpoint = `${envs.HOBIT_BACKEND_ENDPOINT!}/api`;
+const endpoint = `${envs.HOBIT_ADMIN_BACKEND_ENDPOINT!}`;
 
 export async function hobitGetApi<
   T extends HobitAdminGetApiRequest & { params?: Record<string, string>, query?: Record<string, string | number> },
