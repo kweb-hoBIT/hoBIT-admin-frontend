@@ -98,6 +98,7 @@ const SignupForm: React.FC<{
               name="invitationKey"
               type="text"
               value={userData.invitationKey}
+              autoComplete="off"
               onChange={onInputChange}
               placeholder="초대 키를 입력하세요"
               className="w-full p-2 border border-gray-300 rounded-md text-base"
