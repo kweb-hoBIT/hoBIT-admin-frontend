@@ -72,6 +72,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
   return (
     <div className="p-6 bg-white-50 rounded-lg">
       <SeniorFAQFilter
+        seniorFaqs={seniorFaqs}
         filter={filter}
         selectedFilter={selectedFilter}
         onFilterChange={setFilter}
