@@ -12,7 +12,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilter] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<'faq_id' | 'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager'>('question_ko');
+  const [selectedFilter, setSelectedFilter] = useState<'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager'>('question_ko');
 
   const itemsPerPage = 4;
   const pagesPerGroup = 10;
@@ -35,13 +35,15 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+      const nextGroupStartPage = Math.min((currentPageGroup + 1) * pagesPerGroup + 1, totalPages);
+      setCurrentPage(nextGroupStartPage);
     }
   };
-
+  
   const handlePrevPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+      const prevGroupEndPage = Math.max(currentPageGroup * pagesPerGroup, 1);
+      setCurrentPage(prevGroupEndPage);
     }
   };
 
@@ -68,7 +70,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
   };
 
   return (
-    <div className="p-6 bg-white-50 rounded-lg" style={{ transform: 'scale(0.85)', transformOrigin: 'top center' }}>
+    <div className="p-6 bg-white-50 rounded-lg">
       <FAQFilter
         filter={filter}
         selectedFilter={selectedFilter}
@@ -85,30 +87,38 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
             추가
           </button>
         </div>
-        <div style={{ minHeight: '435px' }}>
+        <div style={{ minHeight: '320px' }}>
           <div className="grid grid-cols-2 gap-4">
             {currentItems.map((faq) => (
-              <div key={faq.faq_id} className="relative bg-gray-200 p-4 rounded-lg">
-                <button
-                  onClick={() => handleEditClick(String(faq.faq_id))}
-                  className="absolute top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                >
-                  수정
-                </button>
-
-                <div className="absolute bottom-5 right-5">
-                  <FAQDelete faq_id={String(faq.faq_id)} question_ko={faq.question_ko} onSuccess={() => window.location.reload()} />
-                </div>
-
-                <div
-                  className="mb-2 cursor-pointer"
-                  onClick={() => handleDetailClick(String(faq.faq_id))}
-                >
+              <div key={faq.faq_id} className="relative bg-gray-200 p-4 rounded-lg cursor-pointer" onClick={() => handleDetailClick(String(faq.faq_id))}>
+              
+              {/* 수정 버튼 */}
+              <button
+                onClick={(e) => { 
+                  e.stopPropagation();
+                  handleEditClick(String(faq.faq_id)); 
+                }}
+                className="absolute top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+              >
+                수정
+              </button>
+            
+              {/* 삭제 버튼 */}
+              <div
+                className="absolute bottom-5 right-5"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <FAQDelete faq_id={String(faq.faq_id)} question_ko={faq.question_ko} onSuccess={() => window.location.reload()} />
+              </div>
+            
+              {/* 컨텐츠 영역 */}
+              <div className="pr-24">
+                <div className="mb-2">
                   <span className="mb-1 text-m text-gray-600">
-                    <strong>FAQ ID: {faq.faq_id}</strong>
+                    <strong>질문: {faq.question_ko}</strong>
                   </span>
                 </div>
-
+                
                 <div className="flex flex-col">
                   <div className="mb-1 text-sm text-gray-600">
                     <strong>주요 카테고리:</strong> {faq.maincategory_ko}
@@ -117,19 +127,11 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
                     <strong>하위 카테고리:</strong> {faq.subcategory_ko}
                   </div>
                   <div className="mb-1 text-sm text-gray-600">
-                    <strong>질문:</strong> {faq.question_ko}
-                  </div>
-                  <div className="mb-1 text-sm text-gray-600">
                     <strong>관리자:</strong> {faq.manager}
-                  </div>
-                  <div className="mb-1 text-sm text-gray-600">
-                    <strong>생성 시간:</strong> {formatDateToKST(faq.created_at)}
-                  </div>
-                  <div className="mb-1 text-sm text-gray-600">
-                    <strong>수정 시간:</strong> {formatDateToKST(faq.updated_at)}
                   </div>
                 </div>
               </div>
+            </div>
             ))}
           </div>
         </div>

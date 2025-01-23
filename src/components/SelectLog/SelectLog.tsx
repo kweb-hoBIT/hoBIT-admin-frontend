@@ -19,12 +19,12 @@ const SelectLog: React.FC<SelectLogProps> = ({ onSelectLog }) => {
   };
 
   return (
-    <div className="p-6 bg-white-50 rounded-lg" style={{ transform: 'scale(0.85)', transformOrigin: 'top center' }}>
+    <div className="p-6 bg-white-50 rounded-lg">
       <div className="relative mt-4">
         <div className="flex items-center justify-center mt-8 text-2xl">
           <button
             onClick={handleAnalyticsRedirect}
-            className="absolute -top-4 right-5 mt-4 text-2xl font-semibold text-blue-600 hover:text-blue-800"
+            className="absolute -top-4 right-6 mt-4 text-2xl font-semibold text-blue-600 hover:text-blue-800"
           >
             로그 분석하기
           </button>

@@ -28,13 +28,15 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+      const nextGroupStartPage = Math.min((currentPageGroup + 1) * pagesPerGroup + 1, totalPages);
+      setCurrentPage(nextGroupStartPage);
     }
   };
-
+  
   const handlePrevPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+      const prevGroupEndPage = Math.max(currentPageGroup * pagesPerGroup, 1);
+      setCurrentPage(prevGroupEndPage);
     }
   };
 
@@ -49,31 +51,22 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
   };
 
   return (
-    <div className="p-6 bg-white-50 rounded-lg" style={{ transform: 'scale(0.85)', transformOrigin: 'top center' }}>
+    <div className="p-6 bg-white-50 rounded-lg">
       <div className="p-6">
         <h4 className="text-2xl font-bold mb-4 text-gray-800">유저 로그 리스트</h4>
-        <div style={{ minHeight: '505px' }}>
+        <div style={{ minHeight: '395px' }}>
           <div className="grid grid-cols-2 gap-4">
             {currentItems.map((log) => (
-              <div key={log.question_log_id} className="relative bg-gray-200 p-4 mb-3 rounded-lg shadow-sm">
+              <div key={log.question_log_id} className="relative bg-gray-200 p-4 rounded-lg cursor-pointer">
                 <div className="mb-2">
-                  <span className="mb-1 text-m text-gray-600"><strong>유저 로그 ID: {log.question_log_id}</strong></span>
+                  <span className="mb-1 text-m text-gray-600"><strong>유저 질문: {log.user_question}</strong></span>
                 </div>
                 <div className="flex flex-col">
                   <div className="mb-1 text-sm text-gray-600">
-                    <strong>유저 질문:</strong> {log.user_question}
+                    <strong>매칭된 질문:</strong> {log.user_question}
                   </div>
                   <div className="mb-1 text-sm text-gray-600">
                     <strong>피드백 점수:</strong> {log.feedback_score}
-                  </div>
-                  <div className="mb-1 text-sm text-gray-600">
-                    <strong>피드백:</strong> {log.feedback}
-                  </div>
-                  <div className="mb-1 text-sm text-gray-600">
-                    <strong>매칭된 FAQ ID:</strong> {log.faq_id}
-                  </div>
-                  <div className="mb-1 text-sm text-gray-600">
-                    <strong>매칭된 질문:</strong> {log.faq_question}
                   </div>
                   <div className="mb-1 text-sm text-gray-600">
                     <strong>질문 시각:</strong> {formatDateToKST(log.created_at)}

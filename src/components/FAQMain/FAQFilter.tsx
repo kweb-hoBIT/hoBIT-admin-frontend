@@ -2,7 +2,7 @@ import React from 'react';
 
 type FAQFilterProps = {
   filter: string;
-  selectedFilter: 'faq_id' | 'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager';
+  selectedFilter: 'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager';
   onFilterChange: (value: string) => void;
   onSelectedFilterChange: (value: FAQFilterProps['selectedFilter']) => void;
 };
@@ -22,7 +22,6 @@ const FAQFilter: React.FC<FAQFilterProps> = ({
           onChange={(e) => onSelectedFilterChange(e.target.value as FAQFilterProps['selectedFilter'])}
           className="p-2 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <option value="faq_id">FAQ ID</option>
           <option value="maincategory_ko">주요 카테고리</option>
           <option value="subcategory_ko">하위 카테고리</option>
           <option value="question_ko">질문</option>

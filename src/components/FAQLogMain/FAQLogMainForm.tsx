@@ -9,8 +9,8 @@ interface FAQLogMainFormProps {
 const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4; // 한 페이지에 4개 항목 표시
-  const pagesPerGroup = 10; // 한 그룹에 표시할 페이지 수
+  const itemsPerPage = 4;
+  const pagesPerGroup = 10;
 
   const totalPages = Math.ceil(faqLogs.length / itemsPerPage);
 
@@ -30,13 +30,15 @@ const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+      const nextGroupStartPage = Math.min((currentPageGroup + 1) * pagesPerGroup + 1, totalPages);
+      setCurrentPage(nextGroupStartPage);
     }
   };
-
+  
   const handlePrevPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+      const prevGroupEndPage = Math.max(currentPageGroup * pagesPerGroup, 1);
+      setCurrentPage(prevGroupEndPage);
     }
   };
 
@@ -55,31 +57,19 @@ const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
   };
 
   return (
-    <div className="p-6 bg-white-50 rounded-lg" style={{ transform: 'scale(0.85)', transformOrigin: 'top center' }}>
+    <div className="p-6 bg-white-50 rounded-lg">
       <div className="p-6">
         <h4 className="text-2xl font-bold mb-4 text-gray-800">관리자 로그 리스트(FAQ 수정사항만 반영)</h4>
-        <div style={{ minHeight: '505px' }}>
-          <div className="grid grid-cols-2 gap-4"> {/* 두 개씩 가로로 배치 */}
+        <div style={{ minHeight: '395px' }}>
+          <div className="grid grid-cols-2 gap-4">
             {currentItems.map((log) => (
-              <div
-                key={log.faq_log_id}
-                className="relative bg-gray-200 p-4 mb-3 rounded-lg shadow-sm"
-              >
-                <div
-                  className="mb-2 cursor-pointer"
-                  onClick={() => handleLogClick(String(log.faq_log_id))}
-                >
+              <div key={log.faq_log_id} className="relative bg-gray-200 p-4 rounded-lg cursor-pointer" onClick={() => handleLogClick(String(log.faq_log_id))}>
+               <div className="mb-2">
                   <span className="mb-1 text-m text-gray-600">
-                    <strong>관리자 로그 ID: {log.faq_log_id}</strong>
+                    <strong>수정 유저: {log.username}</strong>
                   </span>
                 </div>
                 <div className="flex flex-col">
-                  <div className="mb-1 text-sm text-gray-600">
-                    <strong>수정 유저:</strong> {log.username}
-                  </div>
-                  <div className="mb-1 text-sm text-gray-600">
-                    <strong>FAQ ID:</strong> {log.faq_id}
-                  </div>
                   <div className="mb-1 text-sm text-gray-600">
                     <strong>주요 카테고리:</strong> {log.faq_maincategory}
                   </div>

@@ -45,13 +45,15 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+      const nextGroupStartPage = Math.min((currentPageGroup + 1) * pagesPerGroup + 1, totalPages);
+      setCurrentPage(nextGroupStartPage);
     }
   };
-
+  
   const handlePrevPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+      const prevGroupEndPage = Math.max(currentPageGroup * pagesPerGroup, 1);
+      setCurrentPage(prevGroupEndPage);
     }
   };
 
@@ -81,11 +83,11 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
   };
 
   return (
-    <div className="p-6 bg-white-50 rounded-lg" style={{ transform: 'scale(0.85)', transformOrigin: 'top center' }}>
+    <div className="p-6 bg-white-50 rounded-lg">
       <UserFeedbackFilter filter={filter} onFilterChange={handleFilterChange} />
       <div className="p-6">
         <h4 className="text-2xl font-bold mb-6 text-gray-800 mt-11">유저 피드백 리스트</h4>
-        <div style={{ minHeight: '500px' }}>
+        <div style={{ minHeight: '395px' }}>
           <div className="grid grid-cols-2 gap-4">
             {currentItems.map((feedback) => (
               <div key={feedback.user_feedback_id} className="relative bg-gray-200 p-4 mb-3 rounded-lg shadow-sm">

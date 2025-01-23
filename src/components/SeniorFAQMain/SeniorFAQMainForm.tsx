@@ -12,7 +12,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilter] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<'senior_faq_id' | 'maincategory_ko' | 'subcategory_ko' | 'detailcategory_ko' | 'manager'>('detailcategory_ko');
+  const [selectedFilter, setSelectedFilter] = useState<'maincategory_ko' | 'subcategory_ko' | 'detailcategory_ko' | 'manager'>('detailcategory_ko');
 
   const itemsPerPage = 4;
   const pagesPerGroup = 10;
@@ -35,13 +35,15 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+      const nextGroupStartPage = Math.min((currentPageGroup + 1) * pagesPerGroup + 1, totalPages);
+      setCurrentPage(nextGroupStartPage);
     }
   };
-
+  
   const handlePrevPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+      const prevGroupEndPage = Math.max(currentPageGroup * pagesPerGroup, 1);
+      setCurrentPage(prevGroupEndPage);
     }
   };
 
@@ -68,7 +70,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
   };
 
   return (
-    <div className="p-6 bg-white-50 rounded-lg" style={{ transform: 'scale(0.85)', transformOrigin: 'top center' }}>
+    <div className="p-6 bg-white-50 rounded-lg">
       <SeniorFAQFilter
         filter={filter}
         selectedFilter={selectedFilter}
@@ -85,18 +87,24 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
             추가
           </button>
         </div>
-          <div style={{ minHeight: '435px' }}>
+          <div style={{ minHeight: '320px' }}>
             <div className="grid grid-cols-2 gap-4">
               {currentItems.map((seniorFaq) => (
-                <div key={seniorFaq.senior_faq_id} className="relative bg-gray-200 p-4 rounded-lg">
+                <div key={seniorFaq.senior_faq_id}  className="relative bg-gray-200 p-4 rounded-lg cursor-pointer" onClick={() => handleDetailClick(String(seniorFaq.senior_faq_id))}>
                   <button
-                    onClick={() => handleEditClick(String(seniorFaq.senior_faq_id))}
+                    onClick={(e) => { 
+                      e.stopPropagation();
+                      handleEditClick(String(seniorFaq.senior_faq_id)); 
+                    }}
                     className="absolute top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                   >
                     수정
                   </button>
 
-                  <div className="absolute bottom-5 right-5">
+                  <div
+                    className="absolute bottom-5 right-5"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <SeniorFAQDelete
                       senior_faq_id={String(seniorFaq.senior_faq_id)}
                       detailcategory_ko={seniorFaq.detailcategory_ko}
@@ -104,33 +112,23 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
                     />
                   </div>
 
-                  <div
-                    className="mb-2 cursor-pointer"
-                    onClick={() => handleDetailClick(String(seniorFaq.senior_faq_id))}
-                  >
-                    <span className="mb-1 text-m text-gray-600">
-                      <strong>Senior FAQ ID: {seniorFaq.senior_faq_id}</strong>
-                    </span>
-                  </div>
 
-                  <div className="flex flex-col">
-                    <div className="mb-1 text-sm text-gray-600">
-                      <strong>주요 카테고리:</strong> {seniorFaq.maincategory_ko}
+                  <div className="pr-24">
+                    <div className="mb-2">
+                      <span className="mb-1 text-m text-gray-600">
+                        <strong>세부 카테고리: {seniorFaq.detailcategory_ko}</strong>
+                      </span>
                     </div>
-                    <div className="mb-1 text-sm text-gray-600">
-                      <strong>하위 카테고리:</strong> {seniorFaq.subcategory_ko}
-                    </div>
-                    <div className="mb-1 text-sm text-gray-600">
-                      <strong>세부 카테고리:</strong> {seniorFaq.detailcategory_ko}
-                    </div>
-                    <div className="mb-1 text-sm text-gray-600">
-                      <strong>관리자:</strong> {seniorFaq.manager}
-                    </div>
-                    <div className="mb-1 text-sm text-gray-600">
-                      <strong>생성 시간:</strong> {formatDateToKST(seniorFaq.created_at)}
-                    </div>
-                    <div className="mb-1 text-sm text-gray-600">
-                      <strong>수정 시간:</strong> {formatDateToKST(seniorFaq.updated_at)}
+                    <div className="flex flex-col">
+                      <div className="mb-1 text-sm text-gray-600">
+                        <strong>주요 카테고리:</strong> {seniorFaq.maincategory_ko}
+                      </div>
+                      <div className="mb-1 text-sm text-gray-600">
+                        <strong>하위 카테고리:</strong> {seniorFaq.subcategory_ko}
+                      </div>
+                      <div className="mb-1 text-sm text-gray-600">
+                        <strong>관리자:</strong> {seniorFaq.manager}
+                      </div>
                     </div>
                   </div>
                 </div>
