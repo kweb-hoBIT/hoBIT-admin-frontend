@@ -54,7 +54,7 @@ const DeleteAccount: React.FC = () => {
       <button
         type="button"
         onClick={togglePopup}
-        className="text-sm text-red-600 hover:underline"
+        className="px-3 py-1 bg-red-500 text-white rounded-md text-sm font-medium hover:bg-red-600 transition-colors duration-200"
       >
         회원탈퇴
       </button>
