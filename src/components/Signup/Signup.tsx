@@ -66,7 +66,7 @@ const Signup: React.FC = () => {
         navigate('/login');
       } else {
         if (response.payload?.statusCode === 403) {
-          setError('초대키가 올바르지 않습니다. 다시 확인해주세요.');
+          setError('관리자 키가 올바르지 않습니다. 다시 확인해주세요.');
         } else if (response.payload?.statusCode === 400) {
           setError('이미 존재하는 이메일입니다. 다른 이메일로 시도해주세요.');
         }
