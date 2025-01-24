@@ -4,11 +4,9 @@ import Translate from '../Translate/Translate';
 
 interface FAQCreateFormProps {
   newFAQ: CreateFAQRequest['body'];
-  setnewFAQ: React.Dispatch<React.SetStateAction<CreateFAQRequest['body']>>;
-  filteredMaincategoryKo: GetAllFAQCategoryResponse['data']['categories']['maincategory_ko'];
-  filteredMaincategoryEn: GetAllFAQCategoryResponse['data']['categories']['maincategory_en'];
-  filteredSubcategoryKo: GetAllFAQCategoryResponse['data']['categories']['subcategory_ko'];
-  filteredSubcategoryEn: GetAllFAQCategoryResponse['data']['categories']['subcategory_en'];
+  setNewFAQ: React.Dispatch<React.SetStateAction<CreateFAQRequest['body']>>;
+  filteredCategory: GetAllFAQCategoryResponse['data']['categories'];
+  findFilterIndex: (key: keyof GetAllFAQCategoryResponse['data']['categories'], value: string) => void;
   handleAddAnswer: () => void;
   handleCreate: () => void;
   handleDeleteAnswer: (index: number) => void;
@@ -17,11 +15,9 @@ interface FAQCreateFormProps {
 
 const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
   newFAQ,
-  setnewFAQ,
-  filteredMaincategoryKo,
-  filteredMaincategoryEn,
-  filteredSubcategoryKo,
-  filteredSubcategoryEn,
+  setNewFAQ,
+  filteredCategory,
+  findFilterIndex,
   handleAddAnswer,
   handleCreate,
   handleDeleteAnswer,
@@ -59,9 +55,9 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
           <div>
             <input
               type="text"
-              value={maincategory_ko}
+              value={maincategory_ko || ''}
               onChange={(e) =>
-                setnewFAQ({ ...newFAQ, maincategory_ko: e.target.value })
+                setNewFAQ({ ...newFAQ, maincategory_ko: e.target.value })
               }
               onFocus={() => setIsMainCateogoryKoInputInputFocused(true)}
               onBlur={() => {
@@ -72,12 +68,14 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
               placeholder="카테고리를 입력하세요"
             />
-            {isMainCateogoryKoInputFocused && filteredMaincategoryKo.length > 0 && (
+            {isMainCateogoryKoInputFocused && filteredCategory['maincategory_ko'].length > 0 && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {filteredMaincategoryKo.map((category) => (
+                {filteredCategory['maincategory_ko'].map((category) => (
                   <li
                     key={category}
-                    onClick={() => setnewFAQ({ ...newFAQ, maincategory_ko: category })}
+                    onClick={() => {
+                      findFilterIndex('maincategory_ko', category);
+                    }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
                   >
                     {category}
@@ -86,14 +84,14 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
               </ul>
             )}
           </div>
-          <Translate sourceText={maincategory_ko} setTargetText={(text) => setnewFAQ({ ...newFAQ, maincategory_en: text })} />
+          <Translate sourceText={maincategory_ko} setTargetText={(text) => setNewFAQ({ ...newFAQ, maincategory_en: text })} />
           <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Category (English)</label>
           <div>
             <input
               type="text"
-              value={maincategory_en}
+              value={maincategory_en || ''}
               onChange={(e) =>
-                setnewFAQ({ ...newFAQ, maincategory_en: e.target.value })
+                setNewFAQ({ ...newFAQ, maincategory_en: e.target.value })
               }
               onFocus={() => setIsMainCateogoryEnInputInputFocused(true)}
               onBlur={() => {
@@ -104,12 +102,14 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter category"
             />
-            {isMainCateogoryEnInputFocused && filteredMaincategoryEn.length > 0 && (
+            {isMainCateogoryEnInputFocused && filteredCategory['maincategory_en'].length > 0 && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {filteredMaincategoryEn.map((category) => (
+                {filteredCategory['maincategory_en'].map((category) => (
                   <li
                     key={category}
-                    onClick={() => setnewFAQ({ ...newFAQ, maincategory_en: category })}
+                    onClick={() => {
+                      findFilterIndex('maincategory_en', category);
+                    }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
                   >
                     {category}
@@ -129,9 +129,9 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
           <div>
             <input
               type="text"
-              value={subcategory_ko}
+              value={subcategory_ko || ''}
               onChange={(e) =>
-                setnewFAQ({ ...newFAQ, subcategory_ko: e.target.value })
+                setNewFAQ({ ...newFAQ, subcategory_ko: e.target.value })
               }
               onFocus={() => setIsSubCateogoryKoInputInputFocused(true)}
               onBlur={() => {
@@ -142,12 +142,14 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
               placeholder="서브카테고리를 입력하세요"
             />
-            {isSubCateogoryKoInputFocused && filteredSubcategoryKo.length > 0 && (
+            {isSubCateogoryKoInputFocused && filteredCategory['subcategory_ko'].length > 0 && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {filteredSubcategoryKo.map((category) => (
+                {filteredCategory['subcategory_ko'].map((category) => (
                   <li
                     key={category}
-                    onClick={() => setnewFAQ({ ...newFAQ, subcategory_ko: category })}
+                    onClick={() => {
+                      findFilterIndex('subcategory_ko', category);
+                    }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
                   >
                     {category}
@@ -156,14 +158,14 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
               </ul>
             )}
           </div>
-          <Translate sourceText={subcategory_ko} setTargetText={(text) => setnewFAQ({ ...newFAQ, subcategory_en: text })} />
+          <Translate sourceText={subcategory_ko || ''} setTargetText={(text) => setNewFAQ({ ...newFAQ, subcategory_en: text })} />
           <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Subcategory (English)</label>
           <div>
             <input
               type="text"
               value={subcategory_en}
               onChange={(e) =>
-                setnewFAQ({ ...newFAQ, subcategory_en: e.target.value })
+                setNewFAQ({ ...newFAQ, subcategory_en: e.target.value })
               }
               onFocus={() => setIsSubCateogoryEnInputInputFocused(true)}
               onBlur={() => {
@@ -174,12 +176,14 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter subcategory"
             />
-            {isSubCateogoryEnInputFocused && filteredSubcategoryEn.length > 0 && (
+            {isSubCateogoryEnInputFocused && filteredCategory['subcategory_en'].length > 0 && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {filteredSubcategoryEn.map((category) => (
+                {filteredCategory['subcategory_en'].map((category) => (
                   <li
                     key={category}
-                    onClick={() => setnewFAQ({ ...newFAQ, subcategory_en: category })}
+                    onClick={() => {
+                      findFilterIndex('subcategory_en', category);
+                    }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
                   >
                     {category}
@@ -200,18 +204,18 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
             type="text"
             value={question_ko}
             onChange={(e) =>
-              setnewFAQ({ ...newFAQ, question_ko: e.target.value })
+              setNewFAQ({ ...newFAQ, question_ko: e.target.value })
             }
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
             placeholder="질문을 입력하세요"
           />
-          <Translate sourceText={question_ko} setTargetText={(text) => setnewFAQ({ ...newFAQ, question_en: text })} />
+          <Translate sourceText={question_ko} setTargetText={(text) => setNewFAQ({ ...newFAQ, question_en: text })} />
           <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Question (English)</label>
           <input
             type="text"
             value={question_en}
             onChange={(e) =>
-              setnewFAQ({ ...newFAQ, question_en: e.target.value })
+              setNewFAQ({ ...newFAQ, question_en: e.target.value })
             }
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
             placeholder="Enter question"
@@ -238,7 +242,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
               placeholder="답변을 입력하세요"
               value={answer.answer}
               onChange={(e) =>
-                setnewFAQ({
+                setNewFAQ({
                   ...newFAQ,
                   answer_ko: answer_ko.map((ans, i) =>
                     i === index ? { ...ans, answer: e.target.value } : ans
@@ -251,7 +255,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
             <Translate
               sourceText={answer.answer}
               setTargetText={(translatedText) => {
-                setnewFAQ({
+                setNewFAQ({
                   ...newFAQ,
                   answer_en: answer_en.map((ans, i) =>
                     i === index ? { ...ans, answer: translatedText } : ans
@@ -264,7 +268,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
               placeholder="Enter Answer"
               value={answer_en[index]?.answer || ''}
               onChange={(e) =>
-                setnewFAQ({
+                setNewFAQ({
                   ...newFAQ,
                   answer_en: answer_en.map((ans, i) =>
                     i === index ? { ...ans, answer: e.target.value } : ans
@@ -280,7 +284,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
                 placeholder="URL"
                 value={answer.url}
                 onChange={(e) => {
-                  setnewFAQ({
+                  setNewFAQ({
                     ...newFAQ,
                     answer_ko: answer_ko.map((ans, i) =>
                       i === index ? { ...ans, url: e.target.value } : ans
@@ -297,7 +301,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
                 placeholder="Email"
                 value={answer.email}
                 onChange={(e) => {
-                  setnewFAQ({
+                  setNewFAQ({
                     ...newFAQ,
                     answer_ko: answer_ko.map((ans, i) =>
                       i === index ? { ...ans, email: e.target.value } : ans
@@ -314,7 +318,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
                 placeholder="Phone"
                 value={answer.phone}
                 onChange={(e) => {
-                  setnewFAQ({
+                  setNewFAQ({
                     ...newFAQ,
                     answer_ko: answer_ko.map((ans, i) =>
                       i === index ? { ...ans, phone: e.target.value } : ans
@@ -329,13 +333,15 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
             </div>
           </div>
         ))}
-        <button
-          type="button"
-          onClick={handleAddAnswer}
-          className="w-full py-3 bg-blue-500 text-white font-medium rounded-lg mt-4 hover:bg-blue-600"
-        >
-          답변 추가
-        </button>
+        <div className="flex justify-between">
+          <button
+            type="button"
+            onClick={handleAddAnswer}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+          >
+            답변 추가
+          </button>
+        </div>
       </div>
 
       {/* 관리자 필드 */}
@@ -346,7 +352,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
           type="text"
           value={manager}
           onChange={(e) =>
-            setnewFAQ({ ...newFAQ, manager: e.target.value })
+            setNewFAQ({ ...newFAQ, manager: e.target.value })
           }
           className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
           placeholder="관리자 이름을 입력하세요"

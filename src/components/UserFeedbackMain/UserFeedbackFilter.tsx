@@ -33,7 +33,7 @@ const UserFeedbackFilter: React.FC<FilterProps> = ({ filter, onFilterChange }) =
                 : "text-gray-600 hover:text-blue-600"
             }`}
           >
-            전체 피드백
+            해결된 피드백
           </span>
         </div>
       </div>

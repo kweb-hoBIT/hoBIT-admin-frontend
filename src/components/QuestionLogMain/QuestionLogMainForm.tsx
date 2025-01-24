@@ -57,7 +57,7 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
         <div style={{ minHeight: '395px' }}>
           <div className="grid grid-cols-2 gap-4">
             {currentItems.map((log) => (
-              <div key={log.question_log_id} className="relative bg-gray-200 p-4 rounded-lg cursor-pointer">
+              <div className="relative bg-gray-200 p-4 rounded-lg">
                 <div className="mb-2">
                   <span className="mb-1 text-m text-gray-600"><strong>유저 질문: {log.user_question}</strong></span>
                 </div>

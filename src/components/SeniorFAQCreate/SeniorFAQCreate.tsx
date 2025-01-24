@@ -18,12 +18,16 @@ const SeniorFAQCreate: React.FC = () => {
     detailcategory_ko: [],
     detailcategory_en: [],
   })
-  const [filteredMaincategoryKo, setFilteredMaincategoryKo] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']['maincategory_ko']>([]);
-  const [filteredMaincategoryEn, setFilteredMaincategoryEn] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']['maincategory_en']>([]);
-  const [filteredSubcategoryKo, setFilteredSubcategoryKo] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']['subcategory_ko']>([]);
-  const [filteredSubcategoryEn, setFilteredSubcategoryEn] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']['subcategory_en']>([]);
-  const [filteredDetailcategoryKo, setFilteredDetailcategoryKo] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']['detailcategory_ko']>([]);
-  const [filteredDetailcategoryEn, setFilteredDetailcategoryEn] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']['detailcategory_en']>([]);
+
+  const [filteredCategory, setFilteredCategory] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']>({
+    maincategory_ko: [],
+    maincategory_en: [],
+    subcategory_ko: [],
+    subcategory_en: [],
+    detailcategory_ko: [],
+    detailcategory_en: [],
+  });
+
   const [newSeniorFAQ, setNewSeniorFAQ] = useState<CreateSeniorFAQRequest["body"]>({
     user_id: user_id ? Number(user_id) : 0,
     maincategory_ko: '',
@@ -71,78 +75,92 @@ const SeniorFAQCreate: React.FC = () => {
     }
   }, [GetAllSeniorFAQCategoryApi.isSuccess]);
 
-  //maincategory_ko 연관검색어 업데이트
-  useEffect(() => {
-    if (newSeniorFAQ.maincategory_ko) {
-      const filtered = category.maincategory_ko.filter((maincategoryKoItem) =>
-        maincategoryKoItem.includes(newSeniorFAQ.maincategory_ko)
-      );
-      setFilteredMaincategoryKo(filtered);
+  // 필터 업데이트 함수
+  const updateFilteredCategory = (key: keyof GetAllSeniorFAQCategoryResponse['data']['categories'], value: string) => {
+    if (value) {
+      const filtered = category[key].filter((item) => item.includes(value));
+      setFilteredCategory((prev) => ({ ...prev, [key]: filtered }));
     } else {
-      setFilteredMaincategoryKo(category.maincategory_ko);
+      setFilteredCategory((prev) => ({ ...prev, [key]: category[key] }));
     }
+  };
+
+  // 필터 인덱스 찾기 함수
+  const findFilterIndex = (key: keyof GetAllSeniorFAQCategoryResponse['data']['categories'], value: string) => {
+    const index = category[key].findIndex((item) => item === value);
+    if (key === 'maincategory_ko') {
+      setNewSeniorFAQ({
+        ...newSeniorFAQ,
+        maincategory_ko: value,
+        maincategory_en: category.maincategory_en[index],
+      });
+    } 
+    if (key === 'maincategory_en') {
+      setNewSeniorFAQ({
+        ...newSeniorFAQ,
+        maincategory_ko: category.maincategory_ko[index],
+        maincategory_en: value,
+      });
+    }
+    if (key === 'subcategory_ko') {
+      setNewSeniorFAQ({
+        ...newSeniorFAQ,
+        subcategory_ko: value,
+        subcategory_en: category.subcategory_en[index],
+      });
+    }
+    if (key === 'subcategory_en') {
+      setNewSeniorFAQ({
+        ...newSeniorFAQ,
+        subcategory_ko: category.subcategory_ko[index],
+        subcategory_en: value,
+      });
+    }
+    if (key === 'detailcategory_ko') {
+      setNewSeniorFAQ({
+        ...newSeniorFAQ,
+        detailcategory_ko: value,
+        detailcategory_en: category.detailcategory_en[index],
+      });
+    }
+    if (key === 'detailcategory_en') {
+      setNewSeniorFAQ({
+        ...newSeniorFAQ,
+        detailcategory_ko: category.detailcategory_ko[index],
+        detailcategory_en: value,
+      });
+    }
+  }
+
+  // maincategory_ko 필터링
+  useEffect(() => {
+    updateFilteredCategory('maincategory_ko', newSeniorFAQ.maincategory_ko);
   }, [newSeniorFAQ.maincategory_ko, category.maincategory_ko]);
 
-  // maincategory_en 연관검색어 업데이트
+  // maincategory_en 필터링
   useEffect(() => {
-    if (newSeniorFAQ.maincategory_en) {
-      const filtered = category.maincategory_en.filter((maincategoryEnItem) =>
-        maincategoryEnItem.includes(newSeniorFAQ.maincategory_en)
-      );
-      setFilteredMaincategoryEn(filtered);
-    } else {
-      setFilteredMaincategoryEn(category.maincategory_en);
-    }
+    updateFilteredCategory('maincategory_en', newSeniorFAQ.maincategory_en);
   }, [newSeniorFAQ.maincategory_en, category.maincategory_en]);
 
-  // subcategory_ko 연관검색어 업데이트
+  // subcategory_ko 필터링
   useEffect(() => {
-    if (newSeniorFAQ.subcategory_ko) {
-      const filtered = category.subcategory_ko.filter((subcategoryKoItem) =>
-        subcategoryKoItem.includes(newSeniorFAQ.subcategory_ko)
-      );
-      setFilteredSubcategoryKo(filtered);
-    } else {
-      setFilteredSubcategoryKo(category.subcategory_ko);
-    }
+    updateFilteredCategory('subcategory_ko', newSeniorFAQ.subcategory_ko);
   }, [newSeniorFAQ.subcategory_ko, category.subcategory_ko]);
 
-  // subcategory_en 연관검색어 업데이트
+  // subcategory_en 필터링
   useEffect(() => {
-    if (newSeniorFAQ.subcategory_en) {
-      const filtered = category.subcategory_en.filter((subcategoryEnItem) =>
-        subcategoryEnItem.includes(newSeniorFAQ.subcategory_en)
-      );
-      setFilteredSubcategoryEn(filtered);
-    } else {
-      setFilteredSubcategoryEn(category.subcategory_en);
-    }
+    updateFilteredCategory('subcategory_en', newSeniorFAQ.subcategory_en);
   }, [newSeniorFAQ.subcategory_en, category.subcategory_en]);
 
-  // detailcategory_ko 연관검색어 업데이트
+  // detailcategory_ko 필터링
   useEffect(() => {
-    if (newSeniorFAQ.detailcategory_ko) {
-      const filtered = category.detailcategory_ko.filter((detailcategoryKoItem) =>
-        detailcategoryKoItem.includes(newSeniorFAQ.detailcategory_ko)
-      );
-      setFilteredDetailcategoryKo(filtered);
-    } else {
-      setFilteredDetailcategoryKo(category.detailcategory_ko);
-    }
+    updateFilteredCategory('detailcategory_ko', newSeniorFAQ.detailcategory_ko);
   }, [newSeniorFAQ.detailcategory_ko, category.detailcategory_ko]);
 
-  // detailcategory_en 연관검색어 업데이트
+  // detailcategory_en 필터링
   useEffect(() => {
-    if (newSeniorFAQ.detailcategory_en) {
-      const filtered = category.detailcategory_en.filter((detailcategoryEnItem) =>
-        detailcategoryEnItem.includes(newSeniorFAQ.detailcategory_en)
-      );
-      setFilteredDetailcategoryEn(filtered);
-    } else {
-      setFilteredDetailcategoryEn(category.detailcategory_en);
-    }
+    updateFilteredCategory('detailcategory_en', newSeniorFAQ.detailcategory_en);
   }, [newSeniorFAQ.detailcategory_en, category.detailcategory_en]);
-
   
   const handleAddAnswer = () => {
     setNewSeniorFAQ({
@@ -246,12 +264,8 @@ const SeniorFAQCreate: React.FC = () => {
     <SeniorFAQCreateForm
       newSeniorFAQ={newSeniorFAQ}
       setNewSeniorFAQ={setNewSeniorFAQ}
-      filteredMaincategoryKo={filteredMaincategoryKo}
-      filteredMaincategoryEn={filteredMaincategoryEn}
-      filteredSubcategoryKo={filteredSubcategoryKo}
-      filteredSubcategoryEn={filteredSubcategoryEn}
-      filteredDetailcategoryKo={filteredDetailcategoryKo}
-      filteredDetailcategoryEn={filteredDetailcategoryEn}
+      filteredCategory={filteredCategory}
+      findFilterIndex={findFilterIndex}
       handleAddAnswer={handleAddAnswer}
       handleSubmit={handleSubmit}
       handleDeleteAnswer={handleDeleteAnswer}

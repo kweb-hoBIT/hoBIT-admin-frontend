@@ -23,7 +23,7 @@ const FAQMain: React.FC = () => {
     if (GetFAQsApi.isSuccess) {
       fetchFAQData();
     }
-  }, [GetFAQsApi.isSuccess]);
+  }, [GetFAQsApi.isSuccess, GetFAQsApi.data]);
 
   if (error) {
     return <div className="error-message">{error}</div>;

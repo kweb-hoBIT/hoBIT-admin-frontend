@@ -11,19 +11,21 @@ const FAQCreate: React.FC = () => {
   const navigate = useNavigate();
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
   const [isCreating, setIsCreating] = useState(false);
-  const [category, setcategory] = useState<GetAllFAQCategoryResponse['data']['categories']>({
+  const [category, setCategory] = useState<GetAllFAQCategoryResponse['data']['categories']>({
     maincategory_ko: [],
     maincategory_en: [],
     subcategory_ko: [],
     subcategory_en: [],
-  })
+  });
 
-  const [filteredMaincategoryKo, setFilteredMaincategoryKo] = useState<GetAllFAQCategoryResponse['data']['categories']['maincategory_ko']>([]);
-  const [filteredMaincategoryEn, setFilteredMaincategoryEn] = useState<GetAllFAQCategoryResponse['data']['categories']['maincategory_en']>([]);
-  const [filteredSubcategoryKo, setFilteredSubcategoryKo] = useState<GetAllFAQCategoryResponse['data']['categories']['subcategory_ko']>([]);
-  const [filteredSubcategoryEn, setFilteredSubcategoryEn] = useState<GetAllFAQCategoryResponse['data']['categories']['subcategory_en']>([]);
+  const [filteredCategory, setFilteredCategory] = useState<GetAllFAQCategoryResponse['data']['categories']>({
+    maincategory_ko: [],
+    maincategory_en: [],
+    subcategory_ko: [],
+    subcategory_en: [],
+  });
 
-  const [newFAQ, setnewFAQ] = useState<CreateFAQRequest["body"]>({
+  const [newFAQ, setNewFAQ] = useState<CreateFAQRequest['body']>({
     user_id: user_id ? Number(user_id) : 0,
     maincategory_ko: '',
     maincategory_en: '',
@@ -35,7 +37,7 @@ const FAQCreate: React.FC = () => {
     answer_en: [{ answer: '', url: '', email: '', phone: '' }],
     manager: '',
   });
-  const[error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const GetAllFAQCategoryApi = useHobitQueryGetApi<GetAllFAQCategoryRequest, GetAllFAQCategoryResponse>('faqs/category');
   const FAQCreateApi = useHobitMutatePostApi<CreateFAQRequest, CreateFAQResponse>('faqs');
@@ -45,7 +47,8 @@ const FAQCreate: React.FC = () => {
     const fetchFAQCategory = async () => {
       if (GetAllFAQCategoryApi.data?.payload?.statusCode === 200) {
         const data = GetAllFAQCategoryApi.data.payload.data.categories;
-        setcategory(data);
+        setCategory(data);
+        setFilteredCategory(data); // 초기화
       } else {
         setError('FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
       }
@@ -56,57 +59,71 @@ const FAQCreate: React.FC = () => {
     }
   }, [GetAllFAQCategoryApi.isSuccess]);
 
-  //maincategory_ko 연관검색어 업데이트
-  useEffect(() => {
-    if (newFAQ.maincategory_ko) {
-      const filtered = category.maincategory_ko.filter((maincategoryKoItem) =>
-        maincategoryKoItem.includes(newFAQ.maincategory_ko)
-      );
-      setFilteredMaincategoryKo(filtered);
+  // 필터 업데이트 함수
+  const updateFilteredCategory = (key: keyof GetAllFAQCategoryResponse['data']['categories'], value: string) => {
+    if (value) {
+      const filtered = category[key].filter((item) => item.includes(value));
+      setFilteredCategory((prev) => ({ ...prev, [key]: filtered }));
     } else {
-      setFilteredMaincategoryKo(category.maincategory_ko);
+      setFilteredCategory((prev) => ({ ...prev, [key]: category[key] }));
     }
+  };
+
+  // 필터 인덱스 찾기 함수
+  const findFilterIndex = (key: keyof GetAllFAQCategoryResponse['data']['categories'], value: string) => {
+    const index = category[key].findIndex((item) => item === value);
+    if (key === 'maincategory_ko') {
+      setNewFAQ({
+        ...newFAQ,
+        maincategory_ko: value,
+        maincategory_en: category.maincategory_en[index],
+      });
+    }
+    if (key === 'maincategory_en') {
+      setNewFAQ({
+        ...newFAQ,
+        maincategory_ko: category.maincategory_ko[index],
+        maincategory_en: value
+      });
+    }
+    if (key === 'subcategory_ko') {
+      setNewFAQ({
+        ...newFAQ,
+        subcategory_ko: value,
+        subcategory_en: category.subcategory_en[index],
+      });
+    }
+    if (key === 'subcategory_en') {
+      setNewFAQ({
+        ...newFAQ,
+        subcategory_ko: category.subcategory_ko[index],
+        subcategory_en: value,
+      });
+    }
+  }
+
+  // maincategory_ko 필터링
+  useEffect(() => {
+    updateFilteredCategory('maincategory_ko', newFAQ.maincategory_ko);
   }, [newFAQ.maincategory_ko, category.maincategory_ko]);
 
-  // maincategory_en 연관검색어 업데이트
+  // maincategory_en 필터링
   useEffect(() => {
-    if (newFAQ.maincategory_en) {
-      const filtered = category.maincategory_en.filter((maincategoryEnItem) =>
-        maincategoryEnItem.includes(newFAQ.maincategory_en)
-      );
-      setFilteredMaincategoryEn(filtered);
-    } else {
-      setFilteredMaincategoryEn(category.maincategory_en);
-    }
+    updateFilteredCategory('maincategory_en', newFAQ.maincategory_en);
   }, [newFAQ.maincategory_en, category.maincategory_en]);
 
-  // subcategory_ko 연관검색어 업데이트
+  // subcategory_ko 필터링
   useEffect(() => {
-    if (newFAQ.subcategory_ko) {
-      const filtered = category.subcategory_ko.filter((subcategoryKoItem) =>
-        subcategoryKoItem.includes(newFAQ.subcategory_ko)
-      );
-      setFilteredSubcategoryKo(filtered);
-    } else {
-      setFilteredSubcategoryKo(category.subcategory_ko);
-    }
+    updateFilteredCategory('subcategory_ko', newFAQ.subcategory_ko);
   }, [newFAQ.subcategory_ko, category.subcategory_ko]);
 
-  // subcategory_en 연관검색어 업데이트
+  // subcategory_en 필터링
   useEffect(() => {
-    if (newFAQ.subcategory_en) {
-      const filtered = category.subcategory_en.filter((subcategoryEnItem) =>
-        subcategoryEnItem.includes(newFAQ.subcategory_en)
-      );
-      setFilteredSubcategoryEn(filtered);
-    } else {
-      setFilteredSubcategoryEn(category.subcategory_en);
-    }
+    updateFilteredCategory('subcategory_en', newFAQ.subcategory_en);
   }, [newFAQ.subcategory_en, category.subcategory_en]);
 
-  
   const handleAddAnswer = () => {
-    setnewFAQ({
+    setNewFAQ({
       ...newFAQ,
       answer_ko: [...newFAQ.answer_ko, { answer: '', url: '', email: '', phone: '' }],
       answer_en: [...newFAQ.answer_en, { answer: '', url: '', email: '', phone: '' }],
@@ -119,7 +136,7 @@ const FAQCreate: React.FC = () => {
       return;
     }
 
-    setnewFAQ({
+    setNewFAQ({
       ...newFAQ,
       answer_ko: newFAQ.answer_ko.filter((_, i) => i !== index),
       answer_en: newFAQ.answer_en.filter((_, i) => i !== index),
@@ -165,7 +182,7 @@ const FAQCreate: React.FC = () => {
 
       if (response.payload?.statusCode === 201) {
         alert('FAQ가 성공적으로 생성되었습니다!');
-        setnewFAQ({
+        setNewFAQ({
           user_id: user_id ? Number(user_id) : 0,
           maincategory_ko: '',
           maincategory_en: '',
@@ -191,11 +208,9 @@ const FAQCreate: React.FC = () => {
   return (
     <FAQCreateForm
       newFAQ={newFAQ}
-      setnewFAQ={setnewFAQ}
-      filteredMaincategoryKo={filteredMaincategoryKo}
-      filteredMaincategoryEn={filteredMaincategoryEn}
-      filteredSubcategoryKo={filteredSubcategoryKo}
-      filteredSubcategoryEn={filteredSubcategoryEn}
+      setNewFAQ={setNewFAQ}
+      filteredCategory={filteredCategory}
+      findFilterIndex={findFilterIndex}
       handleAddAnswer={handleAddAnswer}
       handleCreate={handleCreate}
       handleDeleteAnswer={handleDeleteAnswer}

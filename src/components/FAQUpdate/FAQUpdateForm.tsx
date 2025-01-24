@@ -5,10 +5,8 @@ import Translate from '../Translate/Translate';
 interface FAQUpdateFormProps {
   updatedFAQ: UpdateFAQRequest['body'];
   setupdatedFAQ: React.Dispatch<React.SetStateAction<UpdateFAQRequest['body']>>;
-  filteredMaincategoryKo: GetAllFAQCategoryResponse['data']['categories']['maincategory_ko'];
-  filteredMaincategoryEn: GetAllFAQCategoryResponse['data']['categories']['maincategory_en'];
-  filteredSubcategoryKo: GetAllFAQCategoryResponse['data']['categories']['subcategory_ko'];
-  filteredSubcategoryEn: GetAllFAQCategoryResponse['data']['categories']['subcategory_en'];
+  filteredCategory: GetAllFAQCategoryResponse['data']['categories'];
+  findFilterIndex: (key: keyof GetAllFAQCategoryResponse['data']['categories'], value: string) => void;
   handleAddAnswer: () => void;
   handleUpdate: () => void;
   handleDeleteAnswer: (index: number) => void;
@@ -18,10 +16,8 @@ interface FAQUpdateFormProps {
 const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
   updatedFAQ,
   setupdatedFAQ,
-  filteredMaincategoryKo,
-  filteredMaincategoryEn,
-  filteredSubcategoryKo,
-  filteredSubcategoryEn,
+  filteredCategory,
+  findFilterIndex,
   handleAddAnswer,
   handleUpdate,
   handleDeleteAnswer,
@@ -59,7 +55,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
           <div>
             <input
               type="text"
-              value={maincategory_ko}
+              value={maincategory_ko || ''}
               onChange={(e) =>
                 setupdatedFAQ({ ...updatedFAQ, maincategory_ko: e.target.value })
               }
@@ -72,12 +68,14 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
               placeholder="카테고리를 입력하세요"
             />
-            {isMainCateogoryKoInputFocused && filteredMaincategoryKo.length > 0 && (
+            {isMainCateogoryKoInputFocused && filteredCategory['maincategory_ko'].length > 0 && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {filteredMaincategoryKo.map((category) => (
+                {filteredCategory['maincategory_ko'].map((category) => (
                   <li
                     key={category}
-                    onClick={() => setupdatedFAQ({ ...updatedFAQ, maincategory_ko: category })}
+                    onClick={() => {
+                      findFilterIndex('maincategory_ko', category);
+                    }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
                   >
                     {category}
@@ -109,12 +107,14 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter category"
             />
-            {isMainCateogoryEnInputFocused && filteredMaincategoryEn.length > 0 && (
+            {isMainCateogoryEnInputFocused && filteredCategory['maincategory_en'].length > 0 && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {filteredMaincategoryEn.map((category) => (
+                {filteredCategory['maincategory_en'].map((category) => (
                   <li
-                    key={category}
-                    onClick={() => setupdatedFAQ({ ...updatedFAQ, maincategory_en: category })}
+                    key={category || ''}
+                    onClick={() => {
+                      findFilterIndex('maincategory_en', category);
+                    }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
                   >
                     {category}
@@ -134,7 +134,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
           <div>
             <input
               type="text"
-              value={subcategory_ko}
+              value={subcategory_ko || ''}
               onChange={(e) =>
                 setupdatedFAQ({ ...updatedFAQ, subcategory_ko: e.target.value })
               }
@@ -147,12 +147,14 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
               placeholder="서브카테고리를 입력하세요"
             />
-            {isSubCateogoryKoInputFocused && filteredSubcategoryKo.length > 0 && (
+            {isSubCateogoryKoInputFocused && filteredCategory['subcategory_ko'].length > 0 && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {filteredSubcategoryKo.map((category) => (
+                {filteredCategory['subcategory_ko'].map((category, index) => (
                   <li
-                    key={category}
-                    onClick={() => setupdatedFAQ({ ...updatedFAQ, subcategory_ko: category })}
+                    key={category || ''}
+                    onClick={() => {
+                      findFilterIndex('subcategory_ko', category);
+                    }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
                   >
                     {category}
@@ -184,12 +186,14 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter subcategory"
             />
-            {isSubCateogoryEnInputFocused && filteredSubcategoryEn.length > 0 && (
+            {isSubCateogoryEnInputFocused && filteredCategory['subcategory_en'].length > 0 && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {filteredSubcategoryEn.map((category) => (
+                {filteredCategory['subcategory_en'].map((category) => (
                   <li
                     key={category}
-                    onClick={() => setupdatedFAQ({ ...updatedFAQ, subcategory_en: category })}
+                    onClick={() => {
+                      findFilterIndex('subcategory_en', category);
+                    }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
                   >
                     {category}

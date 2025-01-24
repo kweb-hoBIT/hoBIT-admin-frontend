@@ -23,12 +23,15 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
       detailcategory_ko: [],
       detailcategory_en: [],
     })
-  const [filteredMaincategoryKo, setFilteredMaincategoryKo] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']['maincategory_ko']>([]);
-  const [filteredMaincategoryEn, setFilteredMaincategoryEn] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']['maincategory_en']>([]);
-  const [filteredSubcategoryKo, setFilteredSubcategoryKo] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']['subcategory_ko']>([]);
-  const [filteredSubcategoryEn, setFilteredSubcategoryEn] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']['subcategory_en']>([]);
-  const [filteredDetailcategoryKo, setFilteredDetailcategoryKo] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']['detailcategory_ko']>([]);
-  const [filteredDetailcategoryEn, setFilteredDetailcategoryEn] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']['detailcategory_en']>([]);
+
+  const [filteredCategory, setFilteredCategory] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']>({
+    maincategory_ko: [],
+    maincategory_en: [],
+    subcategory_ko: [],
+    subcategory_en: [],
+    detailcategory_ko: [],
+    detailcategory_en: [],
+  });
 
   const [updatedSeniorFAQ, setUpdatedSeniorFAQ] = useState<UpdateSeniorFAQRequest['body']>({
     user_id: user_id ? Number(user_id) : 0,
@@ -111,76 +114,91 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
     }
   }, [GetAllSeniorFAQCategoryApi.isSuccess]);
 
-  //maincategory_ko 연관검색어 업데이트
-  useEffect(() => {
-    if (updatedSeniorFAQ.maincategory_ko) {
-      const filtered = category.maincategory_ko.filter((maincategoryKoItem) =>
-        maincategoryKoItem.includes(updatedSeniorFAQ.maincategory_ko)
-      );
-      setFilteredMaincategoryKo(filtered);
+  // 필터 업데이트 함수
+  const updateFilteredCategory = (key: keyof GetAllSeniorFAQCategoryResponse['data']['categories'], value: string) => {
+    if (value) {
+      const filtered = category[key].filter((item) => item.includes(value));
+      setFilteredCategory((prev) => ({ ...prev, [key]: filtered }));
     } else {
-      setFilteredMaincategoryKo(category.maincategory_ko);
+      setFilteredCategory((prev) => ({ ...prev, [key]: category[key] }));
     }
+  };
+
+  // 필터 인덱스 찾기 함수
+  const findFilterIndex = (key: keyof GetAllSeniorFAQCategoryResponse['data']['categories'], value: string) => {
+    const index = category[key].findIndex((item) => item === value);
+    if (key === 'maincategory_ko') {
+      setUpdatedSeniorFAQ({
+        ...updatedSeniorFAQ,
+        maincategory_ko: value,
+        maincategory_en: category.maincategory_en[index],
+      });
+    } 
+    if (key === 'maincategory_en') {
+      setUpdatedSeniorFAQ({
+        ...updatedSeniorFAQ,
+        maincategory_ko: category.maincategory_ko[index],
+        maincategory_en: value,
+      });
+    }
+    if (key === 'subcategory_ko') {
+      setUpdatedSeniorFAQ({
+        ...updatedSeniorFAQ,
+        subcategory_ko: value,
+        subcategory_en: category.subcategory_en[index],
+      });
+    }
+    if (key === 'subcategory_en') {
+      setUpdatedSeniorFAQ({
+        ...updatedSeniorFAQ,
+        subcategory_ko: category.subcategory_ko[index],
+        subcategory_en: value,
+      });
+    }
+    if (key === 'detailcategory_ko') {
+      setUpdatedSeniorFAQ({
+        ...updatedSeniorFAQ,
+        detailcategory_ko: value,
+        detailcategory_en: category.detailcategory_en[index],
+      });
+    }
+    if (key === 'detailcategory_en') {
+      setUpdatedSeniorFAQ({
+        ...updatedSeniorFAQ,
+        detailcategory_ko: category.detailcategory_ko[index],
+        detailcategory_en: value,
+      });
+    }
+  }
+
+  // maincategory_ko 필터링
+  useEffect(() => {
+    updateFilteredCategory('maincategory_ko', updatedSeniorFAQ.maincategory_ko);
   }, [updatedSeniorFAQ.maincategory_ko, category.maincategory_ko]);
 
-  // maincategory_en 연관검색어 업데이트
+  // maincategory_en 필터링
   useEffect(() => {
-    if (updatedSeniorFAQ.maincategory_en) {
-      const filtered = category.maincategory_en.filter((maincategoryEnItem) =>
-        maincategoryEnItem.includes(updatedSeniorFAQ.maincategory_en)
-      );
-      setFilteredMaincategoryEn(filtered);
-    } else {
-      setFilteredMaincategoryEn(category.maincategory_en);
-    }
+    updateFilteredCategory('maincategory_en', updatedSeniorFAQ.maincategory_en);
   }, [updatedSeniorFAQ.maincategory_en, category.maincategory_en]);
 
-  // subcategory_ko 연관검색어 업데이트
+  // subcategory_ko 필터링
   useEffect(() => {
-    if (updatedSeniorFAQ.subcategory_ko) {
-      const filtered = category.subcategory_ko.filter((subcategoryKoItem) =>
-        subcategoryKoItem.includes(updatedSeniorFAQ.subcategory_ko)
-      );
-      setFilteredSubcategoryKo(filtered);
-    } else {
-      setFilteredSubcategoryKo(category.subcategory_ko);
-    }
+    updateFilteredCategory('subcategory_ko', updatedSeniorFAQ.subcategory_ko);
   }, [updatedSeniorFAQ.subcategory_ko, category.subcategory_ko]);
 
-  // subcategory_en 연관검색어 업데이트
+  // subcategory_en 필터링
   useEffect(() => {
-    if (updatedSeniorFAQ.subcategory_en) {
-      const filtered = category.subcategory_en.filter((subcategoryEnItem) =>
-        subcategoryEnItem.includes(updatedSeniorFAQ.subcategory_en)
-      );
-      setFilteredSubcategoryEn(filtered);
-    } else {
-      setFilteredSubcategoryEn(category.subcategory_en);
-    }
+    updateFilteredCategory('subcategory_en', updatedSeniorFAQ.subcategory_en);
   }, [updatedSeniorFAQ.subcategory_en, category.subcategory_en]);
 
-  // detailcategory_ko 연관검색어 업데이트
+  // detailcategory_ko 필터링
   useEffect(() => {
-    if (updatedSeniorFAQ.detailcategory_ko) {
-      const filtered = category.detailcategory_ko.filter((detailcategoryKoItem) =>
-        detailcategoryKoItem.includes(updatedSeniorFAQ.detailcategory_ko)
-      );
-      setFilteredDetailcategoryKo(filtered);
-    } else {
-      setFilteredDetailcategoryKo(category.detailcategory_ko);
-    }
+    updateFilteredCategory('detailcategory_ko', updatedSeniorFAQ.detailcategory_ko);
   }, [updatedSeniorFAQ.detailcategory_ko, category.detailcategory_ko]);
 
-  // detailcategory_en 연관검색어 업데이트
+  // detailcategory_en 필터링
   useEffect(() => {
-    if (updatedSeniorFAQ.detailcategory_en) {
-      const filtered = category.detailcategory_en.filter((detailcategoryEnItem) =>
-        detailcategoryEnItem.includes(updatedSeniorFAQ.detailcategory_en)
-      );
-      setFilteredDetailcategoryEn(filtered);
-    } else {
-      setFilteredDetailcategoryEn(category.detailcategory_en);
-    }
+    updateFilteredCategory('detailcategory_en', updatedSeniorFAQ.detailcategory_en);
   }, [updatedSeniorFAQ.detailcategory_en, category.detailcategory_en]);
   
 
@@ -261,12 +279,8 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
     <FAQUpdateForm
       updatedSeniorFAQ={updatedSeniorFAQ}
       setupdatedSeniorFAQ={setUpdatedSeniorFAQ}
-      filteredMaincategoryKo={filteredMaincategoryKo}
-      filteredMaincategoryEn={filteredMaincategoryEn}
-      filteredSubcategoryKo={filteredSubcategoryKo}
-      filteredSubcategoryEn={filteredSubcategoryEn}
-      filteredDetailcategoryKo={filteredDetailcategoryKo}
-      filteredDetailcategoryEn={filteredDetailcategoryEn}
+      filteredCategory={filteredCategory}
+      findFilterIndex={findFilterIndex}
       handleAddAnswer={handleAddAnswer}
       handleDeleteAnswer={handleDeleteAnswer}
       handleUpdate={handleUpdate}
