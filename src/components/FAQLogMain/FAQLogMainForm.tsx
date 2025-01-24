@@ -80,7 +80,20 @@ const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
                     <strong>질문:</strong> {log.faq_question}
                   </div>
                   <div className="mb-1 text-sm text-gray-600">
-                    <strong>변경 목적:</strong> {log.action_type}
+                    <strong>변경 목적:</strong>{' '}
+                    <span
+                      className={`${
+                        log.action_type === '수정'
+                          ? 'text-blue-500'
+                          : log.action_type === '추가'
+                          ? 'text-green-500'
+                          : log.action_type === '삭제'
+                          ? 'text-red-500'
+                          : 'text-gray-600'
+                      }`}
+                    >
+                      {log.action_type}
+                    </span>
                   </div>
                   <div className="mb-1 text-sm text-gray-600">
                     <strong>변경 시각:</strong> {formatDateToKST(log.created_at)}
