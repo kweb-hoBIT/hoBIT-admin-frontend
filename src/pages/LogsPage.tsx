@@ -1,8 +1,8 @@
 import Header from '../components/Header/Header';
 import ProtectedPage from '../components/ProtectedPage';
-import SelectLog from '../components/SelectLog/SelectLog';
-import FAQLogMain from '../components/FAQLogMain/FAQLogMain';
-import QuestionLogMain from '../components/QuestionLogMain/QuestionLogMain';
+import SelectLog from '../components/LogMain/SelectLog';
+import FAQLogMain from '../components/LogMain/FAQLogMain';
+import QuestionLogMain from '../components/LogMain/QuestionLogMain';
 
 import React, { useState } from 'react';
 
