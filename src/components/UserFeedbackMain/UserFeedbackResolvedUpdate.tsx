@@ -11,13 +11,17 @@ type UserFeedbackResolvedUpdateProps = {
 const UserFeedbackResolvedUpdate: React.FC<UserFeedbackResolvedUpdateProps> = ({
   user_feedback_id,
   initialResolved,
-  onResolvedChange
+  onResolvedChange,
 }) => {
   const [isResolved, setIsResolved] = useState<number>(initialResolved);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPopup, setShowPopup] = useState(false); // 팝업 상태 관리
 
-  const UserFeedbackResolvedUpdateApi = useHobitMutatePutApi<UpdateUserFeedbackRequest,UpdateUserFeedbackResponse>('feedbacks/user');
+  const UserFeedbackResolvedUpdateApi = useHobitMutatePutApi<
+    UpdateUserFeedbackRequest,
+    UpdateUserFeedbackResponse
+  >('feedbacks/user');
 
   const toggleResolvedStatus = async () => {
     setLoading(true);
@@ -32,6 +36,8 @@ const UserFeedbackResolvedUpdate: React.FC<UserFeedbackResolvedUpdateProps> = ({
         const newResolvedStatus = isResolved === 0 ? 1 : 0;
         setIsResolved(newResolvedStatus);
         onResolvedChange(user_feedback_id, newResolvedStatus);
+        alert('피드백 상태가 성공적으로 변경되었습니다.');
+        setShowPopup(false);
       } else {
         throw new Error('Resolved 상태를 업데이트하는 데 실패했습니다.');
       }
@@ -42,14 +48,54 @@ const UserFeedbackResolvedUpdate: React.FC<UserFeedbackResolvedUpdateProps> = ({
     }
   };
 
+  // 팝업 토글 함수
+  const togglePopup = () => {
+    setShowPopup(!showPopup);
+    setError(null);
+  };
+
   return (
-    <input
-      type="checkbox"
-      checked={isResolved === 1}
-      onChange={toggleResolvedStatus}
-      disabled={loading}
-      className="form-checkbox h-5 w-5 text-blue-500 ml-1"
-    />
+    <div>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          togglePopup();
+        }}
+        disabled={loading}
+        className="absolute top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+      >
+        {isResolved === 1 ? '보류' : '완료'}
+      </button>
+
+      {showPopup && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <div className="text-center">
+              {error && <p className="text-red-600 mb-2">{error}</p>}
+              <p className="text-sm">
+                {isResolved === 0
+                  ? '피드백을 해결됨 상태로 변경하시겠습니까?'
+                  : '피드백을 해결되지 않음 상태로 변경하시겠습니까?'}
+              </p>
+              <button
+                type="button"
+                onClick={toggleResolvedStatus}
+                className={`mt-4 w-full h-15 text-center bg-blue-500 p-2 rounded-lg hover:bg-blue-600`}
+              >
+                {isResolved === 0 ? '완료로 변경' : '보류로 변경'}
+              </button>
+              <button
+                type="button"
+                onClick={togglePopup}
+                className="mt-4 w-full h-15 text-center bg-gray-300 p-2 rounded-lg hover:bg-gray-400"
+              >
+                취소
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

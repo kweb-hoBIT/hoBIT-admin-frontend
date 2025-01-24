@@ -67,7 +67,9 @@ import {
   GetAllUserFeedbackRequest,
   GetAllUserFeedbackResponse,
   UpdateUserFeedbackRequest,
-  UpdateUserFeedbackResponse
+  UpdateUserFeedbackResponse,
+  DeleteUserFeedbackRequest,
+  DeleteUserFeedbackResponse,
 } from './feedback'
 
 
@@ -111,7 +113,8 @@ export type HobitAdminPutApiRequest =
 export type HobitAdminDeleteApiRequest =
   | DeleteAccountReqeust
   | DeleteFAQRequest
-  | DeleteSeniorFAQRequest;
+  | DeleteSeniorFAQRequest
+  | DeleteUserFeedbackRequest;
 
 
 export type HobitAdminApiResponse =
@@ -142,7 +145,8 @@ export type HobitAdminApiResponse =
   | GetAllUserFeedbackResponse
   | UpdateUserFeedbackResponse
   | GetAllFAQCategoryResponse
-  | GetAllSeniorFAQCategoryResponse;
+  | GetAllSeniorFAQCategoryResponse
+  | DeleteUserFeedbackResponse;
 
 export type ApiResponse<P> = {
   error: ApiErrorPayload | null;

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { GetAllUserFeedbackResponse } from '../../types/feedback';
 import UserFeedbackResolvedUpdate from './UserFeedbackResolvedUpdate';
 import SelectUserFeedback from './SelectUserFeedback';
+import UserFeedbackDelete from './UserFeedbackDelete';
 
 interface UserFeedbackMainFormProps {
   userFeedbacks: GetAllUserFeedbackResponse['data']['userFeedbacks'];
@@ -92,6 +93,20 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
             <div className="grid grid-cols-2 gap-4">
               {currentItems.map((feedback) => (
                 <div key={feedback.user_feedback_id} className="relative bg-gray-200 p-4 rounded-lg">
+                  {/* 수정 버튼 */}
+                  <UserFeedbackResolvedUpdate
+                    user_feedback_id={feedback.user_feedback_id}
+                    initialResolved={feedback.resolved ? 1 : 0}
+                    onResolvedChange={handleResolvedChange}
+                  />
+                
+                  {/* 삭제 버튼 */}
+                  <div
+                    className="absolute bottom-5 right-5"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <UserFeedbackDelete user_feedback_id={String(feedback.user_feedback_id)} onSuccess={() => window.location.reload()} />
+                  </div>
                   <div className="mb-2">
                     <span className="mb-1 text-m text-gray-600"><strong>피드백 ID: {feedback.user_feedback_id}</strong></span>
                   </div>
@@ -101,19 +116,6 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                     </div>
                     <div className="mb-1 text-sm text-gray-600">
                       <strong>피드백 상세:</strong> {feedback.feedback_detail}
-                    </div>
-                    <div className="mb-1 text-sm text-gray-600">
-                      <strong>사용 언어:</strong> {feedback.language === 'ko' ? '한국어' : feedback.language === 'en' ? '영어' : '기타'}
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="mb-1 text-sm text-gray-600 flex items-center">
-                        <strong>해결 여부: </strong>
-                        <UserFeedbackResolvedUpdate
-                          user_feedback_id={feedback.user_feedback_id}
-                          initialResolved={feedback.resolved ? 1 : 0}
-                          onResolvedChange={handleResolvedChange}
-                        />
-                      </div>
                     </div>
                     <div className="mb-1 text-sm text-gray-600">
                       <strong>피드백 시각:</strong> {formatDateToKST(feedback.created_at)}
