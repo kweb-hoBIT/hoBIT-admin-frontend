@@ -74,15 +74,15 @@ const UserFeedbackResolvedUpdate: React.FC<UserFeedbackResolvedUpdateProps> = ({
               {error && <p className="text-red-600 mb-2">{error}</p>}
               <p className="text-sm">
                 {isResolved === 0
-                  ? '피드백을 해결됨 상태로 변경하시겠습니까?'
-                  : '피드백을 해결되지 않음 상태로 변경하시겠습니까?'}
+                  ? '해결된 피드백으로 변경하시겠습니까?'
+                  : '해결되지 않은 피드백으로 변경하시겠습니까?'}
               </p>
               <button
                 type="button"
                 onClick={toggleResolvedStatus}
                 className={`mt-4 w-full h-15 text-center bg-blue-500 p-2 rounded-lg hover:bg-blue-600`}
               >
-                {isResolved === 0 ? '완료로 변경' : '보류로 변경'}
+                {isResolved === 0 ? '해결된 피드백으로 변경' : '해결되지 않은 피드백으로 변경'}
               </button>
               <button
                 type="button"
