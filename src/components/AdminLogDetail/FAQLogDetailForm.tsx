@@ -1,5 +1,5 @@
 import React from 'react';
-import { CompareFAQLogRequest, CompareFAQLogResponse } from "../../types/faqLog";
+import { CompareFAQLogResponse } from "../../types/adminLog";
 
 interface FAQLogDetailFormProps {
   prev_faq: CompareFAQLogResponse["data"]["prev_faq"];

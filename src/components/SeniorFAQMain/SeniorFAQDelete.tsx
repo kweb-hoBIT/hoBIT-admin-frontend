@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { selectAuth } from '../../redux/authSlice';
 import { useHobitMutateDeleteApi } from '../../hooks/hobitAdmin';
 import { DeleteSeniorFAQRequest, DeleteSeniorFAQResponse } from '../../types/seniorfaq';
 
@@ -13,6 +16,8 @@ const SeniorFAQDelete: React.FC<SeniorFAQDeleteProps> = ({ senior_faq_id, detail
   const [showPopup, setShowPopup] = useState(false);
   const [inputText, setInputText] = useState('');
 
+  const { user_id } = useSelector((state: RootState) => selectAuth(state));
+
   const deleteSeniorFAQApi = useHobitMutateDeleteApi<DeleteSeniorFAQRequest, DeleteSeniorFAQResponse>('seniorfaqs');
 
   // 삭제 버튼을 활성화할 수 있는지 여부를 판단
@@ -21,7 +26,8 @@ const SeniorFAQDelete: React.FC<SeniorFAQDeleteProps> = ({ senior_faq_id, detail
   const handleDeleteSeniorFAQ = async () => {
     try {
       const response = await deleteSeniorFAQApi({
-        params: { senior_faq_id }
+        params: { senior_faq_id },
+        body: { user_id : Number(user_id) }
       });
 
       if (response.payload?.statusCode === 200) {

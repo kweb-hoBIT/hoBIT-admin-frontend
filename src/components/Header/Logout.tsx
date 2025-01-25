@@ -9,6 +9,7 @@ const Logout: React.FC = () => {
 
   const handleLogout = () => {
     dispatch(clearTokens());
+    alert('로그아웃 되었습니다.');
     navigate('/login');
   };
 

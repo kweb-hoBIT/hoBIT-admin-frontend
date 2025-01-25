@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import { GetAllFAQLogResponse } from '../../types/faqLog';
+import { GetAllAdminLogResponse } from '../../types/adminLog';
 import { useNavigate } from 'react-router-dom';
 
-interface FAQLogMainFormProps {
-  faqLogs: GetAllFAQLogResponse['data']['faqLogs'];
+interface AdminLogMainFormProps {
+  adminLogs: GetAllAdminLogResponse['data']['adminLogs'];
 }
 
-const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
+const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
   const pagesPerGroup = 10;
 
-  const totalPages = Math.ceil(faqLogs.length / itemsPerPage);
+  const totalPages = Math.ceil(adminLogs.length / itemsPerPage);
 
   // 현재 페이지 그룹 (1-10, 11-20 등)
   const currentPageGroup = Math.floor((currentPage - 1) / pagesPerGroup);
@@ -26,7 +26,7 @@ const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = faqLogs.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = adminLogs.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -52,55 +52,73 @@ const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
     return date.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
   };
 
-  const handleLogClick = (id: string) => {
-    navigate(`/logs/${id}`);
+  const handleFAQLogClick = (id: string) => {
+    navigate(`/adminlogs/faqlogs/${id}`);
+  };
+  
+  const handleSeniorFAQLogClick = (id: string) => {
+    navigate(`/adminlogs/seniorfaqlogs/${id}`);
   };
 
   return (
     <div className="p-6 bg-white-50 rounded-lg">
       <div className="p-6">
-        <h4 className="text-2xl font-bold mb-4 text-gray-800">관리자 로그 리스트(FAQ 수정사항만 반영)</h4>
+        <h4 className="text-2xl font-bold mb-4 text-gray-800">관리자 로그 리스트</h4>
         <div style={{ minHeight: '395px' }}>
           <div className="grid grid-cols-2 gap-4">
-            {currentItems.map((log) => (
-              <div key={log.faq_log_id} className="relative bg-gray-200 p-4 rounded-lg cursor-pointer" onClick={() => handleLogClick(String(log.faq_log_id))}>
-               <div className="mb-2">
-                  <span className="mb-1 text-m text-gray-600">
-                    <strong>수정 유저: {log.username}</strong>
+          {currentItems.map((log) => (
+            <div
+            key={`${log.log_id}-${log.log_type}`}
+              className="relative bg-gray-200 p-4 rounded-lg cursor-pointer"
+              onClick={() =>
+                log.log_type === 'faq_log'
+                  ? handleFAQLogClick(String(log.log_id))
+                  : handleSeniorFAQLogClick(String(log.log_id))
+              }
+            >
+              <div className="mb-2">
+                <span className="mb-1 text-m text-gray-600">
+                  <strong>수정 유저: {log.username}</strong>
+                </span>
+              </div>
+              <div className="flex flex-col">
+                <div className="mb-1 text-sm text-gray-600">
+                  <strong>주요 카테고리:</strong> {log.maincategory}
+                </div>
+                <div className="mb-1 text-sm text-gray-600">
+                  <strong>하위 카테고리:</strong> {log.subcategory}
+                </div>
+                {log.log_type === 'faq_log' ? (
+                  <div className="mb-1 text-sm text-gray-600">
+                    <strong>질문:</strong> {log.question}
+                  </div>
+                ) : log.log_type === 'senior_faq_log' ? (
+                  <div className="mb-1 text-sm text-gray-600">
+                    <strong>세부 카테고리:</strong> {log.detailcategory}
+                  </div>
+                ) : null}
+                <div className="mb-1 text-sm text-gray-600">
+                  <strong>변경 목적:</strong>{' '}
+                  <span
+                    className={`${
+                      log.action_type === '수정'
+                        ? 'text-blue-500'
+                        : log.action_type === '추가'
+                        ? 'text-green-500'
+                        : log.action_type === '삭제'
+                        ? 'text-red-500'
+                        : 'text-gray-600'
+                    }`}
+                  >
+                    {log.action_type}
                   </span>
                 </div>
-                <div className="flex flex-col">
-                  <div className="mb-1 text-sm text-gray-600">
-                    <strong>주요 카테고리:</strong> {log.faq_maincategory}
-                  </div>
-                  <div className="mb-1 text-sm text-gray-600">
-                    <strong>하위 카테고리:</strong> {log.faq_subcategory}
-                  </div>
-                  <div className="mb-1 text-sm text-gray-600">
-                    <strong>질문:</strong> {log.faq_question}
-                  </div>
-                  <div className="mb-1 text-sm text-gray-600">
-                    <strong>변경 목적:</strong>{' '}
-                    <span
-                      className={`${
-                        log.action_type === '수정'
-                          ? 'text-blue-500'
-                          : log.action_type === '추가'
-                          ? 'text-green-500'
-                          : log.action_type === '삭제'
-                          ? 'text-red-500'
-                          : 'text-gray-600'
-                      }`}
-                    >
-                      {log.action_type}
-                    </span>
-                  </div>
-                  <div className="mb-1 text-sm text-gray-600">
-                    <strong>변경 시각:</strong> {formatDateToKST(log.created_at)}
-                  </div>
+                <div className="mb-1 text-sm text-gray-600">
+                  <strong>변경 시각:</strong> {formatDateToKST(log.created_at)}
                 </div>
               </div>
-            ))}
+            </div>
+          ))}
           </div>
         </div>
 
@@ -143,4 +161,4 @@ const FAQLogMainForm: React.FC<FAQLogMainFormProps> = ({ faqLogs }) => {
   );
 };
 
-export default FAQLogMainForm;
+export default AdminLogMainForm;

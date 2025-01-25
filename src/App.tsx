@@ -20,6 +20,7 @@ import SeniorFAQCreatePage from './pages/SeniorFAQCreatePage';
 import SeniorFAQUpdatePage from './pages/SeniorFAQUpdatePage';
 import LogsPage from './pages/LogsPage';
 import FAQLogDetailPage from './pages/FAQLogDetailPage';
+import SeniorFAQLogDetailPage from './pages/SeniorFAQLogDetailPage';
 import LogAnalyticsPage from './pages/LogAnalyticsPage';
 import UserFeedbackPage from './pages/UserFeedbackPage';
 
@@ -55,7 +56,8 @@ const App: React.FC = () => {
 
             {/* 로그 관련 페이지 */}
             <Route path="/logs" element={<LogsPage />} />
-            <Route path="/logs/:id" element={<FAQLogDetailPage />} />
+            <Route path="/adminlogs/faqlogs/:id" element={<FAQLogDetailPage />} />
+            <Route path="/adminlogs/seniorfaqlogs/:id" element={<SeniorFAQLogDetailPage />} />
             <Route path="/logs/analytics" element={<LogAnalyticsPage />} />
 
             {/* 유저 피드백 관련 페이지 */}

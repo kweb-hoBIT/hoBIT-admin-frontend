@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import ProtectedPage from '../components/ProtectedPage';
 import Header from '../components/Header/Header';
-import FAQLogDetail from '../components/AdminLogDetail/FAQLogDetail';
+import SeniorFAQLogDetail from '../components/AdminLogDetail/SeniorFAQLogDetail';
 
 const FAQLogDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -10,7 +10,7 @@ const FAQLogDetailPage: React.FC = () => {
     <div>
       <Header />
       <main>
-      {id ? <FAQLogDetail faq_log_id={id} /> : <p>FAQ ID가 제공되지 않았습니다.</p>}
+      {id ? <SeniorFAQLogDetail senior_faq_log_id={id} /> : <p>Senior FAQ ID가 제공되지 않았습니다.</p>}
       </main>
     </div>
     </ProtectedPage>

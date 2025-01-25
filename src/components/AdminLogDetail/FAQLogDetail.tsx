@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHobitQueryGetApi } from "../../hooks/hobitAdmin";
-import { CompareFAQLogRequest, CompareFAQLogResponse } from "../../types/faqLog";
+import { CompareFAQLogRequest, CompareFAQLogResponse } from "../../types/adminLog";
 import FAQLogDetailForm from "./FAQLogDetailForm";
 
 interface FAQLogDetailProps {
@@ -32,7 +32,7 @@ const FAQLogDetail: React.FC<FAQLogDetailProps> = ({ faq_log_id }) => {
     manager: '',
   });
 
-  const FAQCompareApi = useHobitQueryGetApi<CompareFAQLogRequest, CompareFAQLogResponse>("faqlogs/compare", {
+  const FAQCompareApi = useHobitQueryGetApi<CompareFAQLogRequest, CompareFAQLogResponse>("adminlogs/faqlogs/compare", {
     params: { faq_log_id },
   });
 

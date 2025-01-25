@@ -57,11 +57,13 @@ import {
 } from './questionLog'
 
 import {
-  GetAllFAQLogRequest,
-  GetAllFAQLogResponse,
+  GetAllAdminLogRequest,
+  GetAllAdminLogResponse,
   CompareFAQLogRequest,
   CompareFAQLogResponse,
-} from './faqLog'
+  CompareSeniorFAQLogRequest,
+  CompareSeniorFAQLogResponse,
+} from './adminLog'
 
 import {
   GetAllUserFeedbackRequest,
@@ -90,8 +92,9 @@ export type HobitAdminGetApiRequest =
   | SpecificFrequencyRequest
   | SpecificFeedbackRequest
   | SpecificLanguageRequest
-  | GetAllFAQLogRequest
+  | GetAllAdminLogRequest
   | CompareFAQLogRequest
+  | CompareSeniorFAQLogRequest
   | GetAllUserFeedbackRequest
   | GetAllFAQCategoryRequest
   | GetAllSeniorFAQCategoryRequest;
@@ -140,8 +143,9 @@ export type HobitAdminApiResponse =
   | SpecificFrequencyResponse
   | SpecificFeedbackResponse
   | SpecificLanguageResponse
-  | GetAllFAQLogResponse
+  | GetAllAdminLogResponse
   | CompareFAQLogResponse
+  | CompareSeniorFAQLogResponse
   | GetAllUserFeedbackResponse
   | UpdateUserFeedbackResponse
   | GetAllFAQCategoryResponse
