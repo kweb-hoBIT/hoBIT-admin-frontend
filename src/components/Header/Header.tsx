@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'; // useDispatch 추가
 import { RootState } from '../../redux/store';
 import { selectAuth } from '../../redux/authSlice';
-import { clearFAQFilterState, clearSeniorFAQFilterState } from '../../redux/filterSlice';
+import { clearFAQFilterState, clearSeniorFAQFilterState, clearAdminLogFilterState, clearQuestionLogFilterState, clearFeedbackFilterState } from '../../redux/filterSlice';
 import Logout from './Logout';
 import DeleteAccount from './DeleteAccount';
 
@@ -27,6 +27,9 @@ const Header: React.FC = () => {
   const handleLinkClick = () => {
     // dispatch(clearFAQFilterState());
     // dispatch(clearSeniorFAQFilterState());
+    // dispatch(clearAdminLogFilterState());
+    // dispatch(clearQuestionLogFilterState());
+    // dispatch(clearFeedbackFilterState());
   };
 
   return (
