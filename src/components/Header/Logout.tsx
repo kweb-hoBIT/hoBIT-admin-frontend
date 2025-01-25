@@ -2,6 +2,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { clearTokens } from '../../redux/authSlice';
+import { clearFAQFilterState, clearSeniorFAQFilterState, clearAdminLogFilterState, clearQuestionLogFilterState, clearFeedbackFilterState } from '../../redux/filterSlice';
 
 const Logout: React.FC = () => {
   const dispatch = useDispatch();
@@ -9,6 +10,11 @@ const Logout: React.FC = () => {
 
   const handleLogout = () => {
     dispatch(clearTokens());
+    dispatch(clearFAQFilterState());
+    dispatch(clearSeniorFAQFilterState());
+    dispatch(clearAdminLogFilterState());
+    dispatch(clearQuestionLogFilterState());
+    dispatch(clearFeedbackFilterState());
     alert('로그아웃 되었습니다.');
     navigate('/login');
   };

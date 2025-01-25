@@ -1,4 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { selectAdminLogFilter } from '../../redux/filterSlice';
+import { setAdminLogCurrentPage } from '../../redux/filterSlice';
 import { GetAllAdminLogResponse } from '../../types/adminLog';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,7 +13,16 @@ interface AdminLogMainFormProps {
 
 const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(1);
+  const dispatch = useDispatch();
+  
+  const { storedCurrentPage } = useSelector((state: RootState) => selectAdminLogFilter(state));
+  const [currentPage, setCurrentPage] = useState<number>(storedCurrentPage ? Number(storedCurrentPage) : 1);
+
+  // 필터 상태가 변경될 때마다 localStorage에 저장
+  useEffect(() => {
+    dispatch(setAdminLogCurrentPage(currentPage));
+  }, [currentPage]);
+
   const itemsPerPage = 4;
   const pagesPerGroup = 10;
 

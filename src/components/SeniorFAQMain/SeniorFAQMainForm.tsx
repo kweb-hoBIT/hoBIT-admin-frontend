@@ -1,6 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { GetAllSeniorFAQResponse } from '../../types/seniorfaq';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { selectSeniorFAQFilter } from '../../redux/filterSlice';
+import { setSeniorFAQCurrentPage, setSeniorFAQFilterContent, setSeniorFAQFilterName } from '../../redux/filterSlice';
 import SeniorFAQDelete from './SeniorFAQDelete';
 import SeniorFAQFilter from './SeniorFAQFilter';
 
@@ -10,9 +15,23 @@ interface SeniorFAQMainFormProps {
 
 const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => {
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [filter, setFilter] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<'maincategory_ko' | 'subcategory_ko' | 'detailcategory_ko' | 'manager'>('detailcategory_ko');
+  const dispatch = useDispatch();
+
+  const { storedCurrentPage, storedFilterContent, storedFilterName } = useSelector((state: RootState) => selectSeniorFAQFilter(state));
+
+
+  const [currentPage, setCurrentPage] = useState<number>(storedCurrentPage ? Number(storedCurrentPage) : 1);
+  const [filter, setFilter] = useState<string>(storedFilterContent || '');
+  const [selectedFilter, setSelectedFilter] = useState<'maincategory_ko' | 'subcategory_ko' | 'detailcategory_ko' | 'manager'>(
+    storedFilterName as 'maincategory_ko' | 'subcategory_ko' | 'detailcategory_ko' | 'manager' || 'detailcategory_ko'
+  );
+
+  // 필터 상태가 변경될 때마다 localStorage에 저장
+  useEffect(() => {
+    dispatch(setSeniorFAQCurrentPage(currentPage));
+    dispatch(setSeniorFAQFilterContent(filter));
+    dispatch(setSeniorFAQFilterName(selectedFilter as 'maincategory_ko' | 'subcategory_ko' | 'detailcategory_ko' | 'manager'));
+  }, [currentPage, filter, selectedFilter]);
 
   const itemsPerPage = 4;
   const pagesPerGroup = 10;
@@ -51,8 +70,12 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
     setCurrentPage(page);
   };
 
-  // Reset to the first page when filter changes
+  const isFirstRender = useRef(true);
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     setCurrentPage(1);
   }, [filter, selectedFilter]);
 

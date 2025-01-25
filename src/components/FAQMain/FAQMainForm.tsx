@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { GetAllFAQResponse } from '../../types/faq';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { selectFAQFilter } from '../../redux/filterSlice';
+import { setFAQCurrentPage, setFAQFilterContent, setFAQFilterName } from '../../redux/filterSlice';
 import FAQDelete from './FAQDelete';
 import FAQFilter from './FAQFilter';
 
@@ -10,9 +15,20 @@ interface FAQMainFormProps {
 
 const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [filter, setFilter] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager'>('question_ko');
+  const dispatch = useDispatch();
+
+  const { storedCurrentPage, storedFilterContent, storedFilterName } = useSelector((state: RootState) => selectFAQFilter(state));
+  const [currentPage, setCurrentPage] = useState<number>(storedCurrentPage ? Number(storedCurrentPage) : 1);
+  const [filter, setFilter] = useState<string>(storedFilterContent || '');
+  const [selectedFilter, setSelectedFilter] = useState<'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager'>(
+    storedFilterName as 'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager' || 'question_ko'
+  );
+
+  useEffect(() => {
+    dispatch(setFAQCurrentPage(currentPage));
+    dispatch(setFAQFilterContent(filter));
+    dispatch(setFAQFilterName(selectedFilter as 'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager'));
+  }, [currentPage, filter, selectedFilter]);
 
   const itemsPerPage = 4;
   const pagesPerGroup = 10;
@@ -51,8 +67,12 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
     setCurrentPage(page);
   };
 
-  // Reset to the first page when filter changes
-  React.useEffect(() => {
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     setCurrentPage(1);
   }, [filter, selectedFilter]);
 
@@ -92,47 +112,46 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
           <div className="grid grid-cols-2 gap-4">
             {currentItems.map((faq) => (
               <div key={faq.faq_id} className="relative bg-gray-200 p-4 rounded-lg cursor-pointer" onClick={() => handleDetailClick(String(faq.faq_id))}>
-              
-              {/* 수정 버튼 */}
-              <button
-                onClick={(e) => { 
-                  e.stopPropagation();
-                  handleEditClick(String(faq.faq_id)); 
-                }}
-                className="absolute top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-              >
-                수정
-              </button>
-            
-              {/* 삭제 버튼 */}
-              <div
-                className="absolute bottom-5 right-5"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <FAQDelete faq_id={String(faq.faq_id)} question_ko={faq.question_ko} onSuccess={() => window.location.reload()} />
-              </div>
-            
-              {/* 컨텐츠 영역 */}
-              <div className="pr-24">
-                <div className="mb-2">
-                  <span className="mb-1 text-m text-gray-600">
-                    <strong>질문: {faq.question_ko}</strong>
-                  </span>
+                {/* 수정 버튼 */}
+                <button
+                  onClick={(e) => { 
+                    e.stopPropagation();
+                    handleEditClick(String(faq.faq_id)); 
+                  }}
+                  className="absolute top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                >
+                  수정
+                </button>
+
+                {/* 삭제 버튼 */}
+                <div
+                  className="absolute bottom-5 right-5"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <FAQDelete faq_id={String(faq.faq_id)} question_ko={faq.question_ko} onSuccess={() => window.location.reload()} />
                 </div>
-                
-                <div className="flex flex-col">
-                  <div className="mb-1 text-sm text-gray-600">
-                    <strong>주요 카테고리:</strong> {faq.maincategory_ko}
+
+                {/* 컨텐츠 영역 */}
+                <div className="pr-24">
+                  <div className="mb-2">
+                    <span className="mb-1 text-m text-gray-600">
+                      <strong>질문: {faq.question_ko}</strong>
+                    </span>
                   </div>
-                  <div className="mb-1 text-sm text-gray-600">
-                    <strong>하위 카테고리:</strong> {faq.subcategory_ko}
-                  </div>
-                  <div className="mb-1 text-sm text-gray-600">
-                    <strong>관리자:</strong> {faq.manager}
+                  
+                  <div className="flex flex-col">
+                    <div className="mb-1 text-sm text-gray-600">
+                      <strong>주요 카테고리:</strong> {faq.maincategory_ko}
+                    </div>
+                    <div className="mb-1 text-sm text-gray-600">
+                      <strong>하위 카테고리:</strong> {faq.subcategory_ko}
+                    </div>
+                    <div className="mb-1 text-sm text-gray-600">
+                      <strong>관리자:</strong> {faq.manager}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
             ))}
           </div>
         </div>

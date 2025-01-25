@@ -1,4 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { selectQuestionLogFilter } from '../../redux/filterSlice';
+import { setQuestionLogCurrentPage } from '../../redux/filterSlice';
 import { GetAllQuestionLogResponse } from '../../types/questionLog';
 
 interface QuestionLogMainFormProps {
@@ -6,7 +11,16 @@ interface QuestionLogMainFormProps {
 }
 
 const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const dispatch = useDispatch();
+  
+  const { storedCurrentPage } = useSelector((state: RootState) => selectQuestionLogFilter(state));
+  const [currentPage, setCurrentPage] = useState<number>(storedCurrentPage ? Number(storedCurrentPage) : 1);
+
+  // 필터 상태가 변경될 때마다 localStorage에 저장
+  useEffect(() => {
+    dispatch(setQuestionLogCurrentPage(currentPage));
+  }, [currentPage]);
+
   const itemsPerPage = 4;
   const pagesPerGroup = 10; // 한 그룹에 표시할 페이지 수
 

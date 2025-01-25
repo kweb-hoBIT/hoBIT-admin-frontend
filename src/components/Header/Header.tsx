@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux'; // useDispatch 추가
 import { RootState } from '../../redux/store';
 import { selectAuth } from '../../redux/authSlice';
+import { clearFAQFilterState, clearSeniorFAQFilterState } from '../../redux/filterSlice';
 import Logout from './Logout';
 import DeleteAccount from './DeleteAccount';
 
 const Header: React.FC = () => {
   const { username } = useSelector((state: RootState) => selectAuth(state));
+  const dispatch = useDispatch(); // useDispatch 훅 사용
   const [showPopup, setShowPopup] = useState(false);
   const location = useLocation();
 
@@ -20,6 +22,12 @@ const Header: React.FC = () => {
   };
 
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
+
+  // Link 클릭 시 필터 상태를 리셋하는 함수
+  const handleLinkClick = () => {
+    // dispatch(clearFAQFilterState());
+    // dispatch(clearSeniorFAQFilterState());
+  };
 
   return (
     <header className="bg-crimson p-4 flex justify-between items-center">
@@ -35,16 +43,16 @@ const Header: React.FC = () => {
       <nav className="flex items-center gap-4 relative">
         {!isAuthPage && (
           <>
-            <Link to="/faqs" className="text-white hover:text-gray-600">
+            <Link to="/faqs" className="text-white hover:text-gray-600" onClick={handleLinkClick}>
               FAQ
             </Link>
-            <Link to="/seniorfaqs" className="text-white hover:text-gray-600">
+            <Link to="/seniorfaqs" className="text-white hover:text-gray-600" onClick={handleLinkClick}>
               SENIORFAQ
             </Link>
-            <Link to="/logs" className="text-white hover:text-gray-600">
+            <Link to="/logs" className="text-white hover:text-gray-600" onClick={handleLinkClick}>
               LOG
             </Link>
-            <Link to="/userfeedbacks" className="text-white hover:text-gray-600">
+            <Link to="/userfeedbacks" className="text-white hover:text-gray-600" onClick={handleLinkClick}>
               FEEDBACK
             </Link>
             <div className="relative">
