@@ -30,12 +30,12 @@ const SeniorFAQLogDetailForm: React.FC<SeniorFAQLogDetailFormProps> = ({
 
   return (
     <form onSubmit={(e) => e.preventDefault()} className="max-w-8xl mx-auto p-8 bg-white rounded-xl shadow-lg space-y-8">
-      <h2 className="text-2xl font-bold text-gray-800 text-center">Senior FAQ 로그 상세</h2>
+      <h2 className="text-2xl font-bold text-gray-800 text-center">선배 FAQ 로그 상세</h2>
 
       <div className="grid grid-cols-2 gap-8">
         {/* Left Side: prev_senior_faq */}
         <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-          <h3 className="text-xl font-bold text-gray-800">기존 Senior FAQ</h3>
+          <h3 className="text-xl font-bold text-gray-800">기존 선배 FAQ</h3>
 
           {/* 카테고리 및 상세카테고리 필드 */}
           <div>
@@ -82,7 +82,7 @@ const SeniorFAQLogDetailForm: React.FC<SeniorFAQLogDetailFormProps> = ({
               readOnly
               className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prev_senior_faq.detailcategory_ko, new_senior_faq.detailcategory_ko, 0)} text-black-500`}
             />
-            <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Detail Category (English)</label>
+            <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">DetailCategory (English)</label>
             <input
               type="text"
               value={prev_senior_faq.detailcategory_en}
@@ -161,7 +161,7 @@ const SeniorFAQLogDetailForm: React.FC<SeniorFAQLogDetailFormProps> = ({
 
         {/* Right Side: new_senior_faq */}
         <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-          <h3 className="text-xl font-bold text-gray-800">새로운 Senior FAQ</h3>
+          <h3 className="text-xl font-bold text-gray-800">새로운 선배 FAQ</h3>
 
           {/* 카테고리 및 상세카테고리 필드 */}
           <div>
@@ -208,7 +208,7 @@ const SeniorFAQLogDetailForm: React.FC<SeniorFAQLogDetailFormProps> = ({
               readOnly
               className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prev_senior_faq.detailcategory_ko, new_senior_faq.detailcategory_ko, 1)} text-black-500`}
             />
-            <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Detail Category (English)</label>
+            <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">DetailCategory (English)</label>
             <input
               type="text"
               value={new_senior_faq.detailcategory_en}
