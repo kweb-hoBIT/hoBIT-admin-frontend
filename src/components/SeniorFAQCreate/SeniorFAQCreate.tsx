@@ -233,18 +233,18 @@ const SeniorFAQCreate: React.FC = () => {
 
         if (response.payload?.statusCode === 200) {
           if (response.payload.data.isDuplicated) {
-            alert(`다른 FAQ의 카테고리와 같은 카테고리를 사용하려면 띄어쓰기와 한영 단어가 완벽하게 일치해야 합니다.
-              \n 기존 서브 카테고리: 공간예약 - Reserve a space 
-              \n 현재 서브 카테고리: 공간 예약 - Reserve a space 
+            alert(`다른 선배 FAQ의 카테고리와 같은 카테고리를 사용하려면 띄어쓰기와 한영 단어가 완벽하게 일치해야 합니다.
+              \n 기존 카테고리: 공간예약 - Reserve a space 
+              \n 현재 카테고리: 공간 예약 - Reserve a space 
               \n => 띄어쓰기로 인한 에러
-              \n 기존 서브 카테고리: 공간예약 - Reserve a space 
-              \n 현재 서브 카테고리: 공간예약 - Reserve a room
+              \n 기존 카테고리: 공간예약 - Reserve a space 
+              \n 현재 카테고리: 공간예약 - Reserve a room
               \n => 번역으로 인한 에러`);
             return;
           }
         }
       } catch (error) {
-        alert('FAQ 카테고리 중복 확인 중 오류가 발생했습니다.');
+        alert('선배 FAQ 카테고리 중복 확인 중 오류가 발생했습니다.');
         return;
       }
 
@@ -254,7 +254,7 @@ const SeniorFAQCreate: React.FC = () => {
       console.log(newSeniorFAQ);
 
       if (response.payload?.statusCode === 201) {
-        alert('Senior FAQ가 성공적으로 생성되었습니다!');
+        alert('선배 FAQ가 성공적으로 생성되었습니다!');
         setNewSeniorFAQ({
           user_id: user_id ? Number(user_id) : 0,
           maincategory_ko: '',
@@ -283,10 +283,10 @@ const SeniorFAQCreate: React.FC = () => {
         });
         navigate('/seniorfaqs');
       } else {
-        alert('Senior FAQ 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
+        alert('선배 FAQ 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
       }
     } catch (error) {
-      alert('Senior FAQ 생성에 실패했습니다.');
+      alert('선배 FAQ 생성에 실패했습니다.');
     }
   };
 
