@@ -80,7 +80,7 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
                     <strong>매칭된 질문:</strong> {log.user_question}
                   </div>
                   <div className="mb-1 text-sm text-gray-600">
-                    <strong>피드백 점수:</strong> {log.feedback_score}
+                    <strong>피드백 점수:</strong> {log.feedback_score ? log.feedback_score : '피드백 점수 없음'}
                   </div>
                   <div className="mb-1 text-sm text-gray-600">
                     <strong>질문 시각:</strong> {formatDateToKST(log.created_at)}

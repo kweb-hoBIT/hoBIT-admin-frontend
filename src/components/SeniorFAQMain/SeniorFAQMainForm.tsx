@@ -132,11 +132,14 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
                     <SeniorFAQDelete
                       senior_faq_id={String(seniorFaq.senior_faq_id)}
                       detailcategory_ko={seniorFaq.detailcategory_ko}
-                      onSuccess={() => window.location.reload()}
+                      onSuccess={() => {
+                        if (currentItems.length === 1 && currentPage > 1) {
+                          setCurrentPage((prevPage) => prevPage - 1);
+                        }
+                        window.location.reload();
+                      }}
                     />
                   </div>
-
-
                   <div className="pr-24">
                     <div className="mb-2">
                       <span className="mb-1 text-m text-gray-600">

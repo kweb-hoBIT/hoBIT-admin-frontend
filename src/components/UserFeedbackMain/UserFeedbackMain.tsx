@@ -14,6 +14,7 @@ const UserFeedbackMain: React.FC = () => {
     const fetchUserFeedbackData = async () => {
       if (GetUserFeedbackApi.data?.payload?.statusCode === 200) {
         const data = GetUserFeedbackApi.data.payload.data.userFeedbacks;
+        console.log(data)
         setUserFeedbackData(data);
       } else {
         setError('User Feedback 데이터를 가져오는 중 오류 발생');

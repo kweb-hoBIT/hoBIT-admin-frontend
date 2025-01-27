@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createSelector } from 'reselect';
 import { RootState } from './store';
+import { set } from 'react-datepicker/dist/date_utils';
 
 // FAQ 필터 상태 정의
 interface FAQFilterState {
@@ -30,6 +31,7 @@ interface QuestionLogFilterState {
 interface UserFeedbackFilterState {
   storedUnresolvedCurrentPage: number;
   storedResolvedCurrentPage: number;
+  storedFilterName: 'unresolved' | 'resolved';
 }
 
 const initialFAQFilterState: FAQFilterState = {
@@ -55,6 +57,7 @@ const initialQuestionLogFilterState: QuestionLogFilterState = {
 const initialUserFeedbackFilterState: UserFeedbackFilterState = {
   storedUnresolvedCurrentPage: Number(localStorage.getItem('unresolvedFeedbackCurrentPage')) || 1,
   storedResolvedCurrentPage: Number(localStorage.getItem('resolvedFeedbackCurrentPage')) || 1,
+  storedFilterName: (localStorage.getItem('userFeedbackFilterName') as 'unresolved' | 'resolved') || 'unresolved',
 };
 
 const faqFilterSlice = createSlice({
@@ -153,6 +156,10 @@ const userFeedbackFilterSlice = createSlice({
       state.storedResolvedCurrentPage = action.payload;
       localStorage.setItem('resolvedFeedbackCurrentPage', action.payload.toString());
     },
+    setUserFeedbackFilterName: (state, action: PayloadAction<'unresolved' | 'resolved'>) => {
+      state.storedFilterName = action.payload;
+      localStorage.setItem('userFeedbackFilterName', action.payload);
+    },
     clearFeedbackFilterState: (state) => {
       state.storedUnresolvedCurrentPage = 1;
       state.storedResolvedCurrentPage = 1;
@@ -209,6 +216,7 @@ export const selectUserFeedbackFilter = createSelector(
   (userFeedbackFilterState) => ({
     storedUnresolvedCurrentPage: userFeedbackFilterState.storedUnresolvedCurrentPage,
     storedResolvedCurrentPage: userFeedbackFilterState.storedResolvedCurrentPage,
+    storedFilterName: userFeedbackFilterState.storedFilterName,
   })
 );
 
@@ -239,6 +247,7 @@ export const {
 export const {
   setUnresolvedFeedbackCurrentPage,
   setResolvedFeedbackCurrentPage,
+  setUserFeedbackFilterName,
   clearFeedbackFilterState,
 } = userFeedbackFilterSlice.actions;
 

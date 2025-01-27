@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { selectUserFeedbackFilter } from '../../redux/filterSlice';
-import { setUnresolvedFeedbackCurrentPage, setResolvedFeedbackCurrentPage } from '../../redux/filterSlice';
+import { setUnresolvedFeedbackCurrentPage, setResolvedFeedbackCurrentPage, setUserFeedbackFilterName } from '../../redux/filterSlice';
 import { GetAllUserFeedbackResponse } from '../../types/feedback';
 import UserFeedbackResolvedUpdate from './UserFeedbackResolvedUpdate';
 import SelectUserFeedback from './SelectUserFeedback';
@@ -15,11 +15,13 @@ interface UserFeedbackMainFormProps {
 
 const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbacks }) => {
   const dispatch = useDispatch();
-  const { storedUnresolvedCurrentPage, storedResolvedCurrentPage } = useSelector((state: RootState) => selectUserFeedbackFilter(state));
+  const { storedUnresolvedCurrentPage, storedResolvedCurrentPage, storedFilterName } = useSelector((state: RootState) => selectUserFeedbackFilter(state));
 
   const [unresolvedCurrentPage, setUnresolvedCurrentPage] = useState<number>(storedUnresolvedCurrentPage ? Number(storedUnresolvedCurrentPage) : 1);
   const [resolvedCurrentPage, setResolvedCurrentPage] = useState<number>(storedResolvedCurrentPage ? Number(storedResolvedCurrentPage) : 1);
-  const [filter, setFilter] = useState<'unresolved' | 'resolved'>('unresolved');
+  const [filter, setFilter] = useState<'unresolved' | 'resolved'>(
+    storedFilterName as 'unresolved' | 'resolved' || 'unresolved'
+  );
   const [feedbacks, setFeedbacks] = useState(userFeedbacks);
 
   useEffect(() => {
@@ -29,7 +31,8 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
   useEffect(() => {
     dispatch(setUnresolvedFeedbackCurrentPage(unresolvedCurrentPage));
     dispatch(setResolvedFeedbackCurrentPage(resolvedCurrentPage));
-  }, [unresolvedCurrentPage, resolvedCurrentPage]);
+    dispatch(setUserFeedbackFilterName(filter));
+  }, [unresolvedCurrentPage, resolvedCurrentPage, filter]);
 
   const itemsPerPage = 4;
   const pagesPerGroup = 10;
@@ -88,15 +91,25 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
   };
 
   const handleResolvedChange = (id: number, resolved: number) => {
-    setFeedbacks(prevFeedbacks => 
-      prevFeedbacks.map(feedback => 
-        feedback.user_feedback_id === id 
-          ? { ...feedback, resolved }
-          : feedback
-      )
-    );
+    setFeedbacks(prevFeedbacks => {
+      const updatedFeedbacks = prevFeedbacks.map(feedback =>
+        feedback.user_feedback_id === id ? { ...feedback, resolved } : feedback
+      );
+  
+      if (filter === 'unresolved' && resolved === 1) {
+        if (unresolvedItems.length === 1 && unresolvedCurrentPage > 1) {
+          setUnresolvedCurrentPage(prevPage => prevPage - 1);
+        }
+      } else if (filter === 'resolved' && resolved === 0) {
+        if (resolvedItems.length === 1 && resolvedCurrentPage > 1) {
+          setResolvedCurrentPage(prevPage => prevPage - 1);
+        }
+      }
+  
+      return updatedFeedbacks;
+    });
   };
-
+  
   // 한국 시간으로 변환하는 함수
   const formatDateToKST = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -125,17 +138,37 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                     className="absolute bottom-5 right-5"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <UserFeedbackDelete user_feedback_id={String(feedback.user_feedback_id)} onSuccess={() => window.location.reload()} />
+                    <UserFeedbackDelete
+                      user_feedback_id={String(feedback.user_feedback_id)}
+                      onSuccess={() => {
+                        if (filter === 'unresolved') {
+                          if (unresolvedItems.length === 1 && unresolvedCurrentPage > 1) {
+                            setUnresolvedCurrentPage((prevPage) => prevPage - 1);
+                          }
+                        } else {
+                          if (resolvedItems.length === 1 && resolvedCurrentPage > 1) {
+                            setResolvedCurrentPage((prevPage) => prevPage - 1);
+                          }
+                        }
+                        window.location.reload();
+                      }}
+                    />
                   </div>
                   <div className="mb-2">
-                    <span className="mb-1 text-m text-gray-600"><strong>피드백 ID: {feedback.user_feedback_id}</strong></span>
+                    <span className="mb-1 text-m text-gray-600">
+                      <strong> {feedback.question_ko ? (
+                      `피드백 질문: ${feedback.question_ko}`
+                      ) : (
+                        'FAQ 생성'
+                      )}</strong>
+                    </span>
                   </div>
                   <div className="flex flex-col">
                     <div className="mb-1 text-sm text-gray-600">
-                      <strong>피드백 사유:</strong> {feedback.feedback_reason}
+                      <strong>피드백 사유:</strong> {feedback.feedback_reason ? feedback.feedback_reason : 'X'}
                     </div>
                     <div className="mb-1 text-sm text-gray-600">
-                      <strong>피드백 상세:</strong> {feedback.feedback_detail}
+                      <strong>피드백 상세:</strong> {feedback.feedback_detail ? feedback.feedback_detail : 'X'}
                     </div>
                     <div className="mb-1 text-sm text-gray-600">
                       <strong>피드백 시각:</strong> {formatDateToKST(feedback.created_at)}

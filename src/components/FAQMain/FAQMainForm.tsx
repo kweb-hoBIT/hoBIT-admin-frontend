@@ -128,9 +128,17 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
                   className="absolute bottom-5 right-5"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <FAQDelete faq_id={String(faq.faq_id)} question_ko={faq.question_ko} onSuccess={() => window.location.reload()} />
+                  <FAQDelete
+                    faq_id={String(faq.faq_id)}
+                    question_ko={faq.question_ko}
+                    onSuccess={() => {
+                      if (currentItems.length === 1 && currentPage > 1) {
+                        setCurrentPage((prevPage) => prevPage - 1);
+                      }
+                      window.location.reload();
+                    }}
+                  />
                 </div>
-
                 {/* 컨텐츠 영역 */}
                 <div className="pr-24">
                   <div className="mb-2">
