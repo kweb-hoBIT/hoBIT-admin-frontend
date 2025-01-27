@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useHobitQueryGetApi, useHobitMutatePostApi } from '../../hooks/hobitAdmin';
 import FAQCreateForm from './FAQCreateForm';
 import { selectAuth } from '../../redux/authSlice';
-import { CreateFAQRequest, CreateFAQResponse, GetAllFAQCategoryRequest, GetAllFAQCategoryResponse } from '../../types/faq';
+import { CreateFAQRequest, CreateFAQResponse, GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, CheckFAQCategoryDuplicateRequest, CheckFAQCategoryDuplicateResponse } from '../../types/faq';
 import { RootState } from '../../redux/store';
 import { useNavigate } from 'react-router-dom';
 
@@ -40,6 +40,7 @@ const FAQCreate: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const GetAllFAQCategoryApi = useHobitQueryGetApi<GetAllFAQCategoryRequest, GetAllFAQCategoryResponse>('faqs/category');
+  const CheckFAQCategoryDuplicateApi = useHobitMutatePostApi<CheckFAQCategoryDuplicateRequest, CheckFAQCategoryDuplicateResponse>('faqs/category/check');
   const FAQCreateApi = useHobitMutatePostApi<CreateFAQRequest, CreateFAQResponse>('faqs');
 
   // FAQ Category 데이터 가져오기
@@ -176,6 +177,29 @@ const FAQCreate: React.FC = () => {
     }
 
     try {
+      try {
+        const response = await CheckFAQCategoryDuplicateApi({
+          body: {
+            maincategory_ko,
+            maincategory_en,
+            subcategory_ko,
+            subcategory_en,
+          },
+        });
+
+        if (response.payload?.statusCode === 200) {
+          if (response.payload.data.isDuplicated) {
+            alert('카테고리의 한글과 영어의 연결이 기존의 카테고리와 일부는 일치하고 일부는 다릅니다. 다시 확인해주세요.');
+            setIsCreating(false);
+            return;
+          }
+        }
+      } catch (error) {
+        alert('FAQ 카테고리 중복 확인 중 오류가 발생했습니다.');
+        setIsCreating(false);
+        return;
+      }
+
       const response = await FAQCreateApi({
         body: newFAQ,
       });

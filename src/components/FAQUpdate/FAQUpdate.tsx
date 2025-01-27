@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useHobitQueryGetApi, useHobitMutatePutApi } from '../../hooks/hobitAdmin';
+import { useHobitQueryGetApi, useHobitMutatePostApi, useHobitMutatePutApi } from '../../hooks/hobitAdmin';
 import FAQUpdateForm from './FAQUpdateForm';
 import { selectAuth } from '../../redux/authSlice';
-import { GetFAQRequest, GetFAQResponse, UpdateFAQRequest, UpdateFAQResponse, GetAllFAQCategoryRequest, GetAllFAQCategoryResponse } from '../../types/faq';
+import { GetFAQRequest, GetFAQResponse, UpdateFAQRequest, UpdateFAQResponse, GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, CheckFAQCategoryDuplicateRequest, CheckFAQCategoryDuplicateResponse } from '../../types/faq';
 import { RootState } from '../../redux/store';
 import { useNavigate } from 'react-router-dom';
 
@@ -45,6 +45,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
 
   const FAQFetchApi = useHobitQueryGetApi<GetFAQRequest, GetFAQResponse>('faqs', { params: { faq_id } });
   const GetAllFAQCategoryApi = useHobitQueryGetApi<GetAllFAQCategoryRequest, GetAllFAQCategoryResponse>('faqs/category');
+  const CheckFAQCategoryDuplicateApi = useHobitMutatePostApi<CheckFAQCategoryDuplicateRequest, CheckFAQCategoryDuplicateResponse>('faqs/category/check');
   const FAQUpdateApi = useHobitMutatePutApi<UpdateFAQRequest, UpdateFAQResponse>('faqs');
 
   useEffect(() => {
@@ -212,6 +213,29 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
     }
 
     try {
+      try {
+        const response = await CheckFAQCategoryDuplicateApi({
+          body: {
+            maincategory_ko,
+            maincategory_en,
+            subcategory_ko,
+            subcategory_en,
+          },
+        });
+
+        if (response.payload?.statusCode === 200) {
+          if (response.payload.data.isDuplicated) {
+            alert('카테고리의 한글과 영어의 연결이 기존의 카테고리와 일부는 일치하고 일부는 다릅니다. 다시 확인해주세요.');
+            setIsUpdating(false);
+            return;
+          }
+        }
+      } catch (error) {
+        alert('FAQ 카테고리 중복 확인 중 오류가 발생했습니다.');
+        setIsUpdating(false);
+        return;
+      }
+
       const response = await FAQUpdateApi({
         params: { faq_id },
         body: updatedFAQ,

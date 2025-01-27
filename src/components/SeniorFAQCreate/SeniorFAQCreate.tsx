@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useHobitQueryGetApi, useHobitMutatePostApi } from '../../hooks/hobitAdmin';
 import SeniorFAQCreateForm from './SeniorFAQCreateForm';
 import { selectAuth } from '../../redux/authSlice';
-import { CreateSeniorFAQRequest, CreateSeniorFAQResponse, GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse } from '../../types/seniorfaq';
+import { CreateSeniorFAQRequest, CreateSeniorFAQResponse, GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse, CheckSeniorFAQCategoryDuplicateRequest, CheckSeniorFAQCategoryDuplicateResponse } from '../../types/seniorfaq';
 import { RootState } from '../../redux/store';
 import { useNavigate } from 'react-router-dom';
 
@@ -57,6 +57,7 @@ const SeniorFAQCreate: React.FC = () => {
   const[error, setError] = useState<string | null>(null);
 
   const GetAllSeniorFAQCategoryApi = useHobitQueryGetApi<GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse>('seniorfaqs/category');
+  const CheckSeniorFAQCategoryDuplicateApi = useHobitMutatePostApi<CheckSeniorFAQCategoryDuplicateRequest, CheckSeniorFAQCategoryDuplicateResponse>('seniorfaqs/category/check');
   const SeniorFAQCreateApi = useHobitMutatePostApi<CreateSeniorFAQRequest, CreateSeniorFAQResponse>('seniorfaqs');
 
   // FAQ Category 데이터 가져오기
@@ -218,6 +219,29 @@ const SeniorFAQCreate: React.FC = () => {
     }
 
     try {
+      try {
+        const response = await CheckSeniorFAQCategoryDuplicateApi({
+          body: {
+            maincategory_ko,
+            maincategory_en,
+            subcategory_ko,
+            subcategory_en,
+            detailcategory_ko,
+            detailcategory_en,
+          },
+        });
+
+        if (response.payload?.statusCode === 200) {
+          if (response.payload.data.isDuplicated) {
+            alert('카테고리의 한글과 영어의 연결이 기존의 카테고리와 일부는 일치하고 일부는 다릅니다. 다시 확인해주세요.');
+            return;
+          }
+        }
+      } catch (error) {
+        alert('FAQ 카테고리 중복 확인 중 오류가 발생했습니다.');
+        return;
+      }
+
       const response = await SeniorFAQCreateApi({
         body: newSeniorFAQ,
       });
