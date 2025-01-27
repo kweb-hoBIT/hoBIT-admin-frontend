@@ -189,7 +189,13 @@ const FAQCreate: React.FC = () => {
 
         if (response.payload?.statusCode === 200) {
           if (response.payload.data.isDuplicated) {
-            alert('카테고리의 한글과 영어의 연결이 기존의 카테고리와 일부는 일치하고 일부는 다릅니다. 다시 확인해주세요.');
+            alert(`다른 FAQ의 카테고리와 같은 카테고리를 사용하려면 띄어쓰기와 한영 단어가 완벽하게 일치해야 합니다.
+              \n 기존 서브 카테고리: 공간예약 - Reserve a space 
+              \n 현재 서브 카테고리: 공간 예약 - Reserve a space 
+              \n => 띄어쓰기로 인한 에러
+              \n 기존 서브 카테고리: 공간예약 - Reserve a space 
+              \n 현재 서브 카테고리: 공간예약 - Reserve a room
+              \n => 번역으로 인한 에러`);
             setIsCreating(false);
             return;
           }
