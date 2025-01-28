@@ -98,24 +98,28 @@ const SeniorFAQLogDetailForm: React.FC<SeniorFAQLogDetailFormProps> = ({
               const answerEn = prevAnswersEn[index] || { title: '', answer: '', url: '', map: { latitude: '', longitude: '' } };
               return (
                 <div key={index} className="p-4 border border-gray-300 rounded-lg bg-white space-y-2">
+                  <label className="block text-lg font-medium text-gray-700 mt-2">답변 제목 (한글)</label>
                   <input
                     type="text"
                     value={answer.title || ''}
                     readOnly
                     className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(answer.title, newAnswersKo[index]?.title || '', 0)} text-black-500 mb-2`}
-                  />          
+                  />
+                  <label className="block text-lg font-medium text-gray-700 mb-2">Answer Title (영어)</label>
                   <input
                     type="text"
                     value={answerEn.title || ''}
                     readOnly
                     className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(answerEn.title, newAnswersEn[index]?.title || '', 0)} text-black-500 mb-2`}
                   />
+                  <label className="block text-lg font-medium text-gray-700 mb-2">답변 (한글)</label>
                   <textarea
                     value={answer.answer || ''}
                     readOnly
                     className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(answer.answer, newAnswersKo[index]?.answer || '', 0)} text-black-500 mb-2`}
                     rows={6}
                   />
+                  <label className="block text-lg font-medium text-gray-700 mb-2">Answer (영어)</label>
                   <textarea
                     value={answerEn.answer || ''}
                     readOnly
@@ -127,18 +131,21 @@ const SeniorFAQLogDetailForm: React.FC<SeniorFAQLogDetailFormProps> = ({
                       type="text"
                       value={answer.url || ''}
                       readOnly
+                      placeholder="URL"
                       className={`w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(answer.url, newAnswersKo[index]?.url || '', 0)} text-black-500 mb-2`}
                     />
                     <input
                       type="text"
                       value={answer.map.latitude || ''}
                       readOnly
+                      placeholder="위도"
                       className={`w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(answer.map.latitude, newAnswersKo[index]?.map.latitude || '', 0)} text-black-500 mb-2`}
                     />
                     <input
                       type="text"
                       value={answer.map.longitude || ''}
                       readOnly
+                      placeholder="경도"
                       className={`w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(answer.map.longitude, newAnswersKo[index]?.map.longitude || '', 0)} text-black-500 mb-2`}
                     />
                   </div>
@@ -224,24 +231,28 @@ const SeniorFAQLogDetailForm: React.FC<SeniorFAQLogDetailFormProps> = ({
               const answerEn = newAnswersEn[index] || { title: '', answer: '', url: '', map: { latitude: '', longitude: '' } };
               return (
                 <div key={index} className="p-4 border border-gray-300 rounded-lg bg-white space-y-2">
+                  <label className="block text-lg font-medium text-gray-700 mt-2">답변 제목 (한글)</label>
                   <input
                     type="text"
                     value={answer.title || ''}
                     readOnly
                     className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prevAnswersKo[index]?.title || '', answer.title, 1)} text-black-500 mb-2`}
                   />
+                  <label className="block text-lg font-medium text-gray-700 mb-2">Answer Title (영어)</label>
                   <input
                     type="text"
                     value={answerEn.title || ''}
                     readOnly
                     className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prevAnswersEn[index]?.title || '', answerEn.title, 1)} text-black-500 mb-2`}
                   />
+                  <label className="block text-lg font-medium text-gray-700 mb-2">답변 (한글)</label>
                   <textarea
                     value={answer.answer || ''}
                     readOnly
                     className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prevAnswersKo[index]?.answer || '', answer.answer, 1)} text-black-500 mb-2`}
                     rows={6}
                   />
+                  <label className="block text-lg font-medium text-gray-700 mb-2">Answer (영어)</label>
                   <textarea
                     value={answerEn.answer || ''}
                     readOnly
@@ -253,18 +264,21 @@ const SeniorFAQLogDetailForm: React.FC<SeniorFAQLogDetailFormProps> = ({
                       type="text"
                       value={answer.url || ''}
                       readOnly
+                      placeholder='URL'
                       className={`w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prevAnswersKo[index]?.url || '', answer.url, 1)} text-black-500 mb-2`}
                     />
                     <input
                       type="text"
                       value={answer.map.latitude || ''}
                       readOnly
+                      placeholder='위도'
                       className={`w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prevAnswersKo[index]?.map.latitude || '', answer.map.latitude, 1)} text-black-500 mb-2`}
                     />
                     <input
                       type="text"
                       value={answer.map.longitude || ''}
                       readOnly
+                      placeholder='경도'
                       className={`w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prevAnswersKo[index]?.map.longitude || '', answer.map.longitude, 1)} text-black-500 mb-2`}
                     />
                   </div>

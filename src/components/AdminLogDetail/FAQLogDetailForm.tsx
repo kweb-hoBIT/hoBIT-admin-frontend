@@ -98,12 +98,14 @@ const FAQLogDetailForm: React.FC<FAQLogDetailFormProps> = ({
               const answerEn = prevAnswersEn[index] || { answer: '', url: '', email: '', phone: '' };
               return (
                 <div key={index} className="p-4 border border-gray-300 rounded-lg bg-white space-y-2">
+                  <label className="block text-lg font-medium text-gray-700 mb-2">답변 (한글)</label>
                   <textarea
                     value={answer.answer || ''}
                     readOnly
                     className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(answer.answer, newAnswersKo[index]?.answer || '', 0)} text-black-500 mb-2`}
                     rows={6}
                   />
+                  <label className="block text-lg font-medium text-gray-700 mb-2">Answer (영어)</label>
                   <textarea
                     value={answerEn.answer || ''}
                     readOnly
@@ -116,18 +118,21 @@ const FAQLogDetailForm: React.FC<FAQLogDetailFormProps> = ({
                       type="text"
                       value={answer.url || ''}
                       readOnly
+                      placeholder='URL'
                       className={`w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(answer.url, newAnswersKo[index]?.url || '', 0)} text-black-500 mb-2`}
                     />
                     <input
                       type="email"
                       value={answer.email || ''}
                       readOnly
+                      placeholder='Email'
                       className={`w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(answer.email, newAnswersKo[index]?.email || '', 0)} text-black-500 mb-2`}
                     />
                     <input
                       type="tel"
                       value={answer.phone || ''}
                       readOnly
+                      placeholder='Phone'
                       className={`w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(answer.phone, newAnswersKo[index]?.phone || '', 0)} text-black-500 mb-2`}
                     />
                   </div>
@@ -213,12 +218,14 @@ const FAQLogDetailForm: React.FC<FAQLogDetailFormProps> = ({
               const answerEn = newAnswersEn[index] || { answer: '', url: '', email: '', phone: '' };
               return (
                 <div key={index} className="p-4 border border-gray-300 rounded-lg bg-white space-y-2">
+                  <label className="block text-lg font-medium text-gray-700 mb-2">답변 (한글)</label>
                   <textarea
                     value={answer.answer || ''}
                     readOnly
                     className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prevAnswersKo[index]?.answer || '', answer.answer, 1)} text-black-500 mb-2`}
                     rows={6}
                   />
+                  <label className="block text-lg font-medium text-gray-700 mb-2">Answer (영어)</label>
                   <textarea
                     value={answerEn.answer || ''}
                     readOnly
@@ -230,18 +237,21 @@ const FAQLogDetailForm: React.FC<FAQLogDetailFormProps> = ({
                       type="text"
                       value={answer.url || ''}
                       readOnly
+                      placeholder='URL'
                       className={`w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prevAnswersKo[index]?.url || '', answer.url, 1)} text-black-500 mb-2`}
                     />
                     <input
                       type="email"
                       value={answer.email || ''}
                       readOnly
+                      placeholder='Email'
                       className={`w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prevAnswersKo[index]?.email || '', answer.email, 1)} text-black-500 mb-2`}
                     />
                     <input
                       type="tel"
                       value={answer.phone || ''}
                       readOnly
+                      placeholder='Phone'
                       className={`w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prevAnswersKo[index]?.phone || '', answer.phone, 1)} text-black-500 mb-2`}
                     />
                   </div>
