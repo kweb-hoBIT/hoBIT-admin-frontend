@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { ko } from 'date-fns/locale';
 
 interface EntireAnalyzeFilterProps {
   onApplyFilter: (filters: any) => void;
@@ -16,9 +17,12 @@ const EntireAnalyzeFilter: React.FC<EntireAnalyzeFilterProps> = ({ onApplyFilter
   const disableDates = (date: Date, type: "start" | "end"): boolean => {
     if (!date) return false;
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     if (period === "week") {
       if (type === "start") return date.getDay() !== 1; // 월요일 (시작)
-      if (type === "end") return date.getDay() !== 0; // 일요일 (종료)
+      if (type === "end") return date.getDay() !== 0 || date > today; // 일요일 (종료)
     }
 
     if (period === "month") {
@@ -26,11 +30,11 @@ const EntireAnalyzeFilter: React.FC<EntireAnalyzeFilterProps> = ({ onApplyFilter
       if (type === "end") {
         const nextDay = new Date(date);
         nextDay.setDate(date.getDate() + 1);
-        return nextDay.getDate() !== 1; // 다음 날이 1일 (종료)
+        return nextDay.getDate() !== 1 || date > today; // 다음 날이 1일 (종료)
       }
     }
 
-    return false;
+    return type === "end" && date > today;
   };
 
   const handleApplyFilter = () => {
@@ -85,6 +89,7 @@ const EntireAnalyzeFilter: React.FC<EntireAnalyzeFilterProps> = ({ onApplyFilter
           <div>
             <label className="block text-sm font-medium text-gray-700">시작 일자</label>
             <DatePicker
+              locale={ko}
               selected={startDate}
               onChange={(date: Date | null) => setStartDate(date)}
               dateFormat="yyyy-MM-dd"
@@ -99,6 +104,7 @@ const EntireAnalyzeFilter: React.FC<EntireAnalyzeFilterProps> = ({ onApplyFilter
           <div>
             <label className="block text-sm font-medium text-gray-700">종료 일자</label>
             <DatePicker
+              locale={ko}
               selected={endDate}
               onChange={(date: Date | null) => setEndDate(date)}
               dateFormat="yyyy-MM-dd"

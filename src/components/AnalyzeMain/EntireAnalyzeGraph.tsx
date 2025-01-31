@@ -1,5 +1,6 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid } from 'recharts';
+import EntireAnalyzeTooltip from './EntireAnalyzeTooltip';
 
 interface EntireAnalyzeGraphProps {
   searchSubject: string;
@@ -10,11 +11,13 @@ const EntireAnalyzeGraph: React.FC<EntireAnalyzeGraphProps> = ({ searchSubject, 
   const transformedData = currentPageData
     .map((item) => {
       if (searchSubject === 'language') {
-        return {
+        return item.data.map((subItem: any) => ({
           date: `${item.startDate}`,
-          한국어: parseInt(item.data[0].ko_frequency || '0', 10),
-          영어: parseInt(item.data[0].en_frequency || '0', 10),
-        };
+          startDate: item.startDate,
+          endDate: item.endDate,
+          한국어: parseInt(item.data[0]?.ko_frequency || '0', 10),
+          영어: parseInt(item.data[0]?.en_frequency || '0', 10),
+        }));
       } else if (searchSubject === 'frequency' && item.data) {
         return item.data.map((subItem: any) => ({
           faq_id_label: `${subItem.faq_id}번`,
@@ -52,7 +55,7 @@ const EntireAnalyzeGraph: React.FC<EntireAnalyzeGraphProps> = ({ searchSubject, 
               offset: 0,
             }}
           />
-          <Tooltip />
+          <Tooltip content={<EntireAnalyzeTooltip searchSubject={searchSubject} />} />
           <Legend />
           {searchSubject === 'language' && (
             <>
