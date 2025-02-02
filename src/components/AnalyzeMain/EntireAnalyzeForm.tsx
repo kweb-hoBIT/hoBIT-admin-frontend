@@ -110,6 +110,7 @@ const EntireAnalyzeForm: React.FC<EntireAnalyzeFormProps> = ({ analyzeData, sear
                               <th
                                 key={idx}
                                 className="px-6 py-4 text-left text-sm font-medium text-gray-600 border-b"
+                                style={{ whiteSpace: 'nowrap'}}
                               >
                                 {renderField(key)}
                               </th>

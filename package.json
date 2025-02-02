@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/react-query": "^1.2.9",
+    "date-fns": "^4.1.0",
     "DatePicker": "^2.0.0",
     "json-bigint": "^1.0.0",
     "jwt-decode": "^4.0.0",
