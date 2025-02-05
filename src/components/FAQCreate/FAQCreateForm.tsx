@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CreateFAQRequest, GetAllFAQCategoryResponse } from '../../types/faq';
 import Translate from '../Translate/Translate';
+import FAQPreview from './FAQPreviewProps';
 
 interface FAQCreateFormProps {
   newFAQ: CreateFAQRequest['body'];
@@ -358,6 +359,18 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
           placeholder="관리자 이름을 입력하세요"
         />
       </div>
+
+      <FAQPreview 
+        question_ko={question_ko} 
+        question_en={question_en} 
+        answer_ko={answer_ko} 
+        answer_en={answer_en}
+        manager={manager}
+        maincategory_ko={maincategory_ko}
+        maincategory_en={maincategory_en}
+        subcategory_ko={subcategory_ko}
+        subcategory_en={subcategory_en}
+      />
 
       {/* 생성버튼 */}
       <div className="flex justify-center">
