@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import { UpdateFAQRequest, GetAllFAQCategoryResponse } from '../../types/faq';
 import Translate from '../Translate/Translate';
+import FAQPreview from '../FAQCreate/FAQPreviewProps';
 
 interface FAQUpdateFormProps {
   updatedFAQ: UpdateFAQRequest['body'];
@@ -373,6 +374,18 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
           placeholder="관리자 이름을 입력하세요"
         />
       </div>
+
+      <FAQPreview 
+        question_ko={question_ko} 
+        question_en={question_en} 
+        answer_ko={answer_ko} 
+        answer_en={answer_en}
+        manager={manager}
+        maincategory_ko={maincategory_ko}
+        maincategory_en={maincategory_en}
+        subcategory_ko={subcategory_ko}
+        subcategory_en={subcategory_en}
+      />
 
       {/* 업데이트 버튼 */}
       <div className="text-center mt-8">

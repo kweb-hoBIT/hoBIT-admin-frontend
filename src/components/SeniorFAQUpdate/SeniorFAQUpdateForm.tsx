@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { UpdateSeniorFAQRequest, GetAllSeniorFAQCategoryResponse } from '../../types/seniorfaq';
 import Translate from '../Translate/Translate';
+import SeniorFAQPreview from '../SeniorFAQCreate/SeniorFAQPreview';
 
 interface SeniorFAQUpdateFormProps {
   updatedSeniorFAQ: UpdateSeniorFAQRequest['body'];
@@ -443,6 +444,18 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
           placeholder="관리자 이름을 입력하세요"
         />
       </div>
+
+      <SeniorFAQPreview
+        maincategory_ko={maincategory_ko}
+        maincategory_en={maincategory_en}
+        subcategory_ko={subcategory_ko}
+        subcategory_en={subcategory_en}
+        detailcategory_ko={detailcategory_ko}
+        detailcategory_en={detailcategory_en}
+        answer_ko={answer_ko.map(({ answer, url, map }) => ({ answer, url, email: '', phone: '', map }))}
+        answer_en={answer_en.map(({ answer, url, map }) => ({ answer, url, email: '', phone: '', map }))}
+        manager={manager}
+      />
 
       {/* 생성버튼 */}
       <div className="flex justify-center">
