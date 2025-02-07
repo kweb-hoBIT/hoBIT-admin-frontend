@@ -18,11 +18,46 @@ const SeniorFAQDetailForm: React.FC<SeniorFAQDetailFormProps> = ({
     answer_ko,
     answer_en,
     manager,
+    created_at,
+    updated_at,
   } = seniorFaqData;
 
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    };
+    return new Date(dateString).toLocaleString('ko-KR', options);
+  };
+  
   return (
     <form onSubmit={(e) => e.preventDefault()} className="max-w-4xl mx-auto p-8 bg-white rounded-xl shadow-lg space-y-8">
       <h2 className="text-2xl font-bold text-gray-800 text-center">선배 FAQ 상세</h2>
+
+      {/* 생성 및 수정일자 */}
+      <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
+        <h3 className="text-xl font-bold text-gray-800">일자</h3>
+        <div>
+          <label className="block text-lg font-medium text-gray-700 mb-2">생성일</label>
+          <input
+            type="text"
+            value={formatDate(created_at)}
+            readOnly
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
+          />
+          <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">수정일</label>
+          <input
+            type="text"
+            value={formatDate(updated_at)}
+            readOnly
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
+          />
+        </div>
+      </div>
 
       {/* 카테고리 및 질문 필드 */}
       <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
