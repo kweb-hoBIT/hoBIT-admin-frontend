@@ -11,19 +11,7 @@ const FAQCreate: React.FC = () => {
   const navigate = useNavigate();
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
   const [isCreating, setIsCreating] = useState(false);
-  const [category, setCategory] = useState<GetAllFAQCategoryResponse['data']['categories']>({
-    maincategory_ko: [],
-    maincategory_en: [],
-    subcategory_ko: [],
-    subcategory_en: [],
-  });
-
-  const [filteredCategory, setFilteredCategory] = useState<GetAllFAQCategoryResponse['data']['categories']>({
-    maincategory_ko: [],
-    maincategory_en: [],
-    subcategory_ko: [],
-    subcategory_en: [],
-  });
+  const [category, setCategory] = useState<GetAllFAQCategoryResponse['data']['categories']>([]);
 
   const [newFAQ, setNewFAQ] = useState<CreateFAQRequest['body']>({
     user_id: user_id ? Number(user_id) : 0,
@@ -38,7 +26,6 @@ const FAQCreate: React.FC = () => {
     manager: '',
   });
   const [error, setError] = useState<string | null>(null);
-
   const GetAllFAQCategoryApi = useHobitQueryGetApi<GetAllFAQCategoryRequest, GetAllFAQCategoryResponse>('faqs/category');
   const CheckFAQCategoryDuplicateApi = useHobitMutatePostApi<CheckFAQCategoryDuplicateRequest, CheckFAQCategoryDuplicateResponse>('faqs/category/check');
   const FAQCreateApi = useHobitMutatePostApi<CreateFAQRequest, CreateFAQResponse>('faqs');
@@ -49,7 +36,6 @@ const FAQCreate: React.FC = () => {
       if (GetAllFAQCategoryApi.data?.payload?.statusCode === 200) {
         const data = GetAllFAQCategoryApi.data.payload.data.categories;
         setCategory(data);
-        setFilteredCategory(data); // 초기화
       } else {
         setError('FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
       }
@@ -59,69 +45,6 @@ const FAQCreate: React.FC = () => {
       fetchFAQCategory();
     }
   }, [GetAllFAQCategoryApi.isSuccess]);
-
-  // 필터 업데이트 함수
-  const updateFilteredCategory = (key: keyof GetAllFAQCategoryResponse['data']['categories'], value: string) => {
-    if (value) {
-      const filtered = category[key].filter((item) => item.includes(value));
-      setFilteredCategory((prev) => ({ ...prev, [key]: filtered }));
-    } else {
-      setFilteredCategory((prev) => ({ ...prev, [key]: category[key] }));
-    }
-  };
-
-  // 필터 인덱스 찾기 함수
-  const findFilterIndex = (key: keyof GetAllFAQCategoryResponse['data']['categories'], value: string) => {
-    const index = category[key].findIndex((item) => item === value);
-    if (key === 'maincategory_ko') {
-      setNewFAQ({
-        ...newFAQ,
-        maincategory_ko: value,
-        maincategory_en: category.maincategory_en[index],
-      });
-    }
-    if (key === 'maincategory_en') {
-      setNewFAQ({
-        ...newFAQ,
-        maincategory_ko: category.maincategory_ko[index],
-        maincategory_en: value
-      });
-    }
-    if (key === 'subcategory_ko') {
-      setNewFAQ({
-        ...newFAQ,
-        subcategory_ko: value,
-        subcategory_en: category.subcategory_en[index],
-      });
-    }
-    if (key === 'subcategory_en') {
-      setNewFAQ({
-        ...newFAQ,
-        subcategory_ko: category.subcategory_ko[index],
-        subcategory_en: value,
-      });
-    }
-  }
-
-  // maincategory_ko 필터링
-  useEffect(() => {
-    updateFilteredCategory('maincategory_ko', newFAQ.maincategory_ko);
-  }, [newFAQ.maincategory_ko, category.maincategory_ko]);
-
-  // maincategory_en 필터링
-  useEffect(() => {
-    updateFilteredCategory('maincategory_en', newFAQ.maincategory_en);
-  }, [newFAQ.maincategory_en, category.maincategory_en]);
-
-  // subcategory_ko 필터링
-  useEffect(() => {
-    updateFilteredCategory('subcategory_ko', newFAQ.subcategory_ko);
-  }, [newFAQ.subcategory_ko, category.subcategory_ko]);
-
-  // subcategory_en 필터링
-  useEffect(() => {
-    updateFilteredCategory('subcategory_en', newFAQ.subcategory_en);
-  }, [newFAQ.subcategory_en, category.subcategory_en]);
 
   const handleAddAnswer = () => {
     setNewFAQ({
@@ -239,8 +162,7 @@ const FAQCreate: React.FC = () => {
     <FAQCreateForm
       newFAQ={newFAQ}
       setNewFAQ={setNewFAQ}
-      filteredCategory={filteredCategory}
-      findFilterIndex={findFilterIndex}
+      category={category}
       handleAddAnswer={handleAddAnswer}
       handleCreate={handleCreate}
       handleDeleteAnswer={handleDeleteAnswer}

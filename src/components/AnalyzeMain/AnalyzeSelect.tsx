@@ -15,7 +15,7 @@ const AnalyzeSelect: React.FC<AnalyzeSelectProps> = ({ onSelectAnalyze }) => {
   return (
     <div className="p-6">
       <div className="relative mt-4">
-        <div className="flex items-center justify-center mt-8 text-lg">
+        <div className="flex items-center justify-center mt-8 text-2xl">
           <div className="flex-1 text-right pr-4">
             <span
               onClick={() => handleSelect('Entire')}

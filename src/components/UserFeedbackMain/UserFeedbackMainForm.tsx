@@ -122,38 +122,39 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
       <div className="p-6 bg-white-50 rounded-lg">
         <div className="p-6">
           <h4 className="text-2xl font-bold mb-4 text-gray-800">유저 피드백 리스트</h4>
-          <div style={{ minHeight: '395px' }}>
-            <div className="grid grid-cols-2 gap-4">
-              {(filter === 'unresolved' ? unresolvedItems : resolvedItems).map((feedback) => (
-                <div key={feedback.user_feedback_id} className="relative bg-gray-200 p-4 rounded-lg">
-                  {/* 수정 버튼 */}
-                  <UserFeedbackResolvedUpdate
-                    user_feedback_id={feedback.user_feedback_id}
-                    initialResolved={feedback.resolved ? 1 : 0}
-                    onResolvedChange={handleResolvedChange}
-                  />
-                
-                  {/* 삭제 버튼 */}
-                  <div
-                    className="absolute bottom-5 right-5"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <UserFeedbackDelete
-                      user_feedback_id={String(feedback.user_feedback_id)}
-                      onSuccess={() => {
-                        if (filter === 'unresolved') {
-                          if (unresolvedItems.length === 1 && unresolvedCurrentPage > 1) {
-                            setUnresolvedCurrentPage((prevPage) => prevPage - 1);
-                          }
-                        } else {
-                          if (resolvedItems.length === 1 && resolvedCurrentPage > 1) {
-                            setResolvedCurrentPage((prevPage) => prevPage - 1);
-                          }
+        <div style={{ minHeight: '320px' }}>
+          <div className="grid grid-cols-2 gap-4">
+            {(filter === 'unresolved' ? unresolvedItems : resolvedItems).map((feedback) => (
+              <div key={feedback.user_feedback_id} className="relative bg-gray-200 p-4 rounded-lg cursor-pointer">
+                {/* 수정 버튼 */}
+                <UserFeedbackResolvedUpdate
+                  user_feedback_id={feedback.user_feedback_id}
+                  initialResolved={feedback.resolved ? 1 : 0}
+                  onResolvedChange={handleResolvedChange}
+                />
+              
+                {/* 삭제 버튼 */}
+                <div
+                  className="absolute bottom-5 right-5"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <UserFeedbackDelete
+                    user_feedback_id={String(feedback.user_feedback_id)}
+                    onSuccess={() => {
+                      if (filter === 'unresolved') {
+                        if (unresolvedItems.length === 1 && unresolvedCurrentPage > 1) {
+                          setUnresolvedCurrentPage((prevPage) => prevPage - 1);
                         }
-                        window.location.reload();
-                      }}
-                    />
-                  </div>
+                      } else {
+                        if (resolvedItems.length === 1 && resolvedCurrentPage > 1) {
+                          setResolvedCurrentPage((prevPage) => prevPage - 1);
+                        }
+                      }
+                      window.location.reload();
+                    }}
+                  />
+                </div>
+                <div className="pr-24">
                   <div className="mb-2">
                     <span className="mb-1 text-m text-gray-600">
                       <strong> {feedback.question_ko ? (
@@ -175,9 +176,10 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
+        </div>
 
           {/* 페이지네이션 */}
           <div className="flex justify-center mt-4 items-center space-x-4">

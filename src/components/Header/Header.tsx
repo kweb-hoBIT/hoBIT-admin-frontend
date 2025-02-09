@@ -25,11 +25,11 @@ const Header: React.FC = () => {
 
   // Link 클릭 시 필터 상태를 리셋하는 함수
   const handleLinkClick = () => {
-    // dispatch(clearFAQFilterState());
-    // dispatch(clearSeniorFAQFilterState());
-    // dispatch(clearAdminLogFilterState());
-    // dispatch(clearQuestionLogFilterState());
-    // dispatch(clearFeedbackFilterState());
+    dispatch(clearFAQFilterState());
+    dispatch(clearSeniorFAQFilterState());
+    dispatch(clearAdminLogFilterState());
+    dispatch(clearQuestionLogFilterState());
+    dispatch(clearFeedbackFilterState());
   };
 
   return (
@@ -38,7 +38,7 @@ const Header: React.FC = () => {
         {isAuthPage ? (
           <span className="text-white">hoBIT</span>
         ) : (
-          <Link to="/home" className="text-white hover:text-gray-600">
+          <Link to="/home" className="text-white hover:text-gray-600" onClick={handleLinkClick}>
             hoBIT
           </Link>
         )}

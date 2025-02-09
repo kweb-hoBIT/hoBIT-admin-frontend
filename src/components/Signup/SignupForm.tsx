@@ -181,7 +181,7 @@ const SignupForm: React.FC<{
               value={userData.phone_num}
               autoComplete="off"
               onChange={onInputChange}
-              placeholder="전화번호를 입력하세요"
+              placeholder="010-XXXX-XXXX 형식으로 입력해주세요."
               pattern="010-\d{4}-\d{4}"
               title="전화번호는 010-XXXX-XXXX 형식으로 입력해주세요."
               className="w-full p-2 border border-gray-300 rounded-md text-base"

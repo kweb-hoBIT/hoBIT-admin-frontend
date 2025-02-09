@@ -34,6 +34,12 @@ const SeniorFAQFilter: React.FC<SeniorFAQFilterProps> = ({
     }
   }, [seniorFaqs, filter, selectedFilter]);
 
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      setSuggestedFiltersInputFocused(false);
+    }
+  }
+
   return (
     <div className="p-6">
       <h4 className="text-2xl font-bold mb-6 text-gray-800">선배 FAQ 검색</h4>
@@ -54,11 +60,7 @@ const SeniorFAQFilter: React.FC<SeniorFAQFilterProps> = ({
             placeholder="검색어를 입력하세요"
             value={filter}
             onFocus={() => setSuggestedFiltersInputFocused(true)}
-            onBlur={() => {
-              setTimeout(() => {
-                setSuggestedFiltersInputFocused(false);
-              }, 100);
-            }}
+            onBlur={(e) => handleInputBlur(e)}
             onChange={(e) => onFilterChange(e.target.value)}
             className="w-full p-3 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -67,7 +69,7 @@ const SeniorFAQFilter: React.FC<SeniorFAQFilterProps> = ({
               {suggestedFilters.map((suggestedFilter) => (
                 <li
                   key={suggestedFilter}
-                  onClick={() => onFilterChange(suggestedFilter)}
+                  onMouseDown={() => onFilterChange(suggestedFilter)}
                   className="p-2 cursor-pointer hover:bg-indigo-100"
                 >
                   {suggestedFilter}
