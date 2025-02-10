@@ -44,14 +44,14 @@ const SeniorFAQPreview: React.FC<SeniorFAQPreviewProps> = ({
         <div className="overflow-x-auto flex flex-nowrap space-x-4 pb-2">
           {answer_ko.length > 0 ? (
             answer_ko.map((item, index) => (
-              <div key={index} className="bg-gray-100 font-medium text-[20px] rounded-[20px] px-[20px] py-[15px] w-[365px] break-words flex-shrink-0">
+              <div key={index} className="font-5medium text-[20px] bg-[#FFEFEF] mt-[10px] rounded-[20px] px-[20px] py-[15px] w-[365px] break-words inline-block mr-[10px]">
                 {index === 0 && (
                   <div className="flex flex-row text-[16px] text-[#686D76] items-center rounded-[10px] w-fit mb-[10px]">
                     <h3 className="text-center">{maincategory_ko}</h3>
                     <IoIosArrowForward />
-                    <h3 className="font-regular text-center">{subcategory_ko}</h3>
+                    <h3 className="font-4regular text-center">{subcategory_ko}</h3>
                     <IoIosArrowForward />
-                    <h3 className="font-regular text-center">{detailcategory_ko}</h3>
+                    <h3 className="font-4regular text-center">{detailcategory_ko}</h3>
                   </div>
                 )}
                 {item.title && (
@@ -66,31 +66,30 @@ const SeniorFAQPreview: React.FC<SeniorFAQPreviewProps> = ({
                     />
                   </div>
                 )}
-                {typeof item.answer === 'string' &&
-                  item.answer.split('\n').map((line, lineIndex) => (
-                    <p key={lineIndex}>{line}</p>
-                  ))}
+                {typeof item.answer === 'string' && (
+                  <div className="whitespace-pre-wrap">{item.answer}</div>
+                )}
                 {(item.url || item.email || item.phone) && (
                   <div className="w-full h-[1px] bg-gray-300 mt-[20px]" />
                 )}
                 {item.url && (
-                  <div className="flex flex-row items-center mt-[20px]">
-                    <FaLink className="mr-[10px] text-[36px] text-[#686D76] bg-white p-[8px] rounded-full" />
+                    <div className="flex flex-row items-center mt-[20px]">
+                      <FaLink className="mr-[10px] text-[36px] text-[#686D76] bg-white p-[8px] rounded-full" />
                     <a href={item.url.startsWith('http') ? item.url : `http://${item.url}`} target="_blank" rel="noopener noreferrer" className="text-[18px] text-[#0A5EB0] cursor-pointer hover:underline break-words">
                       사이트 바로가기
                     </a>
                   </div>
                 )}
-                {item.map.latitude && (
+                {(item.map.latitude || item.map.longitude) && (
                   <div className="flex flex-row items-center mt-[10px]">
-                    <FaMapMarkerAlt className="mr-[10px] text-[36px] text-[#686D76] bg-white p-[8px] rounded-full" />
-                    <p className="text-[18px]">위도: {item.map.latitude}</p>
-                  </div>
-                )}
-                {item.map.longitude && (
-                  <div className="flex flex-row items-center mt-[10px]">
-                    <FaMapMarkerAlt className="mr-[10px] text-[36px] text-[#686D76] bg-white p-[8px] rounded-full" />
-                    <p className="text-[18px]">경도: {item.map.longitude}</p>
+                    <FaMapMarkerAlt  className="mr-[10px] text-[36px] text-[#686D76] bg-white p-[8px] rounded-full" />
+                    <a
+                      href="https://www.korea.ac.kr/campusMap/ko/view.do"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      고려대학교 캠퍼스맵
+                    </a>
                   </div>
                 )}
               </div>
@@ -104,14 +103,14 @@ const SeniorFAQPreview: React.FC<SeniorFAQPreviewProps> = ({
         <div className="overflow-x-auto flex flex-nowrap space-x-4 pb-2">
           {answer_en.length > 0 ? (
             answer_en.map((item, index) => (
-              <div key={index} className="bg-gray-100 font-medium text-[20px] rounded-[20px] px-[20px] py-[15px] w-[365px] break-words flex-shrink-0">
+              <div key={index} className="font-5medium text-[20px] bg-[#FFEFEF] mt-[10px] rounded-[20px] px-[20px] py-[15px] w-[365px] break-words inline-block mr-[10px]">
                 {index === 0 && (
                   <div className="flex flex-row text-[16px] text-[#686D76] items-center rounded-[10px] w-fit mb-[10px]">
                     <h3 className="text-center">{maincategory_en}</h3>
                     <IoIosArrowForward />
-                    <h3 className="font-regular text-center">{subcategory_en}</h3>
+                    <h3 className="font-4regular text-center">{subcategory_en}</h3>
                     <IoIosArrowForward />
-                    <h3 className="font-regular text-center">{detailcategory_en}</h3>
+                    <h3 className="font-4regular text-center">{detailcategory_en}</h3>
                   </div>
                 )}
                 {item.title && (
@@ -126,31 +125,30 @@ const SeniorFAQPreview: React.FC<SeniorFAQPreviewProps> = ({
                     />
                   </div>
                 )}
-                {typeof item.answer === 'string' &&
-                  item.answer.split('\n').map((line, lineIndex) => (
-                    <p key={lineIndex}>{line}</p>
-                  ))}
+                {typeof item.answer === 'string' && (
+                  <div className="whitespace-pre-wrap">{item.answer}</div>
+                )}
                 {(item.url || item.email || item.phone) && (
                   <div className="w-full h-[1px] bg-gray-300 mt-[20px]" />
                 )}
                 {item.url && (
-                  <div className="flex flex-row items-center mt-[20px]">
-                    <FaLink className="mr-[10px] text-[36px] text-[#686D76] bg-white p-[8px] rounded-full" />
+                    <div className="flex flex-row items-center mt-[20px]">
+                      <FaLink className="mr-[10px] text-[36px] text-[#686D76] bg-white p-[8px] rounded-full" />
                     <a href={item.url.startsWith('http') ? item.url : `http://${item.url}`} target="_blank" rel="noopener noreferrer" className="text-[18px] text-[#0A5EB0] cursor-pointer hover:underline break-words">
                       Visit Site
                     </a>
                   </div>
                 )}
-                {item.map.latitude && (
+                {(item.map.latitude || item.map.longitude) && (
                   <div className="flex flex-row items-center mt-[10px]">
-                    <FaMapMarkerAlt className="mr-[10px] text-[36px] text-[#686D76] bg-white p-[8px] rounded-full" />
-                    <p className="text-[18px]">Latitude: {item.map.latitude}</p>
-                  </div>
-                )}
-                {item.map.longitude && (
-                  <div className="flex flex-row items-center mt-[10px]">
-                    <FaMapMarkerAlt className="mr-[10px] text-[36px] text-[#686D76] bg-white p-[8px] rounded-full" />
-                    <p className="text-[18px]">Longitude: {item.map.longitude}</p>
+                    <FaMapMarkerAlt  className="mr-[10px] text-[36px] text-[#686D76] bg-white p-[8px] rounded-full" />
+                    <a
+                      href="https://www.korea.ac.kr/campusMap/ko/view.do"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Korea University Campus Map
+                    </a>
                   </div>
                 )}
               </div>
