@@ -113,6 +113,7 @@ const FAQCreate: React.FC = () => {
         if (response.payload?.statusCode === 200) {
           if (response.payload.data.isDuplicated) {
             alert(`다른 FAQ의 카테고리와 같은 카테고리를 사용하려면 띄어쓰기와 한영 단어가 완벽하게 일치해야 합니다.
+              \n 예시:
               \n 기존 카테고리: 공간예약 - Reserve a space 
               \n 현재 카테고리: 공간 예약 - Reserve a space 
               \n => 띄어쓰기로 인한 에러

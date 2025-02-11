@@ -489,8 +489,8 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
         subcategory_en={subcategory_en}
         detailcategory_ko={detailcategory_ko}
         detailcategory_en={detailcategory_en}
-        answer_ko={answer_ko.map(({ answer, url, map }) => ({ answer, url, email: '', phone: '', map }))}
-        answer_en={answer_en.map(({ answer, url, map }) => ({ answer, url, email: '', phone: '', map }))}
+        answer_ko={answer_ko.map(({ title, answer, url, map }) => ({ title, answer, url, email: '', phone: '', map }))}
+        answer_en={answer_en.map(({ title, answer, url, map }) => ({ title, answer, url, email: '', phone: '', map }))}
         manager={manager}
       />
 
