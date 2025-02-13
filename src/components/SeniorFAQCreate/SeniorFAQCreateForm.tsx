@@ -7,6 +7,7 @@ interface SeniorFAQCreateFormProps {
   newSeniorFAQ: CreateSeniorFAQRequest['body'];
   setNewSeniorFAQ: React.Dispatch<React.SetStateAction<CreateSeniorFAQRequest['body']>>;
   category: GetAllSeniorFAQCategoryResponse['data']['categories'];
+  findFilterIndex: (key: string, value: string) => void;
   handleAddAnswer: () => void;
   handleSubmit: () => void;
   handleDeleteAnswer: (index: number) => void;
@@ -16,6 +17,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
   newSeniorFAQ,
   setNewSeniorFAQ,
   category,
+  findFilterIndex,
   handleAddAnswer,
   handleSubmit,
   handleDeleteAnswer,
@@ -39,10 +41,6 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
   const [isDetailCateogoryKoInputFocused, setIsDetailCateogoryKoInputInputFocused] = useState(false);
   const [isDetailCateogoryEnInputFocused, setIsDetailCateogoryEnInputInputFocused] = useState(false);
   
-  const getFilteredCategories = (input: string, categories: string[]) => {
-    return categories.filter(category => category.includes(input));
-  };
-
   const getSubcategories = (maincategory: string, lang: 'ko' | 'en') => {
     const selectedCategory = category.find(cat =>
       lang === 'ko' ? cat.maincategory_ko === maincategory : cat.maincategory_en === maincategory
@@ -54,19 +52,13 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
     const selectedCategory = category.find(cat =>
       lang === 'ko' ? cat.maincategory_ko === maincategory : cat.maincategory_en === maincategory
     );
-    const selectedSubcategory = selectedCategory?.subcategories.find(subcat =>
-      lang === 'ko' ? subcat.subcategory_ko === subcategory : subcat.subcategory_en === subcategory
-    );
-    return selectedSubcategory ? selectedSubcategory.detailcategories : [];
-  };
 
-  
-  const filteredMainCategoriesKo = getFilteredCategories(maincategory_ko, category.map(cat => cat.maincategory_ko));
-  const filteredMainCategoriesEn = getFilteredCategories(maincategory_en, category.map(cat => cat.maincategory_en));
-  const filteredSubCategoriesKo = getFilteredCategories(subcategory_ko, getSubcategories(maincategory_ko, 'ko').map(subcat => subcat.subcategory_ko));
-  const filteredSubCategoriesEn = getFilteredCategories(subcategory_en, getSubcategories(maincategory_en, 'en').map(subcat => subcat.subcategory_en));
-  const filteredDetailCategoriesKo = getFilteredCategories(detailcategory_ko, getDetailcategories(maincategory_ko, subcategory_ko, 'ko').map(detailcat => detailcat.detailcategory_ko));
-  const filteredDetailCategoriesEn = getFilteredCategories(detailcategory_en, getDetailcategories(maincategory_en, subcategory_en, 'en').map(detailcat => detailcat.detailcategory_en));
+    const selectedSubcategory = selectedCategory?.subcategories.find(sub =>
+      lang === 'ko' ? sub.subcategory_ko === subcategory : sub.subcategory_en === subcategory
+    );
+
+    return selectedSubcategory ? selectedSubcategory.detailcategories : { detailcategory_ko: [], detailcategory_en: [] };
+  };
 
 
   return (
@@ -76,7 +68,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
     >
       <h2 className="text-2xl font-bold text-gray-800 text-center">선배 FAQ 생성</h2>
 
-      {/* 카테고리 필드 */}
+      {/*메인 카테고리 필드 */}
       <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
         <h3 className="text-xl font-bold text-gray-800">카테고리</h3>
         <div>
@@ -95,20 +87,20 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                 }, 100);
               }}
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              placeholder="카테고리를 입력하세요"
+              placeholder="메인카테고리를 입력하세요"
             />
-            {isMainCateogoryKoInputFocused && filteredMainCategoriesKo.length > 0 && (
+            {isMainCateogoryKoInputFocused && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {filteredMainCategoriesKo.map((category) => (
+                {category.flatMap(cat => cat.maincategory_ko).filter(cat => cat.includes(maincategory_ko)).map((cat) => (
                   <li
-                    key={category}
+                    key={cat}
                     onClick={() => {
-                      setNewSeniorFAQ({ ...newSeniorFAQ, maincategory_ko: category });
+                      findFilterIndex('maincategory_ko', cat);
                       setIsMainCateogoryKoInputInputFocused(false);
                     }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
                   >
-                    {category}
+                    {cat}
                   </li>
                 ))}
               </ul>
@@ -130,20 +122,20 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                 }, 100);
               }}
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter category"
+              placeholder="Enter maincategory"
             />
-            {isMainCateogoryEnInputFocused && filteredMainCategoriesEn.length > 0 && (
+            {isMainCateogoryEnInputFocused && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {filteredMainCategoriesEn.map((category) => (
+                {category.flatMap(cat => cat.maincategory_en).filter(cat => cat.includes(maincategory_en)).map((cat) => (
                   <li
-                    key={category}
+                    key={cat}
                     onClick={() => {
-                      setNewSeniorFAQ({ ...newSeniorFAQ, maincategory_en: category });
+                      findFilterIndex('maincategory_en', cat);
                       setIsMainCateogoryEnInputInputFocused(false);
                     }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
                   >
-                    {category}
+                    {cat}
                   </li>
                 ))}
               </ul>
@@ -174,20 +166,20 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
               placeholder="서브카테고리를 입력하세요"
               disabled={!maincategory_ko}
             />
-            {isSubCateogoryKoInputFocused && filteredSubCategoriesKo.length > 0 && (
+            {isSubCateogoryKoInputFocused && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {filteredSubCategoriesKo.map((category) => (
-                  <li
-                    key={category}
-                    onClick={() => {
-                      setNewSeniorFAQ({ ...newSeniorFAQ, subcategory_ko: category });
-                      setIsSubCateogoryKoInputInputFocused(false);
-                    }}
-                    className="p-2 cursor-pointer hover:bg-indigo-100"
-                  >
-                    {category}
-                  </li>
-                ))}
+              {getSubcategories(maincategory_ko, 'ko').flatMap((subcategory) => subcategory.subcategory_ko).filter((subcategory) => subcategory.includes(subcategory_ko)).map((subcategory) => (
+                <li
+                key={`${maincategory_ko}-${subcategory}`}
+                  onClick={() => {
+                    findFilterIndex('subcategory_ko', subcategory);
+                    setIsSubCateogoryKoInputInputFocused(false);
+                  }}
+                  className="p-2 cursor-pointer hover:bg-indigo-100"
+                >
+                  {subcategory}
+                </li>
+              ))}
               </ul>
             )}
           </div>
@@ -210,18 +202,18 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
               placeholder="Enter subcategory"
               disabled={!maincategory_en}
             />
-            {isSubCateogoryEnInputFocused && filteredSubCategoriesEn.length > 0 && (
+            {isSubCateogoryEnInputFocused && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {filteredSubCategoriesEn.map((category) => (
+                {getSubcategories(maincategory_en, 'en').flatMap((subcategory) => subcategory.subcategory_en).filter((subcategory) => subcategory.includes(subcategory_en)).map((subcategory) => (
                   <li
-                    key={category}
+                  key={`${maincategory_en}-${subcategory}`}
                     onClick={() => {
-                      setNewSeniorFAQ({ ...newSeniorFAQ, subcategory_en: category });
+                      findFilterIndex('subcategory_en', subcategory);
                       setIsSubCateogoryEnInputInputFocused(false);
                     }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
                   >
-                    {category}
+                    {subcategory}
                   </li>
                 ))}
               </ul>
@@ -252,18 +244,18 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
               placeholder="세부카테고리를 입력하세요"
               disabled={!subcategory_ko}
             />
-            {isDetailCateogoryKoInputFocused && filteredDetailCategoriesKo.length > 0 && (
+            {isDetailCateogoryKoInputFocused && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {filteredDetailCategoriesKo.map((category) => (
+                {getDetailcategories(maincategory_ko, subcategory_ko, 'ko').detailcategory_ko.filter((detailcategory) => detailcategory.includes(detailcategory_ko)).map((detailcategory) => (
                   <li
-                    key={category}
+                  key={`${maincategory_ko}-${subcategory_ko}-${detailcategory}`}
                     onClick={() => {
-                      setNewSeniorFAQ({ ...newSeniorFAQ, detailcategory_ko: category });
+                      findFilterIndex('detailcategory_ko', detailcategory);
                       setIsDetailCateogoryKoInputInputFocused(false);
                     }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
                   >
-                    {category}
+                    {detailcategory}
                   </li>
                 ))}
               </ul>
@@ -288,18 +280,18 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
               placeholder="Enter detailcategory"
               disabled={!subcategory_en}
             />
-            {isDetailCateogoryEnInputFocused && filteredDetailCategoriesEn.length > 0 && (
+            {isDetailCateogoryEnInputFocused && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {filteredDetailCategoriesEn.map((category) => (
+                {getDetailcategories(maincategory_en, subcategory_en, 'en').detailcategory_en.filter((detailcategory) => detailcategory.includes(detailcategory_en)).map((detailcategory) => (
                   <li
-                    key={category}
+                  key={`${maincategory_en}-${subcategory_en}-${detailcategory}`}
                     onClick={() => {
-                      setNewSeniorFAQ({ ...newSeniorFAQ, detailcategory_en: category });
+                      findFilterIndex('detailcategory_en', detailcategory);
                       setIsDetailCateogoryEnInputInputFocused(false);
                     }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
                   >
-                    {category}
+                    {detailcategory}
                   </li>
                 ))}
               </ul>

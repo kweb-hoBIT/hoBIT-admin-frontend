@@ -10,8 +10,22 @@ import { useNavigate } from 'react-router-dom';
 const SeniorFAQCreate: React.FC = () => {
   const navigate = useNavigate();
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
-  const [category, setcategory] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']>([]);
-
+  const [category, setCategory] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']>([
+    {
+      maincategory_ko: '',
+      maincategory_en: '',
+      subcategories: [
+        {
+          subcategory_ko: '',
+          subcategory_en: '',
+          detailcategories: {
+            detailcategory_ko: [],
+            detailcategory_en: [],
+          },
+        },
+      ],
+    },
+  ]);
   const [newSeniorFAQ, setNewSeniorFAQ] = useState<CreateSeniorFAQRequest["body"]>({
     user_id: user_id ? Number(user_id) : 0,
     maincategory_ko: '',
@@ -49,7 +63,7 @@ const SeniorFAQCreate: React.FC = () => {
     const fetchSeniorFAQCategory = async () => {
       if (GetAllSeniorFAQCategoryApi.data?.payload?.statusCode === 200) {
         const data = GetAllSeniorFAQCategoryApi.data.payload.data.categories;
-        setcategory(data);
+        setCategory(data);
       } else {
         setError('Senior FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
       }
@@ -59,6 +73,70 @@ const SeniorFAQCreate: React.FC = () => {
       fetchSeniorFAQCategory();
     }
   }, [GetAllSeniorFAQCategoryApi.isSuccess]);
+
+   // 필터 인덱스 찾기 함수
+   const findFilterIndex = (key: string, value: string) => {
+    if (key === 'maincategory_ko') {
+      const index = category.findIndex((item) => item[key] === value);
+      setNewSeniorFAQ({
+        ...newSeniorFAQ,
+        maincategory_ko: value,
+        maincategory_en: category[index].maincategory_en,
+      });
+    }
+    
+    if (key === 'maincategory_en') {
+      const index = category.findIndex((item) => item[key] === value);
+      setNewSeniorFAQ({
+        ...newSeniorFAQ,
+        maincategory_ko: category[index].maincategory_ko,
+        maincategory_en: value,
+      });
+    }
+
+    if (key === 'subcategory_ko') {
+      const index = category.findIndex((item) => item.maincategory_ko === newSeniorFAQ.maincategory_ko);
+      const subIndex = category[index].subcategories.findIndex((sub) => sub.subcategory_ko === value);
+      console.log(subIndex);
+      setNewSeniorFAQ({
+        ...newSeniorFAQ,
+        subcategory_ko: value,
+        subcategory_en: category[index].subcategories[subIndex].subcategory_en,
+      });
+    }
+
+    if (key === 'subcategory_en') {
+      const index = category.findIndex((item) => item.maincategory_en === newSeniorFAQ.maincategory_en);
+      const subIndex = category[index].subcategories.findIndex((sub) => sub.subcategory_en === value);
+      setNewSeniorFAQ({
+        ...newSeniorFAQ,
+        subcategory_ko: category[index].subcategories[subIndex].subcategory_ko,
+        subcategory_en: value,
+      });
+    }
+
+    if (key === 'detailcategory_ko') {
+      const index = category.findIndex((item) => item.maincategory_ko === newSeniorFAQ.maincategory_ko);
+      const subIndex = category[index].subcategories.findIndex((sub) => sub.subcategory_ko === newSeniorFAQ.subcategory_ko);
+      const detailIndex = category[index].subcategories[subIndex].detailcategories.detailcategory_ko.findIndex((detail) => detail === value);
+      setNewSeniorFAQ({
+        ...newSeniorFAQ,
+        detailcategory_ko: value,
+        detailcategory_en: category[index].subcategories[subIndex].detailcategories.detailcategory_en[detailIndex],
+      });
+    }
+
+    if (key === 'detailcategory_en') {
+      const index = category.findIndex((item) => item.maincategory_en === newSeniorFAQ.maincategory_en);
+      const subIndex = category[index].subcategories.findIndex((sub) => sub.subcategory_en === newSeniorFAQ.subcategory_en);
+      const detailIndex = category[index].subcategories[subIndex].detailcategories.detailcategory_en.findIndex((detail) => detail === value);
+      setNewSeniorFAQ({
+        ...newSeniorFAQ,
+        detailcategory_ko: category[index].subcategories[subIndex].detailcategories.detailcategory_en[detailIndex],
+        detailcategory_en: value,
+      });
+    }
+  };
 
   const handleAddAnswer = () => {
     setNewSeniorFAQ({
@@ -193,6 +271,7 @@ const SeniorFAQCreate: React.FC = () => {
       newSeniorFAQ={newSeniorFAQ}
       setNewSeniorFAQ={setNewSeniorFAQ}
       category={category}
+      findFilterIndex={findFilterIndex}
       handleAddAnswer={handleAddAnswer}
       handleSubmit={handleSubmit}
       handleDeleteAnswer={handleDeleteAnswer}

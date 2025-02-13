@@ -14,9 +14,22 @@ interface SeniorFAQUpdateProps {
 const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
   const navigate = useNavigate();
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
-
-  const [category, setcategory] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']>([]);
-
+  const [category, setCategory] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']>([
+    {
+      maincategory_ko: '',
+      maincategory_en: '',
+      subcategories: [
+        {
+          subcategory_ko: '',
+          subcategory_en: '',
+          detailcategories: {
+            detailcategory_ko: [],
+            detailcategory_en: [],
+          },
+        },
+      ],
+    },
+  ]);
   const [updatedSeniorFAQ, setUpdatedSeniorFAQ] = useState<UpdateSeniorFAQRequest['body']>({
     user_id: user_id ? Number(user_id) : 0,
     maincategory_ko: '',
@@ -89,7 +102,7 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
     const fetchSeniorFAQCategory = async () => {
       if (GetAllSeniorFAQCategoryApi.data?.payload?.statusCode === 200) {
         const data = GetAllSeniorFAQCategoryApi.data.payload.data.categories;
-        setcategory(data);
+        setCategory(data);
       } else {
         alert('Senior FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
       }
@@ -99,6 +112,69 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
       fetchSeniorFAQCategory();
     }
   }, [GetAllSeniorFAQCategoryApi.isSuccess]);
+
+  // 필터 인덱스 찾기 함수
+  const findFilterIndex = (key: string, value: string) => {
+    if (key === 'maincategory_ko') {
+      const index = category.findIndex((item) => item[key] === value);
+      setUpdatedSeniorFAQ({
+        ...updatedSeniorFAQ,
+        maincategory_ko: value,
+        maincategory_en: category[index].maincategory_en,
+      });
+    }
+    
+    if (key === 'maincategory_en') {
+      const index = category.findIndex((item) => item[key] === value);
+      setUpdatedSeniorFAQ({
+        ...updatedSeniorFAQ,
+        maincategory_ko: category[index].maincategory_ko,
+        maincategory_en: value,
+      });
+      
+    }
+    if (key === 'subcategory_ko') {
+      const index = category.findIndex((item) => item.subcategories.some((sub) => sub.subcategory_ko === value));
+      const subIndex = category[index].subcategories.findIndex((sub) => sub.subcategory_ko === value);
+      setUpdatedSeniorFAQ({
+        ...updatedSeniorFAQ,
+        subcategory_ko: value,
+        subcategory_en: category[index].subcategories[subIndex].subcategory_en,
+      });
+    }
+    
+    if (key === 'subcategory_en') {
+      const index = category.findIndex((item) => item.subcategories.some((sub) => sub.subcategory_en === value));
+      const subIndex = category[index].subcategories.findIndex((sub) => sub.subcategory_en === value);
+      setUpdatedSeniorFAQ({
+        ...updatedSeniorFAQ,
+        subcategory_ko: category[index].subcategories[subIndex].subcategory_ko,
+        subcategory_en: value,
+      });
+    }
+    
+    if (key === 'detailcategory_ko') {
+      const index = category.findIndex((item) => item.subcategories.some((sub) => sub.detailcategories.detailcategory_ko.includes(value)));
+      const subIndex = category[index].subcategories.findIndex((sub) => sub.detailcategories.detailcategory_ko.includes(value));
+      const detailIndex = category[index].subcategories[subIndex].detailcategories.detailcategory_ko.findIndex((detail) => detail === value);
+      setUpdatedSeniorFAQ({
+        ...updatedSeniorFAQ,
+        detailcategory_ko: value,
+        detailcategory_en: category[index].subcategories[subIndex].detailcategories.detailcategory_en[detailIndex],
+      });
+    }
+    
+    if (key === 'detailcategory_en') {
+      const index = category.findIndex((item) => item.subcategories.some((sub) => sub.detailcategories.detailcategory_en.includes(value)));
+      const subIndex = category[index].subcategories.findIndex((sub) => sub.detailcategories.detailcategory_en.includes(value));
+      const detailIndex = category[index].subcategories[subIndex].detailcategories.detailcategory_en.findIndex((detail) => detail === value);
+      setUpdatedSeniorFAQ({
+        ...updatedSeniorFAQ,
+        detailcategory_ko: category[index].subcategories[subIndex].detailcategories.detailcategory_ko[detailIndex],
+        detailcategory_en: value,
+      });
+    }
+  };
 
   const handleAddAnswer = () => {
     setUpdatedSeniorFAQ({
@@ -207,6 +283,7 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
       updatedSeniorFAQ={updatedSeniorFAQ}
       setupdatedSeniorFAQ={setUpdatedSeniorFAQ}
       category={category}
+      findFilterIndex={findFilterIndex}
       handleAddAnswer={handleAddAnswer}
       handleDeleteAnswer={handleDeleteAnswer}
       handleUpdate={handleUpdate}
