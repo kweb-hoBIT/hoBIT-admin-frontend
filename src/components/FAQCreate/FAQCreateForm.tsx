@@ -58,7 +58,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
     >
       <h2 className="text-2xl font-bold text-gray-800 text-center">FAQ 생성</h2>
 
-      {/* 카테고리 필드 */}
+      {/*메인카테고리 필드 */}
       <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
         <h3 className="text-xl font-bold text-gray-800">카테고리</h3>
         <div className="relative">
