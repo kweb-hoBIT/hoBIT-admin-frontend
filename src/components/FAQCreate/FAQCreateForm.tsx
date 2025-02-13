@@ -7,6 +7,7 @@ interface FAQCreateFormProps {
   newFAQ: CreateFAQRequest['body'];
   setNewFAQ: React.Dispatch<React.SetStateAction<CreateFAQRequest['body']>>;
   category: GetAllFAQCategoryResponse['data']['categories'];
+  findFilterIndex: (key: string, value: string) => void;
   handleAddAnswer: () => void;
   handleCreate: () => void;
   handleDeleteAnswer: (index: number) => void;
@@ -17,6 +18,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
   newFAQ,
   setNewFAQ,
   category,
+  findFilterIndex,
   handleAddAnswer,
   handleCreate,
   handleDeleteAnswer,
@@ -40,10 +42,13 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
   const [isSubCateogoryEnInputFocused, setIsSubCateogoryEnInputInputFocused] = useState(false);
 
   const getSubcategories = (maincategory: string, lang: 'ko' | 'en') => {
-    const selectedCategory = category.find(cat => 
-      lang === 'ko' ? cat.maincategory_ko.includes(maincategory) : cat.maincategory_en.includes(maincategory)
+    const selectedCategory = category.find(cat =>
+      lang === 'ko' ? cat.maincategory_ko === maincategory : cat.maincategory_en === maincategory
     );
-    return selectedCategory ? selectedCategory.subcategories : [];
+  
+    return selectedCategory 
+      ? selectedCategory.subcategories 
+      : { subcategory_ko: [], subcategory_en: [] };
   };
 
   return (
@@ -72,7 +77,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
                 }, 100);
               }}
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              placeholder="카테고리를 입력하세요"
+              placeholder="메인카테고리를 입력하세요"
             />
             {isMainCateogoryKoInputFocused && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
@@ -80,7 +85,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
                   <li
                     key={cat}
                     onClick={() => {
-                      setNewFAQ({ ...newFAQ, maincategory_ko: cat });
+                      findFilterIndex('maincategory_ko', cat);
                       setIsMainCateogoryKoInputInputFocused(false);
                     }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
@@ -107,7 +112,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
                 }, 100);
               }}
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter category"
+              placeholder="Enter maincategory"
             />
             {isMainCateogoryEnInputFocused && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
@@ -115,7 +120,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
                   <li
                     key={cat}
                     onClick={() => {
-                      setNewFAQ({ ...newFAQ, maincategory_en: cat });
+                      findFilterIndex('maincategory_en', cat);
                       setIsMainCateogoryEnInputInputFocused(false);
                     }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
@@ -149,20 +154,20 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
               }}
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
               placeholder="서브카테고리를 입력하세요"
-              disabled={!maincategory_ko} // 메인 카테고리가 선택되지 않으면 비활성화
+              disabled={!maincategory_ko}
             />
             {isSubCateogoryKoInputFocused && maincategory_ko && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {getSubcategories(maincategory_ko, 'ko').map((subcategory) => (
+                {getSubcategories(maincategory_ko, 'ko').subcategory_ko.filter(subcategory => subcategory.includes(subcategory_ko)).map((subcategory) => (
                   <li
-                    key={subcategory.subcategory_ko.join(',')}
+                    key={`${maincategory_ko}-${subcategory}`}
                     onClick={() => {
-                      setNewFAQ({ ...newFAQ, subcategory_ko: subcategory.subcategory_ko.join(',') });
+                      findFilterIndex('subcategory_ko', subcategory);
                       setIsSubCateogoryKoInputInputFocused(false);
                     }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
                   >
-                    {subcategory.subcategory_ko.join(',')}
+                    {subcategory}
                   </li>
                 ))}
               </ul>
@@ -185,20 +190,20 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
               }}
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter subcategory"
-              disabled={!maincategory_ko} // 메인 카테고리가 선택되지 않으면 비활성화
+              disabled={!maincategory_ko}
             />
             {isSubCateogoryEnInputFocused && maincategory_ko && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {getSubcategories(maincategory_ko, 'ko').map((subcategory) => (
+                {getSubcategories(maincategory_en, 'en').subcategory_en.filter(subcategory => subcategory.includes(subcategory_en)).map((subcategory) => (
                   <li
-                    key={subcategory.subcategory_en.join(',')}
+                    key={`${maincategory_en}-${subcategory}`}
                     onClick={() => {
-                      setNewFAQ({ ...newFAQ, subcategory_en: subcategory.subcategory_en.join(',') });
+                      findFilterIndex('subcategory_en', subcategory);
                       setIsSubCateogoryEnInputInputFocused(false);
                     }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
                   >
-                    {subcategory.subcategory_en.join(',')}
+                    {subcategory}
                   </li>
                 ))}
               </ul>

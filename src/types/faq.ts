@@ -167,12 +167,12 @@ export interface GetAllFAQCategoryResponse {
   message: string;
   data: {
     categories: {
-      maincategory_ko: string[];
-      maincategory_en: string[];
+      maincategory_ko: string;
+      maincategory_en: string;
       subcategories: {
         subcategory_ko: string[];
         subcategory_en: string[];
-      }[];
+      };
     }[];
   };
 }

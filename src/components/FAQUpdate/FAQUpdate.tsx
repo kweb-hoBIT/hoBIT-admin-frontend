@@ -15,8 +15,14 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
   const navigate = useNavigate();
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
   const [isUpdating, setIsUpdating] = useState(false);
-  const [category, setCategory] = useState<GetAllFAQCategoryResponse['data']['categories']>([]);
-
+  const [category, setCategory] = useState<GetAllFAQCategoryResponse['data']['categories']>([{
+    maincategory_ko: '',
+    maincategory_en: '',
+    subcategories: {
+      subcategory_ko: [],
+      subcategory_en: []
+    }
+  }]);
   const [updatedFAQ, setupdatedFAQ] = useState<UpdateFAQRequest['body']>({
     user_id: user_id ? Number(user_id) : 0,
     maincategory_ko: '',
@@ -70,20 +76,61 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
   }, [faq_id, FAQFetchApi.data, FAQFetchApi.isLoading, user_id]);
 
   // FAQ Category 데이터 가져오기
-    useEffect(() => {
-      const fetchFAQCategory = async () => {
-        if (GetAllFAQCategoryApi.data?.payload?.statusCode === 200) {
-          const data = GetAllFAQCategoryApi.data.payload.data.categories;
-          setCategory(data);
-        } else {
-          setError('FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
-        }
-      };
-  
-      if (GetAllFAQCategoryApi.isSuccess) {
-        fetchFAQCategory();
+  useEffect(() => {
+    const fetchFAQCategory = async () => {
+      if (GetAllFAQCategoryApi.data?.payload?.statusCode === 200) {
+        const data = GetAllFAQCategoryApi.data.payload.data.categories;
+        setCategory(data);
+      } else {
+        setError('FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
       }
-    }, [GetAllFAQCategoryApi.isSuccess]);
+    };
+
+    if (GetAllFAQCategoryApi.isSuccess) {
+      fetchFAQCategory();
+    }
+  }, [GetAllFAQCategoryApi.isSuccess]);
+
+  // 필터 인덱스 찾기 함수
+  const findFilterIndex = (key: string, value: string) => {
+    if (key === 'maincategory_ko') {
+      const index = category.findIndex((item) => item[key] === value);
+      setupdatedFAQ({
+        ...updatedFAQ,
+        maincategory_ko: value,
+        maincategory_en: category[index].maincategory_en,
+      });
+    }
+    
+    if (key === 'maincategory_en') {
+      const index = category.findIndex((item) => item[key] === value);
+      setupdatedFAQ({
+        ...updatedFAQ,
+        maincategory_ko: category[index].maincategory_ko,
+        maincategory_en: value,
+      });
+      
+    }
+    if (key === 'subcategory_ko') {
+      const index = category.findIndex((item) => item.maincategory_ko === updatedFAQ.maincategory_ko);
+      const subIndex = category[index].subcategories.subcategory_ko.findIndex((sub) => sub === value);
+      setupdatedFAQ({
+        ...updatedFAQ,
+        subcategory_ko: value,
+        subcategory_en: category[index].subcategories.subcategory_en[subIndex],
+      });
+    }
+    if (key === 'subcategory_en') {
+      const index = category.findIndex((item) => item.maincategory_en === updatedFAQ.maincategory_en);
+      const subIndex = category[index].subcategories.subcategory_en.findIndex((sub) => sub === value);
+      setupdatedFAQ({
+        ...updatedFAQ,
+        subcategory_ko: category[index].subcategories.subcategory_ko[subIndex],
+        subcategory_en: value,
+      });
+    }
+  };
+
 
   const handleAddAnswer = () => {
     setupdatedFAQ({
@@ -190,6 +237,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
       updatedFAQ={updatedFAQ}
       setupdatedFAQ={setupdatedFAQ}
       category={category}
+      findFilterIndex={findFilterIndex}
       handleAddAnswer={handleAddAnswer}
       handleDeleteAnswer={handleDeleteAnswer}
       handleUpdate={handleUpdate}
