@@ -1,0 +1,47 @@
+name: Actual Deployment of hobit-admin-frontend
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Build frontend
+        run: |
+          npm run build
+
+      - name: Pushes to another repository
+        id: push_directory
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.KWEBHOBIT_PERSONAL_ACCESS_TOKEN }}
+        with:
+          source-directory: build/
+          destination-github-username: kwebhobit
+          destination-repository-name: hoBIT-admin-frontend
+          user-email: ${{ secrets.KWEBHOBIT_EMAIL }}
+          commit-message: ${{ github.event.head_commit.message }}
+          target-branch: 'main'
+
+      - name: Test get variable exported by push-to-another-repository
+        run: echo $DESTINATION_CLONED_DIRECTORY
+
