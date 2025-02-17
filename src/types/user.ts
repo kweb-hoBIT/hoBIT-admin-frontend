@@ -15,7 +15,9 @@ export type LoginResponse = {
   };
 };
 
-export type LogoutRequest = {}
+export type LogoutRequest = {
+  credentials: RequestCredentials;
+}
 
 export type LogoutResponse = {
   statusCode: number;
