@@ -18,10 +18,6 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setAccessToken: (state, action: PayloadAction<string>) => {
-      state.accessToken = action.payload;
-      localStorage.setItem('accessToken', action.payload);
-    },
     setUserId: (state, action: PayloadAction<string>) => {
       state.user_id = action.payload;
       localStorage.setItem('user_id', action.payload);
@@ -29,14 +25,6 @@ const authSlice = createSlice({
     setUsername: (state, action: PayloadAction<string>) => {
       state.username = action.payload;
       localStorage.setItem('username', action.payload);
-    },
-    clearTokens: (state) => {
-      state.accessToken = null;
-      state.user_id = null;
-      state.username = null;
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('user_id');
-      localStorage.removeItem('username');
     },
   },
 });
@@ -52,5 +40,5 @@ export const selectAuth = createSelector(
   })
 );
 
-export const { setAccessToken, setUserId, setUsername, clearTokens } = authSlice.actions;
+export const { setUserId, setUsername } = authSlice.actions;
 export const authReducer = authSlice.reducer;

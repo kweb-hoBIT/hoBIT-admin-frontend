@@ -1,6 +1,8 @@
 import {
   LoginRequest,
   LoginResponse,
+  LogoutRequest,
+  LogoutResponse,
   SignupRequest,
   SignupResponse,
   NewAccessTokenRequest,
@@ -106,6 +108,7 @@ export type HobitAdminGetApiRequest =
 
 export type HobitAdminPostApiRequest =
   | LoginRequest
+  | LogoutRequest
   | SignupRequest
   | NewAccessTokenRequest 
   | CreateFAQRequest
@@ -128,6 +131,7 @@ export type HobitAdminDeleteApiRequest =
 
 export type HobitAdminApiResponse =
   | LoginResponse
+  | LogoutResponse
   | SignupResponse
   | NewAccessTokenResponse
   | DeleteAccountResponse
