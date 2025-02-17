@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useHobitMutateDeleteApi } from '../../hooks/hobitAdmin';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearTokens } from '../../redux/authSlice';
 import { selectAuth } from '../../redux/authSlice';
 import { RootState } from '../../redux/store';
 import { DeleteAccountReqeust, DeleteAccountResponse } from '../../types/user';
@@ -30,7 +29,6 @@ const DeleteAccount: React.FC = () => {
           body: { deleteKey },
         });
         if (response.payload?.statusCode === 200) {
-          dispatch(clearTokens());
           navigate('/login');
           alert('회원 탈퇴가 완료되었습니다.');
         } else if (response.payload?.statusCode === 403) {
