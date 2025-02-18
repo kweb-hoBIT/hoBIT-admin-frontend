@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { FaLink, FaPhoneVolume } from 'react-icons/fa6';
 import { MdOutlineEmail } from 'react-icons/md';
 import { IoIosArrowForward } from 'react-icons/io';
@@ -23,12 +23,46 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
   subcategory_ko,
   subcategory_en,
 }) => {
+  const koreanContainerRef = useRef<HTMLDivElement>(null);
+  const englishContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = (e: Event) => {
+      const target = e.target as HTMLDivElement;
+      if (target === koreanContainerRef.current && englishContainerRef.current) {
+        englishContainerRef.current.scrollLeft = target.scrollLeft;
+      } else if (target === englishContainerRef.current && koreanContainerRef.current) {
+        koreanContainerRef.current.scrollLeft = target.scrollLeft;
+      }
+    };
+
+    const koreanContainer = koreanContainerRef.current;
+    const englishContainer = englishContainerRef.current;
+
+    if (koreanContainer) {
+      koreanContainer.addEventListener('scroll', handleScroll);
+    }
+    if (englishContainer) {
+      englishContainer.addEventListener('scroll', handleScroll);
+    }
+
+    return () => {
+      if (koreanContainer) {
+        koreanContainer.removeEventListener('scroll', handleScroll);
+      }
+      if (englishContainer) {
+        englishContainer.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
+
+  
   return (
     <div className="mt-8 p-6 border border-gray-300 rounded-lg bg-white shadow-md">
       <h3 className="text-xl font-bold text-gray-800 mb-4">미리보기</h3>
       <div className="flex flex-col gap-6">
         {/* 한국어 컨테이너 */}
-        <div className="overflow-x-auto flex flex-nowrap space-x-4 pb-2">
+        <div ref={koreanContainerRef} className="overflow-x-auto flex flex-nowrap space-x-4 pb-2">
           {answer_ko.length > 0 ? (
             answer_ko.map((item, index) => (
               <div key={index} className="bg-gray-100 font-5medium text-[20px] rounded-[20px] px-[20px] py-[15px] min-w-[365px] w-[365px] flex-shrink-0 break-words inline-block">
@@ -83,7 +117,7 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
         </div>
 
         {/* 영어 컨테이너 */}
-        <div className="overflow-x-auto flex flex-nowrap space-x-4 pb-2">
+        <div ref={englishContainerRef} className="overflow-x-auto flex flex-nowrap space-x-4 pb-2">
           {answer_en.length > 0 ? (
             answer_en.map((item, index) => (
               <div key={index} className="bg-gray-100 font-5medium text-[20px] rounded-[20px] px-[20px] py-[15px] min-w-[365px] w-[365px] flex-shrink-0 break-words inline-block">
