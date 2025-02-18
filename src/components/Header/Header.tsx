@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux'; // useDispatch 추가
-import { RootState } from '../../redux/store';
-import { selectAuth } from '../../redux/authSlice';
-import { clearFAQFilterState, clearSeniorFAQFilterState, clearAdminLogFilterState, clearQuestionLogFilterState, clearFeedbackFilterState } from '../../redux/filterSlice';
-import Logout from './Logout';
-import DeleteAccount from './DeleteAccount';
+import React, { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../redux/store";
+import { selectAuth } from "../../redux/authSlice";
+import {
+  clearFAQFilterState,
+  clearSeniorFAQFilterState,
+  clearAdminLogFilterState,
+  clearQuestionLogFilterState,
+  clearFeedbackFilterState,
+} from "../../redux/filterSlice";
+import Logout from "./Logout";
+import DeleteAccount from "./DeleteAccount";
 
 const Header: React.FC = () => {
   const { username } = useSelector((state: RootState) => selectAuth(state));
-  const dispatch = useDispatch(); // useDispatch 훅 사용
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
   const location = useLocation();
 
@@ -21,15 +28,21 @@ const Header: React.FC = () => {
     setShowPopup(false);
   };
 
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
+  const isAuthPage = location.pathname === "/login" || location.pathname === "/signup";
 
-  // Link 클릭 시 필터 상태를 리셋하는 함수
-  const handleLinkClick = () => {
+  // 필터 상태 리셋 후 네비게이션 함수
+  const handleNavigation = (path: string) => {
     dispatch(clearFAQFilterState());
     dispatch(clearSeniorFAQFilterState());
     dispatch(clearAdminLogFilterState());
     dispatch(clearQuestionLogFilterState());
     dispatch(clearFeedbackFilterState());
+    navigate(path);
+    if (location.pathname === path) {
+      navigate(0);
+    } else {
+    
+    }
   };
 
   return (
@@ -38,26 +51,29 @@ const Header: React.FC = () => {
         {isAuthPage ? (
           <span className="text-white">hoBIT</span>
         ) : (
-          <Link to="/home" className="text-white hover:text-gray-600" onClick={handleLinkClick}>
+          <button
+            className="text-white hover:text-gray-600"
+            onClick={() => handleNavigation("/home")}
+          >
             hoBIT
-          </Link>
+          </button>
         )}
       </div>
       <nav className="flex items-center gap-4 relative">
         {!isAuthPage && (
           <>
-            <Link to="/faqs" className="text-white hover:text-gray-600" onClick={handleLinkClick}>
+            <button className="text-white hover:text-gray-600" onClick={() => handleNavigation("/faqs")}>
               FAQ
-            </Link>
-            <Link to="/seniorfaqs" className="text-white hover:text-gray-600" onClick={handleLinkClick}>
+            </button>
+            <button className="text-white hover:text-gray-600" onClick={() => handleNavigation("/seniorfaqs")}>
               SENIORFAQ
-            </Link>
-            <Link to="/logs" className="text-white hover:text-gray-600" onClick={handleLinkClick}>
+            </button>
+            <button className="text-white hover:text-gray-600" onClick={() => handleNavigation("/logs")}>
               LOG
-            </Link>
-            <Link to="/userfeedbacks" className="text-white hover:text-gray-600" onClick={handleLinkClick}>
+            </button>
+            <button className="text-white hover:text-gray-600" onClick={() => handleNavigation("/userfeedbacks")}>
               FEEDBACK
-            </Link>
+            </button>
             <div className="relative">
               <button onClick={togglePopup} className="text-white hover:text-gray-600">
                 <svg
@@ -95,7 +111,7 @@ const Header: React.FC = () => {
                           반갑습니다
                         </>
                       ) : (
-                        '반갑습니다'
+                        "반갑습니다"
                       )}
                     </p>
                     <button onClick={closePopup} className="absolute top-3 right-2 text-gray-500 hover:text-gray-800">
@@ -107,11 +123,7 @@ const Header: React.FC = () => {
                         stroke="currentColor"
                         className="w-4 h-4"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M6 18L18 6M6 6l12 12"
-                        />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </button>
                   </div>
