@@ -8,7 +8,7 @@ const SeniorFAQMain: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const GetSeniorFAQsApi = useHobitQueryGetApi<GetAllSeniorFAQRequest, GetAllSeniorFAQResponse>('seniorfaqs');
-  console.log(GetSeniorFAQsApi);
+  
   // Senior FAQ 데이터 가져오기
   useEffect(() => {
     const fetchSeniorFAQData = async () => {
