@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useHobitQueryGetApi, useHobitMutatePostApi } from '../../hooks/hobitAdmin';
 import FAQCreateForm from './FAQCreateForm';
 import { selectAuth } from '../../redux/authSlice';
-import { CreateFAQRequest, CreateFAQResponse, GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, CheckFAQCategoryDuplicateRequest, CheckFAQCategoryDuplicateResponse } from '../../types/faq';
+import { CreateFAQRequest, CreateFAQResponse, GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, CreateCheckFAQCategoryDuplicateRequest, CreateCheckFAQCategoryDuplicateResponse } from '../../types/faq';
 import { RootState } from '../../redux/store';
 import { useNavigate } from 'react-router-dom';
 
@@ -34,7 +34,7 @@ const FAQCreate: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const GetAllFAQCategoryApi = useHobitQueryGetApi<GetAllFAQCategoryRequest, GetAllFAQCategoryResponse>('faqs/category');
-  const CheckFAQCategoryDuplicateApi = useHobitMutatePostApi<CheckFAQCategoryDuplicateRequest, CheckFAQCategoryDuplicateResponse>('faqs/category/check');
+  const CheckFAQCategoryDuplicateApi = useHobitMutatePostApi<CreateCheckFAQCategoryDuplicateRequest, CreateCheckFAQCategoryDuplicateResponse>('faqs/create/category/check');
   const FAQCreateApi = useHobitMutatePostApi<CreateFAQRequest, CreateFAQResponse>('faqs');
 
   // FAQ Category 데이터 가져오기

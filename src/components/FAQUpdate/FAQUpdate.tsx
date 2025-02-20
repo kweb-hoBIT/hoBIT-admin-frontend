@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useHobitQueryGetApi, useHobitMutatePostApi, useHobitMutatePutApi } from '../../hooks/hobitAdmin';
 import FAQUpdateForm from './FAQUpdateForm';
 import { selectAuth } from '../../redux/authSlice';
-import { GetFAQRequest, GetFAQResponse, UpdateFAQRequest, UpdateFAQResponse, GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, CheckFAQCategoryDuplicateRequest, CheckFAQCategoryDuplicateResponse } from '../../types/faq';
+import { GetFAQRequest, GetFAQResponse, UpdateFAQRequest, UpdateFAQResponse, GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, UpdateCheckFAQCategoryDuplicateRequest, UpdateCheckFAQCategoryDuplicateResponse } from '../../types/faq';
 import { RootState } from '../../redux/store';
 import { useNavigate } from 'react-router-dom';
 
@@ -39,7 +39,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
 
   const FAQFetchApi = useHobitQueryGetApi<GetFAQRequest, GetFAQResponse>('faqs', { params: { faq_id } });
   const GetAllFAQCategoryApi = useHobitQueryGetApi<GetAllFAQCategoryRequest, GetAllFAQCategoryResponse>('faqs/category');
-  const CheckFAQCategoryDuplicateApi = useHobitMutatePostApi<CheckFAQCategoryDuplicateRequest, CheckFAQCategoryDuplicateResponse>('faqs/category/check');
+  const CheckFAQCategoryDuplicateApi = useHobitMutatePostApi<UpdateCheckFAQCategoryDuplicateRequest, UpdateCheckFAQCategoryDuplicateResponse>('faqs/update/category/check');
   const FAQUpdateApi = useHobitMutatePutApi<UpdateFAQRequest, UpdateFAQResponse>('faqs');
 
   useEffect(() => {
@@ -187,6 +187,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
       try {
         const response = await CheckFAQCategoryDuplicateApi({
           body: {
+            faq_id : Number(faq_id),
             maincategory_ko,
             maincategory_en,
             subcategory_ko,
