@@ -1,29 +1,13 @@
-import React, { useState, useEffect} from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RootState } from '../../redux/store';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectLogFilter, setLogFilter } from '../../redux/filterSlice';
 
 interface SelectLogProps {
-  onSelectLog: (logType: 'FAQ' | 'Question') => void;
+  selectedLog: 'FAQ' | 'Question';
+  onFilterChange: (filterValue: 'FAQ' | 'Question') => void;
 }
 
-const SelectLog: React.FC<SelectLogProps> = ({ onSelectLog }) => {
-  const { storedLogFilter } = useSelector((state: RootState) => selectLogFilter(state));
-  const dispatch = useDispatch();
-  const [selectedLog, setSelectedLog] = useState<'FAQ' | 'Question'>(storedLogFilter);
-  
-  useEffect(() => {
-    dispatch(setLogFilter(selectedLog));
-  }, [selectedLog]);
-
-  
+const SelectLog: React.FC<SelectLogProps> = ({ selectedLog, onFilterChange }) => {
   const navigate = useNavigate();
-
-  const handleSelect = (logType: 'FAQ' | 'Question') => {
-    setSelectedLog(logType);
-    onSelectLog(logType);
-  };
 
   const handleAnalyticsRedirect = () => {
     navigate('/logs/analytics');
@@ -41,9 +25,11 @@ const SelectLog: React.FC<SelectLogProps> = ({ onSelectLog }) => {
           </button>
           <div className="flex-1 text-right pr-4">
             <span
-              onClick={() => handleSelect('FAQ')}
+              onClick={() => onFilterChange('FAQ')}
               className={`cursor-pointer font-semibold transition-colors duration-200 ${
-                selectedLog === 'FAQ' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600'
+                selectedLog === "FAQ"
+                  ? "text-blue-600"
+                  : "text-gray-600 hover:text-blue-600"
               }`}
             >
               관리자 로그
@@ -54,9 +40,11 @@ const SelectLog: React.FC<SelectLogProps> = ({ onSelectLog }) => {
 
           <div className="flex-1 text-left pl-4">
             <span
-              onClick={() => handleSelect('Question')}
+              onClick={() => onFilterChange('Question')}
               className={`cursor-pointer font-semibold transition-colors duration-200 ${
-                selectedLog === 'Question' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600'
+                selectedLog === "Question"
+                  ? "text-blue-600"
+                  : "text-gray-600 hover:text-blue-600"
               }`}
             >
               유저 로그
