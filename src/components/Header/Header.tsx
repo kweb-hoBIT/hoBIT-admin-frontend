@@ -6,8 +6,10 @@ import { selectAuth } from "../../redux/authSlice";
 import {
   clearFAQFilterState,
   clearSeniorFAQFilterState,
+  clearLogFilterState,
   clearAdminLogFilterState,
   clearQuestionLogFilterState,
+  clearLogAnalysisFilterState,
   clearFeedbackFilterState,
 } from "../../redux/filterSlice";
 import Logout from "./Logout";
@@ -34,8 +36,10 @@ const Header: React.FC = () => {
   const handleNavigation = (path: string) => {
     dispatch(clearFAQFilterState());
     dispatch(clearSeniorFAQFilterState());
+    dispatch(clearLogFilterState());
     dispatch(clearAdminLogFilterState());
     dispatch(clearQuestionLogFilterState());
+    dispatch(clearLogAnalysisFilterState());
     dispatch(clearFeedbackFilterState());
     navigate(path);
     if (location.pathname === path) {

@@ -1,12 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
+import { RootState } from '../../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectLogFilter, setLogFilter } from '../../redux/filterSlice';
 
 interface SelectLogProps {
   onSelectLog: (logType: 'FAQ' | 'Question') => void;
 }
 
 const SelectLog: React.FC<SelectLogProps> = ({ onSelectLog }) => {
-  const [selectedLog, setSelectedLog] = React.useState<'FAQ' | 'Question'>('FAQ');
+  const { storedLogFilter } = useSelector((state: RootState) => selectLogFilter(state));
+  const dispatch = useDispatch();
+  const [selectedLog, setSelectedLog] = useState<'FAQ' | 'Question'>(storedLogFilter);
+  
+  useEffect(() => {
+    dispatch(setLogFilter(selectedLog));
+  }, [selectedLog]);
+
+  
   const navigate = useNavigate();
 
   const handleSelect = (logType: 'FAQ' | 'Question') => {
