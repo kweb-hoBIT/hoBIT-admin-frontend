@@ -177,7 +177,7 @@ export interface GetAllFAQCategoryResponse {
   };
 }
 
-export type CheckFAQCategoryDuplicateRequest = {
+export type CreateCheckFAQCategoryDuplicateRequest = {
   body: {
     maincategory_ko: string;
     maincategory_en: string;
@@ -186,7 +186,25 @@ export type CheckFAQCategoryDuplicateRequest = {
   };
 };
 
-export type CheckFAQCategoryDuplicateResponse = {
+export type CreateCheckFAQCategoryDuplicateResponse = {
+  statusCode: number;
+  message: string;
+  data: {
+    isDuplicated: boolean;
+  };
+};
+
+export type UpdateCheckFAQCategoryDuplicateRequest = {
+  body: {
+    faq_id: number;
+    maincategory_ko: string;
+    maincategory_en: string;
+    subcategory_ko: string;
+    subcategory_en: string;
+  };
+};
+
+export type UpdateCheckFAQCategoryDuplicateResponse = {
   statusCode: number;
   message: string;
   data: {

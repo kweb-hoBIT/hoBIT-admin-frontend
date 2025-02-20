@@ -23,7 +23,7 @@ const SeniorFAQMain: React.FC = () => {
     if (GetSeniorFAQsApi.isSuccess) {
       fetchSeniorFAQData();
     }
-  }, [GetSeniorFAQsApi.isSuccess]);
+  }, [GetSeniorFAQsApi.isSuccess, GetSeniorFAQsApi.data]);
 
   if (error) {
     return <div className="error-message">{error}</div>;

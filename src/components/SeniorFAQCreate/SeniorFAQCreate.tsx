@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useHobitQueryGetApi, useHobitMutatePostApi } from '../../hooks/hobitAdmin';
 import SeniorFAQCreateForm from './SeniorFAQCreateForm';
 import { selectAuth } from '../../redux/authSlice';
-import { CreateSeniorFAQRequest, CreateSeniorFAQResponse, GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse, CheckSeniorFAQCategoryDuplicateRequest, CheckSeniorFAQCategoryDuplicateResponse } from '../../types/seniorfaq';
+import { CreateSeniorFAQRequest, CreateSeniorFAQResponse, GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse, CreateCheckSeniorFAQCategoryDuplicateRequest, CreateCheckSeniorFAQCategoryDuplicateResponse } from '../../types/seniorfaq';
 import { RootState } from '../../redux/store';
 import { useNavigate } from 'react-router-dom';
 
@@ -55,7 +55,7 @@ const SeniorFAQCreate: React.FC = () => {
   const[error, setError] = useState<string | null>(null);
 
   const GetAllSeniorFAQCategoryApi = useHobitQueryGetApi<GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse>('seniorfaqs/category');
-  const CheckSeniorFAQCategoryDuplicateApi = useHobitMutatePostApi<CheckSeniorFAQCategoryDuplicateRequest, CheckSeniorFAQCategoryDuplicateResponse>('seniorfaqs/category/check');
+  const CheckSeniorFAQCategoryDuplicateApi = useHobitMutatePostApi<CreateCheckSeniorFAQCategoryDuplicateRequest, CreateCheckSeniorFAQCategoryDuplicateResponse>('seniorfaqs/create/category/check');
   const SeniorFAQCreateApi = useHobitMutatePostApi<CreateSeniorFAQRequest, CreateSeniorFAQResponse>('seniorfaqs');
 
   // FAQ Category 데이터 가져오기

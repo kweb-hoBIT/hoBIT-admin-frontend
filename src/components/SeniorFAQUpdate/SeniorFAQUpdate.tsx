@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useHobitQueryGetApi, useHobitMutatePostApi, useHobitMutatePutApi } from '../../hooks/hobitAdmin';
 import FAQUpdateForm from './SeniorFAQUpdateForm';
 import { selectAuth } from '../../redux/authSlice';
-import { GetSeniorFAQRequest, GetSeniorFAQResponse, UpdateSeniorFAQRequest, UpdateSeniorFAQResponse, GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse, CheckSeniorFAQCategoryDuplicateRequest, CheckSeniorFAQCategoryDuplicateResponse } from '../../types/seniorfaq';
+import { GetSeniorFAQRequest, GetSeniorFAQResponse, UpdateSeniorFAQRequest, UpdateSeniorFAQResponse, GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse, UpdateCheckSeniorFAQCategoryDuplicateRequest, UpdateCheckSeniorFAQCategoryDuplicateResponse } from '../../types/seniorfaq';
 import { RootState } from '../../redux/store';
 import { useNavigate } from 'react-router-dom';
 
@@ -62,7 +62,7 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
   });
   
   const GetAllSeniorFAQCategoryApi = useHobitQueryGetApi<GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse>('seniorfaqs/category');
-  const CheckSeniorFAQCategoryDuplicateApi = useHobitMutatePostApi<CheckSeniorFAQCategoryDuplicateRequest, CheckSeniorFAQCategoryDuplicateResponse>('seniorfaqs/category/check');
+  const CheckSeniorFAQCategoryDuplicateApi = useHobitMutatePostApi<UpdateCheckSeniorFAQCategoryDuplicateRequest, UpdateCheckSeniorFAQCategoryDuplicateResponse>('seniorfaqs/update/category/check');
   const seniorFAQUpdateApi = useHobitMutatePutApi<UpdateSeniorFAQRequest, UpdateSeniorFAQResponse>('seniorfaqs');
 
   useEffect(() => {
@@ -235,6 +235,7 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
       try {
         const response = await CheckSeniorFAQCategoryDuplicateApi({
           body: {
+            senior_faq_id: Number(senior_faq_id),
             maincategory_ko,
             maincategory_en,
             subcategory_ko,
