@@ -6,7 +6,7 @@ interface AnalyzeSelectProps {
   onFilterChange: (filterValue: 'Entire' | 'Specific') => void;
 }
 
-const AnalyzeSelect: React.FC<AnalyzeSelectProps> = ({ selectedAnalyze, onFilterChange }) => {
+const SelectAnalyze: React.FC<AnalyzeSelectProps> = ({ selectedAnalyze, onFilterChange }) => {
   return (
     <div className="p-6">
       <div className="relative mt-4">
@@ -44,4 +44,4 @@ const AnalyzeSelect: React.FC<AnalyzeSelectProps> = ({ selectedAnalyze, onFilter
   );
 };
 
-export default AnalyzeSelect;
+export default SelectAnalyze;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import AnalyzeSelect from './AnalyzeSelect';
+import SelectAnalyze from './SelectAnalyze';
 import EntireAnalyzeFilter from './EntireAnalyzeFilter';
 import EntireAnalyze from './EntireAnalyze';
 import SpecificAnalyzeFilter from './SpecificAnalyzeFilter';
@@ -55,7 +55,7 @@ const AnalyzeMain: React.FC = () => {
 
   return (
     <>
-      <AnalyzeSelect selectedAnalyze={selectedAnalyze} onFilterChange={handleFilterChange}/>
+      <SelectAnalyze selectedAnalyze={selectedAnalyze} onFilterChange={handleFilterChange}/>
       {selectedAnalyze === 'Entire' ? (
         <div className="max-w-[1500px] mx-auto p-8 flex justify-between items-start gap-8">
           <div className="flex-[0.75] flex flex-col gap-6 min-h-[500px] min-w-[300px] border border-[#ddd] rounded-lg p-4 bg-white shadow-[0_2px_6px_rgba(0,0,0,0.1)]">
