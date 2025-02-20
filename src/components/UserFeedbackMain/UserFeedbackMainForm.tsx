@@ -123,7 +123,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
         <div style={{ minHeight: '320px' }}>
           <div className="grid grid-cols-2 gap-4">
             {(filter === 'unresolved' ? unresolvedItems : resolvedItems).map((feedback) => (
-              <div key={feedback.user_feedback_id} className="relative bg-gray-200 p-4 rounded-lg cursor-pointer">
+              <div key={feedback.user_feedback_id} className="relative bg-gray-200 p-4 rounded-lg">
                 {/* 수정 버튼 */}
                 <UserFeedbackResolvedUpdate
                   user_feedback_id={feedback.user_feedback_id}
