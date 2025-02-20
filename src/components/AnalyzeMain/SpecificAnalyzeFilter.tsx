@@ -50,17 +50,25 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
   const disableDates = (date: Date, type: "start" | "end"): boolean => {
     if (!date) return false;
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (period === "day") {
+      if (type === "start") return date > today; // 오늘 (시작)
+      if (type === "end") return date > today; // 오늘 (종료)
+    }
+
     if (period === "week") {
-      if (type === "start") return date.getDay() !== 1;
-      if (type === "end") return date.getDay() !== 0;
+      if (type === "start") return date.getDay() !== 1 || date > today; // 월요일 (시작)
+      if (type === "end") return date.getDay() !== 0 || date > today; // 일요일 (종료)
     }
 
     if (period === "month") {
-      if (type === "start") return date.getDate() !== 1;
+      if (type === "start") return date.getDate() !== 1 || date > today; // 1일 (시작)
       if (type === "end") {
         const nextDay = new Date(date);
         nextDay.setDate(date.getDate() + 1);
-        return nextDay.getDate() !== 1;
+        return nextDay.getDate() !== 1 || date > today; // 다음 날이 1일 (종료)
       }
     }
 

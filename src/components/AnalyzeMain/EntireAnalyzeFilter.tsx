@@ -20,13 +20,18 @@ const EntireAnalyzeFilter: React.FC<EntireAnalyzeFilterProps> = ({ onApplyFilter
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    if (period === "day") {
+      if (type === "start") return date > today; // 오늘 (시작)
+      if (type === "end") return date > today; // 오늘 (종료)
+    }
+
     if (period === "week") {
-      if (type === "start") return date.getDay() !== 1; // 월요일 (시작)
+      if (type === "start") return date.getDay() !== 1 || date > today; // 월요일 (시작)
       if (type === "end") return date.getDay() !== 0 || date > today; // 일요일 (종료)
     }
 
     if (period === "month") {
-      if (type === "start") return date.getDate() !== 1; // 1일 (시작)
+      if (type === "start") return date.getDate() !== 1 || date > today; // 1일 (시작)
       if (type === "end") {
         const nextDay = new Date(date);
         nextDay.setDate(date.getDate() + 1);
@@ -34,7 +39,7 @@ const EntireAnalyzeFilter: React.FC<EntireAnalyzeFilterProps> = ({ onApplyFilter
       }
     }
 
-    return type === "end" && date > today;
+    return false;
   };
 
   const handleApplyFilter = () => {
