@@ -49,7 +49,6 @@ const EntireAnalyze: React.FC<EntireAnalyzeProps> = ({
   useEffect(() => {
     const fetchanalyzeData = async () => {
       if (analyzeApi?.data?.payload?.statusCode === 200) {
-        console.log(1);
         setanalyzeData(analyzeApi.data.payload ?? null);
         setError(null);
       } else {
@@ -71,7 +70,7 @@ const EntireAnalyze: React.FC<EntireAnalyzeProps> = ({
   }
 
   if (!analyzeData) {
-    return <div>데이터가 없습니다.</div>;
+    return <div>데이터를 수집하고 있습니다.</div>;
   }
 
   return (
