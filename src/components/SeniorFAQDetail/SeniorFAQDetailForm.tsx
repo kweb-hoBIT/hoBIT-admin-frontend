@@ -31,7 +31,8 @@ const SeniorFAQDetailForm: React.FC<SeniorFAQDetailFormProps> = ({
       minute: '2-digit',
       hour12: false,
     };
-    return new Date(dateString).toLocaleString('ko-KR', options);
+    const date = new Date(dateString).toLocaleString('ko-KR', options) ? new Date(dateString).toLocaleString('ko-KR', options) : '';
+    return date;
   };
   
   return (
