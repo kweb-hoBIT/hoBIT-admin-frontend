@@ -17,13 +17,14 @@ const QuestionLogMain: React.FC = () => {
         setQuestionLogData(data);
       } else {
         setError('Question 로그 데이터를 가져오는 중 오류 발생');
+        console.log('Question 로그 데이터를 가져오는 중 오류 발생:', GetQuestionLogsApi.error);
       }
     };
 
-    if (!GetQuestionLogsApi.isLoading && GetQuestionLogsApi.isSuccess) {
+    if (GetQuestionLogsApi.isSuccess && GetQuestionLogsApi.data) {
       fetchQuestionLogData();
     }
-  }, [GetQuestionLogsApi]);
+  }, [GetQuestionLogsApi.isSuccess, GetQuestionLogsApi.data]);
 
   if (error) {
     return <div className="error-message">{error}</div>;

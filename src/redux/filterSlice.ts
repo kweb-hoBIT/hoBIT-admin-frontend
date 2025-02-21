@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createSelector } from 'reselect';
 import { RootState } from './store';
 import { set } from 'react-datepicker/dist/date_utils';
+import { clear } from 'console';
 
 // FAQ 필터 상태 정의
 interface FAQFilterState {
@@ -17,6 +18,11 @@ interface SeniorFAQFilterState {
   storedFilterName: 'maincategory_ko' | 'subcategory_ko' | 'detailcategory_ko' | 'manager';
 }
 
+// Log 선택 필터 상태 정의
+interface LogFilterState {
+  storedLogFilter: 'FAQ' | 'Question';
+}
+
 // Admin Log 필터 상태 정의
 interface AdminLogFilterState {
   storedCurrentPage: number;
@@ -25,6 +31,11 @@ interface AdminLogFilterState {
 // Question Log 필터 상태 정의
 interface QuestionLogFilterState {
   storedCurrentPage: number;
+}
+
+// Log Analysis 필터 상태 정의
+interface LogAnalysisFilterState {
+  storedLogAnalyzeFilter: 'Entire' | 'Specific';
 }
 
 // User Feedback 필터 상태 정의
@@ -46,12 +57,20 @@ const initialSeniorFAQFilterState: SeniorFAQFilterState = {
   storedFilterName: (localStorage.getItem('seniorFaqFilterName') as 'maincategory_ko' | 'subcategory_ko' | 'detailcategory_ko' | 'manager') || 'detailcategory_ko',
 };
 
+const initialLogFilterState: LogFilterState = {
+  storedLogFilter: localStorage.getItem('logFilter') as 'FAQ' | 'Question' || 'FAQ',
+};
+
 const initialAdminLogFilterState: AdminLogFilterState = {
   storedCurrentPage: Number(localStorage.getItem('adminLogCurrentPage')) || 1
 };
 
 const initialQuestionLogFilterState: QuestionLogFilterState = {
   storedCurrentPage: Number(localStorage.getItem('questionLogCurrentPage')) || 1
+};
+
+const initialLogAnalysisFilterState: LogAnalysisFilterState = {
+  storedLogAnalyzeFilter: localStorage.getItem('logAnalyzeFilter') as 'Entire' | 'Specific' || 'Entire',
 };
 
 const initialUserFeedbackFilterState: UserFeedbackFilterState = {
@@ -114,6 +133,21 @@ const seniorFaqFilterSlice = createSlice({
   },
 });
 
+const logFilterSlice = createSlice({
+  name: 'logFilter',
+  initialState: initialLogFilterState,
+  reducers: {
+    setLogFilter: (state, action: PayloadAction<'FAQ' | 'Question'>) => {
+      state.storedLogFilter = action.payload;
+      localStorage.setItem('logFilter', action.payload);
+    },
+    clearLogFilterState: (state) => {
+      state.storedLogFilter = 'FAQ';
+      localStorage.removeItem('logFilter');
+    },
+  },
+});
+
 const adminLogFilterSlice = createSlice({
   name: 'adminLogFilter',
   initialState: initialAdminLogFilterState,
@@ -140,6 +174,21 @@ const questionLogFilterSlice = createSlice({
     clearQuestionLogFilterState: (state) => {
       state.storedCurrentPage = 1;
       localStorage.removeItem('questionLogCurrentPage');
+    },
+  },
+});
+
+const logAnalysisFilterSlice = createSlice({
+  name: 'logAnalysisFilter',
+  initialState: initialLogAnalysisFilterState,
+  reducers: {
+    setLogAnalyzeFilter: (state, action: PayloadAction<'Entire' | 'Specific'>) => {
+      state.storedLogAnalyzeFilter = action.payload;
+      localStorage.setItem('logAnalyzeFilter', action.payload);
+    },
+    clearLogAnalysisFilterState: (state) => {
+      state.storedLogAnalyzeFilter = 'Entire';
+      localStorage.removeItem('logAnalyzeFilter');
     },
   },
 });
@@ -191,6 +240,15 @@ export const selectSeniorFAQFilter = createSelector(
   })
 );
 
+// Log 필터 상태 선택자
+export const selectLogFilterState = (state: RootState) => state.logFilter;
+export const selectLogFilter = createSelector(
+  [selectLogFilterState],
+  (logFilterState) => ({
+    storedLogFilter: logFilterState.storedLogFilter,
+  })
+);
+
 // Admin Log 필터 상태 선택자
 export const selectAdminLogFilterState = (state: RootState) => state.adminLogFilter;
 export const selectAdminLogFilter = createSelector(
@@ -206,6 +264,15 @@ export const selectQuestionLogFilter = createSelector(
   [selectQuestionLogFilterState],
   (questionLogFilterState) => ({
     storedCurrentPage: questionLogFilterState.storedCurrentPage,
+  })
+);
+
+// Log Analysis 필터 상태 선택자
+export const selectLogAnalysisFilterState = (state: RootState) => state.logAnalysisFilter;
+export const selectLogAnalysisFilter = createSelector(
+  [selectLogAnalysisFilterState],
+  (logAnalysisFilterState) => ({
+    storedLogAnalyzeFilter: logAnalysisFilterState.storedLogAnalyzeFilter,
   })
 );
 
@@ -235,6 +302,11 @@ export const {
 } = seniorFaqFilterSlice.actions;
 
 export const {
+  setLogFilter,
+  clearLogFilterState,
+} = logFilterSlice.actions;
+
+export const {
   setAdminLogCurrentPage,
   clearAdminLogFilterState,
 } = adminLogFilterSlice.actions;
@@ -245,6 +317,11 @@ export const {
 } = questionLogFilterSlice.actions;
 
 export const {
+  setLogAnalyzeFilter,
+  clearLogAnalysisFilterState,
+} = logAnalysisFilterSlice.actions;
+
+export const {
   setUnresolvedFeedbackCurrentPage,
   setResolvedFeedbackCurrentPage,
   setUserFeedbackFilterName,
@@ -253,6 +330,8 @@ export const {
 
 export const faqFilterReducer = faqFilterSlice.reducer;
 export const seniorFaqFilterReducer = seniorFaqFilterSlice.reducer;
+export const logFilterReducer = logFilterSlice.reducer;
 export const adminLogFilterReducer = adminLogFilterSlice.reducer;
 export const questionLogFilterReducer = questionLogFilterSlice.reducer;
+export const logAnalysisFilterReducer = logAnalysisFilterSlice.reducer;
 export const userFeedbackFilterReducer = userFeedbackFilterSlice.reducer;

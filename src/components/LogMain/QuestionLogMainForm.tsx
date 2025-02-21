@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import { selectQuestionLogFilter } from '../../redux/filterSlice';
-import { setQuestionLogCurrentPage } from '../../redux/filterSlice';
+import { selectQuestionLogFilter, setQuestionLogCurrentPage } from '../../redux/filterSlice';
 import { GetAllQuestionLogResponse } from '../../types/questionLog';
 
 interface QuestionLogMainFormProps {
@@ -12,56 +10,45 @@ interface QuestionLogMainFormProps {
 
 const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs }) => {
   const dispatch = useDispatch();
-  
   const { storedCurrentPage } = useSelector((state: RootState) => selectQuestionLogFilter(state));
   const [currentPage, setCurrentPage] = useState<number>(storedCurrentPage ? Number(storedCurrentPage) : 1);
 
-  // 필터 상태가 변경될 때마다 localStorage에 저장
   useEffect(() => {
     dispatch(setQuestionLogCurrentPage(currentPage));
-  }, [currentPage]);
+  }, [currentPage, dispatch]);
 
   const itemsPerPage = 4;
-  const pagesPerGroup = 10; // 한 그룹에 표시할 페이지 수
-
+  const pagesPerGroup = 10;
   const totalPages = Math.ceil(questionLogs.length / itemsPerPage);
-
-  // 현재 페이지 그룹 (1-10, 11-20 등)
   const currentPageGroup = Math.floor((currentPage - 1) / pagesPerGroup);
-
-  // 페이지 그룹의 첫 페이지와 마지막 페이지 계산
   const startPage = currentPageGroup * pagesPerGroup + 1;
   const endPage = Math.min((currentPageGroup + 1) * pagesPerGroup, totalPages);
+  const pageNumbers = Array.from(
+    { length: endPage - startPage + 1 },
+    (_, index) => startPage + index
+  );
 
-  // 현재 페이지 그룹에 해당하는 페이지 목록
-  const pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index);
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = questionLogs.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = questionLogs.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      const nextGroupStartPage = Math.min((currentPageGroup + 1) * pagesPerGroup + 1, totalPages);
-      setCurrentPage(nextGroupStartPage);
+      setCurrentPage(Math.min((currentPageGroup + 1) * pagesPerGroup + 1, totalPages));
     }
   };
-  
+
   const handlePrevPage = () => {
     if (currentPage > 1) {
-      const prevGroupEndPage = Math.max(currentPageGroup * pagesPerGroup, 1);
-      setCurrentPage(prevGroupEndPage);
+      setCurrentPage(Math.max(currentPageGroup * pagesPerGroup, 1));
     }
   };
 
-  const handlePageClick = (page: number) => {
-    setCurrentPage(page);
-  };
+  const handlePageChange = (page: number) => setCurrentPage(page);
 
-  // 한국 시간으로 변환하는 함수
   const formatDateToKST = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
+    return new Date(dateStr).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
   };
 
   return (
@@ -71,9 +58,9 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
         <div style={{ minHeight: '395px' }}>
           <div className="grid grid-cols-2 gap-4">
             {currentItems.map((log) => (
-              <div className="relative bg-gray-200 p-4 rounded-lg">
+              <div className="relative bg-gray-200 p-4 rounded-lg" key={log.created_at}>
                 <div className="mb-2">
-                  <span className="mb-1 text-m text-gray-600"><strong>유저 질문: {log.user_question}</strong></span>
+                  <strong>유저 질문: {log.user_question}</strong>
                 </div>
                 <div className="flex flex-col">
                   <div className="mb-1 text-sm text-gray-600">
@@ -91,22 +78,17 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
           </div>
         </div>
 
-        {/* 페이지네이션 */}
         <div className="flex justify-center mt-4 items-center space-x-4">
           <button
             onClick={handlePrevPage}
             className="px-4 py-2 bg-gray-300 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-400"
             disabled={currentPage === 1}
-          >
-            이전
-          </button>
-
-          {/* 페이지 번호 */}
+          >이전</button>
           <div className="flex space-x-2">
-            {pageNumbers.map((page) => (
+            {pageNumbers.map(page => (
               <button
                 key={page}
-                onClick={() => handlePageClick(page)}
+                onClick={() => handlePageChange(page)}
                 className={`px-3 py-2 text-sm font-semibold rounded-md ${
                   currentPage === page ? 'bg-crimson text-white' : 'bg-gray-200 text-gray-700'
                 }`}
@@ -116,14 +98,11 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
               </button>
             ))}
           </div>
-
           <button
             onClick={handleNextPage}
             className="px-4 py-2 bg-gray-300 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-400"
             disabled={currentPage === totalPages}
-          >
-            다음
-          </button>
+          >다음</button>
         </div>
       </div>
     </div>

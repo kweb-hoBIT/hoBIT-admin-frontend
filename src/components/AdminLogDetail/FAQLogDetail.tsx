@@ -37,20 +37,20 @@ const FAQLogDetail: React.FC<FAQLogDetailProps> = ({ faq_log_id }) => {
   });
 
   useEffect(() => {
-    if (!FAQCompareApi.isLoading && FAQCompareApi.data?.payload?.statusCode === 200) {
-      const data = FAQCompareApi.data.payload.data;
-      setPrevFaq({
-        ...data.prev_faq,
-        answer_ko: Array.isArray(data.prev_faq.answer_ko) ? data.prev_faq.answer_ko : [],
-        answer_en: Array.isArray(data.prev_faq.answer_en) ? data.prev_faq.answer_en : [],
-      });
-      setNewFaq({
-        ...data.new_faq,
-        answer_ko: Array.isArray(data.new_faq.answer_ko) ? data.new_faq.answer_ko : [],
-        answer_en: Array.isArray(data.new_faq.answer_en) ? data.new_faq.answer_en : [],
-      });
+    const fetchFAQLog = async () => {
+      if (FAQCompareApi.data?.payload?.statusCode === 200) {
+        const { prev_faq, new_faq } = FAQCompareApi.data?.payload?.data;
+        setPrevFaq(prev_faq);
+        setNewFaq(new_faq);
+      } else {
+        alert("FAQ Log 데이터를 불러오는 데 실패했습니다.");
+        console.log("FAQ Log 데이터를 불러오는 데 실패했습니다.", FAQCompareApi.error);
+      }
+    };
+    if (FAQCompareApi.isSuccess && FAQCompareApi.data) {
+      fetchFAQLog();
     }
-  }, [FAQCompareApi.isLoading, FAQCompareApi.data]);
+  }, [FAQCompareApi.isSuccess, FAQCompareApi.data]);
 
   return <FAQLogDetailForm prev_faq={prev_faq} new_faq={new_faq} />;
 };

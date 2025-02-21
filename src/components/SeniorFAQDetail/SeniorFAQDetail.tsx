@@ -16,58 +16,31 @@ const SeniorFAQDetail: React.FC<SeniorFAQDetailProps> = ({ senior_faq_id }) => {
     subcategory_en: '',
     detailcategory_ko: '',
     detailcategory_en: '',
-    answer_ko: [
-      {
-        title: '',
-        answer: '',
-        url: '',
-        map: {
-          latitude: '',
-          longitude: '',
-        },
-      },
-    ],
-    answer_en: [
-      {
-        title: '',
-        answer: '',
-        url: '',
-        map: {
-          latitude: '',
-          longitude: '',
-        },
-      },
-    ],
+    answer_ko: [{ title: '', answer: '', url: '', map: { latitude: '', longitude: '' } }],
+    answer_en: [{ title: '', answer: '', url: '', map: { latitude: '', longitude: '' } }],
     manager: '',
     created_at: '',
     updated_at: '',
   });
 
   const seniorFAQFetchApi = useHobitQueryGetApi<GetSeniorFAQRequest, GetSeniorFAQResponse>('seniorfaqs', {
-    params: { senior_faq_id }
+    params: { senior_faq_id },
   });
 
   useEffect(() => {
     const fetchSeniorFAQ = async () => {
-      try {
-        if (seniorFAQFetchApi.data?.payload?.statusCode === 200) {
-          const seniorFaq = seniorFAQFetchApi.data?.payload?.data?.seniorFaq;
-          if (seniorFaq) {
-            setSeniorFaqData(seniorFaq);
-          }
-        } else {
-          alert('Senior FAQ 데이터를 불러오는 데 실패했습니다.');
-        }
-      } catch (error) {
-        console.error(error);
-        alert('Senior FAQ 데이터를 가져오는 중 오류가 발생했습니다.');
+      if (seniorFAQFetchApi.data?.payload?.statusCode === 200) {
+        const seniorFaq = seniorFAQFetchApi.data?.payload?.data?.seniorFaq;
+        setSeniorFaqData(seniorFaq);
+      } else {
+        alert('Senior FAQ 데이터를 불러오는 데 실패했습니다.');
+        console.log('Senior FAQ 데이터를 불러오는 데 실패했습니다.', seniorFAQFetchApi.error);
       }
     };
-
-    if (!seniorFAQFetchApi.isLoading && seniorFAQFetchApi.data) {
+    if (seniorFAQFetchApi.data && seniorFAQFetchApi.isSuccess) {
       fetchSeniorFAQ();
     }
-  }, [senior_faq_id, seniorFAQFetchApi.data, seniorFAQFetchApi.isLoading]);
+  }, [senior_faq_id, seniorFAQFetchApi.isSuccess, seniorFAQFetchApi.data]);
 
   return <SeniorFAQDetailForm seniorFaqData={seniorFaqData} />;
 };

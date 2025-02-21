@@ -27,25 +27,18 @@ const FAQDetail: React.FC<FAQDetailProps> = ({ faq_id }) => {
 
   useEffect(() => {
     const fetchFAQ = async () => {
-      try {
-        if (FAQFetchApi.data?.payload?.statusCode === 200) {
-          const faq = FAQFetchApi.data?.payload?.data?.faq;
-          if (faq) {
-            setFaqData(faq);
-          }
-        } else {
-          alert('FAQ 데이터를 불러오는 데 실패했습니다.');
-        }
-      } catch (error) {
-        console.error(error);
-        alert('FAQ 데이터를 가져오는 중 오류가 발생했습니다.');
+      if (FAQFetchApi.data?.payload?.statusCode === 200) {
+        const faq = FAQFetchApi.data?.payload?.data?.faq;
+        setFaqData(faq);
+      } else {
+        alert('FAQ 데이터를 불러오는 데 실패했습니다.');
+        console.log('FAQ 데이터를 불러오는 데 실패했습니다.', FAQFetchApi.error);
       }
     };
-
-    if (!FAQFetchApi.isLoading && FAQFetchApi.data) {
+    if (FAQFetchApi.isSuccess && FAQFetchApi.data) {
       fetchFAQ();
     }
-  }, [faq_id, FAQFetchApi.data, FAQFetchApi.isLoading]);
+  }, [faq_id, FAQFetchApi.data, FAQFetchApi.isSuccess]);
 
   return <FAQDetailForm faqData={faqData} />;
 };

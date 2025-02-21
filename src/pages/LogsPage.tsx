@@ -1,22 +1,17 @@
 import Header from '../components/Header/Header';
 import ProtectedPage from '../components/ProtectedPage';
-import SelectLog from '../components/LogMain/SelectLog';
-import AdminLogMain from '../components/LogMain/AdminLogMain';
-import QuestionLogMain from '../components/LogMain/QuestionLogMain';
+import LogMain from '../components/LogMain/LogMain';
 
-import React, { useState } from 'react';
+import React from 'react';
 
 const LogsPage: React.FC = () => {
-
-  const [selectedLog, setSelectedLog] = useState<'FAQ' | 'Question'>('FAQ');
 
   return (
     <ProtectedPage>
     <div>
       <Header />
       <main>
-        <SelectLog onSelectLog={(log) => setSelectedLog(log)} />
-        {selectedLog === 'FAQ' ? <AdminLogMain /> : <QuestionLogMain />}
+        <LogMain />
       </main>
     </div>
     </ProtectedPage>

@@ -31,7 +31,6 @@ const FAQCreate: React.FC = () => {
     answer_en: [{ answer: '', url: '', email: '', phone: '' }],
     manager: '',
   });
-  const [error, setError] = useState<string | null>(null);
 
   const GetAllFAQCategoryApi = useHobitQueryGetApi<GetAllFAQCategoryRequest, GetAllFAQCategoryResponse>('faqs/category');
   const CheckFAQCategoryDuplicateApi = useHobitMutatePostApi<CreateCheckFAQCategoryDuplicateRequest, CreateCheckFAQCategoryDuplicateResponse>('faqs/create/category/check');
@@ -44,7 +43,8 @@ const FAQCreate: React.FC = () => {
         const data = GetAllFAQCategoryApi.data.payload.data.categories;
         setCategory(data);
       } else {
-        setError('FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
+        alert('FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
+        console.log('FAQ 카테고리 데이터를 불러오는데 실패했습니다.', GetAllFAQCategoryApi.error);
       }
     };
 
@@ -147,65 +147,47 @@ const FAQCreate: React.FC = () => {
       return;
     }
 
-    try {
-      try {
-        const response = await CheckFAQCategoryDuplicateApi({
-          body: {
-            maincategory_ko,
-            maincategory_en,
-            subcategory_ko,
-            subcategory_en,
-          },
-        });
 
-        if (response.payload?.statusCode === 200) {
-          if (response.payload.data.isDuplicated) {
-            alert(`다른 FAQ의 카테고리와 같은 카테고리를 사용하려면 띄어쓰기와 한영 단어가 완벽하게 일치해야 합니다.
-              \n 예시:
-              \n 기존 카테고리: 공간예약 - Reserve a space 
-              \n 현재 카테고리: 공간 예약 - Reserve a space 
-              \n => 띄어쓰기로 인한 에러
-              \n 기존 카테고리: 공간예약 - Reserve a space 
-              \n 현재 카테고리: 공간예약 - Reserve a room
-              \n => 번역으로 인한 에러`);
-            setIsCreating(false);
-            return;
-          }
+      const checkResponse = await CheckFAQCategoryDuplicateApi({
+        body: {
+          maincategory_ko,
+          maincategory_en,
+          subcategory_ko,
+          subcategory_en,
+        },
+      });
+    
+      if (checkResponse.payload?.statusCode === 200 ) {
+        if (checkResponse.payload.data.isDuplicated){
+          alert(`다른 FAQ의 카테고리와 같은 카테고리를 사용하려면 띄어쓰기와 한영 단어가 완벽하게 일치해야 합니다.
+            \n 예시:
+            \n 기존 카테고리: 공간예약 - Reserve a space 
+            \n 현재 카테고리: 공간 예약 - Reserve a space 
+            \n => 띄어쓰기로 인한 에러
+            \n 기존 카테고리: 공간예약 - Reserve a space 
+            \n 현재 카테고리: 공간예약 - Reserve a room
+            \n => 번역으로 인한 에러`);
+          return;
         }
-      } catch (error) {
-        alert('FAQ 카테고리 중복 확인 중 오류가 발생했습니다.');
-        setIsCreating(false);
+      } else {
+        alert('FAQ 카테고리 중복 체크 중 오류가 발생했습니다.');
+        console.log('FAQ 카테고리 중복 체크 중 오류가 발생했습니다.', checkResponse.error);
         return;
       }
-
-      const response = await FAQCreateApi({
+    
+      const createResponse = await FAQCreateApi({
         body: newFAQ,
       });
-
-      if (response.payload?.statusCode === 201) {
+    
+      if (createResponse.payload?.statusCode === 201) {
         alert('FAQ가 성공적으로 생성되었습니다!');
-        setNewFAQ({
-          user_id: user_id ? Number(user_id) : 0,
-          maincategory_ko: '',
-          maincategory_en: '',
-          subcategory_ko: '',
-          subcategory_en: '',
-          question_ko: '',
-          question_en: '',
-          answer_ko: [{ answer: '', url: '', email: '', phone: '' }],
-          answer_en: [{ answer: '', url: '', email: '', phone: '' }],
-          manager: '',
-        });
         navigate('/faqs');
       } else {
+        setIsCreating(false);
         alert('FAQ 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
+        console.log('FAQ 생성 중 오류가 발생했습니다.', createResponse.error);
       }
-    } catch (error) {
-      alert('FAQ 생성에 실패했습니다.');
-    } finally {
-      setIsCreating(false);
-    }
-  };
+    } 
 
   return (
     <FAQCreateForm

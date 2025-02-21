@@ -4,10 +4,9 @@ import { SpecificFrequencyResponse, SpecificFeedbackResponse, SpecificLanguageRe
 interface SpecificAnalyzeFormProps {
   analyzeData: SpecificFrequencyResponse | SpecificFeedbackResponse | SpecificLanguageResponse;
   searchSubject: string;
-  error: string | null;
 }
 
-const SpecificAnalyzeForm: React.FC<SpecificAnalyzeFormProps> = ({ analyzeData, searchSubject, error }) => {
+const SpecificAnalyzeForm: React.FC<SpecificAnalyzeFormProps> = ({ analyzeData, searchSubject }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const itemsPerPage = 1;
@@ -57,9 +56,6 @@ const SpecificAnalyzeForm: React.FC<SpecificAnalyzeFormProps> = ({ analyzeData, 
           {searchSubject === 'feedback' && 'FAQ 피드백 점수 분석 결과'}
           {searchSubject === 'language' && '사용 언어 빈도 분석 결과'}
         </h2>
-
-        {/* Error Message */}
-        {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
         {currentPageData.length > 0 ? (
           <div className="space-y-6">

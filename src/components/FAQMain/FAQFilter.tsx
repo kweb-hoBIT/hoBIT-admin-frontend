@@ -20,17 +20,10 @@ const FAQFilter: React.FC<FAQFilterProps> = ({
   const [isSuggestedFiltersInputFocused, setSuggestedFiltersInputFocused] = useState(false);
 
   useEffect(() => {
-    if (filter) {
-      const filteredValues = faqs
-        .map((faq) => faq[selectedFilter])
-        .filter((value) => value.toLowerCase().includes(filter.toLowerCase()));
-      const uniqueSuggestions = Array.from(new Set(filteredValues));
-      setSuggestedFilters(uniqueSuggestions);
-    } else {
-      const allValues = faqs.map((faq) => faq[selectedFilter]);
-      const uniqueSuggestions = Array.from(new Set(allValues));
-      setSuggestedFilters(uniqueSuggestions);
-    }
+    const filteredValues = faqs
+      .map((faq) => faq[selectedFilter])
+      .filter((value) => value.toLowerCase().includes(filter.toLowerCase()));
+    setSuggestedFilters(Array.from(new Set(filteredValues)));
   }, [faqs, filter, selectedFilter]);
 
   const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -45,9 +38,7 @@ const FAQFilter: React.FC<FAQFilterProps> = ({
       <div className="mb-4 flex space-x-4">
         <select
           value={selectedFilter}
-          onChange={(e) =>
-            onSelectedFilterChange(e.target.value as FAQFilterProps['selectedFilter'])
-          }
+          onChange={(e) => onSelectedFilterChange(e.target.value as FAQFilterProps['selectedFilter'])}
           className="p-2 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="maincategory_ko">주요 카테고리</option>
@@ -61,7 +52,7 @@ const FAQFilter: React.FC<FAQFilterProps> = ({
             placeholder="검색어를 입력하세요"
             value={filter}
             onFocus={() => setSuggestedFiltersInputFocused(true)}
-            onBlur={(e) => handleInputBlur(e)}
+            onBlur={handleInputBlur}
             onChange={(e) => onFilterChange(e.target.value)}
             className="w-full p-3 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />

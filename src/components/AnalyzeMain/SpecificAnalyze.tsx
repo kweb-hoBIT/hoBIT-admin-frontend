@@ -25,9 +25,7 @@ const SpecificAnalyze: React.FC<SpecificAnalyzeProps> = ({
   startDate,
   endDate,
 }) => {
-  console.log(faq_id, searchSubject, period, startDate, endDate);
   const [analyzeData, setanalyzeData] = useState<SpecificFrequencyResponse | SpecificFeedbackResponse | SpecificLanguageResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   // 조건에 따라 사용할 API 훅을 설정
   let analyzeApi: any;
@@ -48,11 +46,10 @@ const SpecificAnalyze: React.FC<SpecificAnalyzeProps> = ({
   useEffect(() => {
     const fetchAnalyzeData = async () => {
       if (analyzeApi?.isSuccess && analyzeApi.data?.payload?.statusCode === 200) {
-        console.log(2);
         setanalyzeData(analyzeApi.data.payload ?? null);
-        setError(null);
       } else {
-        setError('데이터를 가져오는 데 실패했습니다. 다시 시도해주세요.');
+        alert('분석 데이터를 가져오는 중 오류 발생');
+        console.error('분석 데이터를 가져오는 중 오류 발생:', analyzeApi.error);
         setanalyzeData(null);
       }
     };
@@ -64,12 +61,8 @@ const SpecificAnalyze: React.FC<SpecificAnalyzeProps> = ({
     }
   }, [analyzeApi]);
   
-  if (error) {
-    return <div className="error-message">{error}</div>;
-  }
-  
   if (!analyzeData) {
-    return <div>데이터가 없습니다.</div>;
+    return <div>데이터를 수집하고 있습니다.</div>;
   }
   
   return (
@@ -77,7 +70,6 @@ const SpecificAnalyze: React.FC<SpecificAnalyzeProps> = ({
       <SpecificAnalyzeForm 
         analyzeData={analyzeData} 
         searchSubject={searchSubject}
-        error={error} 
       />
     </div>
   );

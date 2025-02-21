@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { GetAllSeniorFAQResponse } from '../../types/seniorfaq';
 
 interface SeniorFAQFilterProps {
@@ -16,29 +16,22 @@ const SeniorFAQFilter: React.FC<SeniorFAQFilterProps> = ({
   onFilterChange,
   onSelectedFilterChange,
 }) => {
-
   const [suggestedFilters, setSuggestedFilters] = useState<string[]>([]);
   const [isSuggestedFiltersInputFocused, setSuggestedFiltersInputFocused] = useState(false);
-  
+
   useEffect(() => {
-    if (filter) {
-      const filteredValues = seniorFaqs
-        .map((seniorFaq) => seniorFaq[selectedFilter])
-        .filter((value) => value.toLowerCase().includes(filter.toLowerCase()));
-      const uniqueSuggestions = Array.from(new Set(filteredValues));
-      setSuggestedFilters(uniqueSuggestions);
-    } else {
-      const allValues = seniorFaqs.map((seniorFaq) => seniorFaq[selectedFilter]);
-      const uniqueSuggestions = Array.from(new Set(allValues));
-      setSuggestedFilters(uniqueSuggestions);
-    }
+    const uniqueSuggestions = Array.from(
+      new Set(
+        seniorFaqs
+          .map((faq) => faq[selectedFilter])
+          .filter((value) => value.toLowerCase().includes(filter.toLowerCase()))
+      )
+    );
+    setSuggestedFilters(uniqueSuggestions);
   }, [seniorFaqs, filter, selectedFilter]);
 
-  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-      setSuggestedFiltersInputFocused(false);
-    }
-  }
+  const handleFocus = useCallback(() => setSuggestedFiltersInputFocused(true), []);
+  const handleBlur = useCallback(() => setSuggestedFiltersInputFocused(false), []);
 
   return (
     <div className="p-6">
@@ -59,8 +52,8 @@ const SeniorFAQFilter: React.FC<SeniorFAQFilterProps> = ({
             type="text"
             placeholder="검색어를 입력하세요"
             value={filter}
-            onFocus={() => setSuggestedFiltersInputFocused(true)}
-            onBlur={(e) => handleInputBlur(e)}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             onChange={(e) => onFilterChange(e.target.value)}
             className="w-full p-3 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />

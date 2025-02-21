@@ -17,7 +17,6 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
   const [faqData, setFaqData] = useState<GetAllFAQResponse['data']['faqs']>([]);
   const [filteredFAQ, setFilteredFAQ] = useState<GetAllFAQResponse['data']['faqs']>([]);
   const [isFaqInputFocused, setIsFaqInputFocused] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const GetFAQsApi = useHobitQueryGetApi<GetAllFAQRequest, GetAllFAQResponse>('faqs');
 
@@ -27,14 +26,15 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
         const data = GetFAQsApi.data.payload.data.faqs;
         setFaqData(data);
       } else {
-        setError('FAQ 데이터를 가져오는 중 오류 발생');
+        alert('FAQ 데이터를 가져오는 중 오류 발생');
+        console.error('FAQ 데이터를 가져오는 중 오류 발생:', GetFAQsApi.error);
       }
     };
 
-    if (GetFAQsApi.isSuccess) {
+    if (GetFAQsApi.isSuccess && GetFAQsApi.data) {
       fetchFAQData();
     }
-  }, [GetFAQsApi.isSuccess]);
+  }, [GetFAQsApi.isSuccess, GetFAQsApi.data]);
 
   useEffect(() => {
     if (faq) {
@@ -50,17 +50,25 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
   const disableDates = (date: Date, type: "start" | "end"): boolean => {
     if (!date) return false;
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (period === "day") {
+      if (type === "start") return date > today; // 오늘 (시작)
+      if (type === "end") return date > today; // 오늘 (종료)
+    }
+
     if (period === "week") {
-      if (type === "start") return date.getDay() !== 1;
-      if (type === "end") return date.getDay() !== 0;
+      if (type === "start") return date.getDay() !== 1 || date > today; // 월요일 (시작)
+      if (type === "end") return date.getDay() !== 0 || date > today; // 일요일 (종료)
     }
 
     if (period === "month") {
-      if (type === "start") return date.getDate() !== 1;
+      if (type === "start") return date.getDate() !== 1 || date > today; // 1일 (시작)
       if (type === "end") {
         const nextDay = new Date(date);
         nextDay.setDate(date.getDate() + 1);
-        return nextDay.getDate() !== 1;
+        return nextDay.getDate() !== 1 || date > today; // 다음 날이 1일 (종료)
       }
     }
 
@@ -89,13 +97,6 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
     <div className="flex-[0.25] w-full h-[500px] p-4 bg-[#f9f9f9] border border-[#ddd] rounded-lg shadow-[0_2px_6px_rgba(0,0,0,0.1)] overflow-y-auto">
       <div className="p-4 rounded-3xl max-w-sm mx-auto space-y-4">
         <h4 className="text-xl font-semibold text-gray-800">분석 필터 설정</h4>
-
-        {error && (
-          <div className="text-red-600 text-sm p-2 border border-red-600 rounded-lg bg-red-100">
-            {error}
-          </div>
-        )}
-
         <div className="space-y-3">
           {/* FAQ 질문 검색 */}
           <div>

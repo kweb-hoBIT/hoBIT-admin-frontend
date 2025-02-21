@@ -22,7 +22,9 @@ const SeniorFAQDetailForm: React.FC<SeniorFAQDetailFormProps> = ({
     updated_at,
   } = seniorFaqData;
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return '';
+  
     const options: Intl.DateTimeFormatOptions = {
       year: 'numeric',
       month: '2-digit',

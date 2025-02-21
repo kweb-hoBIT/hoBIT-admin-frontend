@@ -65,7 +65,7 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
         <div ref={koreanContainerRef} className="overflow-x-auto flex flex-nowrap space-x-4 pb-2">
           {answer_ko.length > 0 ? (
             answer_ko.map((item, index) => (
-              <div key={index} className="bg-gray-100 font-5medium text-[20px] rounded-[20px] px-[20px] py-[15px] min-w-[365px] w-[365px] flex-shrink-0 break-words inline-block">
+              <div key={index} className="bg-gray-100 font-5medium text-[20px] mt-[10px] rounded-[20px] px-[20px] py-[15px] min-w-[365px] w-[365px] flex-shrink-0 break-words inline-block">
                 {index === 0 && (
                   <div className="flex flex-row text-[16px] text-[#686D76] items-center rounded-[10px] w-fit mb-[10px]">
                     <h3 className="text-center">{maincategory_ko}</h3>
@@ -120,7 +120,7 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
         <div ref={englishContainerRef} className="overflow-x-auto flex flex-nowrap space-x-4 pb-2">
           {answer_en.length > 0 ? (
             answer_en.map((item, index) => (
-              <div key={index} className="bg-gray-100 font-5medium text-[20px] rounded-[20px] px-[20px] py-[15px] min-w-[365px] w-[365px] flex-shrink-0 break-words inline-block">
+              <div key={index} className="bg-gray-100 font-5medium text-[20px] mt-[10px] rounded-[20px] px-[20px] py-[15px] min-w-[365px] w-[365px] flex-shrink-0 break-words inline-block">
                 {index === 0 && (
                   <div className="flex flex-row text-[16px] text-[#686D76] items-center rounded-[10px] w-fit mb-[10px]">
                     <h3 className="text-center">{maincategory_en}</h3>

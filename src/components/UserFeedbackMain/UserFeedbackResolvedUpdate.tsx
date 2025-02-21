@@ -14,9 +14,8 @@ const UserFeedbackResolvedUpdate: React.FC<UserFeedbackResolvedUpdateProps> = ({
   onResolvedChange,
 }) => {
   const [isResolved, setIsResolved] = useState<number>(initialResolved);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showPopup, setShowPopup] = useState(false); // 팝업 상태 관리
+  const [showPopup, setShowPopup] = useState(false);
 
   const UserFeedbackResolvedUpdateApi = useHobitMutatePutApi<
     UpdateUserFeedbackRequest,
@@ -24,27 +23,20 @@ const UserFeedbackResolvedUpdate: React.FC<UserFeedbackResolvedUpdateProps> = ({
   >('feedbacks/user');
 
   const toggleResolvedStatus = async () => {
-    setLoading(true);
     setError(null);
+    const response = await UserFeedbackResolvedUpdateApi({
+      params: { user_feedback_id: String(user_feedback_id) },
+    });
 
-    try {
-      const response = await UserFeedbackResolvedUpdateApi({
-        params: { user_feedback_id: String(user_feedback_id) },
-      });
-
-      if (response.payload?.statusCode === 200) {
-        const newResolvedStatus = isResolved === 0 ? 1 : 0;
-        setIsResolved(newResolvedStatus);
-        onResolvedChange(user_feedback_id, newResolvedStatus);
-        alert('피드백 상태가 성공적으로 변경되었습니다.');
-        setShowPopup(false);
-      } else {
-        throw new Error('Resolved 상태를 업데이트하는 데 실패했습니다.');
-      }
-    } catch (err: any) {
-      setError(err.message || '알 수 없는 오류가 발생했습니다.');
-    } finally {
-      setLoading(false);
+    if (response.payload?.statusCode === 200) {
+      const newResolvedStatus = isResolved === 0 ? 1 : 0;
+      setIsResolved(newResolvedStatus);
+      onResolvedChange(user_feedback_id, newResolvedStatus);
+      alert('피드백 상태가 성공적으로 변경되었습니다.');
+      setShowPopup(false);
+    } else {
+      alert('피드백 상태 변경 중 오류가 발생했습니다. 다시 시도해주세요.');
+      console.log('피드백 상태 변경 중 오류가 발생했습니다.', response.error);
     }
   };
 
@@ -61,7 +53,6 @@ const UserFeedbackResolvedUpdate: React.FC<UserFeedbackResolvedUpdateProps> = ({
           e.stopPropagation();
           togglePopup();
         }}
-        disabled={loading}
         className="absolute top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
       >
         {isResolved === 1 ? '보류' : '완료'}

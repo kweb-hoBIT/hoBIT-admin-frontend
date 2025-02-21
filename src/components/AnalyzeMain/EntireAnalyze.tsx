@@ -28,7 +28,6 @@ const EntireAnalyze: React.FC<EntireAnalyzeProps> = ({
   limit,
 }) => {
   const [analyzeData, setanalyzeData] = useState<EntireFrequencyResponse | EntireFeedbackResponse | EntireLanguageResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   // 조건에 따라 사용할 API 훅을 설정
   let analyzeApi: any;
@@ -49,29 +48,23 @@ const EntireAnalyze: React.FC<EntireAnalyzeProps> = ({
   useEffect(() => {
     const fetchanalyzeData = async () => {
       if (analyzeApi?.data?.payload?.statusCode === 200) {
-        console.log(1);
         setanalyzeData(analyzeApi.data.payload ?? null);
-        setError(null);
       } else {
-        setError('데이터를 가져오는 데 실패했습니다. 다시 시도해주세요.');
+        alert('분석 데이터를 가져오는 중 오류 발생');
+        console.error('분석 데이터를 가져오는 중 오류 발생:', analyzeApi.error);
         setanalyzeData(null);
       }
     };
 
     if (startDate && endDate) {
-      if (!analyzeApi?.isLoading && analyzeApi?.isSuccess) {
+      if (analyzeApi.isSuccess && analyzeApi.data) {
         fetchanalyzeData();
       }
     }
-  }, [analyzeApi]);
-  
-
-  if (error) {
-    return <div className="error-message">{error}</div>;
-  }
+  }, [analyzeApi.isSuccess, analyzeApi.data]);
 
   if (!analyzeData) {
-    return <div>데이터가 없습니다.</div>;
+    return <div>데이터를 수집하고 있습니다.</div>;
   }
 
   return (
@@ -79,8 +72,7 @@ const EntireAnalyze: React.FC<EntireAnalyzeProps> = ({
       <EntireAnalyzeForm 
         analyzeData={analyzeData} 
         searchSubject={searchSubject}
-        error={error} 
-        limit={limit} // 이거 추가해서 사용 언어 빈도에도 limit 값 사용할 수 있도록 넘겨줌
+        limit={limit}
       />
     </div>
   );

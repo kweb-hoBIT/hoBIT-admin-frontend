@@ -52,7 +52,6 @@ const SeniorFAQCreate: React.FC = () => {
     ],
     manager: '',
   });
-  const[error, setError] = useState<string | null>(null);
 
   const GetAllSeniorFAQCategoryApi = useHobitQueryGetApi<GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse>('seniorfaqs/category');
   const CheckSeniorFAQCategoryDuplicateApi = useHobitMutatePostApi<CreateCheckSeniorFAQCategoryDuplicateRequest, CreateCheckSeniorFAQCategoryDuplicateResponse>('seniorfaqs/create/category/check');
@@ -65,7 +64,8 @@ const SeniorFAQCreate: React.FC = () => {
         const data = GetAllSeniorFAQCategoryApi.data.payload.data.categories;
         setCategory(data);
       } else {
-        setError('Senior FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
+        alert('선배 FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
+        console.log('선배 FAQ 카테고리 데이터를 불러오는데 실패했습니다.', GetAllSeniorFAQCategoryApi.error);
       }
     };
 
@@ -74,8 +74,8 @@ const SeniorFAQCreate: React.FC = () => {
     }
   }, [GetAllSeniorFAQCategoryApi.isSuccess]);
 
-   // 필터 인덱스 찾기 함수
-   const findFilterIndex = (key: string, value: string) => {
+  // 필터 인덱스 찾기 함수
+  const findFilterIndex = (key: string, value: string) => {
     if (key === 'maincategory_ko') {
       const index = category.findIndex((item) => item[key] === value);
       setNewSeniorFAQ({
@@ -97,7 +97,6 @@ const SeniorFAQCreate: React.FC = () => {
     if (key === 'subcategory_ko') {
       const index = category.findIndex((item) => item.maincategory_ko === newSeniorFAQ.maincategory_ko);
       const subIndex = category[index].subcategories.findIndex((sub) => sub.subcategory_ko === value);
-      console.log(subIndex);
       setNewSeniorFAQ({
         ...newSeniorFAQ,
         subcategory_ko: value,
@@ -135,8 +134,8 @@ const SeniorFAQCreate: React.FC = () => {
         detailcategory_ko: category[index].subcategories[subIndex].detailcategories.detailcategory_en[detailIndex],
         detailcategory_en: value,
       });
-    }
-  };
+    };
+  }
 
   const handleAddAnswer = () => {
     setNewSeniorFAQ({
@@ -177,7 +176,7 @@ const SeniorFAQCreate: React.FC = () => {
       answer_ko,
       answer_en,
     } = newSeniorFAQ;
-
+  
     if (
       !maincategory_ko ||
       !maincategory_en ||
@@ -192,80 +191,49 @@ const SeniorFAQCreate: React.FC = () => {
       alert('모든 필드를 채워주세요.');
       return;
     }
-
-    try {
-      try {
-        const response = await CheckSeniorFAQCategoryDuplicateApi({
-          body: {
-            maincategory_ko,
-            maincategory_en,
-            subcategory_ko,
-            subcategory_en,
-            detailcategory_ko,
-            detailcategory_en,
-          },
-        });
-
-        if (response.payload?.statusCode === 200) {
-          if (response.payload.data.isDuplicated) {
-            alert(`다른 선배 FAQ의 카테고리와 같은 카테고리를 사용하려면 띄어쓰기와 한영 단어가 완벽하게 일치해야 합니다.
-              \n 예시:
-              \n 기존 카테고리: 공간예약 - Reserve a space 
-              \n 현재 카테고리: 공간 예약 - Reserve a space 
-              \n => 띄어쓰기로 인한 에러
-              \n 기존 카테고리: 공간예약 - Reserve a space 
-              \n 현재 카테고리: 공간예약 - Reserve a room
-              \n => 번역으로 인한 에러`);
-            return;
-          }
-        }
-      } catch (error) {
-        alert('선배 FAQ 카테고리 중복 확인 중 오류가 발생했습니다.');
+  
+    const checkResponse = await CheckSeniorFAQCategoryDuplicateApi({
+      body: {
+        maincategory_ko,
+        maincategory_en,
+        subcategory_ko,
+        subcategory_en,
+        detailcategory_ko,
+        detailcategory_en,
+      },
+    });
+  
+    if (checkResponse.payload?.statusCode === 200) {
+      if (checkResponse.payload.data.isDuplicated) {
+        alert(`다른 선배 FAQ의 카테고리와 같은 카테고리를 사용하려면 띄어쓰기와 한영 단어가 완벽하게 일치해야 합니다.
+          \n 예시:
+          \n 기존 카테고리: 공간예약 - Reserve a space 
+          \n 현재 카테고리: 공간 예약 - Reserve a space 
+          \n => 띄어쓰기로 인한 에러
+          \n 기존 카테고리: 공간예약 - Reserve a space 
+          \n 현재 카테고리: 공간예약 - Reserve a room
+          \n => 번역으로 인한 에러`);
         return;
       }
-
-      const response = await SeniorFAQCreateApi({
-        body: newSeniorFAQ,
-      });
-      console.log(newSeniorFAQ);
-
-      if (response.payload?.statusCode === 201) {
-        alert('선배 FAQ가 성공적으로 생성되었습니다!');
-        setNewSeniorFAQ({
-          user_id: user_id ? Number(user_id) : 0,
-          maincategory_ko: '',
-          maincategory_en: '',
-          subcategory_ko: '',
-          subcategory_en: '',
-          detailcategory_ko: '',
-          detailcategory_en: '',
-          answer_ko: [
-            {
-              title: '',
-              answer: '',
-              url: '',
-              map: { latitude: '', longitude: '' },
-            },
-          ],
-          answer_en: [
-            {
-              title: '',
-              answer: '',
-              url: '',
-              map: { latitude: '', longitude: '' },
-            },
-          ],
-          manager: '',
-        });
-        navigate('/seniorfaqs');
-      } else {
-        alert('선배 FAQ 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
-      }
-    } catch (error) {
-      alert('선배 FAQ 생성에 실패했습니다.');
+    } else {
+      alert('선배 FAQ 카테고리 중복 체크 중 오류가 발생했습니다.');
+      console.log('선배 FAQ 카테고리 중복 체크 중 오류가 발생했습니다.', checkResponse.error);
+      return;
     }
-  };
-
+  
+    const createResponse = await SeniorFAQCreateApi({
+      body: newSeniorFAQ,
+    });
+  
+    if (createResponse.payload?.statusCode === 201) {
+      alert('선배 FAQ가 성공적으로 생성되었습니다!');
+      navigate('/seniorfaqs');
+    } else {
+      alert('선배 FAQ 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
+      console.log('선배 FAQ 생성 중 오류가 발생했습니다.', createResponse.error);
+    }
+  }; 
+    
   return (
     <SeniorFAQCreateForm
       newSeniorFAQ={newSeniorFAQ}
