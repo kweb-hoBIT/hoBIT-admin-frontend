@@ -35,7 +35,6 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
     answer_en: [{ answer: '', url: '', email: '', phone: '' }],
     manager: '',
   });
-  const[error, setError] = useState<string | null>(null);
 
   const FAQFetchApi = useHobitQueryGetApi<GetFAQRequest, GetFAQResponse>('faqs', { params: { faq_id } });
   const GetAllFAQCategoryApi = useHobitQueryGetApi<GetAllFAQCategoryRequest, GetAllFAQCategoryResponse>('faqs/category');
@@ -44,36 +43,32 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
 
   useEffect(() => {
     const fetchFAQ = async () => {
-      try {
-        if (FAQFetchApi.data?.payload?.statusCode === 200) {
-          const faq = FAQFetchApi.data?.payload?.data?.faq;
-          if (faq) {
-            setupdatedFAQ({
-              user_id: Number(user_id),
-              maincategory_ko: faq.maincategory_ko || '',
-              maincategory_en: faq.maincategory_en || '',
-              subcategory_ko: faq.subcategory_ko || '',
-              subcategory_en: faq.subcategory_en || '',
-              question_ko: faq.question_ko || '',
-              question_en: faq.question_en || '',
-              answer_ko: faq.answer_ko || [{ answer: '', url: '', email: '', phone: '' }],
-              answer_en: faq.answer_en || [{ answer: '', url: '', email: '', phone: '' }],
-              manager: faq.manager || '',
-            });
-          }
-        } else {
-          alert('FAQ 데이터를 불러오는 데 실패했습니다.');
+      if (FAQFetchApi.data?.payload?.statusCode === 200) {
+        const faq = FAQFetchApi.data?.payload?.data?.faq;
+        if (faq) {
+          setupdatedFAQ({
+            user_id: Number(user_id),
+            maincategory_ko: faq.maincategory_ko || '',
+            maincategory_en: faq.maincategory_en || '',
+            subcategory_ko: faq.subcategory_ko || '',
+            subcategory_en: faq.subcategory_en || '',
+            question_ko: faq.question_ko || '',
+            question_en: faq.question_en || '',
+            answer_ko: faq.answer_ko || [{ answer: '', url: '', email: '', phone: '' }],
+            answer_en: faq.answer_en || [{ answer: '', url: '', email: '', phone: '' }],
+            manager: faq.manager || '',
+          });
         }
-      } catch (error) {
-        console.error(error);
-        alert('FAQ 데이터를 가져오는 중 오류가 발생했습니다.');
+      } else {
+        alert('FAQ 데이터를 불러오는 데 실패했습니다.');
+        console.log('FAQ 데이터를 불러오는 데 실패했습니다.', FAQFetchApi.error);
       }
     };
 
-    if (!FAQFetchApi.isLoading && FAQFetchApi.data) {
+    if (FAQFetchApi.isSuccess && FAQFetchApi.data) {
       fetchFAQ();
     }
-  }, [faq_id, FAQFetchApi.data, FAQFetchApi.isLoading, user_id]);
+  }, [FAQFetchApi.isSuccess, FAQFetchApi.data, faq_id, user_id]);
 
   // FAQ Category 데이터 가져오기
   useEffect(() => {
@@ -82,14 +77,15 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
         const data = GetAllFAQCategoryApi.data.payload.data.categories;
         setCategory(data);
       } else {
-        setError('FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
+        alert('FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
+        console.log('FAQ 카테고리 데이터를 불러오는데 실패했습니다.', GetAllFAQCategoryApi.error);
       }
     };
 
     if (GetAllFAQCategoryApi.isSuccess) {
       fetchFAQCategory();
     }
-  }, [GetAllFAQCategoryApi.isSuccess]);
+  }, [GetAllFAQCategoryApi.isSuccess, GetAllFAQCategoryApi.data]);
 
   // 필터 인덱스 찾기 함수
   const findFilterIndex = (key: string, value: string) => {
@@ -182,55 +178,49 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
       alert('모든 필드를 채워주세요.');
       return;
     }
+      
+    const checkResponse = await CheckFAQCategoryDuplicateApi({
+      body: {
+        faq_id : Number(faq_id),
+        maincategory_ko,
+        maincategory_en,
+        subcategory_ko,
+        subcategory_en,
+      },
+    });
 
-    try {
-      try {
-        const response = await CheckFAQCategoryDuplicateApi({
-          body: {
-            faq_id : Number(faq_id),
-            maincategory_ko,
-            maincategory_en,
-            subcategory_ko,
-            subcategory_en,
-          },
-        });
-
-        if (response.payload?.statusCode === 200) {
-          if (response.payload.data.isDuplicated) {
-            alert(`다른 FAQ의 카테고리와 같은 카테고리를 사용하려면 띄어쓰기와 한영 단어가 완벽하게 일치해야 합니다.
-              \n 기존 카테고리: 공간예약 - Reserve a space 
-              \n 현재 카테고리: 공간 예약 - Reserve a space 
-              \n => 띄어쓰기로 인한 에러
-              \n 기존 카테고리: 공간예약 - Reserve a space 
-              \n 현재 카테고리: 공간예약 - Reserve a room
-              \n => 번역으로 인한 에러`);
-            setIsUpdating(false);
-            return;
-          }
-        }
-      } catch (error) {
-        alert('FAQ 카테고리 중복 확인 중 오류가 발생했습니다.');
+    if (checkResponse.payload?.statusCode === 200) {
+      if (checkResponse.payload.data.isDuplicated) {
+        alert(`다른 FAQ의 카테고리와 같은 카테고리를 사용하려면 띄어쓰기와 한영 단어가 완벽하게 일치해야 합니다.
+          \n 기존 카테고리: 공간예약 - Reserve a space 
+          \n 현재 카테고리: 공간 예약 - Reserve a space 
+          \n => 띄어쓰기로 인한 에러
+          \n 기존 카테고리: 공간예약 - Reserve a space 
+          \n 현재 카테고리: 공간예약 - Reserve a room
+          \n => 번역으로 인한 에러`);
         setIsUpdating(false);
         return;
       }
-
-      const response = await FAQUpdateApi({
-        params: { faq_id },
-        body: updatedFAQ,
-      });
-
-      if (response.payload?.statusCode === 200) {
-        alert('FAQ가 성공적으로 수정되었습니다!');
-        navigate('/faqs');
-      } else {
-        alert('FAQ 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
-      }
-    } catch (error) {
-      console.error(error);
-      alert('FAQ 수정에 실패했습니다.');
-    } finally {
+    } else {
+      alert('FAQ 카테고리 중복 확인 중 오류가 발생했습니다. 다시 시도해주세요.');
       setIsUpdating(false);
-    }     
+      return;
+    }
+  
+
+    const updateResponse = await FAQUpdateApi({
+      params: { faq_id },
+      body: updatedFAQ,
+    });
+
+    if (updateResponse.payload?.statusCode === 200) {
+      alert('FAQ가 성공적으로 수정되었습니다!');
+      navigate('/faqs');
+    } else {
+      alert('FAQ 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
+      console.log('FAQ 수정 중 오류가 발생했습니다.', updateResponse.error);
+      setIsUpdating(false);
+    }
   };
 
   return (

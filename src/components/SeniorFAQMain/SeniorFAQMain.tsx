@@ -17,10 +17,11 @@ const SeniorFAQMain: React.FC = () => {
         setSeniorFaqData(data);
       } else {
         setError('Senior FAQ 데이터를 가져오는 중 오류 발생');
+        console.error('Senior FAQ 데이터를 가져오는 중 오류 발생:', GetSeniorFAQsApi.error);
       }
     };
 
-    if (GetSeniorFAQsApi.isSuccess) {
+    if (GetSeniorFAQsApi.isSuccess && GetSeniorFAQsApi.data) {
       fetchSeniorFAQData();
     }
   }, [GetSeniorFAQsApi.isSuccess, GetSeniorFAQsApi.data]);

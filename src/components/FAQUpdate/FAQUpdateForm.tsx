@@ -45,7 +45,6 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
     const selectedCategory = category.find(cat =>
       lang === 'ko' ? cat.maincategory_ko === maincategory : cat.maincategory_en === maincategory
     );
-    console.log(selectedCategory);
     return selectedCategory 
       ? selectedCategory.subcategories 
       : { subcategory_ko: [], subcategory_en: [] };

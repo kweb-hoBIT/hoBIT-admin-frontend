@@ -14,17 +14,17 @@ const AdminLogMain: React.FC = () => {
     const fetchFAQLogData = async () => {
       if (GetAdminLogsApi.data?.payload?.statusCode === 200) {
         const data = GetAdminLogsApi.data.payload.data.adminLogs;
-        console.log(data);
         setAdminLogData(data);
       } else {
         setError('FAQ 로그 데이터를 가져오는 중 오류 발생');
+        console.log('FAQ 로그 데이터를 가져오는 중 오류 발생:', GetAdminLogsApi.error);
       }
     };
 
-    if (!GetAdminLogsApi.isLoading && GetAdminLogsApi.isSuccess) {
+    if (GetAdminLogsApi.isSuccess && GetAdminLogsApi.data) {
       fetchFAQLogData();
     }
-  }, [GetAdminLogsApi]);
+  }, [GetAdminLogsApi.isSuccess, GetAdminLogsApi.data]);
 
   if (error) {
     return <div className="error-message">{error}</div>;

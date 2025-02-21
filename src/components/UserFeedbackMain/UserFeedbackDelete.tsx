@@ -14,21 +14,20 @@ const UserFeedbackDelete: React.FC<FAQDeleteProps> = ({ user_feedback_id, onSucc
   const deleteFAQApi = useHobitMutateDeleteApi<DeleteUserFeedbackRequest, DeleteUserFeedbackResponse>('feedbacks');
 
   const handleDeleteFAQ = async () => {
-    try {
-      const response = await deleteFAQApi({
-        params: { user_feedback_id }
-      });
+    setError(null);
+    const response = await deleteFAQApi({
+      params: { user_feedback_id }
+    });
 
-      if (response.payload?.statusCode === 200) {
-        alert('피드백이 성공적으로 삭제되었습니다.');
-        setShowPopup(false);
-        if (onSuccess) onSuccess();
-      } else {
-        setError('피드백 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
-      }
-    } catch (err) {
-      setError('피드백 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+    if (response.payload?.statusCode === 200) {
+      alert('피드백이 성공적으로 삭제되었습니다.');
+      setShowPopup(false);
+      if (onSuccess) onSuccess();
+    } else {
+      alert('피드백 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+      console.log('피드백 삭제 중 오류가 발생했습니다.', response.error);
     }
+    
   };
 
   // 팝업 토글 함수

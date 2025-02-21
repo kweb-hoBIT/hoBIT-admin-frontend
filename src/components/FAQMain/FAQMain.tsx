@@ -17,10 +17,11 @@ const FAQMain: React.FC = () => {
         setFaqData(data);
       } else {
         setError('FAQ 데이터를 가져오는 중 오류 발생');
+        console.error('FAQ 데이터를 가져오는 중 오류 발생:', GetFAQsApi.error);
       }
     };
 
-    if (GetFAQsApi.isSuccess) {
+    if (GetFAQsApi.isSuccess && GetFAQsApi.data) {
       fetchFAQData();
     }
   }, [GetFAQsApi.isSuccess, GetFAQsApi.data]);

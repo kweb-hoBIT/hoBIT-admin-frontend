@@ -17,7 +17,6 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
   const [faqData, setFaqData] = useState<GetAllFAQResponse['data']['faqs']>([]);
   const [filteredFAQ, setFilteredFAQ] = useState<GetAllFAQResponse['data']['faqs']>([]);
   const [isFaqInputFocused, setIsFaqInputFocused] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const GetFAQsApi = useHobitQueryGetApi<GetAllFAQRequest, GetAllFAQResponse>('faqs');
 
@@ -27,14 +26,15 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
         const data = GetFAQsApi.data.payload.data.faqs;
         setFaqData(data);
       } else {
-        setError('FAQ 데이터를 가져오는 중 오류 발생');
+        alert('FAQ 데이터를 가져오는 중 오류 발생');
+        console.error('FAQ 데이터를 가져오는 중 오류 발생:', GetFAQsApi.error);
       }
     };
 
-    if (GetFAQsApi.isSuccess) {
+    if (GetFAQsApi.isSuccess && GetFAQsApi.data) {
       fetchFAQData();
     }
-  }, [GetFAQsApi.isSuccess]);
+  }, [GetFAQsApi.isSuccess, GetFAQsApi.data]);
 
   useEffect(() => {
     if (faq) {
@@ -97,13 +97,6 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
     <div className="flex-[0.25] w-full h-[500px] p-4 bg-[#f9f9f9] border border-[#ddd] rounded-lg shadow-[0_2px_6px_rgba(0,0,0,0.1)] overflow-y-auto">
       <div className="p-4 rounded-3xl max-w-sm mx-auto space-y-4">
         <h4 className="text-xl font-semibold text-gray-800">분석 필터 설정</h4>
-
-        {error && (
-          <div className="text-red-600 text-sm p-2 border border-red-600 rounded-lg bg-red-100">
-            {error}
-          </div>
-        )}
-
         <div className="space-y-3">
           {/* FAQ 질문 검색 */}
           <div>

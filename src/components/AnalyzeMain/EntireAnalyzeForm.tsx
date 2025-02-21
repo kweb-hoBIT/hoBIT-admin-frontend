@@ -5,11 +5,10 @@ import { EntireFrequencyResponse, EntireFeedbackResponse, EntireLanguageResponse
 interface EntireAnalyzeFormProps {
   analyzeData: EntireFrequencyResponse | EntireFeedbackResponse | EntireLanguageResponse;
   searchSubject: string;
-  error: string | null;
   limit: string;
 }
 
-const EntireAnalyzeForm: React.FC<EntireAnalyzeFormProps> = ({ analyzeData, searchSubject, error, limit }) => {
+const EntireAnalyzeForm: React.FC<EntireAnalyzeFormProps> = ({ analyzeData, searchSubject, limit }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const itemsPerPage = searchSubject === 'language' ? parseInt(limit || '1', 10) : 1;
@@ -60,9 +59,6 @@ const EntireAnalyzeForm: React.FC<EntireAnalyzeFormProps> = ({ analyzeData, sear
           {searchSubject === 'feedback' && 'FAQ 피드백 점수 분석 결과'}
           {searchSubject === 'language' && '사용 언어 빈도 분석 결과'}
         </h2>
-
-        {/* Error Message */}
-        {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
         {currentPageData.length > 0 ? (
           <div className="space-y-6">

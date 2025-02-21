@@ -32,9 +32,6 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
     dispatch(setUserFeedbackFilterName(filter));
   }, [unresolvedCurrentPage, resolvedCurrentPage, filter]);
 
-  const itemsPerPage = 4;
-  const pagesPerGroup = 10;
-
   // 필터링된 피드백
   const filteredFeedbacks = feedbacks.filter(feedback => {
     if (filter === 'unresolved') {
@@ -42,6 +39,9 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
     }
     return feedback.resolved === 1;
   });
+
+  const itemsPerPage = 4;
+  const pagesPerGroup = 10;
 
   // 해결되지 않은 피드백의 페이지네이션
   const unresolvedTotalPages = Math.ceil(filteredFeedbacks.filter(feedback => feedback.resolved === 0).length / itemsPerPage);
@@ -76,7 +76,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
     }
   };
 
-  const handlePageClick = (page: number) => {
+  const handlePageChange = (page: number) => {
     if (filter === 'unresolved') {
       setUnresolvedCurrentPage(page);
     } else {
@@ -141,11 +141,11 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                     onSuccess={() => {
                       if (filter === 'unresolved') {
                         if (unresolvedItems.length === 1 && unresolvedCurrentPage > 1) {
-                          setUnresolvedCurrentPage((prevPage) => prevPage - 1);
+                          dispatch(setUnresolvedFeedbackCurrentPage(unresolvedCurrentPage - 1));
                         }
                       } else {
                         if (resolvedItems.length === 1 && resolvedCurrentPage > 1) {
-                          setResolvedCurrentPage((prevPage) => prevPage - 1);
+                          dispatch(setResolvedFeedbackCurrentPage(resolvedCurrentPage - 1));
                         }
                       }
                       window.location.reload();
@@ -154,13 +154,11 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                 </div>
                 <div className="pr-24">
                   <div className="mb-2">
-                    <span className="mb-1 text-m text-gray-600">
                       <strong> {feedback.question_ko ? (
                       `피드백 질문: ${feedback.question_ko}`
                       ) : (
                         'FAQ 생성'
                       )}</strong>
-                    </span>
                   </div>
                   <div className="flex flex-col">
                     <div className="mb-1 text-sm text-gray-600">
@@ -194,7 +192,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
               {(filter === 'unresolved' ? unresolvedPageNumbers : resolvedPageNumbers).map((page) => (
                 <button
                   key={page}
-                  onClick={() => handlePageClick(page)}
+                  onClick={() => handlePageChange(page)}
                   className={`px-3 py-2 text-sm font-semibold rounded-md ${
                     (filter === 'unresolved' ? unresolvedCurrentPage : resolvedCurrentPage) === page ? 'bg-crimson text-white' : 'bg-gray-200 text-gray-700'
                   }`}
