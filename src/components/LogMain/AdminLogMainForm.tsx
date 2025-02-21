@@ -78,6 +78,14 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
                     <div className="mb-1 text-sm text-gray-600">
                       <strong>하위 카테고리:</strong> {log.subcategory}
                     </div>
+                    {log.log_type === 'faq_log' ? (
+                      <div className="mb-1 text-sm text-gray-600">
+                        <strong>질문:</strong> {log.question}
+                      </div>) : (
+                      <div className="mb-1 text-sm text-gray-600">
+                        <strong>세부 카테고리 :</strong> {log.detailcategory}
+                      </div>
+                    )}
                     <div className="mb-1 text-sm text-gray-600">
                       <strong>변경 목적:</strong>
                       <span className={`ml-1 ${
