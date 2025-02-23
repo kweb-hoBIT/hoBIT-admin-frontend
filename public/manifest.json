@@ -26,8 +26,27 @@
       "src": "/hoBIT256.ico",
       "sizes": "256x256",
       "type": "image/x-icon"
+    },
+    {
+      "src": "/hoBIT512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
     }
   ],
+  "screenshots": [
+  {
+    "src": "/hoBIT1280.png",
+    "sizes": "1280x1280",
+    "type": "image/png",
+    "form_factor": "wide"
+  },
+  {
+    "src": "/hoBIT1280.png",
+    "sizes": "1280x1280",
+    "type": "image/png"
+  }
+],
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
