@@ -169,14 +169,14 @@ const FindPassword: React.FC = () => {
 
                   <button
                     type="submit"
-                    className="mt-4 w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 hover:bg-crimson-dark"
+                    className="mt-4 w-full bg-crimson text-white font-semibold p-2 rounded-md transition-colors duration-300 hover:bg-crimson-dark"
                   >
                     비밀번호 찾기
                   </button>
                   <button
                     type="button"
                     onClick={togglePopup}
-                    className="mt-2 w-full bg-gray-300 text-black font-semibold text-xl p-2 rounded-md transition-colors duration-300 hover:bg-gray-400"
+                    className="mt-2 w-full bg-gray-300 text-black font-semibold p-2 rounded-md transition-colors duration-300 hover:bg-gray-400"
                   >
                     취소
                   </button>
@@ -299,14 +299,14 @@ const FindPassword: React.FC = () => {
                 <button
                   type="button"
                   onClick={handlePasswordChange}
-                  className="mt-4 w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 hover:bg-crimson-dark"
+                  className="mt-4 w-full bg-crimson text-white font-semibold p-2 rounded-md transition-colors duration-300 hover:bg-crimson-dark"
                 >
                   비밀번호 변경
                 </button>
                 <button
                     type="button"
                     onClick={togglePopup}
-                    className="mt-2 w-full bg-gray-300 text-black font-semibold text-xl p-2 rounded-md transition-colors duration-300 hover:bg-gray-400"
+                    className="mt-2 w-full bg-gray-300 text-black font-semibold p-2 rounded-md transition-colors duration-300 hover:bg-gray-400"
                   >
                     취소
                 </button>
