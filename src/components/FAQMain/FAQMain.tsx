@@ -30,6 +30,10 @@ const FAQMain: React.FC = () => {
     return <div className="error-message">{error}</div>;
   }
 
+  if (GetFAQsApi.isLoading){
+    return <div></div>;
+  }
+
   return (
     <div>
       <FAQMainForm faqs={faqData} />

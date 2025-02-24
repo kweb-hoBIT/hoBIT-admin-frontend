@@ -30,6 +30,10 @@ const SeniorFAQMain: React.FC = () => {
     return <div className="error-message">{error}</div>;
   }
 
+  if (GetSeniorFAQsApi.isLoading) {
+    return <div></div>;
+  }
+
   return (
     <div>
       <SeniorFAQMainForm seniorFaqs={seniorFaqData} />

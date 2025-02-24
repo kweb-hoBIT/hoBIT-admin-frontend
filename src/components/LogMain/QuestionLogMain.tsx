@@ -30,6 +30,10 @@ const QuestionLogMain: React.FC = () => {
     return <div className="error-message">{error}</div>;
   }
 
+  if (GetQuestionLogsApi.isLoading) {
+    return <div></div>;
+  }
+
   return (
     <div>
       <QuestionLogMainForm questionLogs={questionLogData} />

@@ -52,6 +52,10 @@ const FAQLogDetail: React.FC<FAQLogDetailProps> = ({ faq_log_id }) => {
     }
   }, [FAQCompareApi.isSuccess, FAQCompareApi.data]);
 
+  if (FAQCompareApi.isLoading){
+    return <div></div>;
+  }
+
   return <FAQLogDetailForm prev_faq={prev_faq} new_faq={new_faq} />;
 };
 

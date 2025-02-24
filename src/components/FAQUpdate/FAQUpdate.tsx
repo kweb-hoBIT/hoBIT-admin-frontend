@@ -223,6 +223,10 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
     }
   };
 
+  if (FAQFetchApi.isLoading || GetAllFAQCategoryApi.isLoading){
+    return <div></div>;
+  }
+
   return (
     <FAQUpdateForm
       updatedFAQ={updatedFAQ}

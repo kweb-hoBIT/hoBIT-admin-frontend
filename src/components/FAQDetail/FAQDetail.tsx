@@ -40,7 +40,7 @@ const FAQDetail: React.FC<FAQDetailProps> = ({ faq_id }) => {
     }
   }, [faq_id, FAQFetchApi.data, FAQFetchApi.isSuccess]);
 
-  if(!FAQFetchApi.data){
+  if (FAQFetchApi.isLoading){
     return <div></div>;
   }
 

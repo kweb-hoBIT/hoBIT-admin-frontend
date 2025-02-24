@@ -29,6 +29,10 @@ const UserFeedbackMain: React.FC = () => {
     return <div className="error-message">{error}</div>;
   }
 
+  if (GetUserFeedbackApi.isLoading) {
+    return <div></div>;
+  }
+
   return (
     <div>
       <UserFeedbackMainForm userFeedbacks={userFeedbackData} />
