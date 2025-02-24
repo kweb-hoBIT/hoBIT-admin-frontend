@@ -40,6 +40,10 @@ const FAQDetail: React.FC<FAQDetailProps> = ({ faq_id }) => {
     }
   }, [faq_id, FAQFetchApi.data, FAQFetchApi.isSuccess]);
 
+  if(!FAQFetchApi.data){
+    return <div></div>;
+  }
+
   return <FAQDetailForm faqData={faqData} />;
 };
 
