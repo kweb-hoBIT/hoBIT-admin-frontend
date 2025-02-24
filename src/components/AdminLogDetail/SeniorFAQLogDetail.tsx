@@ -55,6 +55,9 @@ const SeniorFAQLogDetail: React.FC<SeniorFAQLogDetailProps> = ({ senior_faq_log_
     }
   }, [SeniorFAQCompareApi.isSuccess, SeniorFAQCompareApi.data]);
 
+  if (SeniorFAQCompareApi.isLoading){
+    return <div></div>;
+  }
 
   return <SeniorFAQLogDetailForm prev_senior_faq={prev_senior_faq} new_senior_faq={new_senior_faq} />;
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
@@ -21,6 +21,7 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
   const location = useLocation();
+  const popupRef = useRef<HTMLDivElement>(null);
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
@@ -30,9 +31,27 @@ const Header: React.FC = () => {
     setShowPopup(false);
   };
 
+  // 팝업 외부 클릭 감지
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+        closePopup();
+      }
+    }
+
+    if (showPopup) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showPopup]);
+
   const isAuthPage = location.pathname === "/login" || location.pathname === "/signup";
 
-  // 필터 상태 리셋 후 네비게이션 함수
   const handleNavigation = (path: string) => {
     dispatch(clearFAQFilterState());
     dispatch(clearSeniorFAQFilterState());
@@ -44,8 +63,6 @@ const Header: React.FC = () => {
     navigate(path);
     if (location.pathname === path) {
       navigate(0);
-    } else {
-    
     }
   };
 
@@ -55,10 +72,7 @@ const Header: React.FC = () => {
         {isAuthPage ? (
           <span className="text-white">hoBIT</span>
         ) : (
-          <button
-            className="text-white hover:text-gray-600"
-            onClick={() => handleNavigation("/home")}
-          >
+          <button className="text-white hover:text-gray-600" onClick={() => handleNavigation("/home")}>
             hoBIT
           </button>
         )}
@@ -102,23 +116,13 @@ const Header: React.FC = () => {
               </button>
               {showPopup && (
                 <div
+                  ref={popupRef}
                   className="absolute right-0 top-10 bg-white border border-gray-300 rounded-lg shadow-md p-4 w-40"
-                  style={{
-                    zIndex: 1000,
-                  }}
+                  style={{ zIndex: 1000 }}
                 >
-                  <div className="flex justify-between items-center mb-2">
-                    <p className="text-black font-semibold">
-                      {username ? (
-                        <>
-                          {username}님<br />
-                          반갑습니다
-                        </>
-                      ) : (
-                        "반갑습니다"
-                      )}
-                    </p>
-                    <button onClick={closePopup} className="absolute top-3 right-2 text-gray-500 hover:text-gray-800">
+                  <div className="flex justify-between items-center mb-1">
+                    <p className="text-black font-semibold -mb-1">{username}님</p>
+                    <button onClick={closePopup} className="text-gray-500 hover:text-gray-800">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -131,6 +135,7 @@ const Header: React.FC = () => {
                       </svg>
                     </button>
                   </div>
+                  <p className="text-black font-semibold mb-2">반갑습니다</p>
                   <div className="mb-2">
                     <Logout />
                   </div>

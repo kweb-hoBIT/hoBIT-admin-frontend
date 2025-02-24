@@ -258,19 +258,23 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
     }
   
 
-  const updateResponse = await seniorFAQUpdateApi({
-    params: { senior_faq_id },
-    body: updatedSeniorFAQ,
-  });
+    const updateResponse = await seniorFAQUpdateApi({
+      params: { senior_faq_id },
+      body: updatedSeniorFAQ,
+    });
 
-  if (updateResponse.payload?.statusCode === 200) {
-    alert('선배 FAQ가 성공적으로 수정되었습니다!');
-    navigate('/seniorfaqs');
-  } else {
-    alert('선배 FAQ 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
-    console.error('선배 FAQ 수정 중 오류가 발생했습니다.', updateResponse.error);
-  }
+    if (updateResponse.payload?.statusCode === 200) {
+      alert('선배 FAQ가 성공적으로 수정되었습니다!');
+      navigate('/seniorfaqs');
+    } else {
+      alert('선배 FAQ 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
+      console.error('선배 FAQ 수정 중 오류가 발생했습니다.', updateResponse.error);
+    }
   };
+
+  if (seniorFAQFetchApi.isLoading || GetAllSeniorFAQCategoryApi.isLoading) {
+    return <div></div>;
+  }
 
   return (
     <FAQUpdateForm

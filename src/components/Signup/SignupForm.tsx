@@ -7,7 +7,7 @@ const SignupForm: React.FC<{
     confirmPassword: string;
     username: string;
     phone_num: string;
-    invitationKey: string;
+    manageKey: string;
   };
   error: string | null;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -188,14 +188,14 @@ const SignupForm: React.FC<{
             />
           </div>
           <div>
-            <label htmlFor="invitationKey" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="manageKey" className="block text-sm font-medium text-gray-700">
               관리자 키
             </label>
             <input
-              id="invitationKey"
-              name="invitationKey"
+              id="manageKey"
+              name="manageKey"
               type="text"
-              value={userData.invitationKey}
+              value={userData.manageKey}
               autoComplete="off"
               onChange={onInputChange}
               placeholder="관리자 키를 입력하세요"

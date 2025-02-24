@@ -9,6 +9,10 @@ import {
   NewAccessTokenResponse,
   DeleteAccountReqeust,
   DeleteAccountResponse,
+  FindUserRequest,
+  FindUserResponse,
+  UpdatePasswordRequest,
+  UpdatePasswordResponse,
 } from './user';
 
 import {
@@ -114,6 +118,7 @@ export type HobitAdminPostApiRequest =
   | LoginRequest
   | LogoutRequest
   | SignupRequest
+  | FindUserRequest
   | NewAccessTokenRequest 
   | CreateFAQRequest
   | CreateSeniorFAQRequest
@@ -124,6 +129,7 @@ export type HobitAdminPostApiRequest =
   | TranslateFAQRequest;
 
 export type HobitAdminPutApiRequest =
+  | UpdatePasswordRequest
   | UpdateFAQRequest
   | UpdateSeniorFAQRequest
   | UpdateUserFeedbackRequest;
@@ -139,6 +145,8 @@ export type HobitAdminApiResponse =
   | LoginResponse
   | LogoutResponse
   | SignupResponse
+  | FindUserRequest
+  | UpdatePasswordResponse
   | NewAccessTokenResponse
   | DeleteAccountResponse
   | CreateFAQResponse

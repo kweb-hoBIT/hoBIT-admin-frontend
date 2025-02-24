@@ -12,7 +12,7 @@ const Signup: React.FC = () => {
     confirmPassword: '',
     username: '',
     phone_num: '',
-    invitationKey: ''
+    manageKey: ''
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -24,10 +24,10 @@ const Signup: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    let { email, password, confirmPassword, username, phone_num, invitationKey } = userData;
+    let { email, password, confirmPassword, username, phone_num, manageKey } = userData;
 
     // 모든 값이 존재하는지 확인
-    if (!email || !password || !username || !phone_num || !invitationKey) {
+    if (!email || !password || !username || !phone_num || !manageKey) {
       setError('모든 필드를 입력해주세요.');
       return;
     }
@@ -58,7 +58,7 @@ const Signup: React.FC = () => {
     // 회원가입 API 호출
     try {
       const response = await SignupApi({
-        body: { email, password, username, phone_num, invitationKey }
+        body: { email, password, username, phone_num, manageKey }
       });
 
       if (response.payload?.statusCode === 201) {

@@ -10,8 +10,7 @@ const DeleteAccount: React.FC = () => {
   const { user_id, username } = useSelector((state: RootState) => selectAuth(state));
   const [error, setError] = useState<string | null>(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [deleteKey, setDeleteKey] = useState('');
-  const dispatch = useDispatch();
+  const [manageKey, setManageKey] = useState('');
   const navigate = useNavigate();
 
   const DeleteAccountApi = useHobitMutateDeleteApi<DeleteAccountReqeust, DeleteAccountResponse>('users');
@@ -26,7 +25,7 @@ const DeleteAccount: React.FC = () => {
       try {
         const response = await DeleteAccountApi({
           params: { user_id: String(user_id) },
-          body: { deleteKey },
+          body: { manageKey },
         });
         if (response.payload?.statusCode === 200) {
           navigate('/login');
@@ -64,8 +63,8 @@ const DeleteAccount: React.FC = () => {
               <p>{username ? `${username}님, 정말 회원 탈퇴를 하시겠습니까?` : '정말 회원 탈퇴를 하시겠습니까?'}</p>
               <input
                 type="password"
-                value={deleteKey}
-                onChange={(e) => setDeleteKey(e.target.value)}
+                value={manageKey}
+                onChange={(e) => setManageKey(e.target.value)}
                 placeholder="관리자 키를 입력하세요"
                 className="mt-4 w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
               />

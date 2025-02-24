@@ -30,6 +30,10 @@ const AdminLogMain: React.FC = () => {
     return <div className="error-message">{error}</div>;
   }
 
+  if (GetAdminLogsApi.isLoading) {
+    return <div></div>;
+  }
+
   return (
     <div>
       <AdminLogMainForm adminLogs={adminLogData} />

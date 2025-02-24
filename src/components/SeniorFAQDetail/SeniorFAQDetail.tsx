@@ -42,6 +42,10 @@ const SeniorFAQDetail: React.FC<SeniorFAQDetailProps> = ({ senior_faq_id }) => {
     }
   }, [senior_faq_id, seniorFAQFetchApi.isSuccess, seniorFAQFetchApi.data]);
 
+  if (seniorFAQFetchApi.isLoading) {
+    return <div></div>;
+  }
+
   return <SeniorFAQDetailForm seniorFaqData={seniorFaqData} />;
 };
 
