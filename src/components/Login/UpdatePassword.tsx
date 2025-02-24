@@ -39,6 +39,26 @@ const FindPassword: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!formData.email) {
+      alert('이메일을 입력해주세요.');
+      return;
+    }
+
+    if (!formData.username) {
+      alert('이름을 입력해주세요.');
+      return;
+    }
+
+    if (!formData.phone_num) {
+      alert('전화번호를 입력해주세요.');
+      return;
+    }
+
+    if (!formData.manageKey) {
+      alert('관리자 키를 입력해주세요.');
+      return;
+    }
+
     const response = await FindUserwordApi({
       body: { ...formData },
     });
@@ -57,6 +77,16 @@ const FindPassword: React.FC = () => {
   };
 
   const handlePasswordChange = async () => {
+    if (!password) {
+      alert('비밀번호를 입력해주세요.');
+      return;
+    }
+
+    if (!confirmPassword) {
+      alert('비밀번호 확인을 입력해주세요.');
+      return;
+    }
+
     if (password !== confirmPassword) {
       alert('비밀번호가 일치하지 않습니다.');
       return;
@@ -139,14 +169,14 @@ const FindPassword: React.FC = () => {
 
                   <button
                     type="submit"
-                    className="mt-4 w-full bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700"
+                    className="mt-4 w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 hover:bg-crimson-dark"
                   >
                     비밀번호 찾기
                   </button>
                   <button
                     type="button"
                     onClick={togglePopup}
-                    className="mt-2 w-full bg-gray-300 p-2 rounded-lg hover:bg-gray-400"
+                    className="mt-2 w-full bg-gray-300 text-black font-semibold text-xl p-2 rounded-md transition-colors duration-300 hover:bg-gray-400"
                   >
                     취소
                   </button>
@@ -269,14 +299,14 @@ const FindPassword: React.FC = () => {
                 <button
                   type="button"
                   onClick={handlePasswordChange}
-                  className="mt-4 w-full bg-green-600 text-white p-2 rounded-lg hover:bg-green-700"
+                  className="mt-4 w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 hover:bg-crimson-dark"
                 >
                   비밀번호 변경
                 </button>
                 <button
                     type="button"
                     onClick={togglePopup}
-                    className="mt-2 w-full bg-gray-300 p-2 rounded-lg hover:bg-gray-400"
+                    className="mt-2 w-full bg-gray-300 text-black font-semibold text-xl p-2 rounded-md transition-colors duration-300 hover:bg-gray-400"
                   >
                     취소
                 </button>
