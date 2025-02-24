@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { LoginRequest, LoginResponse } from '../../types/user';
+import { LoginRequest } from '../../types/user';
+import UpdatePassword from './UpdatePassword';
 
 const LoginForm: React.FC<{
   userData: LoginRequest['body'];
@@ -101,13 +102,14 @@ const LoginForm: React.FC<{
             로그인
           </button>
         </form>
-        <div className="mt-4 text-center">
+        <div className="mt-4 text-center flex flex-col gap-2">
           <a
             href="/signup"
             className="text-indigo-600 hover:underline text-lg font-medium"
           >
             회원가입
           </a>
+          <UpdatePassword />
         </div>
       </div>
     </div>
