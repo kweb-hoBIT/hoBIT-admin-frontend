@@ -1,9 +1,10 @@
-name: actual-deploy
+name: develop-deploy
 
 on:
   push:
     branches:
-      - main
+      - develop
+      - 'release/**'
 
 jobs:
   build:
@@ -40,8 +41,7 @@ jobs:
           destination-repository-name: hoBIT-admin-frontend
           user-email: ${{ secrets.KWEBHOBIT_EMAIL }}
           commit-message: ${{ github.event.head_commit.message }}
-          target-branch: ${{ github.ref == 'refs/heads/main' && 'main'}}
+          target-branch: 'develop'
 
       - name: Test get variable exported by push-to-another-repository
         run: echo $DESTINATION_CLONED_DIRECTORY
-
