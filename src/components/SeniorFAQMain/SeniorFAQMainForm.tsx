@@ -6,6 +6,7 @@ import { RootState } from '../../redux/store';
 import { selectSeniorFAQFilter, setSeniorFAQCurrentPage, setSeniorFAQFilterContent, setSeniorFAQFilterName } from '../../redux/filterSlice';
 import SeniorFAQDelete from './SeniorFAQDelete';
 import SeniorFAQFilter from './SeniorFAQFilter';
+import { selectSeniorFAQItemsPerPage, setSeniorFAQItemsPerPage } from '../../redux/itemSlice';
 
 interface SeniorFAQMainFormProps {
   seniorFaqs: GetAllSeniorFAQResponse['data']['seniorFaqs'];
@@ -44,7 +45,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
     String(faq[selectedFilter]).toLowerCase().includes(filter.toLowerCase())
   );
 
-  const itemsPerPage = 4;
+  const itemsPerPage = useSelector(selectSeniorFAQItemsPerPage);
   const pagesPerGroup = 10;
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const currentPageGroup = Math.floor((currentPage - 1) / pagesPerGroup);
@@ -59,6 +60,10 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
   const handlePrevPage = () =>
     currentPage > 1 && setCurrentPage(Math.max(currentPageGroup * pagesPerGroup, 1));
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [itemsPerPage]);
+
   return (
     <div className="p-6 bg-white-50 rounded-lg">
       <SeniorFAQFilter
@@ -71,12 +76,24 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
       <div className="p-6">
         <div className="flex justify-center items-center mb-6">
           <h4 className="text-2xl font-bold text-gray-800 flex-grow">선배 FAQ 리스트</h4>
+            <div className="flex items-center space-x-4">
+              <select
+                value={itemsPerPage}
+                onChange={(e) => dispatch(setSeniorFAQItemsPerPage(Number(e.target.value)))}
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md"
+              >
+                <option value={4}>4개씩 보기</option>
+                <option value={6}>6개씩 보기</option>
+                <option value={8}>8개씩 보기</option>
+                <option value={10}>10개씩 보기</option>
+              </select>
           <button
             onClick={() => window.location.assign('/seniorfaqs/create')}
             className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
           >
             추가
           </button>
+          </div>
         </div>
         <div style={{ minHeight: '320px' }}>
           <div className="grid grid-cols-2 gap-4">

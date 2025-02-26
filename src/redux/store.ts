@@ -1,6 +1,21 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { authReducer } from './authSlice';
-import { faqFilterReducer, seniorFaqFilterReducer, logFilterReducer, adminLogFilterReducer, questionLogFilterReducer, logAnalysisFilterReducer, userFeedbackFilterReducer } from './filterSlice';
+import {
+  faqItemReducer,
+  seniorFaqItemReducer,
+  logItemReducer,
+  questionLogItemReducer,
+  userFeedbackItemReducer,
+} from './itemSlice';
+import {
+  faqFilterReducer,
+  seniorFaqFilterReducer,
+  logFilterReducer,
+  adminLogFilterReducer,
+  questionLogFilterReducer,
+  logAnalysisFilterReducer,
+  userFeedbackFilterReducer,
+} from './filterSlice';
 
 const store = configureStore({
   reducer: {
@@ -12,6 +27,11 @@ const store = configureStore({
     questionLogFilter: questionLogFilterReducer,
     logAnalysisFilter: logAnalysisFilterReducer,
     userFeedbackFilter: userFeedbackFilterReducer,
+    faqItem: faqItemReducer,
+    seniorFaqItem: seniorFaqItemReducer,
+    logItem: logItemReducer,
+    questionLogItem: questionLogItemReducer,
+    userFeedbackItem: userFeedbackItemReducer,
   },
 });
 

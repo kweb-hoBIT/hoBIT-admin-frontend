@@ -4,6 +4,7 @@ import { RootState } from '../../redux/store';
 import { selectAdminLogFilter, setAdminLogCurrentPage } from '../../redux/filterSlice';
 import { GetAllAdminLogResponse } from '../../types/adminLog';
 import { useNavigate } from 'react-router-dom';
+import { selectLogItemsPerPage, setLogItemsPerPage } from '../../redux/itemSlice';
 
 interface AdminLogMainFormProps {
   adminLogs: GetAllAdminLogResponse['data']['adminLogs'];
@@ -20,7 +21,7 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
     dispatch(setAdminLogCurrentPage(currentPage));
   }, [currentPage]);
 
-  const itemsPerPage = 4;
+  const itemsPerPage = useSelector(selectLogItemsPerPage);
   const pagesPerGroup = 10;
   const totalPages = Math.ceil(adminLogs.length / itemsPerPage);
   const currentPageGroup = Math.floor((currentPage - 1) / pagesPerGroup);
@@ -53,12 +54,28 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
     navigate(path);
   };
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [itemsPerPage]);
+
   return (
     <div className="p-6 bg-white-50 rounded-lg">
       <div className="p-6">
         <div className="flex justify-center items-center mb-6">
           <h4 className="text-2xl font-bold text-gray-800 flex-grow">관리자 로그 리스트</h4>
-        </div>
+            <div className="flex items-center space-x-4">
+              <select
+                value={itemsPerPage}
+                onChange={(e) => dispatch(setLogItemsPerPage(Number(e.target.value)))}
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md"
+              >
+                <option value={4}>4개씩 보기</option>
+                <option value={6}>6개씩 보기</option>
+                <option value={8}>8개씩 보기</option>
+                <option value={10}>10개씩 보기</option>
+              </select>
+            </div>
+          </div>
         <div style={{ minHeight: '320px' }}>
           <div className="grid grid-cols-2 gap-4">
             {currentItems.map(log => (
