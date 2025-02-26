@@ -54,6 +54,10 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
     navigate(path);
   };
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [itemsPerPage]);
+
   return (
     <div className="p-6 bg-white-50 rounded-lg">
       <div className="p-6">

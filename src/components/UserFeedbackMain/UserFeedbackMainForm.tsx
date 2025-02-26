@@ -6,6 +6,7 @@ import { GetAllUserFeedbackResponse } from '../../types/feedback';
 import UserFeedbackResolvedUpdate from './UserFeedbackResolvedUpdate';
 import SelectUserFeedback from './SelectUserFeedback';
 import UserFeedbackDelete from './UserFeedbackDelete';
+import { selectUserFeedbackItemsPerPage, setUserFeedbackItemsPerPage } from '../../redux/itemSlice';
 
 interface UserFeedbackMainFormProps {
   userFeedbacks: GetAllUserFeedbackResponse['data']['userFeedbacks'];
@@ -40,7 +41,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
     return feedback.resolved === 1;
   });
 
-  const itemsPerPage = 4;
+  const itemsPerPage = useSelector(selectUserFeedbackItemsPerPage);
   const pagesPerGroup = 10;
 
   // 해결되지 않은 피드백의 페이지네이션
@@ -114,12 +115,31 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
     return date.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
   };
 
+  useEffect(() => {
+    setUnresolvedCurrentPage(1);
+    setResolvedCurrentPage(1);
+  }, [itemsPerPage]);
+
   return (
     <div>
       <SelectUserFeedback filter={filter} onFilterChange={handleFilterChange} />
       <div className="p-6 bg-white-50 rounded-lg">
         <div className="p-6">
-          <h4 className="text-2xl font-bold mb-4 text-gray-800">유저 피드백 리스트</h4>
+          <div className="flex justify-between items-center mb-6">
+            <h4 className="text-2xl font-bold text-gray-800 flex-grow">유저 피드백 리스트</h4>
+              <div className="flex items-center space-x-4">
+                <select
+                  value={itemsPerPage}
+                  onChange={(e) => dispatch(setUserFeedbackItemsPerPage(Number(e.target.value)))}
+                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md"
+                >
+                  <option value={4}>4개씩 보기</option>
+                  <option value={6}>6개씩 보기</option>
+                  <option value={8}>8개씩 보기</option>
+                  <option value={10}>10개씩 보기</option>
+                </select>
+              </div>
+            </div>
         <div style={{ minHeight: '320px' }}>
           <div className="grid grid-cols-2 gap-4">
             {(filter === 'unresolved' ? unresolvedItems : resolvedItems).map((feedback) => (

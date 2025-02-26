@@ -5,6 +5,7 @@ import {
   seniorFaqItemReducer,
   logItemReducer,
   questionLogItemReducer,
+  userFeedbackItemReducer,
 } from './itemSlice';
 import {
   faqFilterReducer,
@@ -30,6 +31,7 @@ const store = configureStore({
     seniorFaqItem: seniorFaqItemReducer,
     logItem: logItemReducer,
     questionLogItem: questionLogItemReducer,
+    userFeedbackItem: userFeedbackItemReducer,
   },
 });
 

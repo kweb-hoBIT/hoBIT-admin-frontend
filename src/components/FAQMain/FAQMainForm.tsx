@@ -68,6 +68,10 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
     currentPage * itemsPerPage
   );
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [itemsPerPage]);
+
   const handlePageChange = (page: number) => setCurrentPage(page);
   const handleNextPage = () =>
     currentPage < totalPages &&

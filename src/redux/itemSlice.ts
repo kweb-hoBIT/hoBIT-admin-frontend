@@ -37,6 +37,10 @@ export const questionLogItemSlice = createItemSlice(
   'questionLogItem',
   'questionLogItemsPerPage'
 );
+export const userFeedbackItemSlice = createItemSlice(
+  'userFeedbackItem',
+  'userFeedbackItemsPerPage'
+);
 
 export const { setItemsPerPage: setFAQItemsPerPage } = faqItemSlice.actions;
 export const { setItemsPerPage: setSeniorFAQItemsPerPage } =
@@ -44,6 +48,8 @@ export const { setItemsPerPage: setSeniorFAQItemsPerPage } =
 export const { setItemsPerPage: setLogItemsPerPage } = logItemSlice.actions;
 export const { setItemsPerPage: setQuestionLogItemsPerPage } =
   questionLogItemSlice.actions;
+export const { setItemsPerPage: setUserFeedbackItemsPerPage } =
+  userFeedbackItemSlice.actions;
 
 export const selectFAQItemsPerPage = (state: RootState) =>
   state.faqItem.itemsPerPage;
@@ -53,8 +59,11 @@ export const selectLogItemsPerPage = (state: RootState) =>
   state.logItem.itemsPerPage;
 export const selectQuestionLogItemsPerPage = (state: RootState) =>
   state.questionLogItem.itemsPerPage;
+export const selectUserFeedbackItemsPerPage = (state: RootState) =>
+  state.userFeedbackItem.itemsPerPage;
 
 export const faqItemReducer = faqItemSlice.reducer;
 export const seniorFaqItemReducer = seniorFaqItemSlice.reducer;
 export const logItemReducer = logItemSlice.reducer;
 export const questionLogItemReducer = questionLogItemSlice.reducer;
+export const userFeedbackItemReducer = userFeedbackItemSlice.reducer;

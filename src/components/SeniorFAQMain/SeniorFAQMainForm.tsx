@@ -60,6 +60,10 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
   const handlePrevPage = () =>
     currentPage > 1 && setCurrentPage(Math.max(currentPageGroup * pagesPerGroup, 1));
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [itemsPerPage]);
+
   return (
     <div className="p-6 bg-white-50 rounded-lg">
       <SeniorFAQFilter

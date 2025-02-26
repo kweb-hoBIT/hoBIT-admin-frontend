@@ -52,6 +52,10 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
     return new Date(dateStr).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
   };
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [itemsPerPage]);
+
   return (
     <div className="p-6 bg-white-50 rounded-lg">
       <div className="p-6">
