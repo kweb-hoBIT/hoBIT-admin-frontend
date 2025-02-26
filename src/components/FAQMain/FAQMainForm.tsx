@@ -8,6 +8,7 @@ import {
   setFAQFilterContent,
   setFAQFilterName
 } from '../../redux/filterSlice';
+import { selectFAQItemsPerPage, setFAQItemsPerPage } from '../../redux/itemSlice';
 import FAQDelete from './FAQDelete';
 import FAQFilter from './FAQFilter';
 import { GetAllFAQResponse } from '../../types/faq';
@@ -51,7 +52,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
     String(faq[selectedFilter]).toLowerCase().includes(filter.toLowerCase())
   );
   
-  const itemsPerPage = 4;
+  const itemsPerPage = useSelector((state: RootState) => state.faqItem.itemsPerPage);
   const pagesPerGroup = 10;
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const currentPageGroup = Math.floor((currentPage - 1) / pagesPerGroup);
@@ -88,12 +89,24 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
       <div className="p-6">
         <div className="flex justify-center items-center mb-6">
           <h4 className="text-2xl font-bold text-gray-800 flex-grow">FAQ 리스트</h4>
-          <button
-            onClick={() => window.location.assign('/faqs/create')}
-            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-          >
-            추가
-          </button>
+          <div className="flex items-center space-x-4">
+            <select
+              value={itemsPerPage}
+              onChange={(e) => dispatch(setFAQItemsPerPage(Number(e.target.value)))}
+              className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md"
+            >
+              <option value={4}>4개씩 보기</option>
+              <option value={6}>6개씩 보기</option>
+              <option value={8}>8개씩 보기</option>
+              <option value={10}>10개씩 보기</option>
+            </select>
+            <button
+              onClick={() => window.location.assign('/faqs/create')}
+              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+            >
+              추가
+            </button>
+          </div>
         </div>
         <div style={{ minHeight: '320px' }}>
           <div className="grid grid-cols-2 gap-4">

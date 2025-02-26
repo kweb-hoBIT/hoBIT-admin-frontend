@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { selectQuestionLogFilter, setQuestionLogCurrentPage } from '../../redux/filterSlice';
 import { GetAllQuestionLogResponse } from '../../types/questionLog';
+import { selectQuestionLogItemsPerPage, setQuestionLogItemsPerPage } from '../../redux/itemSlice';
 
 interface QuestionLogMainFormProps {
   questionLogs: GetAllQuestionLogResponse['data']['questionLogs'];
@@ -17,7 +18,7 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
     dispatch(setQuestionLogCurrentPage(currentPage));
   }, [currentPage, dispatch]);
 
-  const itemsPerPage = 4;
+  const itemsPerPage = useSelector(selectQuestionLogItemsPerPage);
   const pagesPerGroup = 10;
   const totalPages = Math.ceil(questionLogs.length / itemsPerPage);
   const currentPageGroup = Math.floor((currentPage - 1) / pagesPerGroup);
@@ -54,7 +55,21 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
   return (
     <div className="p-6 bg-white-50 rounded-lg">
       <div className="p-6">
-        <h4 className="text-2xl font-bold mb-4 text-gray-800">유저 로그 리스트</h4>
+        <div className="flex justify-center items-center mb-6">
+            <h4 className="text-2xl font-bold text-gray-800 flex-grow">유저 로그 리스트</h4>
+            <div className="flex items-center space-x-4">
+              <select
+                value={itemsPerPage}
+                onChange={(e) => dispatch(setQuestionLogItemsPerPage(Number(e.target.value)))}
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md"
+              >
+                <option value={4}>4개씩 보기</option>
+                <option value={6}>6개씩 보기</option>
+                <option value={8}>8개씩 보기</option>
+                <option value={10}>10개씩 보기</option>
+              </select>
+            </div>
+          </div>
         <div style={{ minHeight: '395px' }}>
           <div className="grid grid-cols-2 gap-4">
             {currentItems.map((log) => (
