@@ -6,6 +6,7 @@ import { RootState } from '../../redux/store';
 import { selectSeniorFAQFilter, setSeniorFAQCurrentPage, setSeniorFAQFilterContent, setSeniorFAQFilterName } from '../../redux/filterSlice';
 import SeniorFAQDelete from './SeniorFAQDelete';
 import SeniorFAQFilter from './SeniorFAQFilter';
+import SeniorFAQSort from './SeniorFAQSort';
 import { selectSeniorFAQItemsPerPage, setSeniorFAQItemsPerPage } from '../../redux/itemSlice';
 
 interface SeniorFAQMainFormProps {
@@ -26,6 +27,8 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
   const [selectedFilter, setSelectedFilter] = useState<'maincategory_ko' | 'subcategory_ko' | 'detailcategory_ko' | 'manager'>(
     storedFilterName
   );
+  const [seniorFaqSortValue, setseniorFAQSortValue] = useState<number>(1);
+  const [orderedseniorFaqs, setOrderedseniorFaqs] = useState(seniorFaqs);
 
   useEffect(() => {
     dispatch(setSeniorFAQCurrentPage(currentPage));
@@ -41,7 +44,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
     setCurrentPage(1);
   }, [filter, selectedFilter]);
 
-  const filteredData = seniorFaqs.filter(faq =>
+  const filteredData = orderedseniorFaqs.filter(faq =>
     String(faq[selectedFilter]).toLowerCase().includes(filter.toLowerCase())
   );
 
@@ -72,6 +75,13 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
         selectedFilter={selectedFilter}
         onFilterChange={setFilter}
         onSelectedFilterChange={setSelectedFilter}
+      />
+      <SeniorFAQSort
+        seniorFaqs={seniorFaqs}
+        sort={seniorFaqSortValue}
+        onSortChange={setseniorFAQSortValue}
+        orderedseniorFaqs={orderedseniorFaqs}
+        setOrderedseniorFaqs={setOrderedseniorFaqs}
       />
       <div className="p-6">
         <div className="flex justify-center items-center mb-6">

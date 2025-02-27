@@ -11,6 +11,7 @@ import {
 import { selectFAQItemsPerPage, setFAQItemsPerPage } from '../../redux/itemSlice';
 import FAQDelete from './FAQDelete';
 import FAQFilter from './FAQFilter';
+import FAQSort from './FAQSort';
 import { GetAllFAQResponse } from '../../types/faq';
 
 interface FAQMainFormProps {
@@ -33,6 +34,8 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
   const [selectedFilter, setSelectedFilter] = useState<
     'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager'
   >(storedFilterName);
+  const [faqSortValue, setFAQSortValue] = useState<number>(1);
+  const [orderedFaqs, setOrderedFaqs] = useState(faqs);
 
   useEffect(() => {
     dispatch(setFAQCurrentPage(currentPage));
@@ -48,7 +51,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
     setCurrentPage(1);
   }, [filter, selectedFilter]);
 
-  const filteredData = faqs.filter(faq =>
+  const filteredData = orderedFaqs.filter(faq =>
     String(faq[selectedFilter]).toLowerCase().includes(filter.toLowerCase())
   );
   
@@ -90,10 +93,18 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
         onFilterChange={setFilter}
         onSelectedFilterChange={setSelectedFilter}
       />
+      <FAQSort 
+        faqs={faqs}
+        sort={faqSortValue} 
+        onSortChange={setFAQSortValue}
+        orderedFaqs={orderedFaqs}
+        setOrderedFaqs={setOrderedFaqs}
+      />
       <div className="p-6">
         <div className="flex justify-center items-center mb-6">
           <h4 className="text-2xl font-bold text-gray-800 flex-grow">FAQ 리스트</h4>
           <div className="flex items-center space-x-4">
+            
             <select
               value={itemsPerPage}
               onChange={(e) => dispatch(setFAQItemsPerPage(Number(e.target.value)))}
