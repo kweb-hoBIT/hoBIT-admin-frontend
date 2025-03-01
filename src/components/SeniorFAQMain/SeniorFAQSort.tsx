@@ -36,10 +36,10 @@ const SeniorFAQSort: React.FC<SeniorFAQSortProps> = ({ filteredSeniorFaqs: filte
             >
                 <option value={1}>최신순</option>
                 <option value={0}>오래된순</option>
-                <option value={2}>메인 카테고리(가나다순)</option>
-                <option value={3}>메인 카테고리(역순)</option>
-                <option value={4}>서브 카테고리(가나다순)</option>
-                <option value={5}>서브 카테고리(역순)</option>
+                <option value={2}>주요 카테고리(가나다순)</option>
+                <option value={3}>주요 카테고리(역순)</option>
+                <option value={4}>하위 카테고리(가나다순)</option>
+                <option value={5}>하위 카테고리(역순)</option>
                 <option value={6}>세부 카테고리(가나다순)</option>
                 <option value={7}>세부 카테고리(역순)</option>
             </select>

@@ -3,7 +3,12 @@ import { GetAllSeniorFAQResponse } from '../../types/seniorfaq';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import { selectSeniorFAQFilter, setSeniorFAQCurrentPage, setSeniorFAQFilterContent, setSeniorFAQFilterName } from '../../redux/filterSlice';
+import { selectSeniorFAQFilter, 
+  setSeniorFAQCurrentPage, 
+  setSeniorFAQFilterContent,
+  setSeniorFAQFilterName, 
+  setSeniorSortValue 
+} from '../../redux/filterSlice';
 import SeniorFAQDelete from './SeniorFAQDelete';
 import SeniorFAQFilter from './SeniorFAQFilter';
 import SeniorFAQSort from './SeniorFAQSort';
@@ -21,6 +26,8 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
   const { storedCurrentPage, storedFilterContent, storedFilterName } = useSelector(
     (state: RootState) => selectSeniorFAQFilter(state)
   );
+
+  const { storedSortValue } = useSelector((state: RootState) => state.seniorFaqSort);
   
   const [currentPage, setCurrentPage] = useState<number>(storedCurrentPage);
   const [filter, setFilter] = useState<string>(storedFilterContent);
@@ -28,13 +35,14 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
     storedFilterName
   );
   const [filteredSeniorFaqs, setFilteredSeniorFaqs] = useState(seniorFaqs);
-  const [seniorFaqSortValue, setseniorFAQSortValue] = useState<number>(1);
+  const [seniorFaqSortValue, setseniorFAQSortValue] = useState<number>(storedSortValue);
 
   useEffect(() => {
     dispatch(setSeniorFAQCurrentPage(currentPage));
     dispatch(setSeniorFAQFilterContent(filter));
     dispatch(setSeniorFAQFilterName(selectedFilter));
-  }, [currentPage, filter, selectedFilter]);
+    dispatch(setSeniorSortValue(seniorFaqSortValue));
+  }, [currentPage, filter, selectedFilter, seniorFaqSortValue]);
 
   useEffect(() => {
     if (isFirstRender.current) {

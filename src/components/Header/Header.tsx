@@ -7,6 +7,7 @@ import {
   clearFAQFilterState,
   clearFAQSortState,
   clearSeniorFAQFilterState,
+  clearSeniorFAQSortState,
   clearLogFilterState,
   clearAdminLogFilterState,
   clearQuestionLogFilterState,
@@ -57,6 +58,7 @@ const Header: React.FC = () => {
     dispatch(clearFAQFilterState());
     dispatch(clearFAQSortState());
     dispatch(clearSeniorFAQFilterState());
+    dispatch(clearSeniorFAQSortState());
     dispatch(clearLogFilterState());
     dispatch(clearAdminLogFilterState());
     dispatch(clearQuestionLogFilterState());

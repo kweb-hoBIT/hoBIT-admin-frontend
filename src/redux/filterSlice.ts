@@ -16,6 +16,11 @@ interface FAQSortState {
   storedSortValue: number;
 }
 
+// Senior FAQ 순서 필터 상태 정의
+interface FAQSortState {
+  storedSortValue: number;
+}
+
 // Senior FAQ 필터 상태 정의
 interface SeniorFAQFilterState {
   storedCurrentPage: number;
@@ -58,6 +63,10 @@ const initialFAQFilterState: FAQFilterState = {
 
 const initialFAQSortState: FAQSortState = {
   storedSortValue: parseInt(localStorage.getItem('faqSortValue') || '1', 10),
+};
+
+const initialSeniorFAQSortState: FAQSortState = {
+  storedSortValue: parseInt(localStorage.getItem('seniorFaqSortValue') || '1', 10),
 };
 
 const initialSeniorFAQFilterState: SeniorFAQFilterState = {
@@ -154,6 +163,21 @@ const seniorFaqFilterSlice = createSlice({
       localStorage.removeItem('seniorFaqFilterContent');
       localStorage.removeItem('seniorFaqFilterName');
     },
+  },
+});
+
+const seniorFaqSortSlice = createSlice({
+  name: 'seniorFaqSort',
+  initialState: initialSeniorFAQSortState,
+  reducers: {
+    setSeniorSortValue: (state, action: PayloadAction<number>) => {
+      state.storedSortValue = action.payload;
+      localStorage.setItem('seniorFaqSortValue', action.payload.toString());
+    },
+    clearSeniorFAQSortState: (state) => {
+      state.storedSortValue = 1;
+      localStorage.removeItem('seniorFaqSortValue');
+    }
   },
 });
 
@@ -273,6 +297,15 @@ export const selectSeniorFAQFilter = createSelector(
   })
 );
 
+// Senior FAQ 순서 필터 상태 선택자
+export const selectSeniorFAQSortState = (state: RootState) => state.seniorFaqSort;
+export const selectSeniorFAQSort = createSelector(
+  [selectSeniorFAQSortState],
+  (seniorFaqSortState) => ({
+    storedSortValue: seniorFaqSortState.storedSortValue,
+  })
+);
+
 // Log 필터 상태 선택자
 export const selectLogFilterState = (state: RootState) => state.logFilter;
 export const selectLogFilter = createSelector(
@@ -340,6 +373,11 @@ export const {
 } = seniorFaqFilterSlice.actions;
 
 export const {
+  setSeniorSortValue,
+  clearSeniorFAQSortState,
+} = seniorFaqSortSlice.actions;
+
+export const {
   setLogFilter,
   clearLogFilterState,
 } = logFilterSlice.actions;
@@ -369,6 +407,7 @@ export const {
 export const faqFilterReducer = faqFilterSlice.reducer;
 export const faqSortReducer = faqSortSlice.reducer;
 export const seniorFaqFilterReducer = seniorFaqFilterSlice.reducer;
+export const seniorFaqSortReducer = seniorFaqSortSlice.reducer;
 export const logFilterReducer = logFilterSlice.reducer;
 export const adminLogFilterReducer = adminLogFilterSlice.reducer;
 export const questionLogFilterReducer = questionLogFilterSlice.reducer;

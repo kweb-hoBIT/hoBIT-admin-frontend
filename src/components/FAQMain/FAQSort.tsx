@@ -9,7 +9,7 @@ type FAQSortProps = {
 };
 
 const FAQSort: React.FC<FAQSortProps> = ({ filteredFaqs, sort, onSortChange, setFilteredFaqs }) => {
-    const filter = ["created_at", "maincategory_ko", "subcategory_ko"] as const;
+    const filter = ["created_at", "maincategory_ko", "subcategory_ko", "question_ko"] as const;
 
     useEffect(() => {
         if (!filteredFaqs.length) return;
@@ -36,10 +36,12 @@ const FAQSort: React.FC<FAQSortProps> = ({ filteredFaqs, sort, onSortChange, set
             >
                 <option value={1}>최신순</option>
                 <option value={0}>오래된순</option>
-                <option value={2}>메인 카테고리(가나다순)</option>
-                <option value={3}>메인 카테고리(역순)</option>
-                <option value={4}>서브 카테고리(가나다순)</option>
-                <option value={5}>서브 카테고리(역순)</option>
+                <option value={2}>주요 카테고리(가나다순)</option>
+                <option value={3}>주요 카테고리(역순)</option>
+                <option value={4}>하위 카테고리(가나다순)</option>
+                <option value={5}>하위 카테고리(역순)</option>
+                <option value={6}>질문(가나다순)</option>
+                <option value={7}>질문(역순)</option>
             </select>
         </div>
     );

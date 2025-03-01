@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useHobitMutatePostApi } from '../../hooks/hobitAdmin';
 import { LogoutRequest, LogoutResponse } from '../../types/user';
-import { clearFAQFilterState, clearFAQSortState, clearSeniorFAQFilterState, clearAdminLogFilterState, clearQuestionLogFilterState, clearFeedbackFilterState } from '../../redux/filterSlice';
+import { clearFAQFilterState, clearFAQSortState, clearSeniorFAQFilterState, clearSeniorFAQSortState, clearAdminLogFilterState, clearQuestionLogFilterState, clearFeedbackFilterState } from '../../redux/filterSlice';
 
 const Logout: React.FC = () => {
   const dispatch = useDispatch();
@@ -21,6 +21,7 @@ const Logout: React.FC = () => {
     dispatch(clearFAQFilterState());
     dispatch(clearFAQSortState());
     dispatch(clearSeniorFAQFilterState());
+    dispatch(clearSeniorFAQSortState());
     dispatch(clearAdminLogFilterState());
     dispatch(clearQuestionLogFilterState());
     dispatch(clearFeedbackFilterState());
