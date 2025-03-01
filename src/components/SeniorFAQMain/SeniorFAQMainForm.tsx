@@ -80,7 +80,6 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
         seniorFaqs={seniorFaqs}
         sort={seniorFaqSortValue}
         onSortChange={setseniorFAQSortValue}
-        orderedseniorFaqs={orderedseniorFaqs}
         setOrderedseniorFaqs={setOrderedseniorFaqs}
       />
       <div className="p-6">

@@ -5,11 +5,10 @@ type FAQSortProps = {
     faqs: GetAllFAQResponse['data']['faqs'];
     sort: number;
     onSortChange: (value: number) => void;
-    orderedFaqs: GetAllFAQResponse['data']['faqs'];
     setOrderedFaqs: (value: GetAllFAQResponse['data']['faqs']) => void;
 };
 
-const FAQSort: React.FC<FAQSortProps> = ({ faqs, sort, onSortChange, orderedFaqs, setOrderedFaqs }) => {
+const FAQSort: React.FC<FAQSortProps> = ({ faqs, sort, onSortChange, setOrderedFaqs }) => {
     const filter = ["created_at", "maincategory_ko", "subcategory_ko"] as const;
 
     useEffect(() => {

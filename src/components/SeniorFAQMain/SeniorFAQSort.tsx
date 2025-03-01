@@ -5,11 +5,10 @@ type SeniorFAQSortProps = {
     seniorFaqs: GetAllSeniorFAQResponse['data']['seniorFaqs'];
     sort: number;
     onSortChange: (value: number) => void;
-    orderedseniorFaqs: GetAllSeniorFAQResponse['data']['seniorFaqs'];
     setOrderedseniorFaqs: (value: GetAllSeniorFAQResponse['data']['seniorFaqs']) => void;
 };
 
-const SeniorFAQSort: React.FC<SeniorFAQSortProps> = ({ seniorFaqs, sort, onSortChange, orderedseniorFaqs, setOrderedseniorFaqs }) => {
+const SeniorFAQSort: React.FC<SeniorFAQSortProps> = ({ seniorFaqs, sort, onSortChange, setOrderedseniorFaqs }) => {
     const filter = ["created_at", "maincategory_ko", "subcategory_ko"] as const;
 
     useEffect(() => {

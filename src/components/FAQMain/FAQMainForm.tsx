@@ -97,7 +97,6 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
         faqs={faqs}
         sort={faqSortValue} 
         onSortChange={setFAQSortValue}
-        orderedFaqs={orderedFaqs}
         setOrderedFaqs={setOrderedFaqs}
       />
       <div className="p-6">
