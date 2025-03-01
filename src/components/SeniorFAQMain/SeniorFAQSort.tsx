@@ -2,30 +2,30 @@ import React, { useEffect } from 'react';
 import { GetAllSeniorFAQResponse } from '../../types/seniorfaq';
 
 type SeniorFAQSortProps = {
-    seniorFaqs: GetAllSeniorFAQResponse['data']['seniorFaqs'];
+    filteredSeniorFaqs: GetAllSeniorFAQResponse['data']['seniorFaqs'];
     sort: number;
     onSortChange: (value: number) => void;
-    setOrderedseniorFaqs: (value: GetAllSeniorFAQResponse['data']['seniorFaqs']) => void;
+    setFilteredseniorFaqs: (value: GetAllSeniorFAQResponse['data']['seniorFaqs']) => void;
 };
 
-const SeniorFAQSort: React.FC<SeniorFAQSortProps> = ({ seniorFaqs, sort, onSortChange, setOrderedseniorFaqs }) => {
+const SeniorFAQSort: React.FC<SeniorFAQSortProps> = ({ filteredSeniorFaqs: filteredFaqs, sort, onSortChange, setFilteredseniorFaqs }) => {
     const filter = ["created_at", "maincategory_ko", "subcategory_ko"] as const;
 
     useEffect(() => {
-        if (!seniorFaqs.length) return;
+        if (!filteredFaqs.length) return;
 
         const index = Math.floor(sort / 2);
         const sortField = filter[index] as keyof GetAllSeniorFAQResponse['data']['seniorFaqs'][number];
         const isAsc = sort % 2 === 0;
 
-        const sortedFaqs = [...seniorFaqs].sort((a, b) => {
+        const sortedFaqs = [...filteredFaqs].sort((a, b) => {
             return isAsc
                 ? String(a[sortField]).localeCompare(String(b[sortField]), "ko-KR")
                 : String(b[sortField]).localeCompare(String(a[sortField]), "ko-KR");
         });
 
-        setOrderedseniorFaqs(sortedFaqs);
-    }, [seniorFaqs, sort]);
+        setFilteredseniorFaqs(sortedFaqs);
+    }, [filteredFaqs, sort]);
 
     return (
         <div className="p-6">

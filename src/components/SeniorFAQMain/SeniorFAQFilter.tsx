@@ -7,6 +7,7 @@ interface SeniorFAQFilterProps {
   selectedFilter: 'maincategory_ko' | 'subcategory_ko' | 'detailcategory_ko' | 'manager';
   onFilterChange: (newFilter: string) => void;
   onSelectedFilterChange: (newSelectedFilter: SeniorFAQFilterProps['selectedFilter']) => void;
+  setFilteredseniorFaqs: (value: GetAllSeniorFAQResponse['data']['seniorFaqs']) => void;
 }
 
 const SeniorFAQFilter: React.FC<SeniorFAQFilterProps> = ({
@@ -15,6 +16,7 @@ const SeniorFAQFilter: React.FC<SeniorFAQFilterProps> = ({
   selectedFilter,
   onFilterChange,
   onSelectedFilterChange,
+  setFilteredseniorFaqs
 }) => {
   const [suggestedFilters, setSuggestedFilters] = useState<string[]>([]);
   const [isSuggestedFiltersInputFocused, setSuggestedFiltersInputFocused] = useState(false);
@@ -28,6 +30,10 @@ const SeniorFAQFilter: React.FC<SeniorFAQFilterProps> = ({
       )
     );
     setSuggestedFilters(uniqueSuggestions);
+    const filteredseniorFaqs = seniorFaqs.filter(seniorFaq =>
+      String(seniorFaq[selectedFilter]).toLowerCase().includes(filter.toLowerCase())
+    );
+    setFilteredseniorFaqs(filteredseniorFaqs);
   }, [seniorFaqs, filter, selectedFilter]);
 
   const handleFocus = useCallback(() => setSuggestedFiltersInputFocused(true), []);

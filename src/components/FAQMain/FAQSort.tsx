@@ -2,30 +2,30 @@ import { GetAllFAQResponse } from "../../types/faq";
 import { useEffect } from "react";
 
 type FAQSortProps = {
-    faqs: GetAllFAQResponse['data']['faqs'];
+    filteredFaqs: GetAllFAQResponse['data']['faqs'];
     sort: number;
     onSortChange: (value: number) => void;
-    setOrderedFaqs: (value: GetAllFAQResponse['data']['faqs']) => void;
+    setFilteredFaqs: (value: GetAllFAQResponse['data']['faqs']) => void;
 };
 
-const FAQSort: React.FC<FAQSortProps> = ({ faqs, sort, onSortChange, setOrderedFaqs }) => {
+const FAQSort: React.FC<FAQSortProps> = ({ filteredFaqs, sort, onSortChange, setFilteredFaqs }) => {
     const filter = ["created_at", "maincategory_ko", "subcategory_ko"] as const;
 
     useEffect(() => {
-        if (!faqs.length) return;
+        if (!filteredFaqs.length) return;
 
         const index = Math.floor(sort / 2);
         const sortField = filter[index] as keyof GetAllFAQResponse['data']['faqs'][number];
         const isAsc = sort % 2 === 0;
 
-        const sortedFaqs = [...faqs].sort((a, b) => {
+        const sortedFaqs = [...filteredFaqs].sort((a, b) => {
             return isAsc
                 ? String(a[sortField]).localeCompare(String(b[sortField]), "ko-KR")
                 : String(b[sortField]).localeCompare(String(a[sortField]), "ko-KR");
         });
 
-        setOrderedFaqs(sortedFaqs);
-    }, [faqs, sort]);
+        setFilteredFaqs(sortedFaqs);
+    }, [filteredFaqs, sort]);
 
     return (
         <div className="p-6">

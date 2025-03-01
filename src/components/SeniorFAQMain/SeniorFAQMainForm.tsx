@@ -27,8 +27,8 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
   const [selectedFilter, setSelectedFilter] = useState<'maincategory_ko' | 'subcategory_ko' | 'detailcategory_ko' | 'manager'>(
     storedFilterName
   );
+  const [filteredSeniorFaqs, setFilteredSeniorFaqs] = useState(seniorFaqs);
   const [seniorFaqSortValue, setseniorFAQSortValue] = useState<number>(1);
-  const [orderedseniorFaqs, setOrderedseniorFaqs] = useState(seniorFaqs);
 
   useEffect(() => {
     dispatch(setSeniorFAQCurrentPage(currentPage));
@@ -44,18 +44,14 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
     setCurrentPage(1);
   }, [filter, selectedFilter]);
 
-  const filteredData = orderedseniorFaqs.filter(faq =>
-    String(faq[selectedFilter]).toLowerCase().includes(filter.toLowerCase())
-  );
-
   const itemsPerPage = useSelector(selectSeniorFAQItemsPerPage);
   const pagesPerGroup = 10;
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredSeniorFaqs.length / itemsPerPage);
   const currentPageGroup = Math.floor((currentPage - 1) / pagesPerGroup);
   const startPage = currentPageGroup * pagesPerGroup + 1;
   const endPage = Math.min((currentPageGroup + 1) * pagesPerGroup, totalPages);
   const pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index);
-  const currentItems = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const currentItems = filteredSeniorFaqs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handlePageChange = (page: number) => setCurrentPage(page);
   const handleNextPage = () =>
@@ -75,12 +71,13 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
         selectedFilter={selectedFilter}
         onFilterChange={setFilter}
         onSelectedFilterChange={setSelectedFilter}
+        setFilteredseniorFaqs={setFilteredSeniorFaqs}
       />
       <SeniorFAQSort
-        seniorFaqs={seniorFaqs}
+        filteredSeniorFaqs={filteredSeniorFaqs}
         sort={seniorFaqSortValue}
         onSortChange={setseniorFAQSortValue}
-        setOrderedseniorFaqs={setOrderedseniorFaqs}
+        setFilteredseniorFaqs={setFilteredSeniorFaqs}
       />
       <div className="p-6">
         <div className="flex justify-center items-center mb-6">

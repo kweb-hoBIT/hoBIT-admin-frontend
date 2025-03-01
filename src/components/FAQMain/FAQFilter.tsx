@@ -7,6 +7,7 @@ type FAQFilterProps = {
   selectedFilter: 'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager';
   onFilterChange: (value: string) => void;
   onSelectedFilterChange: (value: FAQFilterProps['selectedFilter']) => void;
+  setFilteredFaqs: (value: GetAllFAQResponse['data']['faqs']) => void;
 };
 
 const FAQFilter: React.FC<FAQFilterProps> = ({
@@ -15,6 +16,7 @@ const FAQFilter: React.FC<FAQFilterProps> = ({
   selectedFilter,
   onFilterChange,
   onSelectedFilterChange,
+  setFilteredFaqs
 }) => {
   const [suggestedFilters, setSuggestedFilters] = useState<string[]>([]);
   const [isSuggestedFiltersInputFocused, setSuggestedFiltersInputFocused] = useState(false);
@@ -24,6 +26,12 @@ const FAQFilter: React.FC<FAQFilterProps> = ({
       .map((faq) => faq[selectedFilter])
       .filter((value) => value.toLowerCase().includes(filter.toLowerCase()));
     setSuggestedFilters(Array.from(new Set(filteredValues)));
+
+    const filteredFaqs = faqs.filter(faq =>
+      String(faq[selectedFilter]).toLowerCase().includes(filter.toLowerCase())
+    );
+    setFilteredFaqs(filteredFaqs);
+
   }, [faqs, filter, selectedFilter]);
 
   const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {

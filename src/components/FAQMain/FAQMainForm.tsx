@@ -34,8 +34,8 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
   const [selectedFilter, setSelectedFilter] = useState<
     'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager'
   >(storedFilterName);
+  const [filteredFaqs, setFilteredFaqs] = useState(faqs);
   const [faqSortValue, setFAQSortValue] = useState<number>(1);
-  const [orderedFaqs, setOrderedFaqs] = useState(faqs);
 
   useEffect(() => {
     dispatch(setFAQCurrentPage(currentPage));
@@ -50,14 +50,10 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
     }
     setCurrentPage(1);
   }, [filter, selectedFilter]);
-
-  const filteredData = orderedFaqs.filter(faq =>
-    String(faq[selectedFilter]).toLowerCase().includes(filter.toLowerCase())
-  );
   
   const itemsPerPage = useSelector((state: RootState) => state.faqItem.itemsPerPage);
   const pagesPerGroup = 10;
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredFaqs.length / itemsPerPage);
   const currentPageGroup = Math.floor((currentPage - 1) / pagesPerGroup);
   const startPage = currentPageGroup * pagesPerGroup + 1;
   const endPage = Math.min((currentPageGroup + 1) * pagesPerGroup, totalPages);
@@ -66,7 +62,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
     (_, index) => startPage + index
   );
   
-  const currentItems = filteredData.slice(
+  const currentItems = filteredFaqs.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -92,12 +88,13 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
         selectedFilter={selectedFilter}
         onFilterChange={setFilter}
         onSelectedFilterChange={setSelectedFilter}
+        setFilteredFaqs={setFilteredFaqs}
       />
       <FAQSort 
-        faqs={faqs}
+        filteredFaqs={filteredFaqs}
         sort={faqSortValue} 
         onSortChange={setFAQSortValue}
-        setOrderedFaqs={setOrderedFaqs}
+        setFilteredFaqs={setFilteredFaqs}
       />
       <div className="p-6">
         <div className="flex justify-center items-center mb-6">
