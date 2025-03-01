@@ -73,15 +73,17 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
         onSelectedFilterChange={setSelectedFilter}
         setFilteredseniorFaqs={setFilteredSeniorFaqs}
       />
-      <SeniorFAQSort
-        filteredSeniorFaqs={filteredSeniorFaqs}
-        sort={seniorFaqSortValue}
-        onSortChange={setseniorFAQSortValue}
-        setFilteredseniorFaqs={setFilteredSeniorFaqs}
-      />
       <div className="p-6">
-        <div className="flex justify-center items-center mb-6">
+        <div className="flex justify-between items-center mb-6">
+          <div className="flex items-center space-x-4">
           <h4 className="text-2xl font-bold text-gray-800 flex-grow">선배 FAQ 리스트</h4>
+          <SeniorFAQSort
+            filteredSeniorFaqs={filteredSeniorFaqs}
+            sort={seniorFaqSortValue}
+            onSortChange={setseniorFAQSortValue}
+            setFilteredseniorFaqs={setFilteredSeniorFaqs}
+          />
+          </div>
             <div className="flex items-center space-x-4">
               <select
                 value={itemsPerPage}

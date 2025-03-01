@@ -90,17 +90,19 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
         onSelectedFilterChange={setSelectedFilter}
         setFilteredFaqs={setFilteredFaqs}
       />
-      <FAQSort 
-        filteredFaqs={filteredFaqs}
-        sort={faqSortValue} 
-        onSortChange={setFAQSortValue}
-        setFilteredFaqs={setFilteredFaqs}
-      />
+
       <div className="p-6">
-        <div className="flex justify-center items-center mb-6">
-          <h4 className="text-2xl font-bold text-gray-800 flex-grow">FAQ 리스트</h4>
+        <div className="flex justify-between items-center mb-6">
           <div className="flex items-center space-x-4">
-            
+          <h4 className="text-2xl font-bold text-gray-800 flex-grow">FAQ 리스트</h4>
+          <FAQSort 
+            filteredFaqs={filteredFaqs}
+            sort={faqSortValue} 
+            onSortChange={setFAQSortValue}
+            setFilteredFaqs={setFilteredFaqs}
+          />
+          </div>
+          <div className="flex items-center space-x-4">
             <select
               value={itemsPerPage}
               onChange={(e) => dispatch(setFAQItemsPerPage(Number(e.target.value)))}
