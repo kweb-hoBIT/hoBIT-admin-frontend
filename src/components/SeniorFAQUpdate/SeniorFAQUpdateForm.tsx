@@ -69,9 +69,9 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
 
       {/* 카테고리 필드 */}
       <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">카테고리</h3>
+        <h3 className="text-xl font-bold text-gray-800">주요카테고리</h3>
         <div>
-          <label className="block text-lg font-medium text-gray-700 mb-2">카테고리 (한글)</label>
+          <label className="block text-lg font-medium text-gray-700 mb-2">주요카테고리 (한글)</label>
           <div>
             <input
               type="text"
@@ -86,7 +86,7 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
                 }, 100);
               }}
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              placeholder="카테고리를 입력하세요"
+              placeholder="주요카테고리를 입력하세요"
             />
             {isMainCateogoryKoInputFocused && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
@@ -106,7 +106,7 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
             )}
           </div>
           <Translate sourceText={maincategory_ko} setTargetText={(text) => setupdatedSeniorFAQ({ ...updatedSeniorFAQ, maincategory_en: text })} />
-          <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Category (English)</label>
+          <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">MainCategory (English)</label>
           <div>
             <input
               type="text"
@@ -121,7 +121,7 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
                 }, 100);
               }}
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter category"
+              placeholder="Enter maincategory"
             />
             {isMainCateogoryEnInputFocused && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
@@ -145,9 +145,9 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
 
       {/* 서브카테고리 필드 */}
       <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">서브카테고리</h3>
+        <h3 className="text-xl font-bold text-gray-800">하위카테고리</h3>
         <div>
-          <label className="block text-lg font-medium text-gray-700 mb-2">서브카테고리 (한글)</label>
+          <label className="block text-lg font-medium text-gray-700 mb-2">하위카테고리 (한글)</label>
           <div>
             <input
               type="text"
@@ -162,7 +162,7 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
                 }, 100);
               }}
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              placeholder="서브카테고리를 입력하세요"
+              placeholder="하위카테고리를 입력하세요"
               disabled={!maincategory_ko}
             />
             {isSubCateogoryKoInputFocused && (

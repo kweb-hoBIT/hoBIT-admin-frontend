@@ -63,9 +63,9 @@ const SeniorFAQDetailForm: React.FC<SeniorFAQDetailFormProps> = ({
 
       {/* 카테고리 및 질문 필드 */}
       <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">카테고리</h3>
+        <h3 className="text-xl font-bold text-gray-800">주요카테고리</h3>
         <div>
-          <label className="block text-lg font-medium text-gray-700 mb-2">카테고리 (한글)</label>
+          <label className="block text-lg font-medium text-gray-700 mb-2">주요카테고리 (한글)</label>
           <input
             type="text"
             value={maincategory_ko}
@@ -84,9 +84,9 @@ const SeniorFAQDetailForm: React.FC<SeniorFAQDetailFormProps> = ({
 
       {/* 서브카테고리 필드 */}
       <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">서브카테고리</h3>
+        <h3 className="text-xl font-bold text-gray-800">하위카테고리</h3>
         <div>
-          <label className="block text-lg font-medium text-gray-700 mb-2">서브카테고리 (한글)</label>
+          <label className="block text-lg font-medium text-gray-700 mb-2">하위카테고리 (한글)</label>
           <input
             type="text"
             value={subcategory_ko}

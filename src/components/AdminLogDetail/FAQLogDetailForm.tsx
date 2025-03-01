@@ -39,14 +39,14 @@ const FAQLogDetailForm: React.FC<FAQLogDetailFormProps> = ({
 
           {/* 카테고리 및 질문 필드 */}
           <div>
-            <label className="block text-lg font-medium text-gray-700 mb-2">카테고리 (한글)</label>
+            <label className="block text-lg font-medium text-gray-700 mb-2">주요카테고리 (한글)</label>
             <input
               type="text"
               value={prev_faq.maincategory_ko}
               readOnly
               className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prev_faq.maincategory_ko, new_faq.maincategory_ko, 0)} text-black-500`}
             />
-            <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Category (English)</label>
+            <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">MainCategory (English)</label>
             <input
               type="text"
               value={prev_faq.maincategory_en}
@@ -57,7 +57,7 @@ const FAQLogDetailForm: React.FC<FAQLogDetailFormProps> = ({
 
           {/* 서브카테고리 필드 */}
           <div>
-            <label className="block text-lg font-medium text-gray-700 mb-2">서브카테고리 (한글)</label>
+            <label className="block text-lg font-medium text-gray-700 mb-2">하위카테고리 (한글)</label>
             <input
               type="text"
               value={prev_faq.subcategory_ko}
@@ -159,14 +159,14 @@ const FAQLogDetailForm: React.FC<FAQLogDetailFormProps> = ({
 
           {/* 카테고리 및 질문 필드 */}
           <div>
-            <label className="block text-lg font-medium text-gray-700 mb-2">카테고리 (한글)</label>
+            <label className="block text-lg font-medium text-gray-700 mb-2">주요카테고리 (한글)</label>
             <input
               type="text"
               value={new_faq.maincategory_ko}
               readOnly
               className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prev_faq.maincategory_ko, new_faq.maincategory_ko, 1)} text-black-500`}
             />
-            <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Category (English)</label>
+            <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">MainCategory (English)</label>
             <input
               type="text"
               value={new_faq.maincategory_en}
@@ -177,7 +177,7 @@ const FAQLogDetailForm: React.FC<FAQLogDetailFormProps> = ({
 
           {/* 서브카테고리 필드 */}
           <div>
-            <label className="block text-lg font-medium text-gray-700 mb-2">서브카테고리 (한글)</label>
+            <label className="block text-lg font-medium text-gray-700 mb-2">하위카테고리 (한글)</label>
             <input
               type="text"
               value={new_faq.subcategory_ko}
