@@ -9,7 +9,7 @@ type SeniorFAQSortProps = {
 };
 
 const SeniorFAQSort: React.FC<SeniorFAQSortProps> = ({ filteredSeniorFaqs: filteredFaqs, sort, onSortChange, setFilteredseniorFaqs }) => {
-    const filter = ["created_at", "maincategory_ko", "subcategory_ko"] as const;
+    const filter = ["created_at", "maincategory_ko", "subcategory_ko", "detailcategory_ko"] as const;
 
     useEffect(() => {
         if (!filteredFaqs.length) return;
@@ -40,6 +40,8 @@ const SeniorFAQSort: React.FC<SeniorFAQSortProps> = ({ filteredSeniorFaqs: filte
                 <option value={3}>메인 카테고리(역순)</option>
                 <option value={4}>서브 카테고리(가나다순)</option>
                 <option value={5}>서브 카테고리(역순)</option>
+                <option value={6}>세부 카테고리(가나다순)</option>
+                <option value={7}>세부 카테고리(역순)</option>
             </select>
         </div>
     );
