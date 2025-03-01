@@ -28,7 +28,7 @@ const FAQSort: React.FC<FAQSortProps> = ({ faqs, sort, onSortChange, setOrderedF
     }, [faqs, sort]);
 
     return (
-        <div className="p-6">
+        <div className="px-6">
             <select
                 value={sort}
                 onChange={(e) => onSortChange(Number(e.target.value))}
