@@ -6,7 +6,8 @@ import {
   selectFAQFilter,
   setFAQCurrentPage,
   setFAQFilterContent,
-  setFAQFilterName
+  setFAQFilterName,
+  setSortValue
 } from '../../redux/filterSlice';
 import { selectFAQItemsPerPage, setFAQItemsPerPage } from '../../redux/itemSlice';
 import FAQDelete from './FAQDelete';
@@ -26,8 +27,10 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
   const {
     storedCurrentPage,
     storedFilterContent,
-    storedFilterName
+    storedFilterName,
   } = useSelector((state: RootState) => selectFAQFilter(state));
+
+  const { storedSortValue } = useSelector((state: RootState) => state.faqSort);
 
   const [currentPage, setCurrentPage] = useState<number>(storedCurrentPage);
   const [filter, setFilter] = useState<string>(storedFilterContent);
@@ -35,13 +38,14 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
     'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager'
   >(storedFilterName);
   const [filteredFaqs, setFilteredFaqs] = useState(faqs);
-  const [faqSortValue, setFAQSortValue] = useState<number>(1);
+  const [faqSortValue, setFAQSortValue] = useState<number>(storedSortValue);
 
   useEffect(() => {
     dispatch(setFAQCurrentPage(currentPage));
     dispatch(setFAQFilterContent(filter));
     dispatch(setFAQFilterName(selectedFilter));
-  }, [currentPage, filter, selectedFilter]);
+    dispatch(setSortValue(faqSortValue));
+  }, [currentPage, filter, selectedFilter, faqSortValue]);
 
   useEffect(() => {
     if (isFirstRender.current) {

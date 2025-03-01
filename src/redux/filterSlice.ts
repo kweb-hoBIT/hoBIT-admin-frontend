@@ -11,6 +11,11 @@ interface FAQFilterState {
   storedFilterName: 'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager';
 }
 
+// FAQ 순서 필터 상태 정의
+interface FAQSortState {
+  storedSortValue: number;
+}
+
 // Senior FAQ 필터 상태 정의
 interface SeniorFAQFilterState {
   storedCurrentPage: number;
@@ -49,6 +54,10 @@ const initialFAQFilterState: FAQFilterState = {
   storedCurrentPage: parseInt(localStorage.getItem('faqCurrentPage') || '1', 10),
   storedFilterContent: localStorage.getItem('faqFilterContent') || '',
   storedFilterName: (localStorage.getItem('faqFilterName') as 'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager') || 'question_ko',
+};
+
+const initialFAQSortState: FAQSortState = {
+  storedSortValue: parseInt(localStorage.getItem('faqSortValue') || '1', 10),
 };
 
 const initialSeniorFAQFilterState: SeniorFAQFilterState = {
@@ -103,6 +112,21 @@ const faqFilterSlice = createSlice({
       localStorage.removeItem('faqFilterContent');
       localStorage.removeItem('faqFilterName');
     },
+  },
+});
+
+const faqSortSlice = createSlice({
+  name: 'faqSort',
+  initialState: initialFAQSortState,
+  reducers: {
+    setSortValue: (state, action: PayloadAction<number>) => {
+      state.storedSortValue = action.payload;
+      localStorage.setItem('faqSortValue', action.payload.toString());
+    },
+    clearFAQSortState: (state) => {
+      state.storedSortValue = 1;
+      localStorage.removeItem('faqSortValue');
+    }
   },
 });
 
@@ -229,6 +253,15 @@ export const selectFAQFilter = createSelector(
   })
 );
 
+// FAQ 순서 필터 상태 선택자
+export const selectFAQSortState = (state: RootState) => state.faqSort;
+export const selectFAQSort = createSelector(
+  [selectFAQSortState],
+  (faqSortState) => ({
+    storedSortValue: faqSortState.storedSortValue,
+  })
+);
+
 // Senior FAQ 필터 상태 선택자
 export const selectSeniorFAQFilterState = (state: RootState) => state.seniorFaqFilter;
 export const selectSeniorFAQFilter = createSelector(
@@ -295,6 +328,11 @@ export const {
 } = faqFilterSlice.actions;
 
 export const {
+  setSortValue,
+  clearFAQSortState,
+} = faqSortSlice.actions;
+
+export const {
   setSeniorFAQCurrentPage,
   setSeniorFAQFilterContent,
   setSeniorFAQFilterName,
@@ -329,6 +367,7 @@ export const {
 } = userFeedbackFilterSlice.actions;
 
 export const faqFilterReducer = faqFilterSlice.reducer;
+export const faqSortReducer = faqSortSlice.reducer;
 export const seniorFaqFilterReducer = seniorFaqFilterSlice.reducer;
 export const logFilterReducer = logFilterSlice.reducer;
 export const adminLogFilterReducer = adminLogFilterSlice.reducer;

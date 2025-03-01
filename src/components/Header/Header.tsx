@@ -5,6 +5,7 @@ import { RootState } from "../../redux/store";
 import { selectAuth } from "../../redux/authSlice";
 import {
   clearFAQFilterState,
+  clearFAQSortState,
   clearSeniorFAQFilterState,
   clearLogFilterState,
   clearAdminLogFilterState,
@@ -54,6 +55,7 @@ const Header: React.FC = () => {
 
   const handleNavigation = (path: string) => {
     dispatch(clearFAQFilterState());
+    dispatch(clearFAQSortState());
     dispatch(clearSeniorFAQFilterState());
     dispatch(clearLogFilterState());
     dispatch(clearAdminLogFilterState());

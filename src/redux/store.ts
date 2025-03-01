@@ -9,6 +9,7 @@ import {
 } from './itemSlice';
 import {
   faqFilterReducer,
+  faqSortReducer,
   seniorFaqFilterReducer,
   logFilterReducer,
   adminLogFilterReducer,
@@ -21,6 +22,7 @@ const store = configureStore({
   reducer: {
     auth: authReducer,
     faqFilter: faqFilterReducer,
+    faqSort: faqSortReducer,
     seniorFaqFilter: seniorFaqFilterReducer,
     logFilter: logFilterReducer,
     adminLogFilter: adminLogFilterReducer,
