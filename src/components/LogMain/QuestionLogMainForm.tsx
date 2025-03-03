@@ -52,10 +52,6 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
     return new Date(dateStr).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
   };
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [itemsPerPage]);
-
   return (
     <div className="p-6 bg-white-50 rounded-lg">
       <div className="p-6">
@@ -64,8 +60,11 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
             <div className="flex items-center space-x-4">
               <select
                 value={itemsPerPage}
-                onChange={(e) => dispatch(setQuestionLogItemsPerPage(Number(e.target.value)))}
-                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md"
+                onChange={(e) => {
+                  dispatch(setQuestionLogItemsPerPage(Number(e.target.value)))
+                  setCurrentPage(1);
+                }}
+                className="p-2 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value={4}>4개씩 보기</option>
                 <option value={6}>6개씩 보기</option>

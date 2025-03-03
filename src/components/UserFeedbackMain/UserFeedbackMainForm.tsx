@@ -115,11 +115,6 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
     return date.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
   };
 
-  useEffect(() => {
-    setUnresolvedCurrentPage(1);
-    setResolvedCurrentPage(1);
-  }, [itemsPerPage]);
-
   return (
     <div>
       <SelectUserFeedback filter={filter} onFilterChange={handleFilterChange} />
@@ -130,8 +125,12 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
               <div className="flex items-center space-x-4">
                 <select
                   value={itemsPerPage}
-                  onChange={(e) => dispatch(setUserFeedbackItemsPerPage(Number(e.target.value)))}
-                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md"
+                  onChange={(e) => {
+                    dispatch(setUserFeedbackItemsPerPage(Number(e.target.value)))
+                    setUnresolvedCurrentPage(1);
+                    setResolvedCurrentPage(1);
+                  }}
+                  className="p-2 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value={4}>4개씩 보기</option>
                   <option value={6}>6개씩 보기</option>
