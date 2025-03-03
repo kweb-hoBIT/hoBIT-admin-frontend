@@ -24,22 +24,16 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
   const currentPageGroup = Math.floor((currentPage - 1) / pagesPerGroup);
   const startPage = currentPageGroup * pagesPerGroup + 1;
   const endPage = Math.min((currentPageGroup + 1) * pagesPerGroup, totalPages);
-  const pageNumbers = Array.from(
-    { length: endPage - startPage + 1 },
-    (_, index) => startPage + index
-  );
+  const pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index);
 
-  const currentItems = questionLogs.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const currentItems = questionLogs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(Math.min((currentPageGroup + 1) * pagesPerGroup + 1, totalPages));
     }
   };
-
+  
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(Math.max(currentPageGroup * pagesPerGroup, 1));
@@ -76,7 +70,7 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
         <div style={{ minHeight: '395px' }}>
           <div className="grid grid-cols-2 gap-4">
             {currentItems.map((log) => (
-              <div className="relative bg-gray-200 p-4 rounded-lg" key={log.created_at}>
+              <div className="relative bg-gray-200 p-4 rounded-lg" key={log.question_log_id}>
                 <div className="mb-2">
                   <strong>유저 질문: {log.user_question}</strong>
                 </div>
