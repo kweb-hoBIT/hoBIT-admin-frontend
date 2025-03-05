@@ -46,36 +46,39 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
 
   // 해결되지 않은 피드백의 페이지네이션
   const unresolvedTotalPages = Math.ceil(filteredFeedbacks.filter(feedback => feedback.resolved === 0).length / itemsPerPage);
-  const unresolvedPageNumbers = Array.from({ length: Math.min(unresolvedTotalPages, pagesPerGroup) }, (_, index) => index + 1);
+  const unresolvedCurrentPageGroup = Math.floor((unresolvedCurrentPage - 1) / pagesPerGroup);
+  const unresolvedStartPage = unresolvedCurrentPageGroup * pagesPerGroup + 1;
+  const unresolvedEndPage = Math.min((unresolvedCurrentPageGroup + 1) * pagesPerGroup, unresolvedTotalPages);
+  const unresolvedPageNumbers = Array.from({ length: unresolvedEndPage - unresolvedStartPage + 1 }, (_, index) => unresolvedStartPage + index);
   
   // 해결된 피드백의 페이지네이션
   const resolvedTotalPages = Math.ceil(filteredFeedbacks.filter(feedback => feedback.resolved === 1).length / itemsPerPage);
-  const resolvedPageNumbers = Array.from({ length: Math.min(resolvedTotalPages, pagesPerGroup) }, (_, index) => index + 1);
+  const resolvedCurrentPageGroup = Math.floor((resolvedCurrentPage - 1) / pagesPerGroup);
+  const resolvedStartPage = resolvedCurrentPageGroup * pagesPerGroup + 1;
+  const resolvedEndPage = Math.min((resolvedCurrentPageGroup + 1) * pagesPerGroup, resolvedTotalPages);
+  const resolvedPageNumbers = Array.from({ length: resolvedEndPage - resolvedStartPage + 1 }, (_, index) => resolvedStartPage + index);
 
-  // 페이지 번호 및 아이템을 처리
-  const indexOfUnresolvedLastItem = unresolvedCurrentPage * itemsPerPage;
-  const indexOfUnresolvedFirstItem = indexOfUnresolvedLastItem - itemsPerPage;
-  const unresolvedItems = filteredFeedbacks.filter(feedback => feedback.resolved === 0).slice(indexOfUnresolvedFirstItem, indexOfUnresolvedLastItem);
 
-  const indexOfResolvedLastItem = resolvedCurrentPage * itemsPerPage;
-  const indexOfResolvedFirstItem = indexOfResolvedLastItem - itemsPerPage;
-  const resolvedItems = filteredFeedbacks.filter(feedback => feedback.resolved === 1).slice(indexOfResolvedFirstItem, indexOfResolvedLastItem);
+  // 현재 페이지에 보여줄 피드백
+  const unresolvedCurrentItems = filteredFeedbacks.filter(feedback => feedback.resolved === 0).slice((unresolvedCurrentPage - 1) * itemsPerPage, unresolvedCurrentPage * itemsPerPage);
+  const resolvedCurrentItems = filteredFeedbacks.filter(feedback => feedback.resolved === 1).slice((resolvedCurrentPage - 1) * itemsPerPage, resolvedCurrentPage * itemsPerPage);
 
   const handleNextPage = () => {
     if (filter === 'unresolved' && unresolvedCurrentPage < unresolvedTotalPages) {
-      setUnresolvedCurrentPage(prev => prev + 1);
+      setUnresolvedCurrentPage(Math.min((unresolvedCurrentPageGroup + 1) * pagesPerGroup + 1, unresolvedTotalPages));
     } else if (filter === 'resolved' && resolvedCurrentPage < resolvedTotalPages) {
-      setResolvedCurrentPage(prev => prev + 1);
+      setResolvedCurrentPage(Math.min((unresolvedCurrentPageGroup + 1) * pagesPerGroup + 1, resolvedTotalPages));
     }
   };
 
   const handlePrevPage = () => {
     if (filter === 'unresolved' && unresolvedCurrentPage > 1) {
-      setUnresolvedCurrentPage(prev => prev - 1);
+      setUnresolvedCurrentPage(Math.max(unresolvedCurrentPageGroup * pagesPerGroup, 1));
     } else if (filter === 'resolved' && resolvedCurrentPage > 1) {
-      setResolvedCurrentPage(prev => prev - 1);
+      setResolvedCurrentPage(Math.max(resolvedCurrentPageGroup * pagesPerGroup, 1));
     }
   };
+
 
   const handlePageChange = (page: number) => {
     if (filter === 'unresolved') {
@@ -96,11 +99,11 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
       );
   
       if (filter === 'unresolved' && resolved === 1) {
-        if (unresolvedItems.length === 1 && unresolvedCurrentPage > 1) {
+        if (unresolvedCurrentItems.length === 1 && unresolvedCurrentPage > 1) {
           setUnresolvedCurrentPage(prevPage => prevPage - 1);
         }
       } else if (filter === 'resolved' && resolved === 0) {
-        if (resolvedItems.length === 1 && resolvedCurrentPage > 1) {
+        if (resolvedCurrentItems.length === 1 && resolvedCurrentPage > 1) {
           setResolvedCurrentPage(prevPage => prevPage - 1);
         }
       }
@@ -141,7 +144,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
             </div>
         <div style={{ minHeight: '320px' }}>
           <div className="grid grid-cols-2 gap-4">
-            {(filter === 'unresolved' ? unresolvedItems : resolvedItems).map((feedback) => (
+            {(filter === 'unresolved' ? unresolvedCurrentItems : resolvedCurrentItems).map((feedback) => (
               <div key={feedback.user_feedback_id} className="relative bg-gray-200 p-4 rounded-lg">
                 {/* 수정 버튼 */}
                 <UserFeedbackResolvedUpdate
@@ -159,11 +162,11 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                     user_feedback_id={String(feedback.user_feedback_id)}
                     onSuccess={() => {
                       if (filter === 'unresolved') {
-                        if (unresolvedItems.length === 1 && unresolvedCurrentPage > 1) {
+                        if (unresolvedCurrentItems.length === 1 && unresolvedCurrentPage > 1) {
                           dispatch(setUnresolvedFeedbackCurrentPage(unresolvedCurrentPage - 1));
                         }
                       } else {
-                        if (resolvedItems.length === 1 && resolvedCurrentPage > 1) {
+                        if (resolvedCurrentItems.length === 1 && resolvedCurrentPage > 1) {
                           dispatch(setResolvedFeedbackCurrentPage(resolvedCurrentPage - 1));
                         }
                       }
