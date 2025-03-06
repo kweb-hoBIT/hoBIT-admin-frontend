@@ -34,7 +34,18 @@ const EntireAnalyzeGraph: React.FC<EntireAnalyzeGraphProps> = ({ searchSubject, 
       return null; 
     })
     .flat()
-    .filter(Boolean); 
+    .filter(Boolean);
+
+  const maxValue = Math.max(...transformedData.map((item) => { // 최대값을 한계로 설정해도록
+    if (searchSubject === 'language') {
+      return Math.max(item.한국어, item.영어);
+    } else if (searchSubject === 'frequency') {
+      return item.횟수;
+    } else if (searchSubject === 'feedback') {
+      return item.평균점수;
+    }
+    return 0;
+  }));
 
   return (
     <div className="analyze-graph"
@@ -48,12 +59,14 @@ const EntireAnalyzeGraph: React.FC<EntireAnalyzeGraphProps> = ({ searchSubject, 
         <BarChart data={transformedData}>
           <CartesianGrid strokeDasharray="3 3" />
           <YAxis
-            domain={searchSubject === 'feedback' ? [-1, 1] : [0, 'auto']} 
+            domain={searchSubject === 'feedback' ? [-1, 1] : [0, maxValue]} // 검색 주제가 피드백이면 가독성을 위해 최소/최댓값을 -1/1로 고정
             label={{
               value: searchSubject === 'feedback' ? '점수' : '횟수',
               position: 'insideLeft',
               offset: 0,
             }}
+            tickFormatter={(value) => Math.round(value).toString()} // 정수 단위로만 나누어지도록
+            allowDecimals={false}
           />
           <Tooltip content={<EntireAnalyzeTooltip searchSubject={searchSubject} />} />
           <Legend />
