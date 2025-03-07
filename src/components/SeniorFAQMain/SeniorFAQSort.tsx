@@ -25,7 +25,7 @@ const SeniorFAQSort: React.FC<SeniorFAQSortProps> = ({ filteredSeniorFaqs: filte
         });
 
         setFilteredseniorFaqs(sortedFaqs);
-    }, [filteredFaqs, sort]);
+    }, [sort]);
 
     return (
         <div className="px-6">

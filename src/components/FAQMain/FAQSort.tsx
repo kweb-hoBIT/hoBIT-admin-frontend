@@ -25,7 +25,7 @@ const FAQSort: React.FC<FAQSortProps> = ({ filteredFaqs, sort, onSortChange, set
         });
 
         setFilteredFaqs(sortedFaqs);
-    }, [filteredFaqs, sort]);
+    }, [sort]);
 
     return (
         <div className="px-6">
