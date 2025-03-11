@@ -42,7 +42,7 @@ const Login: React.FC = () => {
         } else {
           if (response.payload?.statusCode === 404) {
             setError('존재하지 않는 이메일입니다. 다시 확인해주세요.');
-          } else if (response.payload?.statusCode === 400) {
+          } else if (response.payload?.statusCode === 401) {
             setError('비밀번호가 일치하지 않습니다. 다시 확인해주세요.');
           }
         }
