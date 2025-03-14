@@ -204,7 +204,7 @@ export type UpdateCheckFAQCategoryDuplicateRequest = {
   };
 };
 
-export type UpdateCheckFAQCategoryDuplicateResponse = {
+export type CheckFAQCategoryDuplicateResponse = {
   statusCode: number;
   message: string;
   data: {

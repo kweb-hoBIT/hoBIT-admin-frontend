@@ -1,6 +1,6 @@
 import ProtectedPage from '../components/ProtectedPage';
 import Header from '../components/Header/Header';
-import SeniorFAQCreate from '../components/SeniorFAQCreate/SeniorFAQCreate';
+import SeniorFAQCreate from '../components/SeniorFAQ/SeniorFAQCreate/SeniorFAQCreate';
 
 const FAQCreatePage: React.FC = () => {
 

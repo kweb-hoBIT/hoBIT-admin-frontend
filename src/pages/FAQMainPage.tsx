@@ -1,6 +1,6 @@
 import ProtectedPage from '../components/ProtectedPage';
 import Header from '../components/Header/Header';
-import FAQMain from '../components/FAQMain/FAQMain';
+import FAQMain from '../components/FAQ/FAQMain/FAQMain';
 
 const FAQMainPage: React.FC = () => {
   return (

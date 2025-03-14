@@ -1,6 +1,6 @@
 import Header from '../components/Header/Header';
 import ProtectedPage from '../components/ProtectedPage';
-import LogMain from '../components/LogMain/LogMain';
+import LogMain from '../components/Log/LogMain/LogMain';
 
 import React from 'react';
 

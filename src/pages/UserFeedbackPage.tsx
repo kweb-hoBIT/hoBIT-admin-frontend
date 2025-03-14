@@ -1,6 +1,6 @@
 import ProtectedPage from '../components/ProtectedPage';
 import Header from '../components/Header/Header';
-import UserFeedbackMain from '../components/UserFeedbackMain/UserFeedbackMain';
+import UserFeedbackMain from '../components/UserFeedback/UserFeedbackMain/UserFeedbackMain';
 
 const UserFeedbackMainPage: React.FC = () => {
 
