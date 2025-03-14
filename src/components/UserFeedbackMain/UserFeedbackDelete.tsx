@@ -11,7 +11,7 @@ const UserFeedbackDelete: React.FC<FAQDeleteProps> = ({ user_feedback_id, onSucc
   const [error, setError] = useState<string | null>(null);
   const [showPopup, setShowPopup] = useState(false);
 
-  const deleteFAQApi = useHobitMutateDeleteApi<DeleteUserFeedbackRequest, DeleteUserFeedbackResponse>('feedbacks');
+  const deleteFAQApi = useHobitMutateDeleteApi<DeleteUserFeedbackRequest, DeleteUserFeedbackResponse>('feedbacks/user');
 
   const handleDeleteFAQ = async () => {
     setError(null);
