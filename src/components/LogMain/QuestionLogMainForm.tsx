@@ -76,7 +76,7 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
                 </div>
                 <div className="flex flex-col">
                   <div className="mb-1 text-sm text-gray-600">
-                    <strong>매칭된 질문:</strong> {log.user_question}
+                    <strong>매칭된 질문:</strong> {log.faq_question}
                   </div>
                   <div className="mb-1 text-sm text-gray-600">
                     <strong>피드백 점수:</strong> {log.feedback_score ? log.feedback_score : '피드백 점수 없음'}
