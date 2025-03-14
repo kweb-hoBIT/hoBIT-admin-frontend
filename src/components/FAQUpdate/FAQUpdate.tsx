@@ -6,6 +6,7 @@ import { selectAuth } from '../../redux/authSlice';
 import { GetFAQRequest, GetFAQResponse, UpdateFAQRequest, UpdateFAQResponse, GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, UpdateCheckFAQCategoryDuplicateRequest, UpdateCheckFAQCategoryDuplicateResponse } from '../../types/faq';
 import { RootState } from '../../redux/store';
 import { useNavigate } from 'react-router-dom';
+import FAQCategoryChange from "./FAQCategoryChange"
 
 interface FAQUpdateProps {
   faq_id: string;
@@ -35,6 +36,23 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
     answer_en: [{ answer: '', url: '', email: '', phone: '' }],
     manager: '',
   });
+
+  const [showCategoryChange, setShowCategoryChange] = useState(false);
+  const [changedData, setChangedData] = useState<UpdateCheckFAQCategoryDuplicateResponse['data']['changedData']>([
+    {
+      field: '',
+      input: {
+        ko: '',
+        en: ''
+      },
+      conflict: [
+        {
+          ko: '',
+          en: ''
+        }
+      ]
+    }
+  ]);
 
   const FAQFetchApi = useHobitQueryGetApi<GetFAQRequest, GetFAQResponse>('faqs', { params: { faq_id } });
   const GetAllFAQCategoryApi = useHobitQueryGetApi<GetAllFAQCategoryRequest, GetAllFAQCategoryResponse>('faqs/category');
@@ -149,6 +167,11 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
     });
   };
 
+  
+  const handleCategoryChangeClose = () => {
+    setShowCategoryChange(false);
+  };
+
   const handleUpdate = async () => {
     if (isUpdating) return;
     setIsUpdating(true);
@@ -191,13 +214,9 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
 
     if (checkResponse.payload?.statusCode === 200) {
       if (checkResponse.payload.data.isDuplicated) {
-        alert(`다른 FAQ의 카테고리와 같은 카테고리를 사용하려면 띄어쓰기와 한영 단어가 완벽하게 일치해야 합니다.
-          \n 기존 카테고리: 공간예약 - Reserve a space 
-          \n 현재 카테고리: 공간 예약 - Reserve a space 
-          \n => 띄어쓰기로 인한 에러
-          \n 기존 카테고리: 공간예약 - Reserve a space 
-          \n 현재 카테고리: 공간예약 - Reserve a room
-          \n => 번역으로 인한 에러`);
+        console.log(11111111111111)
+        setChangedData(checkResponse.payload.data.changedData);
+        setShowCategoryChange(true);
         setIsUpdating(false);
         return;
       }
@@ -228,16 +247,23 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
   }
 
   return (
-    <FAQUpdateForm
-      updatedFAQ={updatedFAQ}
-      setupdatedFAQ={setupdatedFAQ}
-      category={category}
-      findFilterIndex={findFilterIndex}
-      handleAddAnswer={handleAddAnswer}
-      handleDeleteAnswer={handleDeleteAnswer}
-      handleUpdate={handleUpdate}
-      isUpdating={isUpdating}
-    />
+    <>
+      {showCategoryChange && (
+        <FAQCategoryChange 
+          changedData={changedData}
+          onHandleCategoryChangeClose={handleCategoryChangeClose} />
+      )}
+      <FAQUpdateForm
+        updatedFAQ={updatedFAQ}
+        setupdatedFAQ={setupdatedFAQ}
+        category={category}
+        findFilterIndex={findFilterIndex}
+        handleAddAnswer={handleAddAnswer}
+        handleDeleteAnswer={handleDeleteAnswer}
+        handleUpdate={handleUpdate}
+        isUpdating={isUpdating}
+      />
+    </>
   );
 };
 

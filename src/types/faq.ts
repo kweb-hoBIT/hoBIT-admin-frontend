@@ -209,6 +209,17 @@ export type UpdateCheckFAQCategoryDuplicateResponse = {
   message: string;
   data: {
     isDuplicated: boolean;
+    changedData: {
+      field: string;
+      input: {
+        ko: string;
+        en: string;
+      };
+      conflict: {
+        ko: string;
+        en: string;
+      }[];
+    }[];
   };
 };
 
