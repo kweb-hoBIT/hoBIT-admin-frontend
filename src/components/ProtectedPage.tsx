@@ -13,7 +13,7 @@ const ProtectedPage: React.FC<ProtectedPageProps> = ({ children }) => {
 
   useEffect(() => {
     const checkTokenExpiration = async () => {
-      const response = await NewAccessTokenApi({ credentials: 'include' });
+      const response = await NewAccessTokenApi({});
       if (response.payload?.statusCode !== 200) {
         alert("세션이 만료되어 다시 로그인 부탁드립니다.");
         navigate('/login');

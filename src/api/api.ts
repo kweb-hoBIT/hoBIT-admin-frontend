@@ -40,6 +40,7 @@ export async function hobitGetApi<
     resp = await fetch(`${endpoint}/${path}`, {
       method: 'GET',
       mode: 'cors',
+      credentials: 'include',
       headers,
     });
     
@@ -69,7 +70,7 @@ export async function hobitGetApi<
 }
 
 export async function hobitPostApi<
-  T extends HobitAdminPostApiRequest & { body?: Record<string, any>, credentials?: RequestCredentials },
+  T extends HobitAdminPostApiRequest & { body?: Record<string, any> },
   R extends HobitAdminApiResponse,
 >(path: string, req?: T): Promise<ApiResponse<R>> {
   const headers: Record<string, string> = {
@@ -79,12 +80,11 @@ export async function hobitPostApi<
   let resp: Response | undefined;
   try {
     const body = req?.body ?? {};
-    const credential = req?.credentials ?? 'omit';
     resp = await fetch(`${endpoint}/${path}`, {
       method: 'POST',
       mode: 'cors',
       headers,
-      credentials: credential,
+      credentials: 'include',
       body: JSONbig.stringify(body),
     });
 
@@ -130,6 +130,7 @@ export async function hobitPutApi<
       method: 'PUT',
       mode: 'cors',
       headers,
+      credentials: 'include',
       body: JSONbig.stringify(body),
     });
     
@@ -175,12 +176,14 @@ export async function hobitDeleteApi<
         method: 'DELETE',
         mode: 'cors',
         headers,
+        credentials: 'include',
         body: JSONbig.stringify(body),
       });
     } else{
       resp = await fetch(`${endpoint}/${path}`, {
         method: 'DELETE',
         mode: 'cors',
+        credentials: 'include',
         headers,
       });
     }
