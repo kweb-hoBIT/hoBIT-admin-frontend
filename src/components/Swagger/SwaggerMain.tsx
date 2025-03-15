@@ -20,7 +20,7 @@ const SwaggerMain: React.FC = () => {
 
 
   if (GetSwaggerApi.isLoading) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   return swaggerData ? (
