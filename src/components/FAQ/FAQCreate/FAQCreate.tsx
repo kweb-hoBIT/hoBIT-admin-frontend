@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useHobitQueryGetApi, useHobitMutatePostApi } from '../../../hooks/hobitAdmin';
 import FAQCreateForm from './FAQCreateForm';
+import FAQCategoryConflict from '../FAQCategoryConflict';
 import { selectAuth } from '../../../redux/authSlice';
-import { CreateFAQRequest, CreateFAQResponse, GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, CreateCheckFAQCategoryDuplicateRequest, CreateCheckFAQCategoryDuplicateResponse } from '../../../types/faq';
+import { CreateFAQRequest, CreateFAQResponse, GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, CreateCheckFAQCategoryConflictRequest, CheckFAQCategoryConflictResponse } from '../../../types/faq';
 import { RootState } from '../../../redux/store';
 import { useNavigate } from 'react-router-dom';
 
@@ -32,8 +33,25 @@ const FAQCreate: React.FC = () => {
     manager: '',
   });
 
+  const [showCategoryConflict, setShowCategoryConflict] = useState(false);
+  const [conflictedData, setConflictedData] = useState<CheckFAQCategoryConflictResponse['data']['conflictedData']>([
+    {
+      field: '',
+      input: {
+        ko: '',
+        en: ''
+      },
+      conflict: [
+        {
+          ko: '',
+          en: ''
+        }
+      ]
+    }
+  ]);
+
   const GetAllFAQCategoryApi = useHobitQueryGetApi<GetAllFAQCategoryRequest, GetAllFAQCategoryResponse>('faqs/category');
-  const CheckFAQCategoryDuplicateApi = useHobitMutatePostApi<CreateCheckFAQCategoryDuplicateRequest, CreateCheckFAQCategoryDuplicateResponse>('faqs/create/category/check');
+  const CheckFAQCategoryConflictApi = useHobitMutatePostApi<CreateCheckFAQCategoryConflictRequest, CheckFAQCategoryConflictResponse>('faqs/create/category/conflict');
   const FAQCreateApi = useHobitMutatePostApi<CreateFAQRequest, CreateFAQResponse>('faqs');
 
   // FAQ Category 데이터 가져오기
@@ -115,6 +133,10 @@ const FAQCreate: React.FC = () => {
     });
   };
 
+  const handleCategoryConflictClose = () => {
+    setShowCategoryConflict(false);
+  };
+
   const handleCreate = async () => {
     if (isCreating) return;
     setIsCreating(true);
@@ -148,7 +170,7 @@ const FAQCreate: React.FC = () => {
     }
 
 
-      const checkResponse = await CheckFAQCategoryDuplicateApi({
+      const checkResponse = await CheckFAQCategoryConflictApi({
         body: {
           maincategory_ko,
           maincategory_en,
@@ -158,19 +180,15 @@ const FAQCreate: React.FC = () => {
       });
     
       if (checkResponse.payload?.statusCode === 200 ) {
-        if (checkResponse.payload.data.isDuplicated){
-          alert(`다른 FAQ의 카테고리와 같은 카테고리를 사용하려면 띄어쓰기와 한영 단어가 완벽하게 일치해야 합니다.
-            \n 예시:
-            \n 기존 카테고리: 공간예약 - Reserve a space 
-            \n 현재 카테고리: 공간 예약 - Reserve a space 
-            \n => 띄어쓰기로 인한 에러
-            \n 기존 카테고리: 공간예약 - Reserve a space 
-            \n 현재 카테고리: 공간예약 - Reserve a room
-            \n => 번역으로 인한 에러`);
+        if (checkResponse.payload.data.isConflict) {
+          setConflictedData(checkResponse.payload.data.conflictedData);
+          setShowCategoryConflict(true);
+          setIsCreating(false);
           return;
         }
       } else {
         alert('FAQ 카테고리 중복 체크 중 오류가 발생했습니다.');
+        setIsCreating(false);
         console.log('FAQ 카테고리 중복 체크 중 오류가 발생했습니다.', checkResponse.error);
         return;
       }
@@ -190,16 +208,24 @@ const FAQCreate: React.FC = () => {
     } 
 
   return (
-    <FAQCreateForm
-      newFAQ={newFAQ}
-      setNewFAQ={setNewFAQ}
-      category={category}
-      findFilterIndex={findFilterIndex}
-      handleAddAnswer={handleAddAnswer}
-      handleCreate={handleCreate}
-      handleDeleteAnswer={handleDeleteAnswer}
-      isCreating={isCreating}
-    />
+    <>
+      {showCategoryConflict && (
+        <FAQCategoryConflict
+          conflictedData={conflictedData}
+          onHandleCategoryConflictClose={handleCategoryConflictClose} 
+        />
+      )}
+      <FAQCreateForm
+        newFAQ={newFAQ}
+        setNewFAQ={setNewFAQ}
+        category={category}
+        findFilterIndex={findFilterIndex}
+        handleAddAnswer={handleAddAnswer}
+        handleCreate={handleCreate}
+        handleDeleteAnswer={handleDeleteAnswer}
+        isCreating={isCreating}
+      />
+    </>
   );
 };
 

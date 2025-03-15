@@ -3,10 +3,10 @@ import { useSelector } from 'react-redux';
 import { useHobitQueryGetApi, useHobitMutatePostApi, useHobitMutatePutApi } from '../../../hooks/hobitAdmin';
 import FAQUpdateForm from './FAQUpdateForm';
 import { selectAuth } from '../../../redux/authSlice';
-import { GetFAQRequest, GetFAQResponse, UpdateFAQRequest, UpdateFAQResponse, GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, UpdateCheckFAQCategoryDuplicateRequest, CheckFAQCategoryDuplicateResponse } from '../../../types/faq';
+import { GetFAQRequest, GetFAQResponse, UpdateFAQRequest, UpdateFAQResponse, GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, UpdateCheckFAQCategoryConflictRequest, CheckFAQCategoryConflictResponse } from '../../../types/faq';
 import { RootState } from '../../../redux/store';
 import { useNavigate } from 'react-router-dom';
-import FAQCategoryChange from "../FAQCategoryChange"
+import FAQCategoryConflict from "../FAQCategoryConflict"
 
 interface FAQUpdateProps {
   faq_id: string;
@@ -37,8 +37,8 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
     manager: '',
   });
 
-  const [showCategoryChange, setShowCategoryChange] = useState(false);
-  const [changedData, setChangedData] = useState<CheckFAQCategoryDuplicateResponse['data']['changedData']>([
+  const [showCategoryConflict, setShowCategoryConflict] = useState(false);
+  const [conflictedData, setConflictedData] = useState<CheckFAQCategoryConflictResponse['data']['conflictedData']>([
     {
       field: '',
       input: {
@@ -56,7 +56,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
 
   const FAQFetchApi = useHobitQueryGetApi<GetFAQRequest, GetFAQResponse>('faqs', { params: { faq_id } });
   const GetAllFAQCategoryApi = useHobitQueryGetApi<GetAllFAQCategoryRequest, GetAllFAQCategoryResponse>('faqs/category');
-  const CheckFAQCategoryDuplicateApi = useHobitMutatePostApi<UpdateCheckFAQCategoryDuplicateRequest, CheckFAQCategoryDuplicateResponse>('faqs/update/category/check');
+  const CheckFAQCategoryConflictApi = useHobitMutatePostApi<UpdateCheckFAQCategoryConflictRequest, CheckFAQCategoryConflictResponse>('faqs/update/category/conflict');
   const FAQUpdateApi = useHobitMutatePutApi<UpdateFAQRequest, UpdateFAQResponse>('faqs');
 
   useEffect(() => {
@@ -168,8 +168,8 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
   };
 
   
-  const handleCategoryChangeClose = () => {
-    setShowCategoryChange(false);
+  const handleCategoryConflictClose = () => {
+    setShowCategoryConflict(false);
   };
 
   const handleUpdate = async () => {
@@ -202,7 +202,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
       return;
     }
       
-    const checkResponse = await CheckFAQCategoryDuplicateApi({
+    const checkResponse = await CheckFAQCategoryConflictApi({
       body: {
         faq_id : Number(faq_id),
         maincategory_ko,
@@ -213,15 +213,16 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
     });
 
     if (checkResponse.payload?.statusCode === 200) {
-      if (checkResponse.payload.data.isDuplicated) {
-        setChangedData(checkResponse.payload.data.changedData);
-        setShowCategoryChange(true);
+      if (checkResponse.payload.data.isConflict) {
+        setConflictedData(checkResponse.payload.data.conflictedData);
+        setShowCategoryConflict(true);
         setIsUpdating(false);
         return;
       }
     } else {
       alert('FAQ 카테고리 중복 확인 중 오류가 발생했습니다. 다시 시도해주세요.');
       setIsUpdating(false);
+      console.log('FAQ 카테고리 중복 확인 중 오류가 발생했습니다.', checkResponse.error);
       return;
     }
   
@@ -247,10 +248,10 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
 
   return (
     <>
-      {showCategoryChange && (
-        <FAQCategoryChange 
-          changedData={changedData}
-          onHandleCategoryChangeClose={handleCategoryChangeClose} 
+      {showCategoryConflict && (
+        <FAQCategoryConflict 
+          conflictedData={conflictedData}
+          onHandleCategoryConflictClose={handleCategoryConflictClose} 
         />
       )}
       <FAQUpdateForm

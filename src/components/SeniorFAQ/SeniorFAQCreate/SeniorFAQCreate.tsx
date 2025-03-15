@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useHobitQueryGetApi, useHobitMutatePostApi } from '../../../hooks/hobitAdmin';
 import SeniorFAQCreateForm from './SeniorFAQCreateForm';
+import SeniorFAQCategoryConflict from '../SeniorFAQCategoryConflict';
 import { selectAuth } from '../../../redux/authSlice';
-import { CreateSeniorFAQRequest, CreateSeniorFAQResponse, GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse, CreateCheckSeniorFAQCategoryDuplicateRequest, CreateCheckSeniorFAQCategoryDuplicateResponse } from '../../../types/seniorfaq';
+import { CreateSeniorFAQRequest, CreateSeniorFAQResponse, GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse, CreateCheckSeniorFAQCategoryConflictRequest, CheckSeniorFAQCategoryConflictResponse } from '../../../types/seniorfaq';
 import { RootState } from '../../../redux/store';
 import { useNavigate } from 'react-router-dom';
 
@@ -53,8 +54,25 @@ const SeniorFAQCreate: React.FC = () => {
     manager: '',
   });
 
+  const [showCategoryConflict, setShowCategoryConflict] = useState(false);
+  const [conflictedData, setConflictedData] = useState<CheckSeniorFAQCategoryConflictResponse['data']['conflictedData']>([
+    {
+      field: '',
+      input: {
+        ko: '',
+        en: ''
+      },
+      conflict: [
+        {
+          ko: '',
+          en: ''
+        }
+      ]
+    }
+  ]);
+
   const GetAllSeniorFAQCategoryApi = useHobitQueryGetApi<GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse>('seniorfaqs/category');
-  const CheckSeniorFAQCategoryDuplicateApi = useHobitMutatePostApi<CreateCheckSeniorFAQCategoryDuplicateRequest, CreateCheckSeniorFAQCategoryDuplicateResponse>('seniorfaqs/create/category/check');
+  const CheckSeniorFAQCategoryConflictApi = useHobitMutatePostApi<CreateCheckSeniorFAQCategoryConflictRequest, CheckSeniorFAQCategoryConflictResponse>('seniorfaqs/create/category/conflict');
   const SeniorFAQCreateApi = useHobitMutatePostApi<CreateSeniorFAQRequest, CreateSeniorFAQResponse>('seniorfaqs');
 
   // FAQ Category 데이터 가져오기
@@ -164,6 +182,10 @@ const SeniorFAQCreate: React.FC = () => {
     });
   };
 
+  const handleCategoryConflictClose = () => {
+    setShowCategoryConflict(false);
+  };
+
   const handleSubmit = async () => {
     const {
       maincategory_ko,
@@ -192,7 +214,7 @@ const SeniorFAQCreate: React.FC = () => {
       return;
     }
   
-    const checkResponse = await CheckSeniorFAQCategoryDuplicateApi({
+    const checkResponse = await CheckSeniorFAQCategoryConflictApi({
       body: {
         maincategory_ko,
         maincategory_en,
@@ -204,15 +226,9 @@ const SeniorFAQCreate: React.FC = () => {
     });
   
     if (checkResponse.payload?.statusCode === 200) {
-      if (checkResponse.payload.data.isDuplicated) {
-        alert(`다른 선배 FAQ의 카테고리와 같은 카테고리를 사용하려면 띄어쓰기와 한영 단어가 완벽하게 일치해야 합니다.
-          \n 예시:
-          \n 기존 카테고리: 공간예약 - Reserve a space 
-          \n 현재 카테고리: 공간 예약 - Reserve a space 
-          \n => 띄어쓰기로 인한 에러
-          \n 기존 카테고리: 공간예약 - Reserve a space 
-          \n 현재 카테고리: 공간예약 - Reserve a room
-          \n => 번역으로 인한 에러`);
+      if (checkResponse.payload.data.isConflict) {
+        setConflictedData(checkResponse.payload.data.conflictedData);
+        setShowCategoryConflict(true);
         return;
       }
     } else {
@@ -235,15 +251,23 @@ const SeniorFAQCreate: React.FC = () => {
   }; 
     
   return (
-    <SeniorFAQCreateForm
-      newSeniorFAQ={newSeniorFAQ}
-      setNewSeniorFAQ={setNewSeniorFAQ}
-      category={category}
-      findFilterIndex={findFilterIndex}
-      handleAddAnswer={handleAddAnswer}
-      handleSubmit={handleSubmit}
-      handleDeleteAnswer={handleDeleteAnswer}
-    />
+    <>
+      {showCategoryConflict && (
+        <SeniorFAQCategoryConflict 
+          conflictedData={conflictedData}
+          onHandleCategoryConflictClose={handleCategoryConflictClose} 
+        />
+      )}
+      <SeniorFAQCreateForm
+        newSeniorFAQ={newSeniorFAQ}
+        setNewSeniorFAQ={setNewSeniorFAQ}
+        category={category}
+        findFilterIndex={findFilterIndex}
+        handleAddAnswer={handleAddAnswer}
+        handleSubmit={handleSubmit}
+        handleDeleteAnswer={handleDeleteAnswer}
+      />
+    </>
   );
 };
 

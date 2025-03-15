@@ -28,10 +28,9 @@ import {
   UpdateFAQResponse,
   GetAllFAQCategoryRequest,
   GetAllFAQCategoryResponse,
-  CreateCheckFAQCategoryDuplicateRequest,
-  CreateCheckFAQCategoryDuplicateResponse,
-  UpdateCheckFAQCategoryDuplicateRequest,
-  CheckFAQCategoryDuplicateResponse,
+  CreateCheckFAQCategoryConflictRequest,
+  UpdateCheckFAQCategoryConflictRequest,
+  CheckFAQCategoryConflictResponse,
 } from './faq';
 
 import {
@@ -47,10 +46,9 @@ import {
   UpdateSeniorFAQResponse,
   GetAllSeniorFAQCategoryRequest,
   GetAllSeniorFAQCategoryResponse,
-  CreateCheckSeniorFAQCategoryDuplicateRequest,
-  CreateCheckSeniorFAQCategoryDuplicateResponse,
-  UpdateCheckSeniorFAQCategoryDuplicateRequest,
-  CheckSeniorFAQCategoryDuplicateResponse
+  CreateCheckSeniorFAQCategoryConflictRequest,
+  UpdateCheckSeniorFAQCategoryConflictRequest,
+  CheckSeniorFAQCategoryConflictResponse
 } from './seniorfaq'
 
 import {
@@ -122,10 +120,10 @@ export type HobitAdminPostApiRequest =
   | NewAccessTokenRequest 
   | CreateFAQRequest
   | CreateSeniorFAQRequest
-  | CreateCheckFAQCategoryDuplicateRequest
-  | UpdateCheckFAQCategoryDuplicateRequest
-  | CreateCheckSeniorFAQCategoryDuplicateRequest
-  | UpdateCheckSeniorFAQCategoryDuplicateRequest
+  | CreateCheckFAQCategoryConflictRequest
+  | UpdateCheckFAQCategoryConflictRequest
+  | CreateCheckSeniorFAQCategoryConflictRequest
+  | UpdateCheckSeniorFAQCategoryConflictRequest
   | TranslateFAQRequest;
 
 export type HobitAdminPutApiRequest =
@@ -175,11 +173,8 @@ export type HobitAdminApiResponse =
   | GetAllFAQCategoryResponse
   | GetAllSeniorFAQCategoryResponse
   | DeleteUserFeedbackResponse
-  | CreateCheckFAQCategoryDuplicateResponse
-  | CreateCheckFAQCategoryDuplicateResponse
-  | CreateCheckSeniorFAQCategoryDuplicateResponse
-  | CheckFAQCategoryDuplicateResponse
-  | CheckSeniorFAQCategoryDuplicateResponse;
+  | CheckFAQCategoryConflictResponse
+  | CheckSeniorFAQCategoryConflictResponse;
 
 export type ApiResponse<P> = {
   error: ApiErrorPayload | null;
