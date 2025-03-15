@@ -24,6 +24,7 @@ import FAQLogDetailPage from './pages/FAQLogDetailPage';
 import SeniorFAQLogDetailPage from './pages/SeniorFAQLogDetailPage';
 import LogAnalyticsPage from './pages/LogAnalyticsPage';
 import UserFeedbackPage from './pages/UserFeedbackPage';
+import SwaggerPage from './pages/SwaggerPage';
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,9 @@ const App: React.FC = () => {
             <Routes>
               {/* 시작 페이지 */}
               <Route path="/" element={<Navigate to="/login" />} />
+
+              {/* Swagger 페이지 */}
+              <Route path="/api-docs" element={<SwaggerPage />} />
               
               {/* 인증 관련 페이지 */}
               <Route path="/login" element={<LoginPage />} />

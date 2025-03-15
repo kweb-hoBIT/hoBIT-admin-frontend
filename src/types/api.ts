@@ -92,6 +92,13 @@ import {
   TranslateFAQResponse,
 } from './translate'
 
+
+import {
+  SwaggerRequest,
+  SwaggerResponse,
+} from './swagger'
+
+
 export type HobitAdminGetApiRequest =
   | GetAllFAQRequest
   | GetFAQRequest
@@ -109,7 +116,8 @@ export type HobitAdminGetApiRequest =
   | CompareSeniorFAQLogRequest
   | GetAllUserFeedbackRequest
   | GetAllFAQCategoryRequest
-  | GetAllSeniorFAQCategoryRequest;
+  | GetAllSeniorFAQCategoryRequest
+  | SwaggerRequest;
 
 
 export type HobitAdminPostApiRequest =
@@ -174,7 +182,8 @@ export type HobitAdminApiResponse =
   | GetAllSeniorFAQCategoryResponse
   | DeleteUserFeedbackResponse
   | CheckFAQCategoryConflictResponse
-  | CheckSeniorFAQCategoryConflictResponse;
+  | CheckSeniorFAQCategoryConflictResponse
+  | SwaggerResponse;
 
 export type ApiResponse<P> = {
   error: ApiErrorPayload | null;
