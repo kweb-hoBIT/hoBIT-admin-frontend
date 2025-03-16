@@ -4,7 +4,7 @@
 <img alt="Logo" src="https://github.com/user-attachments/assets/8ba1cd26-2741-4789-b967-28989fe53e00" width="300px"/>
 </p>
 
-# 호빗 관리자 사이트 소개
+# 관리자 사이트 소개
 
 **호빗**은 고려대학교 정보대학 행정 관련 질문, 정보대학 선배들의 조언들을 한 곳에 모아둔 챗봇입니다.
 
