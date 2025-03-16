@@ -1,7 +1,7 @@
 # hoBIT-admin-frontend
 
 <p align="center">
-<img alt="Logo" src="https://github.com/user-attachments/assets/8ba1cd26-2741-4789-b967-28989fe53e00" width="500px"/>
+<img alt="Logo" src="https://github.com/user-attachments/assets/8ba1cd26-2741-4789-b967-28989fe53e00" width="300px"/>
 </p>
 
 # 호빗 관리자 사이트 소개
