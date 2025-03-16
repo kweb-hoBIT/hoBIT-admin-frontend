@@ -1,8 +1,16 @@
 # hoBIT-admin-frontend
 
-## System Requirements
+<p align="center">
+<img alt="Logo" src="https://user-images.githubusercontent.com/43535460/213188549-5b7cda33-7a77-4ad6-8e6e-8ab44dc24b7d.png" width="500px"/>
+</p>
 
-- MySQL
+# 호빗 관리자 사이트 소개
+
+**호빗**은 고려대학교 정보대학 행정 관련 질문, 정보대학 선배들의 조언들을 한 곳에 모아둔 챗봇입니다.
+
+관리자 사이트에서는 호빗에 필요한 데이터를 추가, 수정, 삭제할 수 있습니다. 
+
+자세한 내용은 [관리자 사이트 소개](https://magnificent-screw-658.notion.site/1a5d8b1360b88022adb8e0efaf538eed?pvs=4)에서 확인해주세요.
 
 ## Installation
 
