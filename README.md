@@ -41,6 +41,17 @@ Start Application:
 ```bash
 npm start
 ```
+
+## ENV 변수
+
+`hobit` 에 사용되는 환경변수: 
+
+
+| 변수명                 | 설명 |
+|------------------------|--------------------------------|
+| `REACT_APP_HOBIT_ADMIN_BACKEND_ENDPOINT`                | API의 기본 URL |
+| `GENERATE_SOURCEMAP`             | 소스 맵 생성 여부 설정 옵션 |
+
 # 가이드라인
 
 ## 브랜치 전략
