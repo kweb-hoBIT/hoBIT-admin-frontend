@@ -183,6 +183,11 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                       )}</strong>
                   </div>
                   <div className="flex flex-col">
+                    {feedback.question_ko && (
+                      <div className="mb-1 text-sm text-gray-600">
+                        <strong>유저 질문:</strong> {feedback.user_question ? feedback.user_question : 'X'}
+                      </div>
+                    )}
                     <div className="mb-1 text-sm text-gray-600">
                       <strong>피드백 사유:</strong> {feedback.feedback_reason ? feedback.feedback_reason : 'X'}
                     </div>
