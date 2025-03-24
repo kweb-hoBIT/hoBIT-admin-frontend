@@ -192,7 +192,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                       <strong>피드백 사유:</strong> {feedback.feedback_reason ? feedback.feedback_reason : 'X'}
                     </div>
                     <div className="mb-1 text-sm text-gray-600">
-                      <strong>피드백 상세:</strong> {feedback.feedback_detail ? feedback.feedback_detail : 'X'}
+                      <strong>피드백 상세:</strong> {feedback.feedback_detail && !feedback.feedback_detail.startsWith('Unresolved') ? feedback.feedback_detail : 'X'}
                     </div>
                     <div className="mb-1 text-sm text-gray-600">
                       <strong>피드백 시각:</strong> {formatDateToKST(feedback.created_at)}
