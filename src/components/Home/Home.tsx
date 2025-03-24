@@ -7,6 +7,7 @@ const Home: React.FC = () => {
         <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">메인 페이지</h2>
         <div className="space-y-4">
           {[
+            { href: "/categories", text: "카테고리로 이동" },
             { href: "/faqs", text: "FAQ로 이동" },
             { href: "/seniorfaqs", text: "선배 FAQ로 이동" },
             { href: "/logs", text: "로그로 이동" },

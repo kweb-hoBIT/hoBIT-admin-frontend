@@ -231,4 +231,3 @@ export type CheckSeniorFAQCategoryConflictResponse = {
     }[];
   };
 };
-

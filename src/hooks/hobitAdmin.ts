@@ -1,10 +1,24 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { HobitAdminGetApiRequest, HobitAdminPostApiRequest, HobitAdminPutApiRequest, HobitAdminDeleteApiRequest, HobitAdminApiResponse } from '../types/api';
-import { hobitGetApi, hobitPostApi, hobitPutApi, hobitDeleteApi } from '../api/api';
+import {
+  HobitAdminGetApiRequest,
+  HobitAdminPostApiRequest,
+  HobitAdminPutApiRequest,
+  HobitAdminDeleteApiRequest,
+  HobitAdminApiResponse,
+} from '../types/api';
+import {
+  hobitGetApi,
+  hobitPostApi,
+  hobitPutApi,
+  hobitDeleteApi,
+} from '../api/api';
 
 // GET 요청을 처리하는 훅
 export function useHobitQueryGetApi<
-  T extends HobitAdminGetApiRequest &  { params?: Record<string, string>, query?: Record<string, string | number> },
+  T extends HobitAdminGetApiRequest & {
+    params?: Record<string, string>;
+    query?: Record<string, string | number>;
+  },
   R extends HobitAdminApiResponse,
 >(path: string, req?: T) {
   return useQuery({
@@ -18,7 +32,7 @@ export function useHobitQueryGetApi<
 
 // POST 요청을 처리하는 훅
 export function useHobitMutatePostApi<
-  T extends HobitAdminPostApiRequest  & { body?: Record<string, any> },
+  T extends HobitAdminPostApiRequest & { body?: Record<string, any> },
   R extends HobitAdminApiResponse,
 >(path: string) {
   const { mutateAsync } = useMutation({
@@ -33,8 +47,11 @@ export function useHobitMutatePostApi<
 
 // PUT 요청을 처리하는 훅
 export function useHobitMutatePutApi<
-  T extends HobitAdminPutApiRequest & { params: Record<string, string>, body?: Record<string, any> },
-  R extends HobitAdminApiResponse
+  T extends HobitAdminPutApiRequest & {
+    params: Record<string, string>;
+    body?: Record<string, any>;
+  },
+  R extends HobitAdminApiResponse,
 >(path: string) {
   const { mutateAsync } = useMutation({
     mutationFn: async (req: T) => {
@@ -47,7 +64,10 @@ export function useHobitMutatePutApi<
 
 // DELETE 요청을 처리하는 훅
 export function useHobitMutateDeleteApi<
-  T extends HobitAdminDeleteApiRequest & { params: Record<string, string>, body?: Record<string, any> },
+  T extends HobitAdminDeleteApiRequest & {
+    params: Record<string, string>;
+    body?: Record<string, any>;
+  },
   R extends HobitAdminApiResponse,
 >(path: string) {
   const { mutateAsync } = useMutation({
@@ -58,4 +78,3 @@ export function useHobitMutateDeleteApi<
   });
   return mutateAsync;
 }
-
