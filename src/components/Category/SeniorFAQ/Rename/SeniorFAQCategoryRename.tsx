@@ -28,6 +28,8 @@ const SeniorFAQCategoryRename: React.FC = () => {
     new_category: '',
   });
 
+  const [isUpdating, setIsUpdating] = useState(false);
+
   const GetAllSeniorFAQCategoryApi = useHobitQueryGetApi<GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse>('seniorfaqs/category');
   const RenameCategoryApi = useHobitMutatePutApi<ChangeSeniorFAQCategoryRequest, ChangeSeniorFAQCategoryResponse>('seniorfaqs/category');
 
@@ -91,6 +93,8 @@ const SeniorFAQCategoryRename: React.FC = () => {
   };
 
   const handleRename = async () => {
+    if (isUpdating) return;
+    setIsUpdating(true);
     if (!renameData.prev_category || !renameData.new_category) {
       alert('⚠️ 모든 필드를 입력해주세요.');
       return;
@@ -107,13 +111,19 @@ const SeniorFAQCategoryRename: React.FC = () => {
       } else if (renameResponse.payload?.statusCode === 400) {
         alert('⚠️ 기존에 존재하는 카테고리로는 수정할 수 없습니다.');
         console.log('FAQ 카테고리 데이터 오류:', renameResponse.payload?.message);
+        setIsUpdating(false);
+        return;
       } else {
         alert('⚠️ 카테고리 변경 중 오류가 발생했습니다.');
         console.log('FAQ 카테고리 데이터 오류:', renameResponse.payload?.message);
+        setIsUpdating(false);
+        return;
       }
     } catch (error) {
       console.log('카테고리 변경 오류:', error);
       alert('⚠️ 카테고리 변경 중 오류가 발생했습니다.');
+      setIsUpdating(false);
+      return;
     }
   };
 
@@ -126,7 +136,7 @@ const SeniorFAQCategoryRename: React.FC = () => {
       selectedSubCategory={selectedSubCategory}
       handleCategorySelect={handleCategorySelect}
       handleRename={handleRename}
-      isRenaming={GetAllSeniorFAQCategoryApi.isLoading}
+      isUpdating={isUpdating}
     />
   );
 };

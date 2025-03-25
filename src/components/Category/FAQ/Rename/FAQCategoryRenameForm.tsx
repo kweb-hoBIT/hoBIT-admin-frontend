@@ -19,7 +19,7 @@ interface FAQCategoryRenameFormProps {
   categories: Category[];
   handleCategorySelect: (field: string, value: string) => void;
   handleRename: () => void;
-  isRenaming: boolean;
+  isUpdating: boolean;
 }
 
 const FAQCategoryRenameForm: React.FC<FAQCategoryRenameFormProps> = ({
@@ -28,7 +28,7 @@ const FAQCategoryRenameForm: React.FC<FAQCategoryRenameFormProps> = ({
   categories,
   handleCategorySelect,
   handleRename,
-  isRenaming,
+  isUpdating,
 }) => {
   const [selectedMainCategory, setSelectedMainCategory] = useState<string>("");
   const [availableSubcategories, setAvailableSubcategories] = useState<string[]>([]);
@@ -151,14 +151,14 @@ const FAQCategoryRenameForm: React.FC<FAQCategoryRenameFormProps> = ({
       {/* 카테고리 변경 버튼 */}
       <button
         onClick={handleRename}
-        disabled={isRenaming || !renameData.prev_category || !renameData.new_category}
+        disabled={isUpdating || !renameData.prev_category || !renameData.new_category}
         className={`w-full py-3 rounded-lg text-white font-bold transition ${
-          isRenaming || !renameData.prev_category || !renameData.new_category
+          isUpdating || !renameData.prev_category || !renameData.new_category
             ? "bg-gray-400 cursor-not-allowed"
             : "bg-crimson hover:bg-crimson-dark"
         }`}
       >
-        {isRenaming ? "변경 중..." : "카테고리 이름 변경"}
+        {isUpdating ? "변경 중..." : "카테고리 이름 변경"}
       </button>
       </div>
       </div>

@@ -30,7 +30,7 @@ interface SeniorFAQCategoryRenameFormProps {
   selectedSubCategory: { ko: string; en: string }; 
   handleCategorySelect: (field: string, value: string) => void;
   handleRename: () => void;
-  isRenaming: boolean;
+  isUpdating: boolean;
 }
 
 const SeniorFAQCategoryRenameForm: React.FC<SeniorFAQCategoryRenameFormProps> = ({
@@ -39,7 +39,7 @@ const SeniorFAQCategoryRenameForm: React.FC<SeniorFAQCategoryRenameFormProps> = 
   categories,
   handleCategorySelect,
   handleRename,
-  isRenaming,
+  isUpdating,
 }) => {
   const [selectedMainCategory, setSelectedMainCategory] = useState<string>("");
   const [selectedSubCategory, setSelectedSubCategory] = useState<string>("");
@@ -228,14 +228,14 @@ const SeniorFAQCategoryRenameForm: React.FC<SeniorFAQCategoryRenameFormProps> = 
       {/* 카테고리 변경 버튼 */}
       <button
         onClick={handleRename}
-        disabled={isRenaming || !isFormValid()}
+        disabled={isUpdating || !isFormValid()}
         className={`w-full py-3 rounded-lg text-white font-bold transition ${
-          isRenaming || !isFormValid()
+          isUpdating || !isFormValid()
             ? "bg-gray-400 cursor-not-allowed"
             : "bg-crimson hover:bg-crimson-dark"
         }`}
       >
-        {isRenaming ? "변경 중..." : "카테고리 이름 변경"}
+        {isUpdating ? "변경 중..." : "카테고리 이름 변경"}
       </button>
       </div>
       </div>
