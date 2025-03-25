@@ -134,7 +134,8 @@ const SeniorFAQCategoryRenameForm: React.FC<SeniorFAQCategoryRenameFormProps> = 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100"> 
       <div className="p-6 bg-white rounded-lg shadow-md w-full max-w-lg">
-      <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">카테고리 이름 변경</h1>
+      <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">선배 FAQ 카테고리 이름 변경</h1>
+      <p className="text-center mb-4">해당되는 카테고리를 한번에 바꿀 수 있습니다.</p>
 
         {/* 카테고리 유형 선택 */}
         <div className="mb-4">
@@ -145,24 +146,24 @@ const SeniorFAQCategoryRenameForm: React.FC<SeniorFAQCategoryRenameFormProps> = 
             className="w-full p-3 border border-gray-300 rounded-lg"
           >
             <option value="">카테고리 선택</option>
-            <option value="maincategory_ko">메인 카테고리 (KO)</option>
-            <option value="maincategory_en">메인 카테고리 (EN)</option>
-            <option value="subcategory_ko">서브 카테고리 (KO)</option>
-            <option value="subcategory_en">서브 카테고리 (EN)</option>
-            <option value="detailcategory_ko">디테일 카테고리 (KO)</option>
-            <option value="detailcategory_en">디테일 카테고리 (EN)</option>
+            <option value="maincategory_ko">주요 카테고리 (KO)</option>
+            <option value="maincategory_en">주요 카테고리 (EN)</option>
+            <option value="subcategory_ko">하위 카테고리 (KO)</option>
+            <option value="subcategory_en">하위 카테고리 (EN)</option>
+            <option value="detailcategory_ko">세부 카테고리 (KO)</option>
+            <option value="detailcategory_en">세부 카테고리 (EN)</option>
           </select>
         </div>
 
-        {/* 메인 카테고리 선택 */}
+        {/* 주요 카테고리 선택 */}
         <div className="mb-4">
-          <label className="block text-lg font-medium text-gray-700 mb-2">메인 카테고리:</label>
+          <label className="block text-lg font-medium text-gray-700 mb-2">주요 카테고리:</label>
           <select
             value={selectedMainCategory}
             onChange={(e) => setSelectedMainCategory(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-lg"
           >
-            <option value="">메인 카테고리 선택</option>
+            <option value="">주요 카테고리 선택</option>
             {categories.map((cat) => (
               <option
                 key={cat.maincategory_ko}
@@ -174,16 +175,16 @@ const SeniorFAQCategoryRenameForm: React.FC<SeniorFAQCategoryRenameFormProps> = 
           </select>
         </div>
 
-        {/* 서브 카테고리 선택 */}
+        {/* 하위 카테고리 선택 */}
         {(renameData.category_field.includes("subcategory") || renameData.category_field.includes("detailcategory")) && (
           <div className="mb-4">
-            <label className="block text-lg font-medium text-gray-700 mb-2">서브 카테고리:</label>
+            <label className="block text-lg font-medium text-gray-700 mb-2">하위 카테고리:</label>
             <select
               value={selectedSubCategory}
               onChange={(e) => setSelectedSubCategory(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-lg"
             >
-              <option value="">서브 카테고리 선택</option>
+              <option value="">하위 카테고리 선택</option>
               {availableSubcategories.map((sub) => (
                 <option key={sub.ko} value={renameData.category_field.includes("ko") ? sub.ko : sub.en}>
                   {renameData.category_field.includes("ko") ? sub.ko : sub.en}
@@ -193,16 +194,16 @@ const SeniorFAQCategoryRenameForm: React.FC<SeniorFAQCategoryRenameFormProps> = 
           </div>
         )}
 
-        {/* 디테일 카테고리 선택 */}
+        {/* 세부 카테고리 선택 */}
         {renameData.category_field.includes("detailcategory") && (
           <div className="mb-4">
-            <label className="block text-lg font-medium text-gray-700 mb-2">디테일 카테고리:</label>
+            <label className="block text-lg font-medium text-gray-700 mb-2">세부 카테고리:</label>
             <select
               value={renameData.prev_category}
               onChange={(e) => handleCategorySelect("prev_category", e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-lg"
             >
-              <option value="">디테일 카테고리 선택</option>
+              <option value="">세부 카테고리 선택</option>
               {availableDetailCategories.map((detail) => (
                 <option key={detail.ko} value={renameData.category_field.includes("ko") ? detail.ko : detail.en}>
                   {renameData.category_field.includes("ko") ? detail.ko : detail.en}

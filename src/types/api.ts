@@ -31,6 +31,8 @@ import {
   CreateCheckFAQCategoryConflictRequest,
   UpdateCheckFAQCategoryConflictRequest,
   CheckFAQCategoryConflictResponse,
+  ChangeFAQCategoryRequest,
+  ChangeFAQCategoryResponse,
 } from './faq';
 
 import {
@@ -48,7 +50,9 @@ import {
   GetAllSeniorFAQCategoryResponse,
   CreateCheckSeniorFAQCategoryConflictRequest,
   UpdateCheckSeniorFAQCategoryConflictRequest,
-  CheckSeniorFAQCategoryConflictResponse
+  CheckSeniorFAQCategoryConflictResponse,
+  ChangeSeniorFAQCategoryRequest,
+  ChangeSeniorFAQCategoryResponse,
 } from './seniorfaq'
 
 import {
@@ -138,7 +142,9 @@ export type HobitAdminPutApiRequest =
   | UpdatePasswordRequest
   | UpdateFAQRequest
   | UpdateSeniorFAQRequest
-  | UpdateUserFeedbackRequest;
+  | UpdateUserFeedbackRequest
+  | ChangeFAQCategoryRequest
+  | ChangeSeniorFAQCategoryRequest;
 
 export type HobitAdminDeleteApiRequest =
   | DeleteAccountReqeust
@@ -183,6 +189,8 @@ export type HobitAdminApiResponse =
   | DeleteUserFeedbackResponse
   | CheckFAQCategoryConflictResponse
   | CheckSeniorFAQCategoryConflictResponse
+  | ChangeFAQCategoryResponse
+  | ChangeSeniorFAQCategoryResponse
   | SwaggerResponse;
 
 export type ApiResponse<P> = {

@@ -48,7 +48,7 @@ export function useHobitMutatePostApi<
 // PUT 요청을 처리하는 훅
 export function useHobitMutatePutApi<
   T extends HobitAdminPutApiRequest & {
-    params: Record<string, string>;
+    params?: Record<string, string>;
     body?: Record<string, any>;
   },
   R extends HobitAdminApiResponse,
@@ -65,7 +65,7 @@ export function useHobitMutatePutApi<
 // DELETE 요청을 처리하는 훅
 export function useHobitMutateDeleteApi<
   T extends HobitAdminDeleteApiRequest & {
-    params: Record<string, string>;
+    params?: Record<string, string>;
     body?: Record<string, any>;
   },
   R extends HobitAdminApiResponse,

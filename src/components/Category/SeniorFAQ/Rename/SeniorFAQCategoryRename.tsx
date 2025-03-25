@@ -7,15 +7,13 @@ import SeniorFAQCategoryRenameForm from './SeniorFAQCategoryRenameForm';
 import {
   GetAllSeniorFAQCategoryRequest,
   GetAllSeniorFAQCategoryResponse,
-} from '../../../../types/seniorfaq';
-import {
   ChangeSeniorFAQCategoryRequest,
-  ChangeSeniorFAQCategoryResponse,
-} from '../../../../types/category';
+  ChangeSeniorFAQCategoryResponse
+} from '../../../../types/seniorfaq';
+
 import { RootState } from '../../../../redux/store';
 
 const SeniorFAQCategoryRename: React.FC = () => {
-  const navigate = useNavigate();
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
 
   const [categories, setCategories] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']>([]);
@@ -33,25 +31,32 @@ const SeniorFAQCategoryRename: React.FC = () => {
   const GetAllSeniorFAQCategoryApi = useHobitQueryGetApi<GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse>('seniorfaqs/category');
   const RenameCategoryApi = useHobitMutatePutApi<ChangeSeniorFAQCategoryRequest, ChangeSeniorFAQCategoryResponse>('seniorfaqs/category');
 
-useEffect(() => {
-  if (GetAllSeniorFAQCategoryApi.isSuccess && GetAllSeniorFAQCategoryApi.data?.payload?.statusCode === 200) {
-    const formattedCategories = GetAllSeniorFAQCategoryApi.data.payload.data.categories.map(category => ({
-      ...category,
-      subcategories: category.subcategories.map(subcategory => ({
-        ...subcategory,
-        detailcategories: {
-          detailcategory_ko: subcategory.detailcategories.detailcategory_ko, 
-          detailcategory_en: subcategory.detailcategories.detailcategory_en, 
-        }
-      })),
-    }));
+  useEffect(() => {
+    const fetchSeniorFAQCategory = async () => {
+      if (GetAllSeniorFAQCategoryApi.data?.payload?.statusCode === 200) {
+        const formattedCategories = GetAllSeniorFAQCategoryApi.data.payload.data.categories.map(category => ({
+          ...category,
+          subcategories: category.subcategories.map(subcategory => ({
+            ...subcategory,
+            detailcategories: {
+              detailcategory_ko: subcategory.detailcategories.detailcategory_ko, 
+              detailcategory_en: subcategory.detailcategories.detailcategory_en, 
+            }
+          })),
+        }));
+        setCategories(formattedCategories);
+      } else {
+        alert('⚠️ 선배 FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
+        console.log(' 선배 FAQ 카테고리 데이터 오류:', GetAllSeniorFAQCategoryApi.data?.payload?.message);
+      }
+    }
 
-    setCategories(formattedCategories);
-  } else if (GetAllSeniorFAQCategoryApi.isError) {
-    alert('⚠️ 선배 FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
-    console.error(' 선배 FAQ 카테고리 데이터 오류:', GetAllSeniorFAQCategoryApi.error);
-  }
-}, [GetAllSeniorFAQCategoryApi.isSuccess, GetAllSeniorFAQCategoryApi.isError]);
+    if (GetAllSeniorFAQCategoryApi.isSuccess && GetAllSeniorFAQCategoryApi.data) {
+      fetchSeniorFAQCategory();
+    }
+    
+  }, [GetAllSeniorFAQCategoryApi.isSuccess, GetAllSeniorFAQCategoryApi.data]);
+
   const handleCategorySelect = (field: string, value: string) => {
     setRenameData((prev) => ({
       ...prev,
@@ -93,18 +98,21 @@ useEffect(() => {
 
     try {
       const renameResponse = await RenameCategoryApi({
-        params: { user_feedback_id: '' },
         body: renameData,
       });
 
       if (renameResponse.payload?.statusCode === 200) {
         alert('카테고리 이름이 성공적으로 변경되었습니다.');
-        navigate('/seniorfaqs');
+        window.location.reload();
+      } else if (renameResponse.payload?.statusCode === 400) {
+        alert('⚠️ 기존에 존재하는 카테고리로는 수정할 수 없습니다.');
+        console.log('FAQ 카테고리 데이터 오류:', renameResponse.payload?.message);
       } else {
-        alert(renameResponse.payload?.message || '⚠️ 카테고리 변경 중 오류가 발생했습니다.');
+        alert('⚠️ 카테고리 변경 중 오류가 발생했습니다.');
+        console.log('FAQ 카테고리 데이터 오류:', renameResponse.payload?.message);
       }
     } catch (error) {
-      console.error('카테고리 변경 오류:', error);
+      console.log('카테고리 변경 오류:', error);
       alert('⚠️ 카테고리 변경 중 오류가 발생했습니다.');
     }
   };

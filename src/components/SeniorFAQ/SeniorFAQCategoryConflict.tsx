@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from 'react-router-dom';
 import { CheckSeniorFAQCategoryConflictResponse } from "../../types/seniorfaq";
 
 type SeniorFAQCategoryConflictProps = {
@@ -7,6 +8,8 @@ type SeniorFAQCategoryConflictProps = {
 };
 
 const SeniorFAQCategoryConflict: React.FC<SeniorFAQCategoryConflictProps> = ({ conflictedData, onHandleCategoryConflictClose }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-2xl shadow-2xl w-[420px]">
@@ -42,12 +45,15 @@ const SeniorFAQCategoryConflict: React.FC<SeniorFAQCategoryConflictProps> = ({ c
         <div className="mt-5 text-center">
           <p className="text-sm text-gray-700 leading-relaxed">
           충돌 카테고리 중 하나와 맞게 설정해주세요.
+          <br />
+          기존 카테고리를 변경하려면 수정 페이지로 이동해주세요.
           </p>
         </div>
 
         <div className="mt-6 flex justify-center space-x-4">
           <button
             className="bg-indigo-600 text-white font-medium px-5 py-2 rounded-lg hover:bg-indigo-700 transition shadow-md"
+            onClick={() => navigate("/categories/seniorfaq/rename")}
           >
             카테고리 수정페이지로 이동
           </button>

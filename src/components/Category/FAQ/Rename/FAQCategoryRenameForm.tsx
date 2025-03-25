@@ -54,8 +54,9 @@ const FAQCategoryRenameForm: React.FC<FAQCategoryRenameFormProps> = ({
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100"> {/* 화면 가운데에 고정 */}
       <div className="p-6 bg-white rounded-lg shadow-md w-full max-w-lg">
-      <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">카테고리 이름 변경</h1>
-
+      <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">FAQ 카테고리 이름 변경</h1>
+      <p className="text-center mb-4">해당되는 카테고리를 한번에 바꿀 수 있습니다.</p>
+    
       {/* 카테고리 유형 선택 */}
       <div className="mb-4">
         <label className="block text-lg font-medium text-gray-700 mb-2">카테고리 유형 선택:</label>
@@ -65,23 +66,23 @@ const FAQCategoryRenameForm: React.FC<FAQCategoryRenameFormProps> = ({
           className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
         >
           <option value="">카테고리 선택</option>
-          <option value="maincategory_ko">메인 카테고리 (KO)</option>
-          <option value="maincategory_en">메인 카테고리 (EN)</option>
-          <option value="subcategory_ko">서브 카테고리 (KO)</option>
-          <option value="subcategory_en">서브 카테고리 (EN)</option>
+          <option value="maincategory_ko">주요 카테고리 (KO)</option>
+          <option value="maincategory_en">주요 카테고리 (EN)</option>
+          <option value="subcategory_ko">하위 카테고리 (KO)</option>
+          <option value="subcategory_en">하위 카테고리 (EN)</option>
         </select>
       </div>
 
-      {/* 메인 카테고리 선택 (메인 카테고리 변경 시) */}
+      {/* 주요 카테고리 선택 (주요 카테고리 변경 시) */}
       {(renameData.category_field === "maincategory_ko" || renameData.category_field === "maincategory_en") && (
         <div className="mb-4">
-          <label className="block text-lg font-medium text-gray-700 mb-2">기존 메인 카테고리:</label>
+          <label className="block text-lg font-medium text-gray-700 mb-2">기존 주요 카테고리:</label>
           <select
             value={renameData.prev_category}
             onChange={(e) => handleCategorySelect("prev_category", e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
           >
-            <option value="">메인 카테고리 선택</option>
+            <option value="">주요 카테고리 선택</option>
             {categories.map((cat) => (
               <option
                 key={cat.maincategory_ko}
@@ -94,16 +95,16 @@ const FAQCategoryRenameForm: React.FC<FAQCategoryRenameFormProps> = ({
         </div>
       )}
 
-      {/* 서브 카테고리 변경 시, 먼저 메인 카테고리를 선택해야 함 */}
+      {/* 하위 카테고리 변경 시, 먼저 주요 카테고리를 선택해야 함 */}
       {(renameData.category_field === "subcategory_ko" || renameData.category_field === "subcategory_en") && (
         <div className="mb-4">
-          <label className="block text-lg font-medium text-gray-700 mb-2">먼저 메인 카테고리를 선택하세요:</label>
+          <label className="block text-lg font-medium text-gray-700 mb-2">먼저 주요 카테고리를 선택하세요:</label>
           <select
             value={selectedMainCategory}
             onChange={(e) => setSelectedMainCategory(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
           >
-            <option value="">메인 카테고리 선택</option>
+            <option value="">주요 카테고리 선택</option>
             {categories.map((cat) => (
               <option
                 key={cat.maincategory_ko}
@@ -114,16 +115,16 @@ const FAQCategoryRenameForm: React.FC<FAQCategoryRenameFormProps> = ({
             ))}
           </select>
 
-          {/* 선택된 메인 카테고리에 따른 서브 카테고리 목록 표시 */}
+          {/* 선택된 주요 카테고리에 따른 하위 카테고리 목록 표시 */}
           {selectedMainCategory && (
             <div className="mt-4">
-              <label className="block text-lg font-medium text-gray-700 mb-2">기존 서브 카테고리:</label>
+              <label className="block text-lg font-medium text-gray-700 mb-2">기존 하위 카테고리:</label>
               <select
                 value={renameData.prev_category}
                 onChange={(e) => handleCategorySelect("prev_category", e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="">서브 카테고리 선택</option>
+                <option value="">하위 카테고리 선택</option>
                 {availableSubcategories.map((subcategory) => (
                   <option key={subcategory} value={subcategory}>
                     {subcategory}
