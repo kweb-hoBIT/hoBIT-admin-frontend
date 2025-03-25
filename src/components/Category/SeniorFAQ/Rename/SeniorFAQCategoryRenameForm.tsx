@@ -12,6 +12,11 @@ interface Category {
     };
   }[];
 }
+interface RenameData {
+  category_field: string;
+  prev_category: string;
+  new_category: string;
+}
 
 interface SeniorFAQCategoryRenameFormProps {
   renameData: {
@@ -41,6 +46,8 @@ const SeniorFAQCategoryRenameForm: React.FC<SeniorFAQCategoryRenameFormProps> = 
   const [availableSubcategories, setAvailableSubcategories] = useState<{ ko: string; en: string }[]>([]);
   const [availableDetailCategories, setAvailableDetailCategories] = useState<{ ko: string; en: string }[]>([]);
 
+
+  
   useEffect(() => {
     if (!renameData.category_field.includes("subcategory") && !renameData.category_field.includes("detailcategory")) {
       setSelectedSubCategory("");
@@ -95,6 +102,34 @@ const SeniorFAQCategoryRenameForm: React.FC<SeniorFAQCategoryRenameFormProps> = 
       );
     }
   }, [selectedMainCategory, selectedSubCategory, renameData.category_field, categories]);
+
+  useEffect(() => {
+  if (!renameData.prev_category) {
+    if (renameData.category_field.includes("maincategory") && selectedMainCategory) {
+      setRenameData((prev: RenameData) => ({ ...prev, prev_category: selectedMainCategory }));
+    } else if (renameData.category_field.includes("subcategory") && selectedSubCategory) {
+      setRenameData((prev: RenameData) => ({ ...prev, prev_category: selectedSubCategory }));
+    }
+  }
+}, [renameData.category_field, selectedMainCategory, selectedSubCategory, setRenameData]);
+
+  const isFormValid = () => {
+    if (!renameData.category_field || !renameData.new_category) return false;
+
+    if (renameData.category_field.includes("detailcategory")) {
+      return !!selectedMainCategory && !!selectedSubCategory && !!renameData.prev_category;
+    }
+
+    if (renameData.category_field.includes("subcategory")) {
+      return !!selectedMainCategory && !!renameData.prev_category;
+    }
+
+    if (renameData.category_field.includes("maincategory")) {
+      return !!renameData.prev_category;
+    }
+
+    return false;
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100"> 
@@ -192,9 +227,9 @@ const SeniorFAQCategoryRenameForm: React.FC<SeniorFAQCategoryRenameFormProps> = 
       {/* 카테고리 변경 버튼 */}
       <button
         onClick={handleRename}
-        disabled={isRenaming || !renameData.prev_category || !renameData.new_category}
+        disabled={isRenaming || !isFormValid()}
         className={`w-full py-3 rounded-lg text-white font-bold transition ${
-          isRenaming || !renameData.prev_category || !renameData.new_category
+          isRenaming || !isFormValid()
             ? "bg-gray-400 cursor-not-allowed"
             : "bg-crimson hover:bg-crimson-dark"
         }`}
