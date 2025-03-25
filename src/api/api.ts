@@ -114,7 +114,7 @@ export async function hobitPostApi<
 
 
 export async function hobitPutApi<
-  T extends HobitAdminPutApiRequest & { params: Record<string, string>, body?: Record<string, any> },
+  T extends HobitAdminPutApiRequest & { params?: Record<string, string>, body?: Record<string, any> },
   R extends HobitAdminApiResponse,
 >(path: string, req: T): Promise<ApiResponse<R>> {
   const headers: Record<string, string> = {
@@ -123,7 +123,7 @@ export async function hobitPutApi<
 
   let resp: Response | undefined;
   try {
-    const {params} = req;
+    const params = req?.params ?? {};
     const body = req?.body ?? {};
     path = `${path}/${Object.values(params)}`;
     resp = await fetch(`${endpoint}/${path}`, {
@@ -159,7 +159,7 @@ export async function hobitPutApi<
 }
 
 export async function hobitDeleteApi<
-  T extends HobitAdminDeleteApiRequest & { params: Record<string, string>, body?: Record<string, any> },
+  T extends HobitAdminDeleteApiRequest & { params?: Record<string, string>, body?: Record<string, any> },
   R extends HobitAdminApiResponse,
 >(path: string, req: T): Promise<ApiResponse<R>> {
   const headers: Record<string, string> = {
@@ -168,7 +168,7 @@ export async function hobitDeleteApi<
 
   let resp: Response | undefined;
   try {
-    const {params} = req;
+    const params = req.params ?? {};
     const body = req.body ?? {};
     path = `${path}/${Object.values(params)}`;
     if(Object.keys(body).length !== 0){

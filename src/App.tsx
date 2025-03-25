@@ -19,6 +19,12 @@ import SeniorFAQMainPage from './pages/SeniorFAQMainPage';
 import SeniorFAQDetailPage from './pages/SeniorFAQDetailPage';
 import SeniorFAQCreatePage from './pages/SeniorFAQCreatePage';
 import SeniorFAQUpdatePage from './pages/SeniorFAQUpdatePage';
+import CategoryMainPage from './pages/CategoryMainPage';
+import FAQCategoryRenamePage from './pages/FAQCategoryRenamePage';
+import FAQCategoryReorderPage from './pages/FAQCategoryReorderPage';
+import SeniorFAQCategoryRenamePage from './pages/SeniorFAQCategoryRenamePage';
+import SeniorFAQCategoryReorderPage from './pages/SeniorFAQCategoryReorderPage';
+
 import LogsPage from './pages/LogsPage';
 import FAQLogDetailPage from './pages/FAQLogDetailPage';
 import SeniorFAQLogDetailPage from './pages/SeniorFAQLogDetailPage';
@@ -61,6 +67,13 @@ const App: React.FC = () => {
               <Route path="/seniorfaqs/create" element={<SeniorFAQCreatePage />} />
               <Route path="/seniorfaqs/update/:id" element={<SeniorFAQUpdatePage />} />
 
+              {/* 카테고리 관련 페이지*/}
+              <Route path="/categories" element={<CategoryMainPage />} />
+              <Route path="/categories/faq/rename" element={<FAQCategoryRenamePage />} />
+              <Route path="/categories/faq/reorder" element={<FAQCategoryReorderPage />} />
+              <Route path="/categories/seniorfaq/rename" element={<SeniorFAQCategoryRenamePage />} />
+              <Route path="/categories/seniorfaq/reorder" element={<SeniorFAQCategoryReorderPage />} />
+              
               {/* 로그 관련 페이지 */}
               <Route path="/logs" element={<LogsPage />} />
               <Route path="/adminlogs/faqlogs/:id" element={<FAQLogDetailPage />} />

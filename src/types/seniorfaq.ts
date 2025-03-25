@@ -232,3 +232,16 @@ export type CheckSeniorFAQCategoryConflictResponse = {
   };
 };
 
+
+export interface ChangeSeniorFAQCategoryRequest {
+  body: {
+    user_id: number;
+    category_field: 'maincategory_ko' | 'maincategory_en' | 'subcategory_ko' | 'subcategory_en' | 'detailcategory_ko' | 'detailcategory_en';
+    prev_category: string;
+    new_category: string;
+  };
+}
+export interface ChangeSeniorFAQCategoryResponse {
+  statusCode: number;
+  message: string;
+}

@@ -9,6 +9,7 @@ const Home: React.FC = () => {
           {[
             { href: "/faqs", text: "FAQ로 이동" },
             { href: "/seniorfaqs", text: "선배 FAQ로 이동" },
+            { href: "/categories", text: "카테고리로 이동" },
             { href: "/logs", text: "로그로 이동" },
             { href: "/logs/analytics", text: "로그 분석으로 이동" },
             { href: "/userfeedbacks", text: "유저 피드백으로 이동" },

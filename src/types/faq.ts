@@ -215,4 +215,19 @@ export type CheckFAQCategoryConflictResponse = {
   };
 };
 
+
+export interface ChangeFAQCategoryRequest {
+  body: {
+    user_id: number;
+    category_field: 'maincategory_ko' | 'maincategory_en' | 'subcategory_ko' | 'subcategory_en';
+    prev_category: string;
+    new_category: string;
+  };
+}
+
+export interface ChangeFAQCategoryResponse {
+  statusCode: number;
+  message: string;
+}
+
 export default Faq;
