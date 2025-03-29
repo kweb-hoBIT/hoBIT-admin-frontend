@@ -102,9 +102,10 @@ const LoginForm: React.FC<{
             className="w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 hover:bg-crimson-dark flex justify-center items-center"
             disabled={isLoading}
           >
+            <span>{isLoading ? '로그인 중' : '로그인'}</span>
             {isLoading ? (
-              <div className="w-5 h-5 border-t-2 border-white border-solid rounded-full animate-spin"></div>
-            ) : '로그인'}
+              <div className="w-5 h-5 border-t-2 border-white border-solid rounded-full animate-spin" style={{ marginRight: '10px' }}></div>
+            ) : null}
           </button>
         </form>
         <div className="mt-4 text-center flex flex-col gap-2">
