@@ -5,12 +5,14 @@ import UpdatePassword from './UpdatePassword';
 const LoginForm: React.FC<{
   userData: LoginRequest['body'];
   error: string | null;
+  isLoading: boolean;
   onEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent) => void;
 }> = ({
   userData,
   error,
+  isLoading,
   onEmailChange,
   onPasswordChange,
   onSubmit,
@@ -97,9 +99,15 @@ const LoginForm: React.FC<{
           </div>
           <button
             type="submit"
-            className="w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 hover:bg-crimson-dark"
+            className="w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 hover:bg-crimson-dark flex justify-center items-center"
+            disabled={isLoading}
           >
-            로그인
+            {isLoading ? (
+              <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 018 8h-4l3 3 3-3h-4a8 8 0 01-8 8v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+              </svg>
+            ) : '로그인'}
           </button>
         </form>
         <div className="mt-4 text-center flex flex-col gap-2">
