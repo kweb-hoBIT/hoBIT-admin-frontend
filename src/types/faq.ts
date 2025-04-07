@@ -230,4 +230,15 @@ export interface ChangeFAQCategoryResponse {
   message: string;
 }
 
+export type UpdateFAQCategoryOrderRequest = {
+  body: {
+    categoryOrder: string[];
+  }
+}
+
+export type UpdateFAQCategoryOrderResponse = {
+  statusCode: number;
+  message: string;
+};
+
 export default Faq;

@@ -232,7 +232,6 @@ export type CheckSeniorFAQCategoryConflictResponse = {
   };
 };
 
-
 export interface ChangeSeniorFAQCategoryRequest {
   body: {
     user_id: number;
@@ -241,7 +240,19 @@ export interface ChangeSeniorFAQCategoryRequest {
     new_category: string;
   };
 }
+
 export interface ChangeSeniorFAQCategoryResponse {
   statusCode: number;
   message: string;
 }
+
+export type UpdateSeniorFAQCategoryOrderRequest = {
+  body: {
+    categoryOrder: string[];
+  }
+}
+
+export type UpdateSeniorFAQCategoryOrderResponse = {
+  statusCode: number;
+  message: string;
+};
