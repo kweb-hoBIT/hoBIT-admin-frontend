@@ -9,6 +9,7 @@ export type Faq = {
   answer_ko: string;
   answer_en: string;
   manager: string;
+  category_order: number;
   created_by: number | null;
   updated_by: number | null;
 };
@@ -50,6 +51,7 @@ export type GetAllFAQResponse = {
   message: string;
   data: {
     faqs: {
+      category_order: number;
       faq_id: number;
       maincategory_ko: string;
       maincategory_en: string;
@@ -216,11 +218,14 @@ export type CheckFAQCategoryConflictResponse = {
   };
 };
 
-
 export interface ChangeFAQCategoryRequest {
   body: {
     user_id: number;
-    category_field: 'maincategory_ko' | 'maincategory_en' | 'subcategory_ko' | 'subcategory_en';
+    category_field:
+      | 'maincategory_ko'
+      | 'maincategory_en'
+      | 'subcategory_ko'
+      | 'subcategory_en';
     prev_category: string;
     new_category: string;
   };
@@ -234,8 +239,8 @@ export interface ChangeFAQCategoryResponse {
 export type UpdateFAQCategoryOrderRequest = {
   body: {
     categoryOrder: string[];
-  }
-}
+  };
+};
 
 export type UpdateFAQCategoryOrderResponse = {
   statusCode: number;

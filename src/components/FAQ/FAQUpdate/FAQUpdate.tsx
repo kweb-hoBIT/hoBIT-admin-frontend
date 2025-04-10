@@ -19,6 +19,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
   const [category, setCategory] = useState<GetAllFAQCategoryResponse['data']['categories']>([{
     maincategory_ko: '',
     maincategory_en: '', 
+    category_order: 0,
     subcategories: {
       subcategory_ko: [],
       subcategory_en: []

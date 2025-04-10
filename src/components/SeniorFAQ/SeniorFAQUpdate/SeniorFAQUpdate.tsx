@@ -19,6 +19,7 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
     {
       maincategory_ko: '',
       maincategory_en: '',
+      category_order: 0,
       subcategories: [
         {
           subcategory_ko: '',
