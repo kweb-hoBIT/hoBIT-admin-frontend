@@ -7,8 +7,8 @@ import SeniorFAQCategoryRenameForm from './SeniorFAQCategoryRenameForm';
 import {
   GetAllSeniorFAQCategoryRequest,
   GetAllSeniorFAQCategoryResponse,
-  ChangeSeniorFAQCategoryRequest,
-  ChangeSeniorFAQCategoryResponse
+  UpdateSeniorFAQCategoryRequest,
+  UpdateSeniorFAQCategoryResponse
 } from '../../../../types/seniorfaq';
 
 import { RootState } from '../../../../redux/store';
@@ -21,7 +21,7 @@ const SeniorFAQCategoryRename: React.FC = () => {
   const [selectedMainCategory, setSelectedMainCategory] = useState<{ ko: string; en: string }>({ ko: '', en: '' });
   const [selectedSubCategory, setSelectedSubCategory] = useState<{ ko: string; en: string }>({ ko: '', en: '' });
 
-  const [renameData, setRenameData] = useState<ChangeSeniorFAQCategoryRequest['body']>({
+  const [renameData, setRenameData] = useState<UpdateSeniorFAQCategoryRequest['body']>({
     user_id: user_id ? Number(user_id) : 0,
     category_field: 'maincategory_ko',
     prev_category: '',
@@ -31,7 +31,7 @@ const SeniorFAQCategoryRename: React.FC = () => {
   const [isUpdating, setIsUpdating] = useState(false);
 
   const GetAllSeniorFAQCategoryApi = useHobitQueryGetApi<GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse>('seniorfaqs/category');
-  const RenameCategoryApi = useHobitMutatePutApi<ChangeSeniorFAQCategoryRequest, ChangeSeniorFAQCategoryResponse>('seniorfaqs/category');
+  const RenameCategoryApi = useHobitMutatePutApi<UpdateSeniorFAQCategoryRequest, UpdateSeniorFAQCategoryResponse>('seniorfaqs/category');
 
   useEffect(() => {
     const fetchSeniorFAQCategory = async () => {

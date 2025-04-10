@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useHobitQueryGetApi, useHobitMutatePutApi } from '../../../../hooks/hobitAdmin';
 import { selectAuth } from '../../../../redux/authSlice';
 import FAQCategoryRenameForm from './FAQCategoryRenameForm';
-import { GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, ChangeFAQCategoryRequest, ChangeFAQCategoryResponse } from '../../../../types/faq';
+import { GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, UpdateFAQCategoryRequest, UpdateFAQCategoryResponse } from '../../../../types/faq';
 import { RootState } from '../../../../redux/store';
 
 const FAQCategoryRename: React.FC = () => {
@@ -13,9 +13,9 @@ const FAQCategoryRename: React.FC = () => {
 
   const [selectedMainCategory, setSelectedMainCategory] = useState<string>('');
 
-  const [renameData, setRenameData] = useState<ChangeFAQCategoryRequest['body']>({
+  const [renameData, setRenameData] = useState<UpdateFAQCategoryRequest['body']>({
     user_id: user_id ? Number(user_id) : 0,
-    category_field: 'maincategory_ko' as ChangeFAQCategoryRequest['body']['category_field'],
+    category_field: 'maincategory_ko' as UpdateFAQCategoryRequest['body']['category_field'],
     prev_category: '',
     new_category: '',
   });
@@ -23,7 +23,7 @@ const FAQCategoryRename: React.FC = () => {
   const [isUpdating, setIsUpdating] = useState(false);
 
   const GetAllFAQCategoryApi = useHobitQueryGetApi<GetAllFAQCategoryRequest, GetAllFAQCategoryResponse>('faqs/category');
-  const RenameCategoryApi = useHobitMutatePutApi<ChangeFAQCategoryRequest, ChangeFAQCategoryResponse>('faqs/category');
+  const RenameCategoryApi = useHobitMutatePutApi<UpdateFAQCategoryRequest, UpdateFAQCategoryResponse>('faqs/category');
 
   useEffect(() => {
     const fetchFAQCategory = async () => {

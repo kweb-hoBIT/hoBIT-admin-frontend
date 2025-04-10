@@ -218,7 +218,7 @@ export type CheckFAQCategoryConflictResponse = {
   };
 };
 
-export interface ChangeFAQCategoryRequest {
+export interface UpdateFAQCategoryRequest {
   body: {
     user_id: number;
     category_field:
@@ -231,7 +231,7 @@ export interface ChangeFAQCategoryRequest {
   };
 }
 
-export interface ChangeFAQCategoryResponse {
+export interface UpdateFAQCategoryResponse {
   statusCode: number;
   message: string;
 }

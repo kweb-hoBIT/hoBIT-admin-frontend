@@ -31,8 +31,8 @@ import {
   CreateCheckFAQCategoryConflictRequest,
   UpdateCheckFAQCategoryConflictRequest,
   CheckFAQCategoryConflictResponse,
-  ChangeFAQCategoryRequest,
-  ChangeFAQCategoryResponse,
+  UpdateFAQCategoryRequest,
+  UpdateFAQCategoryResponse,
   UpdateFAQCategoryOrderRequest,
   UpdateFAQCategoryOrderResponse,
 } from './faq';
@@ -55,8 +55,8 @@ import {
   CheckSeniorFAQCategoryConflictResponse,
   UpdateSeniorFAQCategoryOrderRequest,
   UpdateSeniorFAQCategoryOrderResponse,
-  ChangeSeniorFAQCategoryRequest,
-  ChangeSeniorFAQCategoryResponse,
+  UpdateSeniorFAQCategoryRequest,
+  UpdateSeniorFAQCategoryResponse,
 } from './seniorfaq';
 
 import {
@@ -137,8 +137,8 @@ export type HobitAdminPutApiRequest =
   | UpdateFAQRequest
   | UpdateSeniorFAQRequest
   | UpdateUserFeedbackRequest
-  | ChangeFAQCategoryRequest
-  | ChangeSeniorFAQCategoryRequest
+  | UpdateFAQCategoryRequest
+  | UpdateSeniorFAQCategoryRequest
   | UpdateFAQCategoryOrderRequest
   | UpdateSeniorFAQCategoryOrderRequest;
 
@@ -184,8 +184,10 @@ export type HobitAdminApiResponse =
   | DeleteUserFeedbackResponse
   | CheckFAQCategoryConflictResponse
   | CheckSeniorFAQCategoryConflictResponse
-  | ChangeFAQCategoryResponse
-  | ChangeSeniorFAQCategoryResponse
+  | UpdateFAQCategoryOrderResponse
+  | UpdateSeniorFAQCategoryOrderResponse
+  | UpdateFAQCategoryResponse
+  | UpdateSeniorFAQCategoryResponse
   | SwaggerResponse;
 
 export type ApiResponse<P> = {

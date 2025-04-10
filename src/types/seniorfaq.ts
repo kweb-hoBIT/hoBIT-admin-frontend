@@ -249,7 +249,7 @@ export type CheckSeniorFAQCategoryConflictResponse = {
   };
 };
 
-export interface ChangeSeniorFAQCategoryRequest {
+export interface UpdateSeniorFAQCategoryRequest {
   body: {
     user_id: number;
     category_field:
@@ -264,7 +264,7 @@ export interface ChangeSeniorFAQCategoryRequest {
   };
 }
 
-export interface ChangeSeniorFAQCategoryResponse {
+export interface UpdateSeniorFAQCategoryResponse {
   statusCode: number;
   message: string;
 }
