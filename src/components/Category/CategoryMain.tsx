@@ -6,9 +6,9 @@ const CategoryMain: React.FC = () => {
 
   const options = [
     { path: "/categories/faq/rename", label: "FAQ 카테고리 수정", disabled: false },
-    { path: "/categories/faq/reorder", label: "FAQ 카테고리 순서 수정", disabled: false }, // 추후 업데이트로 지원 예정
-    { path: "/categories/seniorfaq/rename", label: "시니어 FAQ 카테고리 수정", disabled: false },
-    { path: "/categories/seniorfaq/reorder", label: "시니어 FAQ 카테고리 순서 수정", disabled: false },
+    { path: "/categories/faq/reorder", label: "FAQ 카테고리 순서 수정", disabled: false },
+    { path: "/categories/seniorfaq/rename", label: "선배 FAQ 카테고리 수정", disabled: false },
+    { path: "/categories/seniorfaq/reorder", label: "선배 FAQ 카테고리 순서 수정", disabled: false },
   ];
 
   return (
