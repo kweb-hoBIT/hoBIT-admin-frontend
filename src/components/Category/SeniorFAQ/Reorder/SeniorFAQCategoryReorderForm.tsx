@@ -4,13 +4,14 @@ interface SeniorFAQCategoryReorderFormProps {
   categoryOrder: string[];
   onMove: (fromIndex: number, toIndex: number) => void;
   onSubmit: () => void;
+  isUpdating?: boolean;
 }
 
-const SeniorFAQCategoryReorderForm: React.FC<SeniorFAQCategoryReorderFormProps> = ({ categoryOrder, onMove, onSubmit }) => {
+const SeniorFAQCategoryReorderForm: React.FC<SeniorFAQCategoryReorderFormProps> = ({ categoryOrder, onMove, onSubmit, isUpdating }) => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="p-6 bg-white rounded-lg shadow-md w-full max-w-lg">
-        <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">시니어 FAQ 카테고리 순서 변경</h2>
+        <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">선배 FAQ 카테고리 순서 변경</h2>
         <p className="text-center mb-4">카테고리 순서를 자유롭게 조정할 수 있습니다.</p>
         <ul className="space-y-3 mb-6">
           {categoryOrder.map((category, index) => (
@@ -37,7 +38,7 @@ const SeniorFAQCategoryReorderForm: React.FC<SeniorFAQCategoryReorderFormProps> 
           onClick={onSubmit}
           className="w-full py-3 bg-crimson text-white font-bold rounded-lg hover:bg-crimson-dark transition"
         >
-          순서 저장
+          {isUpdating ? '변경 중...' : '순서 변경하기'}
         </button>
       </div>
     </div>

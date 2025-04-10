@@ -4,9 +4,10 @@ interface FAQCategoryReorderFormProps {
   categoryOrder: string[];
   onMove: (fromIndex: number, toIndex: number) => void;
   onSubmit: () => void;
+  isUpdating?: boolean;
 }
 
-const FAQCategoryReorderForm: React.FC<FAQCategoryReorderFormProps> = ({ categoryOrder, onMove, onSubmit }) => {
+const FAQCategoryReorderForm: React.FC<FAQCategoryReorderFormProps> = ({ categoryOrder, onMove, onSubmit, isUpdating }) => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="p-6 bg-white rounded-lg shadow-md w-full max-w-lg">
@@ -37,7 +38,7 @@ const FAQCategoryReorderForm: React.FC<FAQCategoryReorderFormProps> = ({ categor
           onClick={onSubmit}
           className="w-full py-3 bg-crimson text-white font-bold rounded-lg hover:bg-crimson-dark transition"
         >
-          순서 저장
+          {isUpdating ? '변경 중...' : '순서 변경하기'}
         </button>
       </div>
     </div>

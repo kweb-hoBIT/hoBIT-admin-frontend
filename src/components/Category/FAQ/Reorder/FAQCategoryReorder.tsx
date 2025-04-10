@@ -8,22 +8,30 @@ const FAQCategoryReorder: React.FC = () => {
   const UpdateFAQCategoryOrderApi = useHobitMutatePutApi<UpdateFAQCategoryOrderRequest, UpdateFAQCategoryOrderResponse>('faqs/category/order');
 
   const [categoryOrder, setCategoryOrder] = useState<string[]>([]);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
-    if (GetFAQCategoriesApi.data?.payload?.statusCode === 200) {
-      const categories = GetFAQCategoriesApi.data.payload?.data.categories;
+    const fetchFAQCategory = async () => {
+      if (GetFAQCategoriesApi.data?.payload?.statusCode === 200) {
+        const categories = GetFAQCategoriesApi.data.payload?.data.categories;
 
-      console.log('Fetched FAQ Categories:', categories);
+        const sortedCategories = [...categories].sort(
+          (a, b) => (a.category_order ?? Infinity) - (b.category_order ?? Infinity)
+        );
 
-      const sortedCategories = [...categories].sort(
-        (a, b) => (a.category_order ?? Infinity) - (b.category_order ?? Infinity)
-      );
+        const maincategoryOrder = sortedCategories.map((cat) => cat.maincategory_ko);
 
-      const maincategoryOrder = sortedCategories.map((cat) => cat.maincategory_ko);
+        setCategoryOrder(maincategoryOrder);
+      } else {
+        alert('⚠️ FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
+        console.log('FAQ 카테고리 데이터 오류:', GetFAQCategoriesApi.data?.payload?.message);
+      }
+    }; 
 
-      setCategoryOrder(maincategoryOrder);
+    if (GetFAQCategoriesApi.isSuccess && GetFAQCategoriesApi.data) {
+      fetchFAQCategory();
     }
-  }, [GetFAQCategoriesApi.data]);
+  }, [GetFAQCategoriesApi.isSuccess, GetFAQCategoriesApi.data]);
 
   const moveCategory = (fromIndex: number, toIndex: number) => {
     if (toIndex < 0 || toIndex >= categoryOrder.length) return;
@@ -34,27 +42,37 @@ const FAQCategoryReorder: React.FC = () => {
   };
 
   const handleSubmit = async () => {
+    if (isUpdating) return;
+    setIsUpdating(true);
     try {
-      await UpdateFAQCategoryOrderApi({
+      const fetchUpdateFAQCategoryOrderApi = await UpdateFAQCategoryOrderApi({
         body: {
           categoryOrder,
         },
       });
-      alert('카테고리 순서가 성공적으로 변경되었습니다.');
+
+      if (fetchUpdateFAQCategoryOrderApi?.payload?.statusCode == 200) {
+        alert('카테고리 순서가 성공적으로 변경되었습니다.');
+      } else {
+        console.error('카테고리 순서 변경 실패:', fetchUpdateFAQCategoryOrderApi?.payload?.message);
+        alert('카테고리 순서 변경 중 오류가 발생했습니다.');
+      }
     } catch (error) {
       console.error('카테고리 순서 변경 실패:', error);
       alert('카테고리 순서 변경 중 오류가 발생했습니다.');
+    } finally {
+      setIsUpdating(false);
     }
   };
 
-  if (GetFAQCategoriesApi.isLoading) return <p>Loading...</p>;
-  if (GetFAQCategoriesApi.error) return <p>FAQ 데이터를 불러오는 중 오류가 발생했습니다.</p>;
+  if (GetFAQCategoriesApi.isLoading) return <p></p>;
 
   return (
     <FAQCategoryReorderForm
       categoryOrder={categoryOrder}
       onMove={moveCategory}
       onSubmit={handleSubmit}
+      isUpdating={isUpdating}
     />
   );
 };
