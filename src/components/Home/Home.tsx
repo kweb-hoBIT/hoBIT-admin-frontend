@@ -2,7 +2,25 @@ import React from 'react';
 
 const Home: React.FC = () => {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-white-50">
+    <div className="relative flex justify-center items-center min-h-screen bg-white-50">
+      <div className="absolute top-4 left-4 bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-lg shadow-md max-w-xs font-sans">
+        {/* 4월 11일 */}
+        <div className="mb-4">
+          <p className="text-sm font-semibold">📌 4월 11일 (금요일)</p>
+          <ul className="list-disc list-inside text-sm mt-1 space-y-1">
+            <li>카테고리 순서 변경 기능 추가</li>
+          </ul>
+        </div>
+
+        {/* 3월 31일 */}
+        <div>
+          <p className="text-sm font-semibold">📌 3월 31일 (금요일)</p>
+          <ul className="list-disc list-inside text-sm mt-1 space-y-1">
+            <li>하루마다 유저가 한 질문 중 FAQ와 매치되지 않는 질문을 찾아내 피드백에 추가 요청 기능 추가</li>
+          </ul>
+        </div>
+      </div>
+
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
         <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">메인 페이지</h2>
         <div className="space-y-4">
