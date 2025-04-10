@@ -38,7 +38,7 @@ const SeniorFAQCategoryReorderForm: React.FC<SeniorFAQCategoryReorderFormProps> 
           onClick={onSubmit}
           className="w-full py-3 bg-crimson text-white font-bold rounded-lg hover:bg-crimson-dark transition"
         >
-          {isUpdating ? '변경 중...' : '순서 변경하기'}
+          {isUpdating ? '변경 중...' : '순서 변경'}
         </button>
       </div>
     </div>
