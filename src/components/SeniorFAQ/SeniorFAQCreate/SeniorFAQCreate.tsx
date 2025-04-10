@@ -15,6 +15,7 @@ const SeniorFAQCreate: React.FC = () => {
     {
       maincategory_ko: '',
       maincategory_en: '',
+      category_order: 0,
       subcategories: [
         {
           subcategory_ko: '',

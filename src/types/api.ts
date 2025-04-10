@@ -33,6 +33,8 @@ import {
   CheckFAQCategoryConflictResponse,
   ChangeFAQCategoryRequest,
   ChangeFAQCategoryResponse,
+  UpdateFAQCategoryOrderRequest,
+  UpdateFAQCategoryOrderResponse,
 } from './faq';
 
 import {
@@ -51,9 +53,11 @@ import {
   CreateCheckSeniorFAQCategoryConflictRequest,
   UpdateCheckSeniorFAQCategoryConflictRequest,
   CheckSeniorFAQCategoryConflictResponse,
+  UpdateSeniorFAQCategoryOrderRequest,
+  UpdateSeniorFAQCategoryOrderResponse,
   ChangeSeniorFAQCategoryRequest,
   ChangeSeniorFAQCategoryResponse,
-} from './seniorfaq'
+} from './seniorfaq';
 
 import {
   GetAllQuestionLogRequest,
@@ -70,7 +74,7 @@ import {
   SpecificFeedbackResponse,
   SpecificLanguageRequest,
   SpecificLanguageResponse,
-} from './questionLog'
+} from './questionLog';
 
 import {
   GetAllAdminLogRequest,
@@ -79,7 +83,7 @@ import {
   CompareFAQLogResponse,
   CompareSeniorFAQLogRequest,
   CompareSeniorFAQLogResponse,
-} from './adminLog'
+} from './adminLog';
 
 import {
   GetAllUserFeedbackRequest,
@@ -88,20 +92,11 @@ import {
   UpdateUserFeedbackResponse,
   DeleteUserFeedbackRequest,
   DeleteUserFeedbackResponse,
-} from './feedback'
+} from './feedback';
 
+import { TranslateFAQRequest, TranslateFAQResponse } from './translate';
 
-import {
-  TranslateFAQRequest,
-  TranslateFAQResponse,
-} from './translate'
-
-
-import {
-  SwaggerRequest,
-  SwaggerResponse,
-} from './swagger'
-
+import { SwaggerRequest, SwaggerResponse } from './swagger';
 
 export type HobitAdminGetApiRequest =
   | GetAllFAQRequest
@@ -123,13 +118,12 @@ export type HobitAdminGetApiRequest =
   | GetAllSeniorFAQCategoryRequest
   | SwaggerRequest;
 
-
 export type HobitAdminPostApiRequest =
   | LoginRequest
   | LogoutRequest
   | SignupRequest
   | FindUserRequest
-  | NewAccessTokenRequest 
+  | NewAccessTokenRequest
   | CreateFAQRequest
   | CreateSeniorFAQRequest
   | CreateCheckFAQCategoryConflictRequest
@@ -144,14 +138,15 @@ export type HobitAdminPutApiRequest =
   | UpdateSeniorFAQRequest
   | UpdateUserFeedbackRequest
   | ChangeFAQCategoryRequest
-  | ChangeSeniorFAQCategoryRequest;
+  | ChangeSeniorFAQCategoryRequest
+  | UpdateFAQCategoryOrderRequest
+  | UpdateSeniorFAQCategoryOrderRequest;
 
 export type HobitAdminDeleteApiRequest =
   | DeleteAccountReqeust
   | DeleteFAQRequest
   | DeleteSeniorFAQRequest
   | DeleteUserFeedbackRequest;
-
 
 export type HobitAdminApiResponse =
   | LoginResponse

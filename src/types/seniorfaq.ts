@@ -1,3 +1,19 @@
+export type SeniorFaq = {
+  id: number;
+  maincategory_ko: string;
+  maincategory_en: string;
+  subcategory_ko: string;
+  subcategory_en: string;
+  detailcategory_ko: string;
+  detailcategory_en: string;
+  answer_ko: string;
+  answer_en: string;
+  manager: string;
+  category_order: number;
+  created_by: number | null;
+  updated_by: number | null;
+};
+
 export type CreateSeniorFAQRequest = {
   body: {
     user_id: number;
@@ -41,6 +57,7 @@ export type GetAllSeniorFAQResponse = {
   message: string;
   data: {
     seniorFaqs: {
+      category_order: number;
       senior_faq_id: number;
       maincategory_ko: string;
       maincategory_en: string;
@@ -178,6 +195,7 @@ export type GetAllSeniorFAQCategoryResponse = {
     categories: {
       maincategory_ko: string;
       maincategory_en: string;
+      category_order: number;
       subcategories: {
         subcategory_ko: string;
         subcategory_en: string;
@@ -189,7 +207,6 @@ export type GetAllSeniorFAQCategoryResponse = {
     }[];
   };
 };
-
 export type CreateCheckSeniorFAQCategoryConflictRequest = {
   body: {
     maincategory_ko: string;
@@ -235,7 +252,13 @@ export type CheckSeniorFAQCategoryConflictResponse = {
 export interface ChangeSeniorFAQCategoryRequest {
   body: {
     user_id: number;
-    category_field: 'maincategory_ko' | 'maincategory_en' | 'subcategory_ko' | 'subcategory_en' | 'detailcategory_ko' | 'detailcategory_en';
+    category_field:
+      | 'maincategory_ko'
+      | 'maincategory_en'
+      | 'subcategory_ko'
+      | 'subcategory_en'
+      | 'detailcategory_ko'
+      | 'detailcategory_en';
     prev_category: string;
     new_category: string;
   };
@@ -249,8 +272,8 @@ export interface ChangeSeniorFAQCategoryResponse {
 export type UpdateSeniorFAQCategoryOrderRequest = {
   body: {
     categoryOrder: string[];
-  }
-}
+  };
+};
 
 export type UpdateSeniorFAQCategoryOrderResponse = {
   statusCode: number;
