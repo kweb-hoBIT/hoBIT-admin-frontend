@@ -8,7 +8,7 @@ const Home: React.FC = () => {
         <div className="mb-4">
           <p className="text-sm font-semibold">📌 4월 11일 (금요일)</p>
           <ul className="list-disc list-inside text-sm mt-1 space-y-1">
-            <li>카테고리 순서 변경 기능 추가(아직 챗봇 개발 미완으로 인해 챗봇에는 반영 안됌)</li>
+            <li>카테고리 순서 변경 기능 추가</li>
           </ul>
         </div>
 
