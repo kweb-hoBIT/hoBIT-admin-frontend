@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useHobitQueryGetApi, useHobitMutatePutApi } from '../../../../hooks/hobitAdmin';
 import { GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, UpdateFAQCategoryOrderRequest, UpdateFAQCategoryOrderResponse } from '../../../../types/faq';
 import FAQCategoryReorderForm from './FAQCategoryReorderForm';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const FAQCategoryReorder: React.FC = () => {
   const GetFAQCategoriesApi = useHobitQueryGetApi<GetAllFAQCategoryRequest, GetAllFAQCategoryResponse>('faqs/category');
   const UpdateFAQCategoryOrderApi = useHobitMutatePutApi<UpdateFAQCategoryOrderRequest, UpdateFAQCategoryOrderResponse>('faqs/category/order');
 
+  const [originalOrder, setOriginalOrder] = useState<string[]>([]);
   const [categoryOrder, setCategoryOrder] = useState<string[]>([]);
+  
   const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
@@ -20,13 +24,13 @@ const FAQCategoryReorder: React.FC = () => {
         );
 
         const maincategoryOrder = sortedCategories.map((cat) => cat.maincategory_ko);
-
+        setOriginalOrder(maincategoryOrder);
         setCategoryOrder(maincategoryOrder);
       } else {
         alert('⚠️ FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
         console.log('FAQ 카테고리 데이터 오류:', GetFAQCategoriesApi.data?.payload?.message);
       }
-    }; 
+    };
 
     if (GetFAQCategoriesApi.isSuccess && GetFAQCategoriesApi.data) {
       fetchFAQCategory();
@@ -39,6 +43,10 @@ const FAQCategoryReorder: React.FC = () => {
     const [moved] = updated.splice(fromIndex, 1);
     updated.splice(toIndex, 0, moved);
     setCategoryOrder(updated);
+  };
+
+  const handleReset = () => {
+    setCategoryOrder(originalOrder);
   };
 
   const handleSubmit = async () => {
@@ -68,12 +76,15 @@ const FAQCategoryReorder: React.FC = () => {
   if (GetFAQCategoriesApi.isLoading) return <p></p>;
 
   return (
-    <FAQCategoryReorderForm
-      categoryOrder={categoryOrder}
-      onMove={moveCategory}
-      onSubmit={handleSubmit}
-      isUpdating={isUpdating}
-    />
+    <DndProvider backend={HTML5Backend}>
+      <FAQCategoryReorderForm
+        categoryOrder={categoryOrder}
+        onMove={moveCategory}
+        onReset={handleReset}
+        onSubmit={handleSubmit}
+        isUpdating={isUpdating}
+      />
+    </DndProvider>
   );
 };
 

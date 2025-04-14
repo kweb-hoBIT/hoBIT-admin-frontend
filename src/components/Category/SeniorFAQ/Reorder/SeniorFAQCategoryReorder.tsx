@@ -7,14 +7,19 @@ import {
   UpdateSeniorFAQCategoryOrderResponse,
 } from '../../../../types/seniorfaq';
 import SeniorFAQCategoryReorderForm from './SeniorFAQCategoryReorderForm';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const SeniorFAQCategoryReorder: React.FC = () => {
-  const GetSeniorFAQCategoriesApi = useHobitQueryGetApi<GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse>('seniorfaqs/category');
+  const GetSeniorFAQCategoriesApi = useHobitQueryGetApi<GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse>(
+    'seniorfaqs/category'
+  );
   const UpdateSeniorCategoryOrderApi = useHobitMutatePutApi<
     UpdateSeniorFAQCategoryOrderRequest,
     UpdateSeniorFAQCategoryOrderResponse
   >('seniorfaqs/category/order');
 
+  const [originalOrder, setOriginalOrder] = useState<string[]>([]);
   const [categoryOrder, setCategoryOrder] = useState<string[]>([]);
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -23,14 +28,12 @@ const SeniorFAQCategoryReorder: React.FC = () => {
       if (GetSeniorFAQCategoriesApi.data?.payload?.statusCode === 200) {
         const categories = GetSeniorFAQCategoriesApi.data.payload?.data.categories;
 
-        console.log('Fetched FAQ Categories:', categories);
-
         const sortedCategories = [...categories].sort(
           (a, b) => (a.category_order ?? Infinity) - (b.category_order ?? Infinity)
         );
 
         const maincategoryOrder = sortedCategories.map((cat) => cat.maincategory_ko);
-
+        setOriginalOrder(maincategoryOrder);
         setCategoryOrder(maincategoryOrder);
       } else {
         alert('⚠️ 선배 FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
@@ -49,6 +52,10 @@ const SeniorFAQCategoryReorder: React.FC = () => {
     const [moved] = updated.splice(fromIndex, 1);
     updated.splice(toIndex, 0, moved);
     setCategoryOrder(updated);
+  };
+
+  const handleReset = () => {
+    setCategoryOrder(originalOrder);
   };
 
   const handleSubmit = async () => {
@@ -78,12 +85,15 @@ const SeniorFAQCategoryReorder: React.FC = () => {
   if (GetSeniorFAQCategoriesApi.isLoading) return <p></p>;
 
   return (
-    <SeniorFAQCategoryReorderForm
-      categoryOrder={categoryOrder}
-      onMove={moveCategory}
-      onSubmit={handleSubmit}
-      isUpdating={isUpdating}
-    />
+    <DndProvider backend={HTML5Backend}>
+      <SeniorFAQCategoryReorderForm
+        categoryOrder={categoryOrder}
+        onMove={moveCategory}
+        onReset={handleReset}
+        onSubmit={handleSubmit}
+        isUpdating={isUpdating}
+      />
+    </DndProvider>
   );
 };
 
