@@ -13,6 +13,8 @@ import SeniorFAQDelete from './SeniorFAQDelete';
 import SeniorFAQFilter from './SeniorFAQFilter';
 import SeniorFAQSort from './SeniorFAQSort';
 import { selectSeniorFAQItemsPerPage, setSeniorFAQItemsPerPage } from '../../../redux/itemSlice';
+import { useItemsPerPage } from '../../../hooks/useItemsPerPage';
+import { ItemsPerPageSelect } from '../../../hooks/ItemsPerPageSelect';
 
 interface SeniorFAQMainFormProps {
   seniorFaqs: GetAllSeniorFAQResponse['data']['seniorFaqs'];
@@ -67,6 +69,11 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
   const handlePrevPage = () =>
     currentPage > 1 && setCurrentPage(Math.max(currentPageGroup * pagesPerGroup, 1));
 
+  const { handleItemsPerPage } = useItemsPerPage({
+    actionCreator: setSeniorFAQItemsPerPage,
+    resetters: [setCurrentPage],
+  });
+
   return (
     <div className="p-6 bg-white-50 rounded-lg">
       <SeniorFAQFilter
@@ -89,19 +96,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
           />
           </div>
             <div className="flex items-center space-x-4">
-              <select
-                value={itemsPerPage}
-                onChange={(e) => {
-                  dispatch(setSeniorFAQItemsPerPage(Number(e.target.value)))
-                  setCurrentPage(1);
-                }}
-                className="p-2 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value={4}>4개씩 보기</option>
-                <option value={6}>6개씩 보기</option>
-                <option value={8}>8개씩 보기</option>
-                <option value={10}>10개씩 보기</option>
-              </select>
+              <ItemsPerPageSelect itemsPerPage={itemsPerPage} onChange={handleItemsPerPage} />
           <button
             onClick={() => window.location.assign('/seniorfaqs/create')}
             className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
@@ -165,7 +160,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
                 key={page}
                 onClick={() => handlePageChange(page)}
                 className={`px-3 py-2 text-sm font-semibold rounded-md ${currentPage === page ? 'bg-crimson text-white' : 'bg-gray-200 text-gray-700'}`}
-                style={{ width: '40px', textAlign: 'center' }}
+                style={{ width: '40px', textAlign: 'center', padding: '8px 0' }}
               >
                 {page}
               </button>

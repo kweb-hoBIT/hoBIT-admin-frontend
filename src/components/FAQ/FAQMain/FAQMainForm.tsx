@@ -14,6 +14,8 @@ import FAQDelete from './FAQDelete';
 import FAQFilter from './FAQFilter';
 import FAQSort from './FAQSort';
 import { GetAllFAQResponse } from '../../../types/faq';
+import { useItemsPerPage } from '../../../hooks/useItemsPerPage';
+import { ItemsPerPageSelect } from '../../../hooks/ItemsPerPageSelect';
 
 interface FAQMainFormProps {
   faqs: GetAllFAQResponse['data']['faqs'];
@@ -80,6 +82,11 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
     currentPage > 1 &&
     setCurrentPage(Math.max(currentPageGroup * pagesPerGroup, 1));
 
+  const { handleItemsPerPage } = useItemsPerPage({
+    actionCreator: setFAQItemsPerPage,
+    resetters: [setCurrentPage],
+  });
+
   return (
     <div className="p-6 bg-white-50 rounded-lg">
       <FAQFilter
@@ -103,19 +110,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
           />
           </div>
           <div className="flex items-center space-x-4">
-            <select
-              value={itemsPerPage}
-              onChange={(e) => {
-                dispatch(setFAQItemsPerPage(Number(e.target.value)))
-                setCurrentPage(1);
-              }}
-              className="p-2 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value={4}>4개씩 보기</option>
-              <option value={6}>6개씩 보기</option>
-              <option value={8}>8개씩 보기</option>
-              <option value={10}>10개씩 보기</option>
-            </select>
+            <ItemsPerPageSelect itemsPerPage={itemsPerPage} onChange={handleItemsPerPage} />
             <button
               onClick={() => window.location.assign('/faqs/create')}
               className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"

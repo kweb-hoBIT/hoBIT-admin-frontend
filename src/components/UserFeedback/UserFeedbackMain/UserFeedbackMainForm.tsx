@@ -7,6 +7,8 @@ import UserFeedbackResolvedUpdate from './UserFeedbackResolvedUpdate';
 import SelectUserFeedback from './SelectUserFeedback';
 import UserFeedbackDelete from './UserFeedbackDelete';
 import { selectUserFeedbackItemsPerPage, setUserFeedbackItemsPerPage } from '../../../redux/itemSlice';
+import { useItemsPerPage } from '../../../hooks/useItemsPerPage';
+import { ItemsPerPageSelect } from '../../../hooks/ItemsPerPageSelect';
 
 interface UserFeedbackMainFormProps {
   userFeedbacks: GetAllUserFeedbackResponse['data']['userFeedbacks'];
@@ -88,6 +90,11 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
     }
   };
 
+  const { handleItemsPerPage } = useItemsPerPage({
+    actionCreator: setUserFeedbackItemsPerPage,
+    resetters: [setUnresolvedCurrentPage, setResolvedCurrentPage],
+  });
+
   const handleFilterChange = (filterValue: 'unresolved' | 'resolved') => {
     setFilter(filterValue);
   };
@@ -126,20 +133,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
           <div className="flex justify-between items-center mb-6">
             <h4 className="text-2xl font-bold text-gray-800 flex-grow">유저 피드백 리스트</h4>
               <div className="flex items-center space-x-4">
-                <select
-                  value={itemsPerPage}
-                  onChange={(e) => {
-                    dispatch(setUserFeedbackItemsPerPage(Number(e.target.value)))
-                    setUnresolvedCurrentPage(1);
-                    setResolvedCurrentPage(1);
-                  }}
-                  className="p-2 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value={4}>4개씩 보기</option>
-                  <option value={6}>6개씩 보기</option>
-                  <option value={8}>8개씩 보기</option>
-                  <option value={10}>10개씩 보기</option>
-                </select>
+                <ItemsPerPageSelect itemsPerPage={itemsPerPage} onChange={handleItemsPerPage} />
               </div>
             </div>
         <div style={{ minHeight: '320px' }}>
@@ -223,7 +217,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                   className={`px-3 py-2 text-sm font-semibold rounded-md ${
                     (filter === 'unresolved' ? unresolvedCurrentPage : resolvedCurrentPage) === page ? 'bg-crimson text-white' : 'bg-gray-200 text-gray-700'
                   }`}
-                  style={{ width: '40px', textAlign: 'center' }}
+                  style={{ width: '40px', textAlign: 'center', padding: '8px 0' }}
                 >
                   {page}
                 </button>

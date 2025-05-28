@@ -5,6 +5,8 @@ import { selectAdminLogFilter, setAdminLogCurrentPage } from '../../../redux/fil
 import { GetAllAdminLogResponse } from '../../../types/adminLog';
 import { useNavigate } from 'react-router-dom';
 import { selectLogItemsPerPage, setLogItemsPerPage } from '../../../redux/itemSlice';
+import { useItemsPerPage } from '../../../hooks/useItemsPerPage';
+import { ItemsPerPageSelect } from '../../../hooks/ItemsPerPageSelect';
 
 interface AdminLogMainFormProps {
   adminLogs: GetAllAdminLogResponse['data']['adminLogs'];
@@ -45,6 +47,11 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
 
   const handlePageChange = (page: number) => setCurrentPage(page);
 
+  const { handleItemsPerPage } = useItemsPerPage({
+    actionCreator: setLogItemsPerPage,
+    resetters: [setCurrentPage],
+  });
+
   const formatDateToKST = (dateStr: string) => {
     return new Date(dateStr).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
   };
@@ -60,19 +67,7 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
         <div className="flex justify-center items-center mb-6">
           <h4 className="text-2xl font-bold text-gray-800 flex-grow">관리자 로그 리스트</h4>
             <div className="flex items-center space-x-4">
-              <select
-                value={itemsPerPage}
-                onChange={(e) => {
-                  dispatch(setLogItemsPerPage(Number(e.target.value)))
-                  setCurrentPage(1);
-                }}
-                className="p-2 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value={4}>4개씩 보기</option>
-                <option value={6}>6개씩 보기</option>
-                <option value={8}>8개씩 보기</option>
-                <option value={10}>10개씩 보기</option>
-              </select>
+              <ItemsPerPageSelect itemsPerPage={itemsPerPage} onChange={handleItemsPerPage} />
             </div>
           </div>
         <div style={{ minHeight: '320px' }}>
@@ -137,7 +132,7 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
                 className={`px-3 py-2 text-sm font-semibold rounded-md ${
                   currentPage === page ? 'bg-crimson text-white' : 'bg-gray-200 text-gray-700'
                 }`}
-                style={{ width: '40px', textAlign: 'center' }}
+                style={{ width: '40px', textAlign: 'center', padding: '8px 0' }}
               >
                 {page}
               </button>
