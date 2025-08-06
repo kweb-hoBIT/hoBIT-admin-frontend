@@ -4,6 +4,14 @@ const Home: React.FC = () => {
   return (
     <div className="relative flex justify-center items-center min-h-screen bg-white-50">
       <div className="absolute top-4 left-4 bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-lg shadow-md max-w-xs font-sans">
+        {/* 8월 6일 */}
+        <div className="mb-4">
+          <p className="text-sm font-semibold">📌 8월 6일 (수요일)</p>
+          <ul className="list-disc list-inside text-sm mt-1 space-y-1">
+            <li>피드백 필터링 기능 추가(욕설, 비방글 등)</li>
+          </ul>
+        </div>
+        
         {/* 4월 11일 */}
         <div className="mb-4">
           <p className="text-sm font-semibold">📌 4월 11일 (금요일)</p>
@@ -20,6 +28,7 @@ const Home: React.FC = () => {
           </ul>
         </div>
       </div>
+      
 
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
         <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">메인 페이지</h2>
