@@ -357,7 +357,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Email"
                 />
-                {isEmailFocused && (
+                {isEmailFocused && emailList?.filter((email) => email.includes(answer.email)).length > 0 && (
                   <ul className="absolute left-0 right-0 z-10 mt-1 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
                     {emailList
                       ?.filter((email) => email.includes(answer.email))
@@ -405,7 +405,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Phone"
                 />
-                {isPhoneFocused && (
+                {isPhoneFocused && phoneList?.filter((phone) => phone.includes(answer.phone)).length > 0 && (
                   <ul className="absolute left-0 right-0 z-10 mt-1 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
                     {phoneList
                       ?.filter((phone) => phone.includes(answer.phone))
