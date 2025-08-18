@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useHobitQueryGetApi, useHobitMutatePostApi, useHobitMutatePutApi } from '../../../hooks/hobitAdmin';
 import FAQUpdateForm from './FAQUpdateForm';
 import { selectAuth } from '../../../redux/authSlice';
-import { GetFAQRequest, GetFAQResponse, UpdateFAQRequest, UpdateFAQResponse, GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, UpdateCheckFAQCategoryConflictRequest, CheckFAQCategoryConflictResponse } from '../../../types/faq';
+import { GetFAQRequest, GetFAQResponse, UpdateFAQRequest, UpdateFAQResponse, GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, UpdateCheckFAQCategoryConflictRequest, CheckFAQCategoryConflictResponse, GetAllFAQResponse, GetAllFAQRequest } from '../../../types/faq';
 import { RootState } from '../../../redux/store';
 import { useNavigate } from 'react-router-dom';
 import FAQCategoryConflict from "../FAQCategoryConflict"
@@ -39,6 +39,11 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
   });
 
   const [showCategoryConflict, setShowCategoryConflict] = useState(false);
+  const [emailList, setEmailList] = useState<string[]>([]);
+  const [phoneList, setPhoneList] = useState<string[]>([]);
+  const [managerList, setManagerList] = useState<string[]>([]);
+
+
   const [conflictedData, setConflictedData] = useState<CheckFAQCategoryConflictResponse['data']['conflictedData']>([
     {
       field: '',
@@ -59,6 +64,33 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
   const GetAllFAQCategoryApi = useHobitQueryGetApi<GetAllFAQCategoryRequest, GetAllFAQCategoryResponse>('faqs/category');
   const CheckFAQCategoryConflictApi = useHobitMutatePostApi<UpdateCheckFAQCategoryConflictRequest, CheckFAQCategoryConflictResponse>('faqs/update/category/conflict');
   const FAQUpdateApi = useHobitMutatePutApi<UpdateFAQRequest, UpdateFAQResponse>('faqs');
+  const GetAllFAQsApi = useHobitQueryGetApi<GetAllFAQRequest, GetAllFAQResponse>('faqs');
+
+  const extractFAQMeta = (
+    faqs: GetAllFAQResponse['data']['faqs']
+  ): { emails: string[]; phones: string[]; managers: string[] } => {
+    const emailSet = new Set<string>();
+    const phoneSet = new Set<string>();
+    const managerSet = new Set<string>();
+
+    faqs.forEach((faq) => {
+      faq.answer_ko.forEach((ans) => {
+        ans.email?.split(',').map((e) => e.trim()).forEach((e) => emailSet.add(e));
+        ans.phone?.split(',').map((p) => p.trim()).forEach((p) => phoneSet.add(p));
+      });
+
+      if (faq.manager) {
+        managerSet.add(faq.manager.trim());
+      }
+    });
+
+    return {
+      emails: Array.from(emailSet),
+      phones: Array.from(phoneSet),
+      managers: Array.from(managerSet),
+    };
+  };
+
 
   useEffect(() => {
     const fetchFAQ = async () => {
@@ -88,6 +120,18 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
       fetchFAQ();
     }
   }, [FAQFetchApi.isSuccess, FAQFetchApi.data, faq_id, user_id]);
+
+  // FAQ 데이터에서 이메일, 전화번호, 관리자 정보 추출
+  useEffect(() => {
+    if (GetAllFAQsApi.isSuccess && GetAllFAQsApi.data?.payload?.statusCode === 200) {
+      const faqs = GetAllFAQsApi.data.payload.data.faqs;
+      const { emails, phones, managers } = extractFAQMeta(faqs);
+      setEmailList(emails);
+      setPhoneList(phones);
+      setManagerList(managers);
+    }
+  }, [GetAllFAQsApi.isSuccess]);
+
 
   // FAQ Category 데이터 가져오기
   useEffect(() => {
@@ -264,6 +308,9 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
         handleDeleteAnswer={handleDeleteAnswer}
         handleUpdate={handleUpdate}
         isUpdating={isUpdating}
+        emailList={emailList}
+        phoneList={phoneList}
+        managerList={managerList}
       />
     </>
   );
