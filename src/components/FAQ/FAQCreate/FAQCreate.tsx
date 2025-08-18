@@ -4,7 +4,7 @@ import { useHobitQueryGetApi, useHobitMutatePostApi } from '../../../hooks/hobit
 import FAQCreateForm from './FAQCreateForm';
 import FAQCategoryConflict from '../FAQCategoryConflict';
 import { selectAuth } from '../../../redux/authSlice';
-import { CreateFAQRequest, CreateFAQResponse, GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, CreateCheckFAQCategoryConflictRequest, CheckFAQCategoryConflictResponse } from '../../../types/faq';
+import { CreateFAQRequest, CreateFAQResponse, GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, CreateCheckFAQCategoryConflictRequest, CheckFAQCategoryConflictResponse, GetAllFAQResponse, GetAllFAQRequest } from '../../../types/faq';
 import { RootState } from '../../../redux/store';
 import { useNavigate } from 'react-router-dom';
 
@@ -34,6 +34,11 @@ const FAQCreate: React.FC = () => {
     manager: '',
   });
 
+
+  const [emailList, setEmailList] = useState<string[]>([]);
+  const [phoneList, setPhoneList] = useState<string[]>([]);
+  const [managerList, setManagerList] = useState<string[]>([]);
+
   const [showCategoryConflict, setShowCategoryConflict] = useState(false);
   const [conflictedData, setConflictedData] = useState<CheckFAQCategoryConflictResponse['data']['conflictedData']>([
     {
@@ -54,6 +59,34 @@ const FAQCreate: React.FC = () => {
   const GetAllFAQCategoryApi = useHobitQueryGetApi<GetAllFAQCategoryRequest, GetAllFAQCategoryResponse>('faqs/category');
   const CheckFAQCategoryConflictApi = useHobitMutatePostApi<CreateCheckFAQCategoryConflictRequest, CheckFAQCategoryConflictResponse>('faqs/create/category/conflict');
   const FAQCreateApi = useHobitMutatePostApi<CreateFAQRequest, CreateFAQResponse>('faqs');
+  const GetAllFAQsApi = useHobitQueryGetApi<GetAllFAQRequest, GetAllFAQResponse>('faqs');
+
+  const extractFAQMeta = (
+    faqs: GetAllFAQResponse['data']['faqs']
+  ): { emails: string[]; phones: string[]; managers: string[] } => {
+    const emailSet = new Set<string>();
+    const phoneSet = new Set<string>();
+    const managerSet = new Set<string>();
+
+    faqs.forEach((faq) => {
+      faq.answer_ko.forEach((ans) => {
+        ans.email?.split(',').map((e) => e.trim()).forEach((e) => emailSet.add(e));
+        ans.phone?.split(',').map((p) => p.trim()).forEach((p) => phoneSet.add(p));
+      });
+
+      if (faq.manager) {
+        managerSet.add(faq.manager.trim());
+      }
+    });
+
+    return {
+      emails: Array.from(emailSet),
+      phones: Array.from(phoneSet),
+      managers: Array.from(managerSet),
+    };
+  };
+
+
 
   // FAQ Category 데이터 가져오기
   useEffect(() => {
@@ -71,6 +104,17 @@ const FAQCreate: React.FC = () => {
       fetchFAQCategory();
     }
   }, [GetAllFAQCategoryApi.isSuccess]);
+
+  useEffect(() => {
+    if (GetAllFAQsApi.isSuccess && GetAllFAQsApi.data?.payload?.statusCode === 200) {
+      const faqs = GetAllFAQsApi.data.payload.data.faqs;
+      const { emails, phones, managers } = extractFAQMeta(faqs);
+      setEmailList(emails);
+      setPhoneList(phones);
+      setManagerList(managers);
+    }
+  }, [GetAllFAQsApi.isSuccess]);
+    
 
 
   // 필터 인덱스 찾기 함수
@@ -225,6 +269,9 @@ const FAQCreate: React.FC = () => {
         handleCreate={handleCreate}
         handleDeleteAnswer={handleDeleteAnswer}
         isCreating={isCreating}
+        emailList={emailList}
+        phoneList={phoneList}
+        managerList={managerList}
       />
     </>
   );

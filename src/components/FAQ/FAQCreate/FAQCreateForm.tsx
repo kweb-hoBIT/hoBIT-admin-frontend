@@ -12,6 +12,9 @@ interface FAQCreateFormProps {
   handleCreate: () => void;
   handleDeleteAnswer: (index: number) => void;
   isCreating: boolean;
+  emailList: string[];
+  phoneList: string[];
+  managerList: string[];
 }
 
 const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
@@ -23,6 +26,9 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
   handleCreate,
   handleDeleteAnswer,
   isCreating,
+  emailList,
+  phoneList,
+  managerList,
 }) => {
   const {
     maincategory_ko,
@@ -40,6 +46,11 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
   const [isMainCateogoryEnInputFocused, setIsMainCateogoryEnInputInputFocused] = useState(false);
   const [isSubCateogoryKoInputFocused, setIsSubCateogoryKoInputInputFocused] = useState(false);
   const [isSubCateogoryEnInputFocused, setIsSubCateogoryEnInputInputFocused] = useState(false);
+  const [isEmailFocused, setIsEmailFocused] = useState(false);
+  const [isPhoneFocused, setIsPhoneFocused] = useState(false);
+  const [isManagerFocused, setIsManagerFocused] = useState(false);
+
+
 
   const getSubcategories = (maincategory: string, lang: 'ko' | 'en') => {
     const selectedCategory = category.find(cat =>
@@ -313,40 +324,105 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
                 }}
                 className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
               />
-              <input
-                type="text"
-                placeholder="Email"
-                value={answer.email}
-                onChange={(e) => {
-                  setNewFAQ({
-                    ...newFAQ,
-                    answer_ko: answer_ko.map((ans, i) =>
-                      i === index ? { ...ans, email: e.target.value } : ans
-                    ),
-                    answer_en: answer_en.map((ans, i) =>
-                      i === index ? { ...ans, email: e.target.value } : ans
-                    ),
-                  });
-                }}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              />
-              <input
-                type="text"
-                placeholder="Phone"
-                value={answer.phone}
-                onChange={(e) => {
-                  setNewFAQ({
-                    ...newFAQ,
-                    answer_ko: answer_ko.map((ans, i) =>
-                      i === index ? { ...ans, phone: e.target.value } : ans
-                    ),
-                    answer_en: answer_en.map((ans, i) =>
-                      i === index ? { ...ans, phone: e.target.value } : ans
-                    ),
-                  });
-                }}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={answer.email}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setNewFAQ({
+                      ...newFAQ,
+                      answer_ko: answer_ko.map((ans, i) =>
+                        i === index ? { ...ans, email: val } : ans
+                      ),
+                      answer_en: answer_en.map((ans, i) =>
+                        i === index ? { ...ans, email: val } : ans
+                      ),
+                    });
+                  }}
+                  onFocus={() => setIsEmailFocused(true)}
+                  onBlur={() => setTimeout(() => setIsEmailFocused(false), 100)}
+                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Email"
+                />
+                {isEmailFocused && (
+                  <ul className="absolute left-0 right-0 z-10 mt-1 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+                    {emailList
+                      .filter((email) => email.includes(answer.email))
+                      .map((email) => (
+                        <li
+                          key={email}
+                          onClick={() => {
+                            setNewFAQ({
+                              ...newFAQ,
+                              answer_ko: answer_ko.map((ans, i) =>
+                                i === index ? { ...ans, email } : ans
+                              ),
+                              answer_en: answer_en.map((ans, i) =>
+                                i === index ? { ...ans, email } : ans
+                              ),
+                            });
+                            setIsEmailFocused(false);
+                          }}
+                          className="p-2 cursor-pointer hover:bg-indigo-100"
+                        >
+                          {email}
+                        </li>
+                      ))}
+                  </ul>
+                )}
+              </div>
+
+              <div className="relative">
+                <input
+                  type="text"
+                  value={answer.phone}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setNewFAQ({
+                      ...newFAQ,
+                      answer_ko: answer_ko.map((ans, i) =>
+                        i === index ? { ...ans, phone: val } : ans
+                      ),
+                      answer_en: answer_en.map((ans, i) =>
+                        i === index ? { ...ans, phone: val } : ans
+                      ),
+                    });
+                  }}
+                  onFocus={() => setIsPhoneFocused(true)}
+                  onBlur={() => setTimeout(() => setIsPhoneFocused(false), 100)}
+                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Phone"
+                />
+                {isPhoneFocused && (
+                  <ul className="absolute left-0 right-0 z-10 mt-1 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+                    {phoneList
+                      .filter((phone) => phone.includes(answer.phone))
+                      .map((phone) => (
+                        <li
+                          key={phone}
+                          onClick={() => {
+                            setNewFAQ({
+                              ...newFAQ,
+                              answer_ko: answer_ko.map((ans, i) =>
+                                i === index ? { ...ans, phone } : ans
+                              ),
+                              answer_en: answer_en.map((ans, i) =>
+                                i === index ? { ...ans, phone } : ans
+                              ),
+                            });
+                            setIsPhoneFocused(false);
+                          }}
+                          className="p-2 cursor-pointer hover:bg-indigo-100"
+                        >
+                          {phone}
+                        </li>
+                      ))}
+                  </ul>
+                )}
+              </div>
+
+
             </div>
           </div>
         ))}
@@ -365,15 +441,37 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
       <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
         <h3 className="text-xl font-bold text-gray-800">관리자</h3>
         <label className="block text-lg font-medium text-gray-700 mb-2">관리자 이름</label>
-        <input
-          type="text"
-          value={manager}
-          onChange={(e) =>
-            setNewFAQ({ ...newFAQ, manager: e.target.value })
-          }
-          className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-          placeholder="관리자 이름을 입력하세요"
-        />
+        <div className="relative">
+          <input
+            type="text"
+            value={manager}
+            onChange={(e) =>
+              setNewFAQ({ ...newFAQ, manager: e.target.value })
+            }
+            onFocus={() => setIsManagerFocused(true)}
+            onBlur={() => setTimeout(() => setIsManagerFocused(false), 100)}
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            placeholder="관리자 이름을 입력하세요"
+          />
+          {isManagerFocused && (
+            <ul className="absolute left-0 right-0 z-10 mt-1 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+              {managerList
+                .filter((name) => name.includes(manager))
+                .map((name) => (
+                  <li
+                    key={name}
+                    onClick={() => {
+                      setNewFAQ({ ...newFAQ, manager: name });
+                      setIsManagerFocused(false);
+                    }}
+                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                  >
+                    {name}
+                  </li>
+                ))}
+            </ul>
+          )}
+        </div>
       </div>
 
       <FAQPreview 

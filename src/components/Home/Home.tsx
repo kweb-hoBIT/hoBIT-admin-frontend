@@ -4,6 +4,14 @@ const Home: React.FC = () => {
   return (
     <div className="relative flex justify-center items-center min-h-screen bg-white-50">
       <div className="absolute top-4 left-4 bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-lg shadow-md max-w-xs font-sans">
+        {/* 8월 19일 */}
+        <div className="mb-4">
+          <p className="text-sm font-semibold">📌 8월 19일 (화요일)</p>
+          <ul className="list-disc list-inside text-sm mt-1 space-y-1">
+            <li>이메일, 전화번호, 관리자 자동완성 기능 추가</li>
+          </ul>
+        </div>
+        
         {/* 8월 6일 */}
         <div className="mb-4">
           <p className="text-sm font-semibold">📌 8월 6일 (수요일)</p>
