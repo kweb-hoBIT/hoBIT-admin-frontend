@@ -70,8 +70,8 @@ const FAQCreate: React.FC = () => {
 
     faqs.forEach((faq) => {
       faq.answer_ko.forEach((ans) => {
-        ans.email?.split(',').map((e) => e.trim()).forEach((e) => emailSet.add(e));
-        ans.phone?.split(',').map((p) => p.trim()).forEach((p) => phoneSet.add(p));
+        ans.email?.split(',').map((e) => e.trim()).forEach((e) => {if(e) emailSet.add(e)});
+        ans.phone?.split(',').map((p) => p.trim()).forEach((p) => {if(p) phoneSet.add(p)});
       });
 
       if (faq.manager) {
