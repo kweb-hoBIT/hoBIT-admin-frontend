@@ -4,7 +4,7 @@ import { useHobitQueryGetApi, useHobitMutatePostApi } from '../../../hooks/hobit
 import SeniorFAQCreateForm from './SeniorFAQCreateForm';
 import SeniorFAQCategoryConflict from '../SeniorFAQCategoryConflict';
 import { selectAuth } from '../../../redux/authSlice';
-import { CreateSeniorFAQRequest, CreateSeniorFAQResponse, GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse, CreateCheckSeniorFAQCategoryConflictRequest, CheckSeniorFAQCategoryConflictResponse } from '../../../types/seniorfaq';
+import { CreateSeniorFAQRequest, CreateSeniorFAQResponse, GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse, CreateCheckSeniorFAQCategoryConflictRequest, CheckSeniorFAQCategoryConflictResponse, GetAllSeniorFAQRequest, GetAllSeniorFAQResponse } from '../../../types/seniorfaq';
 import { RootState } from '../../../redux/store';
 import { useNavigate } from 'react-router-dom';
 
@@ -72,6 +72,7 @@ const SeniorFAQCreate: React.FC = () => {
     }
   ]);
 
+  const GetAllSeniorFAQsApi = useHobitQueryGetApi<GetAllSeniorFAQRequest, GetAllSeniorFAQResponse>('seniorfaqs');
   const GetAllSeniorFAQCategoryApi = useHobitQueryGetApi<GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse>('seniorfaqs/category');
   const CheckSeniorFAQCategoryConflictApi = useHobitMutatePostApi<CreateCheckSeniorFAQCategoryConflictRequest, CheckSeniorFAQCategoryConflictResponse>('seniorfaqs/create/category/conflict');
   const SeniorFAQCreateApi = useHobitMutatePostApi<CreateSeniorFAQRequest, CreateSeniorFAQResponse>('seniorfaqs');
@@ -212,6 +213,22 @@ const SeniorFAQCreate: React.FC = () => {
       answer_en.some((ans) => !ans.answer || !ans.title)
     ) {
       alert('모든 필드를 채워주세요.');
+      return;
+    }
+    
+    const allSeniorFAQs = GetAllSeniorFAQsApi.data?.payload?.data?.seniorFaqs || [];
+    const hasDuplicate = allSeniorFAQs.some((existing) => {
+      const duplicateKo = answer_ko.some((newAns) => 
+        existing.answer_ko.some((exAns) => exAns.title === newAns.title)
+      );
+      const duplicateEn = answer_en.some((newAns) => 
+        existing.answer_en.some((exAns) => exAns.title === newAns.title)
+      );
+      return duplicateKo || duplicateEn;
+    });
+
+    if (hasDuplicate) {
+      alert('이미 존재하는 제목의 답변이 있습니다. 중복을 확인해주세요.');
       return;
     }
   

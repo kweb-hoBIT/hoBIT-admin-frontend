@@ -214,6 +214,17 @@ const FAQCreate: React.FC = () => {
       return;
     }
 
+    // 중복 질문 확인
+    const isDuplicate = GetAllFAQsApi.data?.payload?.data.faqs.some(
+      (d) => d.question_ko === question_ko || d.question_en === question_en
+    );
+
+    if (isDuplicate) {
+      alert('이미 존재하는 질문입니다.');
+      setIsCreating(false);
+      return;
+    }
+
 
       const checkResponse = await CheckFAQCategoryConflictApi({
         body: {
