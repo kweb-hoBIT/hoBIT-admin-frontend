@@ -4,7 +4,7 @@ import { useHobitQueryGetApi, useHobitMutatePostApi, useHobitMutatePutApi } from
 import FAQUpdateForm from './SeniorFAQUpdateForm';
 import SeniorFAQCategoryConflict from '../SeniorFAQCategoryConflict';
 import { selectAuth } from '../../../redux/authSlice';
-import { GetSeniorFAQRequest, GetSeniorFAQResponse, UpdateSeniorFAQRequest, UpdateSeniorFAQResponse, GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse, UpdateCheckSeniorFAQCategoryConflictRequest, CheckSeniorFAQCategoryConflictResponse } from '../../../types/seniorfaq';
+import { GetSeniorFAQRequest, GetSeniorFAQResponse, UpdateSeniorFAQRequest, UpdateSeniorFAQResponse, GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse, UpdateCheckSeniorFAQCategoryConflictRequest, CheckSeniorFAQCategoryConflictResponse, GetAllSeniorFAQRequest, GetAllSeniorFAQResponse } from '../../../types/seniorfaq';
 import { RootState } from '../../../redux/store';
 import { useNavigate } from 'react-router-dom';
 
@@ -81,6 +81,7 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
     params: { senior_faq_id }
   });
   
+  const GetAllSeniorFAQsApi = useHobitQueryGetApi<GetAllSeniorFAQRequest, GetAllSeniorFAQResponse>('seniorfaqs');
   const GetAllSeniorFAQCategoryApi = useHobitQueryGetApi<GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse>('seniorfaqs/category');
   const CheckSeniorFAQCategoryConflictApi = useHobitMutatePostApi<UpdateCheckSeniorFAQCategoryConflictRequest, CheckSeniorFAQCategoryConflictResponse>('seniorfaqs/update/category/conflict');
   const seniorFAQUpdateApi = useHobitMutatePutApi<UpdateSeniorFAQRequest, UpdateSeniorFAQResponse>('seniorfaqs');
@@ -245,10 +246,27 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
       !detailcategory_ko ||
       !detailcategory_en ||
       !manager ||
-      answer_ko.some((ans) => !ans.answer) ||
-      answer_en.some((ans) => !ans.answer)
+      answer_ko.some((ans) => !ans.answer || !ans.title) ||
+      answer_en.some((ans) => !ans.answer || !ans.title)
     ) {
       alert('모든 필드를 채워주세요.');
+      return;
+    }
+
+    const allSeniorFAQs = GetAllSeniorFAQsApi.data?.payload?.data?.seniorFaqs || [];
+    const checkList = allSeniorFAQs.filter((f) => f.senior_faq_id !== Number(senior_faq_id));
+    const hasDuplicate = checkList.some((existing) => {
+      const duplicateKo = answer_ko.some((newAns) => 
+        existing.answer_ko.some((exAns) => exAns.title === newAns.title)
+      );
+      const duplicateEn = answer_en.some((newAns) => 
+        existing.answer_en.some((exAns) => exAns.title === newAns.title)
+      );
+      return duplicateKo || duplicateEn;
+    });
+
+    if (hasDuplicate) {
+      alert('이미 존재하는 제목의 답변이 있습니다. 중복을 확인해주세요.');
       return;
     }
 

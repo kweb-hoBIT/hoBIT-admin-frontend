@@ -1,5 +1,6 @@
 import React from 'react';
 import { GetFAQResponse } from '../../../types/faq';
+import FAQPreview from '../FAQPreviewProps'
 
 interface FAQDetailFormProps {
   faqData: GetFAQResponse['data']['faq'];
@@ -178,6 +179,20 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
           );
         })}
       </div>
+
+      {/* ================== 실제 노출 미리보기 ================== */}
+      
+      <FAQPreview
+        question_ko={question_ko}
+        question_en={question_en}
+        answer_ko={answer_ko}
+        answer_en={answer_en}
+        manager={manager}
+        maincategory_ko={maincategory_ko}
+        maincategory_en={maincategory_en}
+        subcategory_ko={subcategory_ko}
+        subcategory_en={subcategory_en}
+      />
       
       {/* 관리자 필드 */}
       <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
@@ -192,6 +207,8 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
           />
         </div>
       </div>
+    
+
     </form>
   );
 };

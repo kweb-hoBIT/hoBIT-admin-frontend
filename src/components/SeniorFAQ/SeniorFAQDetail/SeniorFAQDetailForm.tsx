@@ -1,5 +1,6 @@
 import React from 'react';
 import { GetSeniorFAQResponse } from '../../../types/seniorfaq';
+import SeniorFAQPreview from '../SeniorFAQPreview';
 
 interface SeniorFAQDetailFormProps {
   seniorFaqData: GetSeniorFAQResponse['data']['seniorFaq'];
@@ -198,6 +199,21 @@ const SeniorFAQDetailForm: React.FC<SeniorFAQDetailFormProps> = ({
             </div>
           );
         })}
+      </div>
+
+      {/* ✅ 실제 사용자 기준 미리보기 */}
+      <div>
+        <SeniorFAQPreview
+          maincategory_ko={maincategory_ko}
+          maincategory_en={maincategory_en}
+          subcategory_ko={subcategory_ko}
+          subcategory_en={subcategory_en}
+          detailcategory_ko={detailcategory_ko}
+          detailcategory_en={detailcategory_en}
+          answer_ko={answer_ko}
+          answer_en={answer_en}
+          manager={manager}
+        />
       </div>
 
       {/* 관리자 필드 */}

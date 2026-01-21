@@ -7,7 +7,7 @@ interface Answer {
   title?: string;
   answer: string;
   url: string;
-  map: { latitude: string; longitude: string; };
+  map: { latitude: string; longitude: string };
   email?: string;
   phone?: string;
   image?: string;
@@ -25,6 +25,11 @@ interface SeniorFAQPreviewProps {
   manager: string;
 }
 
+const campusMapUrl = (keyword: string) =>
+  `https://www.korea.ac.kr/campusMap/ko/view.do?srchWrd=${encodeURIComponent(
+    keyword
+  )}`;
+
 const SeniorFAQPreview: React.FC<SeniorFAQPreviewProps> = ({
   maincategory_ko,
   maincategory_en,
@@ -34,7 +39,6 @@ const SeniorFAQPreview: React.FC<SeniorFAQPreviewProps> = ({
   detailcategory_en,
   answer_ko,
   answer_en,
-  manager,
 }) => {
   const koreanContainerRef = useRef<HTMLDivElement>(null);
   const englishContainerRef = useRef<HTMLDivElement>(null);
@@ -44,152 +48,146 @@ const SeniorFAQPreview: React.FC<SeniorFAQPreviewProps> = ({
       const target = e.target as HTMLDivElement;
       if (target === koreanContainerRef.current && englishContainerRef.current) {
         englishContainerRef.current.scrollLeft = target.scrollLeft;
-      } else if (target === englishContainerRef.current && koreanContainerRef.current) {
+      } else if (
+        target === englishContainerRef.current &&
+        koreanContainerRef.current
+      ) {
         koreanContainerRef.current.scrollLeft = target.scrollLeft;
       }
     };
 
-    const koreanContainer = koreanContainerRef.current;
-    const englishContainer = englishContainerRef.current;
-
-    if (koreanContainer) {
-      koreanContainer.addEventListener('scroll', handleScroll);
-    }
-    if (englishContainer) {
-      englishContainer.addEventListener('scroll', handleScroll);
-    }
+    koreanContainerRef.current?.addEventListener('scroll', handleScroll);
+    englishContainerRef.current?.addEventListener('scroll', handleScroll);
 
     return () => {
-      if (koreanContainer) {
-        koreanContainer.removeEventListener('scroll', handleScroll);
-      }
-      if (englishContainer) {
-        englishContainer.removeEventListener('scroll', handleScroll);
-      }
+      koreanContainerRef.current?.removeEventListener('scroll', handleScroll);
+      englishContainerRef.current?.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
+  const renderCard = (
+    item: Answer,
+    index: number,
+    category: { main: string; sub: string; detail: string },
+    isKorean: boolean
+  ) => (
+    <div
+      key={index}
+      className="font-5medium text-base md:text-xl bg-[#FFEFEF] mt-[10px] rounded-[20px]
+                 px-[20px] py-[15px]
+                 w-full max-w-[330px] md:max-w-none md:w-[350px]
+                 break-words flex-shrink-0"
+    >
+      {index === 0 && (
+        <div className="flex flex-wrap text-sm md:text-base text-[#686D76] items-center mb-[10px]">
+          <h3>{category.main}</h3>
+          <IoIosArrowForward className="mx-1" />
+          <h3>{category.sub}</h3>
+          <IoIosArrowForward className="mx-1" />
+          <h3>{category.detail}</h3>
+        </div>
+      )}
+
+      {item.title && (
+        <p className="font-7bold text-lg md:text-xl mb-[10px]">
+          {item.title}
+        </p>
+      )}
+
+      {item.image && (
+        <img
+          src={item.image}
+          alt="related"
+          className="w-full h-auto rounded-[10px] object-cover mt-[15px]"
+        />
+      )}
+
+      <div className="mt-[10px] whitespace-pre-wrap">{item.answer}</div>
+
+      {(item.url || item.map?.latitude || item.map?.longitude) && (
+        <div className="w-full h-[1px] bg-gray-300 mt-[20px]" />
+      )}
+
+      {item.url && (
+        <div className="flex flex-row items-center mt-[20px]">
+          <div className="flex items-center justify-center mr-[10px] bg-white p-[8px] rounded-full flex-shrink-0">
+            <FaLink className="text-xl text-[#686D76]" />
+          </div>
+          <a
+            href={
+              item.url.startsWith('http')
+                ? item.url
+                : `http://${item.url}`
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-base md:text-lg text-[#0A5EB0] hover:underline break-all"
+          >
+            {isKorean ? '사이트 바로가기' : 'Visit Site'}
+          </a>
+        </div>
+      )}
+
+      {(item.map?.latitude || item.map?.longitude) && (
+        <div className="flex flex-row items-center mt-[10px]">
+          <div className="flex items-center justify-center mr-[10px] bg-white p-[8px] rounded-full flex-shrink-0">
+            <FaMapMarkerAlt className="text-xl text-[#686D76]" />
+          </div>
+          <a
+            href={campusMapUrl(category.detail)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-base md:text-lg text-[#0A5EB0] hover:underline"
+          >
+            {isKorean
+              ? '고려대학교 캠퍼스맵'
+              : 'Korea University Campus Map'}
+          </a>
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <div className="mt-8 p-6 border border-gray-300 rounded-lg bg-white shadow-md">
-      <h3 className="text-xl font-bold text-gray-800 mb-4">미리보기</h3>
-      <div className="flex flex-col gap-6">
-        {/* 한국어 컨테이너 */}
-        <div ref={koreanContainerRef} className="overflow-x-auto flex flex-nowrap space-x-4 pb-2">
-          {answer_ko.length > 0 ? (
-            answer_ko.map((item, index) => (
-              <div key={index} className="font-5medium text-[20px] bg-[#FFEFEF] mt-[10px] rounded-[20px] px-[20px] py-[15px] min-w-[365px] w-[365px] flex-shrink-0 break-words inline-block">
-                {index === 0 && (
-                  <div className="flex flex-row text-[16px] text-[#686D76] items-center rounded-[10px] w-fit mb-[10px]">
-                    <h3 className="text-center">{maincategory_ko}</h3>
-                    <IoIosArrowForward />
-                    <h3 className="font-4regular text-center">{subcategory_ko}</h3>
-                    <IoIosArrowForward />
-                    <h3 className="font-4regular text-center">{detailcategory_ko}</h3>
-                  </div>
-                )}
-                {item.title && (
-                  <p className="font-7bold text-[20px] mb-[10px]">{item.title}</p>
-                )}
-                {item.image && (
-                  <div className="mt-[20px]">
-                    <img
-                      src={item.image}
-                      alt="관련 이미지"
-                      className="w-full h-auto rounded-[10px] object-cover"
-                    />
-                  </div>
-                )}
-                {typeof item.answer === 'string' && (
-                  <div className="whitespace-pre-wrap">{item.answer}</div>
-                )}
-                {(item.url || item.email || item.phone) && (
-                  <div className="w-full h-[1px] bg-gray-300 mt-[20px]" />
-                )}
-                {item.url && (
-                    <div className="flex flex-row items-center mt-[20px]">
-                      <FaLink className="mr-[10px] text-[36px] text-[#686D76] bg-white p-[8px] rounded-full" />
-                    <a href={item.url.startsWith('http') ? item.url : `http://${item.url}`} target="_blank" rel="noopener noreferrer" className="text-[18px] text-[#0A5EB0] cursor-pointer hover:underline break-words">
-                      사이트 바로가기
-                    </a>
-                  </div>
-                )}
-                {(item.map.latitude || item.map.longitude) && (
-                  <div className="flex flex-row items-center mt-[10px]">
-                    <FaMapMarkerAlt  className="mr-[10px] text-[36px] text-[#686D76] bg-white p-[8px] rounded-full" />
-                    <a
-                      href="https://www.korea.ac.kr/campusMap/ko/view.do"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      고려대학교 캠퍼스맵
-                    </a>
-                  </div>
-                )}
-              </div>
-            ))
-          ) : (
-            <p className="text-gray-400">한글 답변 미리보기.</p>
-          )}
-        </div>
+      <h3 className="text-xl font-bold mb-4">미리보기</h3>
 
-        {/* 영어 컨테이너 */}
-        <div ref={englishContainerRef} className="overflow-x-auto flex flex-nowrap space-x-4 pb-2">
-          {answer_en.length > 0 ? (
-            answer_en.map((item, index) => (
-              <div key={index} className="font-5medium text-[20px] bg-[#FFEFEF] mt-[10px] rounded-[20px] px-[20px] py-[15px] min-w-[365px] w-[365px] flex-shrink-0 break-words inline-block">
-                {index === 0 && (
-                  <div className="flex flex-row text-[16px] text-[#686D76] items-center rounded-[10px] w-fit mb-[10px]">
-                    <h3 className="text-center">{maincategory_en}</h3>
-                    <IoIosArrowForward />
-                    <h3 className="font-4regular text-center">{subcategory_en}</h3>
-                    <IoIosArrowForward />
-                    <h3 className="font-4regular text-center">{detailcategory_en}</h3>
-                  </div>
-                )}
-                {item.title && (
-                  <p className="font-7bold text-[20px] mb-[10px]">{item.title}</p>
-                )}
-                {item.image && (
-                  <div className="mt-[20px]">
-                    <img
-                      src={item.image}
-                      alt="Related Image"
-                      className="w-full h-auto rounded-[10px] object-cover"
-                    />
-                  </div>
-                )}
-                {typeof item.answer === 'string' && (
-                  <div className="whitespace-pre-wrap">{item.answer}</div>
-                )}
-                {(item.url || item.email || item.phone) && (
-                  <div className="w-full h-[1px] bg-gray-300 mt-[20px]" />
-                )}
-                {item.url && (
-                    <div className="flex flex-row items-center mt-[20px]">
-                      <FaLink className="mr-[10px] text-[36px] text-[#686D76] bg-white p-[8px] rounded-full" />
-                    <a href={item.url.startsWith('http') ? item.url : `http://${item.url}`} target="_blank" rel="noopener noreferrer" className="text-[18px] text-[#0A5EB0] cursor-pointer hover:underline break-words">
-                      Visit Site
-                    </a>
-                  </div>
-                )}
-                {(item.map.latitude || item.map.longitude) && (
-                  <div className="flex flex-row items-center mt-[10px]">
-                    <FaMapMarkerAlt  className="mr-[10px] text-[36px] text-[#686D76] bg-white p-[8px] rounded-full" />
-                    <a
-                      href="https://www.korea.ac.kr/campusMap/ko/view.do"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Korea University Campus Map
-                    </a>
-                  </div>
-                )}
-              </div>
-            ))
-          ) : (
-            <p className="text-gray-300">영어 답변 미리보기.</p>
-          )}
-        </div>
+      {/* 한국어 */}
+      <div
+        ref={koreanContainerRef}
+        className="flex flex-col md:flex-row md:overflow-x-auto gap-3"
+      >
+        {answer_ko.map((item, idx) =>
+          renderCard(
+            item,
+            idx,
+            {
+              main: maincategory_ko,
+              sub: subcategory_ko,
+              detail: detailcategory_ko,
+            },
+            true
+          )
+        )}
+      </div>
+
+      {/* 영어 */}
+      <div
+        ref={englishContainerRef}
+        className="flex flex-col md:flex-row md:overflow-x-auto gap-3 mt-6"
+      >
+        {answer_en.map((item, idx) =>
+          renderCard(
+            item,
+            idx,
+            {
+              main: maincategory_en,
+              sub: subcategory_en,
+              detail: detailcategory_en,
+            },
+            false
+          )
+        )}
       </div>
     </div>
   );
