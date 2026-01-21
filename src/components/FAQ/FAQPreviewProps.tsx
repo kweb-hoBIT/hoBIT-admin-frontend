@@ -53,7 +53,7 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
     subcategory: string,
     isKorean: boolean
   ) => (
-    <div className="flex flex-col md:flex-row md:flex-wrap gap-4">
+    <div className="flex flex-col md:flex-row md:flex-nowrap gap-4">
       {answers.length > 0 ? (
         answers.map((item, index) => (
           <div
@@ -68,6 +68,7 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
               px-[20px] py-[15px]
               w-full max-w-[330px] md:w-[350px]
               break-words inline-block
+              flex-shrink-0
             "
           >
             {/* 카테고리 헤더 (첫 카드만) */}
