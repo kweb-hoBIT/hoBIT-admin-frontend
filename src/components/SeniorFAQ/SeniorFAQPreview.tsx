@@ -73,10 +73,7 @@ const SeniorFAQPreview: React.FC<SeniorFAQPreviewProps> = ({
   ) => (
     <div
       key={index}
-      className="font-5medium text-base md:text-xl bg-[#FFEFEF] mt-[10px] rounded-[20px]
-                 px-[20px] py-[15px]
-                 w-full max-w-[330px] md:max-w-none md:w-[350px]
-                 break-words flex-shrink-0"
+      className="font-5medium text-base md:text-lg bg-[#FFEFEF] mt-[10px] rounded-[20px] px-[20px] py-[15px] w-full max-w-[330px] md:max-w-none md:w-[350px] break-words flex-shrink-0"
     >
       {index === 0 && (
         <div className="flex flex-wrap text-sm md:text-base text-[#686D76] items-center mb-[10px]">
@@ -88,8 +85,8 @@ const SeniorFAQPreview: React.FC<SeniorFAQPreviewProps> = ({
         </div>
       )}
 
-      {item.title && (
-        <p className="font-7bold text-lg md:text-xl mb-[10px]">
+      {index === 0 && item.title && (
+        <p className="font-7bold text-base md:text-lg mb-[15px] break-words">
           {item.title}
         </p>
       )}
@@ -155,7 +152,7 @@ const SeniorFAQPreview: React.FC<SeniorFAQPreviewProps> = ({
       {/* 한국어 */}
       <div
         ref={koreanContainerRef}
-        className="flex flex-col md:flex-row md:overflow-x-auto gap-3"
+        className="flex flex-col md:flex-row md:overflow-x-auto md:items-start gap-3"
       >
         {answer_ko.map((item, idx) =>
           renderCard(
@@ -174,7 +171,7 @@ const SeniorFAQPreview: React.FC<SeniorFAQPreviewProps> = ({
       {/* 영어 */}
       <div
         ref={englishContainerRef}
-        className="flex flex-col md:flex-row md:overflow-x-auto gap-3 mt-6"
+        className="flex flex-col md:flex-row md:overflow-x-auto md:items-start gap-3 mt-6"
       >
         {answer_en.map((item, idx) =>
           renderCard(
