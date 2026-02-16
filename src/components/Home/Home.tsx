@@ -8,7 +8,7 @@ const Home: React.FC = () => {
         <div className="mb-4">
           <p className="text-sm font-semibold">📌 2026년 2월 16일 (월요일)</p>
           <ul className="list-disc list-inside text-sm mt-1 space-y-1">
-            <li>피드백 유해성 검사 수정 & 피드백 ui 편의성 개선</li>
+            <li>피드백 유해성 검사 수정 & 피드백 ui 개선</li>
           </ul>
         </div>
 
