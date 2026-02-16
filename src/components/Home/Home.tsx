@@ -6,7 +6,7 @@ const Home: React.FC = () => {
       <div className="absolute top-4 left-4 bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-lg shadow-md max-w-xs font-sans">
         {/* 2026년 2월 16일 */}
         <div className="mb-4">
-          <p className="text-sm font-semibold">📌 2026년 1월 21일 (수요일)</p>
+          <p className="text-sm font-semibold">📌 2026년 2월 16일 (월요일)</p>
           <ul className="list-disc list-inside text-sm mt-1 space-y-1">
             <li>피드백 유해성 검사 수정 & 피드백 ui 편의성 개선</li>
           </ul>
@@ -14,7 +14,7 @@ const Home: React.FC = () => {
 
         {/* 2026년 2월 15일 */}
         <div className="mb-4">
-          <p className="text-sm font-semibold">📌 2026년 1월 21일 (수요일)</p>
+          <p className="text-sm font-semibold">📌 2026년 2월 15일 (일요일)</p>
           <ul className="list-disc list-inside text-sm mt-1 space-y-1">
             <li>답변카드 질문 표시 & 선배모드 동작 로직 수정</li>
           </ul>
