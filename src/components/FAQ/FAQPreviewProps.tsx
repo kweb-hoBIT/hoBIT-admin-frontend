@@ -16,6 +16,8 @@ interface FAQPreviewProps {
 }
 
 const FAQPreview: React.FC<FAQPreviewProps> = ({
+  question_ko,
+  question_en,
   answer_ko,
   answer_en,
   maincategory_ko,
@@ -51,6 +53,7 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
     answers: typeof answer_ko,
     maincategory: string,
     subcategory: string,
+    question: string,
     isKorean: boolean
   ) => (
     <div className="flex flex-col md:flex-row md:flex-nowrap gap-4">
@@ -73,11 +76,16 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
           >
             {/* 카테고리 헤더 (첫 카드만) */}
             {index === 0 && (
-              <div className="flex flex-row text-sm md:text-base text-[#686D76] items-center mb-[10px]">
-                <h3>{maincategory}</h3>
-                <IoIosArrowForward className="mx-1" />
-                <h3 className="font-4regular">{subcategory}</h3>
-              </div>
+              <>
+                <div className="flex flex-row text-sm md:text-base text-[#686D76] items-center mb-[10px]">
+                  <h3>{maincategory}</h3>
+                  <IoIosArrowForward className="mx-1" />
+                  <h3 className="font-4regular">{subcategory}</h3>
+                </div>
+                <div className="text-black font-6semibold text-base md:text-lg mb-[15px] break-words">
+                  {question}
+                </div>
+              </>
             )}
 
             {/* 본문 */}
@@ -157,6 +165,7 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
           answer_ko,
           maincategory_ko,
           subcategory_ko,
+          question_ko,
           true
         )}
       </div>
@@ -170,6 +179,7 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
           answer_en,
           maincategory_en,
           subcategory_en,
+          question_en,
           false
         )}
       </div>
