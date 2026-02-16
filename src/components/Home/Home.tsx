@@ -8,6 +8,21 @@ const Home: React.FC = () => {
         <div className="mb-4">
           <p className="text-sm font-semibold">📌 2026년 1월 21일 (수요일)</p>
           <ul className="list-disc list-inside text-sm mt-1 space-y-1">
+            <li>피드백 유해성 검사 수정 & 피드백 ui 편의성 개선</li>
+          </ul>
+        </div>
+
+        {/* 2026년 2월 15일 */}
+        <div className="mb-4">
+          <p className="text-sm font-semibold">📌 2026년 1월 21일 (수요일)</p>
+          <ul className="list-disc list-inside text-sm mt-1 space-y-1">
+            <li>답변카드 질문 표시 & 선배모드 동작 로직 수정</li>
+          </ul>
+        </div>
+        {/* 2026년 2월 16일 */}
+        <div className="mb-4">
+          <p className="text-sm font-semibold">📌 2026년 1월 21일 (수요일)</p>
+          <ul className="list-disc list-inside text-sm mt-1 space-y-1">
             <li>답변카드 질문 표시 & 선배모드 동작 로직 수정</li>
           </ul>
         </div>
