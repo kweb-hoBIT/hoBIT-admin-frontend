@@ -24,6 +24,10 @@ import FAQCategoryRenamePage from './pages/FAQCategoryRenamePage';
 import FAQCategoryReorderPage from './pages/FAQCategoryReorderPage';
 import SeniorFAQCategoryRenamePage from './pages/SeniorFAQCategoryRenamePage';
 import SeniorFAQCategoryReorderPage from './pages/SeniorFAQCategoryReorderPage';
+import BulkUpdateEmailPage from './pages/BulkUpdateEmailPage';
+import BulkDeleteEmailPage from './pages/BulkDeleteEmailPage';
+import BulkUpdateAdminPage from './pages/BulkUpdateAdminPage';
+import BulkDeleteAdminPage from './pages/BulkDeleteAdminPage';
 
 import LogsPage from './pages/LogsPage';
 import FAQLogDetailPage from './pages/FAQLogDetailPage';
@@ -73,6 +77,10 @@ const App: React.FC = () => {
               <Route path="/categories/faq/reorder" element={<FAQCategoryReorderPage />} />
               <Route path="/categories/seniorfaq/rename" element={<SeniorFAQCategoryRenamePage />} />
               <Route path="/categories/seniorfaq/reorder" element={<SeniorFAQCategoryReorderPage />} />
+              <Route path="/categories/email/bulk-delete" element={<BulkDeleteEmailPage />} />
+              <Route path="/categories/email/bulk-update" element={<BulkUpdateEmailPage />} />
+              <Route path="/categories/admin/bulk-delete" element={<BulkDeleteAdminPage />} />
+              <Route path="/categories/admin/bulk-update" element={<BulkUpdateAdminPage />} />
               
               {/* 로그 관련 페이지 */}
               <Route path="/logs" element={<LogsPage />} />

@@ -16,6 +16,7 @@ const FAQDelete: React.FC<FAQDeleteProps> = ({ faq_id, question_ko, onSuccess })
   const [error, setError] = useState<string | null>(null);
   const [showPopup, setShowPopup] = useState(false);
   const [inputText, setInputText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const deleteFAQApi = useHobitMutateDeleteApi<DeleteFAQRequest, DeleteFAQResponse>('faqs');
 
@@ -26,6 +27,7 @@ const FAQDelete: React.FC<FAQDeleteProps> = ({ faq_id, question_ko, onSuccess })
   }, []);
 
   const handleDeleteFAQ = async () => {
+    setIsDeleting(true);
     try {
       const response = await deleteFAQApi({
         params: { faq_id },
@@ -41,6 +43,8 @@ const FAQDelete: React.FC<FAQDeleteProps> = ({ faq_id, question_ko, onSuccess })
       }
     } catch {
       setError('FAQ 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -77,12 +81,12 @@ const FAQDelete: React.FC<FAQDeleteProps> = ({ faq_id, question_ko, onSuccess })
             <button
               type="button"
               onClick={handleDeleteFAQ}
-              disabled={!isDeleteEnabled}
+              disabled={!isDeleteEnabled || isDeleting}
               className={`mt-4 w-full h-15 bg-red-500 p-2 rounded-lg hover:bg-red-600 ${
-                !isDeleteEnabled ? 'opacity-50 cursor-not-allowed' : ''
+                !isDeleteEnabled || isDeleting ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
-              삭제
+              {isDeleting ? '삭제 중...' : '삭제'}
             </button>
             <button
               type="button"

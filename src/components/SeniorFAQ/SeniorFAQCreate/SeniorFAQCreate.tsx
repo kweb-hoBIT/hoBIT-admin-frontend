@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 const SeniorFAQCreate: React.FC = () => {
   const navigate = useNavigate();
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
+  const [isCreating, setIsCreating] = useState(false);
   const [category, setCategory] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']>([
     {
       maincategory_ko: '',
@@ -20,6 +21,7 @@ const SeniorFAQCreate: React.FC = () => {
         {
           subcategory_ko: '',
           subcategory_en: '',
+          subcategory_order: 0,
           detailcategories: {
             detailcategory_ko: [],
             detailcategory_en: [],
@@ -189,6 +191,7 @@ const SeniorFAQCreate: React.FC = () => {
   };
 
   const handleSubmit = async () => {
+    setIsCreating(true);
     const {
       maincategory_ko,
       maincategory_en,
@@ -213,6 +216,7 @@ const SeniorFAQCreate: React.FC = () => {
       answer_en.some((ans) => !ans.answer || !ans.title)
     ) {
       alert('모든 필드를 채워주세요.');
+      setIsCreating(false);
       return;
     }
     
@@ -229,6 +233,7 @@ const SeniorFAQCreate: React.FC = () => {
 
     if (hasDuplicate) {
       alert('이미 존재하는 제목의 답변이 있습니다. 중복을 확인해주세요.');
+      setIsCreating(false);
       return;
     }
   
@@ -247,11 +252,13 @@ const SeniorFAQCreate: React.FC = () => {
       if (checkResponse.payload.data.isConflict) {
         setConflictedData(checkResponse.payload.data.conflictedData);
         setShowCategoryConflict(true);
+        setIsCreating(false);
         return;
       }
     } else {
       alert('선배 FAQ 카테고리 중복 체크 중 오류가 발생했습니다.');
       console.log('선배 FAQ 카테고리 중복 체크 중 오류가 발생했습니다.', checkResponse.error);
+      setIsCreating(false);
       return;
     }
   
@@ -261,10 +268,12 @@ const SeniorFAQCreate: React.FC = () => {
   
     if (createResponse.payload?.statusCode === 201) {
       alert('선배 FAQ가 성공적으로 생성되었습니다!');
+      setIsCreating(false);
       navigate('/seniorfaqs');
     } else {
       alert('선배 FAQ 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
       console.log('선배 FAQ 생성 중 오류가 발생했습니다.', createResponse.error);
+      setIsCreating(false);
     }
   }; 
     
@@ -284,6 +293,7 @@ const SeniorFAQCreate: React.FC = () => {
         handleAddAnswer={handleAddAnswer}
         handleSubmit={handleSubmit}
         handleDeleteAnswer={handleDeleteAnswer}
+        isCreating={isCreating}
       />
     </>
   );

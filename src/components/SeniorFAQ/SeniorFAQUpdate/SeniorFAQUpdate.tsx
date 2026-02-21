@@ -15,6 +15,7 @@ interface SeniorFAQUpdateProps {
 const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
   const navigate = useNavigate();
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
+  const [isUpdating, setIsUpdating] = useState(false);
   const [category, setCategory] = useState<GetAllSeniorFAQCategoryResponse['data']['categories']>([
     {
       maincategory_ko: '',
@@ -24,6 +25,7 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
         {
           subcategory_ko: '',
           subcategory_en: '',
+          subcategory_order: 0,
           detailcategories: {
             detailcategory_ko: [],
             detailcategory_en: [],
@@ -226,6 +228,7 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
   };
 
   const handleUpdate = async () => {
+    setIsUpdating(true);
     const {
       maincategory_ko,
       maincategory_en,
@@ -250,6 +253,7 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
       answer_en.some((ans) => !ans.answer || !ans.title)
     ) {
       alert('모든 필드를 채워주세요.');
+      setIsUpdating(false);
       return;
     }
 
@@ -267,6 +271,7 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
 
     if (hasDuplicate) {
       alert('이미 존재하는 제목의 답변이 있습니다. 중복을 확인해주세요.');
+      setIsUpdating(false);
       return;
     }
 
@@ -286,11 +291,13 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
       if (checkResponse.payload.data.isConflict) {
         setConflictedData(checkResponse.payload.data.conflictedData);
         setShowCategoryConflict(true);
+        setIsUpdating(false);
         return;
       }
     } else {
       alert('선배 FAQ 카테고리 중복 확인 중 오류가 발생했습니다.');
       console.error('선배 FAQ 카테고리 중복 확인 중 오류가 발생했습니다.', checkResponse.error);
+      setIsUpdating(false);
       return;
     }
   
@@ -302,10 +309,12 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
 
     if (updateResponse.payload?.statusCode === 200) {
       alert('선배 FAQ가 성공적으로 수정되었습니다!');
+      setIsUpdating(false);
       navigate('/seniorfaqs');
     } else {
       alert('선배 FAQ 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
       console.error('선배 FAQ 수정 중 오류가 발생했습니다.', updateResponse.error);
+      setIsUpdating(false);
     }
   };
 
@@ -329,6 +338,7 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
         handleAddAnswer={handleAddAnswer}
         handleDeleteAnswer={handleDeleteAnswer}
         handleUpdate={handleUpdate}
+        isUpdating={isUpdating}
       />
     </>
   );

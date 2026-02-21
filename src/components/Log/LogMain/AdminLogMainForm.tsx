@@ -5,6 +5,7 @@ import { selectAdminLogFilter, setAdminLogCurrentPage } from '../../../redux/fil
 import { GetAllAdminLogResponse } from '../../../types/adminLog';
 import { useNavigate } from 'react-router-dom';
 import { selectLogItemsPerPage, setLogItemsPerPage } from '../../../redux/itemSlice';
+import BulkDeleteAdminLogModal from './BulkDeleteAdminLogModal';
 
 interface AdminLogMainFormProps {
   adminLogs: GetAllAdminLogResponse['data']['adminLogs'];
@@ -16,6 +17,7 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
   
   const { storedCurrentPage } = useSelector((state: RootState) => selectAdminLogFilter(state));
   const [currentPage, setCurrentPage] = useState<number>(storedCurrentPage || 1);
+  const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
 
   useEffect(() => {
     dispatch(setAdminLogCurrentPage(currentPage));
@@ -73,6 +75,12 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
                 <option value={8}>8개씩 보기</option>
                 <option value={10}>10개씩 보기</option>
               </select>
+              <button
+                onClick={() => setShowBulkDeleteModal(true)}
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 font-semibold"
+              >
+                전체 삭제
+              </button>
             </div>
           </div>
         <div style={{ minHeight: '320px' }}>
@@ -150,6 +158,17 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
           >다음</button>
         </div>
       </div>
+      
+      {/* 전체 삭제 모달 */}
+      {showBulkDeleteModal && (
+        <BulkDeleteAdminLogModal
+          onClose={() => setShowBulkDeleteModal(false)}
+          onSuccess={() => {
+            setShowBulkDeleteModal(false);
+            window.location.reload();
+          }}
+        />
+      )}
     </div>
   );
 };

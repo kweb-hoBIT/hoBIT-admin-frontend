@@ -16,15 +16,20 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
   const navigate = useNavigate();
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
   const [isUpdating, setIsUpdating] = useState(false);
-  const [category, setCategory] = useState<GetAllFAQCategoryResponse['data']['categories']>([{
-    maincategory_ko: '',
-    maincategory_en: '', 
-    category_order: 0,
-    subcategories: {
-      subcategory_ko: [],
-      subcategory_en: []
-    }
-  }]);
+  const [category, setCategory] = useState<GetAllFAQCategoryResponse['data']['categories']>([
+    {
+      maincategory_ko: '',
+      maincategory_en: '',
+      category_order: 0,
+      subcategories: [
+        {
+          subcategory_ko: '',
+          subcategory_en: '',
+          subcategory_order: 0,
+        },
+      ],
+    },
+  ]);
   const [updatedFAQ, setupdatedFAQ] = useState<UpdateFAQRequest['body']>({
     user_id: user_id ? Number(user_id) : 0,
     maincategory_ko: '',
@@ -172,19 +177,19 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
     }
     if (key === 'subcategory_ko') {
       const index = category.findIndex((item) => item.maincategory_ko === updatedFAQ.maincategory_ko);
-      const subIndex = category[index].subcategories.subcategory_ko.findIndex((sub) => sub === value);
+      const subCategory = category[index].subcategories.find((sub) => sub.subcategory_ko === value);
       setupdatedFAQ({
         ...updatedFAQ,
         subcategory_ko: value,
-        subcategory_en: category[index].subcategories.subcategory_en[subIndex],
+        subcategory_en: subCategory?.subcategory_en || '',
       });
     }
     if (key === 'subcategory_en') {
       const index = category.findIndex((item) => item.maincategory_en === updatedFAQ.maincategory_en);
-      const subIndex = category[index].subcategories.subcategory_en.findIndex((sub) => sub === value);
+      const subCategory = category[index].subcategories.find((sub) => sub.subcategory_en === value);
       setupdatedFAQ({
         ...updatedFAQ,
-        subcategory_ko: category[index].subcategories.subcategory_ko[subIndex],
+        subcategory_ko: subCategory?.subcategory_ko || '',
         subcategory_en: value,
       });
     }

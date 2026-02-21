@@ -9,12 +9,16 @@ const CategoryMain: React.FC = () => {
     { path: "/categories/faq/reorder", label: "FAQ 카테고리 순서 수정", disabled: false },
     { path: "/categories/seniorfaq/rename", label: "선배 FAQ 카테고리 수정", disabled: false },
     { path: "/categories/seniorfaq/reorder", label: "선배 FAQ 카테고리 순서 수정", disabled: false },
+    { path: "/categories/email/bulk-update", label: "이메일 변경", disabled: false },
+    { path: "/categories/email/bulk-delete", label: "이메일 삭제", disabled: false },
+    { path: "/categories/admin/bulk-update", label: "관리자 변경", disabled: false },
+    { path: "/categories/admin/bulk-delete", label: "관리자 삭제", disabled: false },
   ];
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">카테고리 관리</h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">관리 페이지</h2>
         <div className="space-y-4">
           {options.map((option, index) => (
             <button

@@ -4,6 +4,22 @@ const Home: React.FC = () => {
   return (
     <div className="relative flex justify-center items-center min-h-screen bg-white-50">
       <div className="absolute top-4 left-4 bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-lg shadow-md max-w-xs font-sans">
+        {/* 2026년 2월 22일 */}
+        <div className="mb-4">
+          <p className="text-sm font-semibold">📌 2026년 2월 22일 (일요일)</p>
+          <ul className="list-disc list-inside text-sm mt-1 space-y-1">
+            <li>전체 삭제 로직 추가</li>
+          </ul>
+        </div>
+
+        {/* 2026년 2월 19일 */}
+        <div className="mb-4">
+          <p className="text-sm font-semibold">📌 2026년 2월 19일 (목요일)</p>
+          <ul className="list-disc list-inside text-sm mt-1 space-y-1">
+            <li>카테고리 순서, 전체관리(이메일, 관리자) 추가</li>
+          </ul>
+        </div>
+
         {/* 2026년 2월 16일 */}
         <div className="mb-4">
           <p className="text-sm font-semibold">📌 2026년 2월 16일 (월요일)</p>
@@ -19,7 +35,7 @@ const Home: React.FC = () => {
             <li>답변카드 질문 표시 & 선배모드 동작 로직 수정</li>
           </ul>
         </div>
-        {/* 2026년 2월 16일 */}
+        {/* 2026년 1월 21일 */}
         <div className="mb-4">
           <p className="text-sm font-semibold">📌 2026년 1월 21일 (수요일)</p>
           <ul className="list-disc list-inside text-sm mt-1 space-y-1">
@@ -50,7 +66,7 @@ const Home: React.FC = () => {
           {[
             { href: "/faqs", text: "FAQ로 이동" },
             { href: "/seniorfaqs", text: "선배 FAQ로 이동" },
-            { href: "/categories", text: "카테고리로 이동" },
+            { href: "/categories", text: "관리페이지로 이동" },
             { href: "/logs", text: "로그로 이동" },
             { href: "/logs/analytics", text: "로그 분석으로 이동" },
             { href: "/userfeedbacks", text: "유저 피드백으로 이동" },

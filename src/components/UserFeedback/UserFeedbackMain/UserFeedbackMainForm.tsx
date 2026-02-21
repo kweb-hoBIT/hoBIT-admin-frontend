@@ -7,6 +7,7 @@ import UserFeedbackResolvedUpdate from './UserFeedbackResolvedUpdate';
 import SelectUserFeedback from './SelectUserFeedback';
 import UserFeedbackDelete from './UserFeedbackDelete';
 import { selectUserFeedbackItemsPerPage, setUserFeedbackItemsPerPage } from '../../../redux/itemSlice';
+import BulkDeleteFeedbackModal from './BulkDeleteFeedbackModal';
 
 interface UserFeedbackMainFormProps {
   userFeedbacks: GetAllUserFeedbackResponse['data']['userFeedbacks'];
@@ -22,6 +23,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
     storedFilterName as 'unresolved' | 'resolved' || 'unresolved'
   );
   const [feedbacks, setFeedbacks] = useState(userFeedbacks);
+  const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
 
   useEffect(() => {
     setFeedbacks(userFeedbacks);
@@ -140,6 +142,12 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                   <option value={8}>8개씩 보기</option>
                   <option value={10}>10개씩 보기</option>
                 </select>
+                <button
+                  onClick={() => setShowBulkDeleteModal(true)}
+                  className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 font-semibold"
+                >
+                  전체 삭제
+                </button>
               </div>
             </div>
         <div style={{ minHeight: '320px' }}>
@@ -240,6 +248,17 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
           </div>
         </div>
       </div>
+      
+      {/* 전체 삭제 모달 */}
+      {showBulkDeleteModal && (
+        <BulkDeleteFeedbackModal
+          onClose={() => setShowBulkDeleteModal(false)}
+          onSuccess={() => {
+            setShowBulkDeleteModal(false);
+            window.location.reload();
+          }}
+        />
+      )}
     </div>
   );
 };
