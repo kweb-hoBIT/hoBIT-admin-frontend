@@ -4,6 +4,7 @@ import { RootState } from '../../../redux/store';
 import { selectQuestionLogFilter, setQuestionLogCurrentPage } from '../../../redux/filterSlice';
 import { GetAllQuestionLogResponse } from '../../../types/questionLog';
 import { selectQuestionLogItemsPerPage, setQuestionLogItemsPerPage } from '../../../redux/itemSlice';
+import BulkDeleteQuestionLogModal from './BulkDeleteQuestionLogModal';
 
 interface QuestionLogMainFormProps {
   questionLogs: GetAllQuestionLogResponse['data']['questionLogs'];
@@ -13,6 +14,7 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
   const dispatch = useDispatch();
   const { storedCurrentPage } = useSelector((state: RootState) => selectQuestionLogFilter(state));
   const [currentPage, setCurrentPage] = useState<number>(storedCurrentPage ? Number(storedCurrentPage) : 1);
+  const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
 
   useEffect(() => {
     dispatch(setQuestionLogCurrentPage(currentPage));
@@ -65,6 +67,12 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
                 <option value={8}>8개씩 보기</option>
                 <option value={10}>10개씩 보기</option>
               </select>
+              <button
+                onClick={() => setShowBulkDeleteModal(true)}
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 font-semibold"
+              >
+                전체 삭제
+              </button>
             </div>
           </div>
         <div style={{ minHeight: '395px' }}>
@@ -117,6 +125,17 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
           >다음</button>
         </div>
       </div>
+      
+      {/* 전체 삭제 모달 */}
+      {showBulkDeleteModal && (
+        <BulkDeleteQuestionLogModal
+          onClose={() => setShowBulkDeleteModal(false)}
+          onSuccess={() => {
+            setShowBulkDeleteModal(false);
+            window.location.reload();
+          }}
+        />
+      )}
     </div>
   );
 };

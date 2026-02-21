@@ -4,9 +4,10 @@ interface Category {
   maincategory_ko: string;
   maincategory_en: string;
   subcategories: {
-    subcategory_ko: string[];
-    subcategory_en: string[];
-  };
+    subcategory_ko: string;
+    subcategory_en: string;
+    subcategory_order: number;
+  }[];
 }
 
 interface FAQCategoryRenameFormProps {
@@ -45,8 +46,8 @@ const FAQCategoryRenameForm: React.FC<FAQCategoryRenameFormProps> = ({
     setAvailableSubcategories(
       selectedCategory
         ? renameData.category_field === "subcategory_ko"
-          ? selectedCategory.subcategories.subcategory_ko
-          : selectedCategory.subcategories.subcategory_en
+          ? selectedCategory.subcategories.map(sub => sub.subcategory_ko)
+          : selectedCategory.subcategories.map(sub => sub.subcategory_en)
         : []
     );
   }, [selectedMainCategory, renameData.category_field, categories]);

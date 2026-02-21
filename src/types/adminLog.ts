@@ -140,3 +140,33 @@ export type CompareSeniorFAQLogResponse = {
     }
   };
 }
+
+export interface CountAdminLogsRequest {
+  endpoint: 'adminlogs/count';
+  method: 'get';
+  query?: {
+    before_date?: string;
+  };
+}
+
+export interface CountAdminLogsResponse {
+  statusCode: number;
+  data: {
+    count: number;
+  };
+}
+
+export interface BulkDeleteAdminLogsRequest {
+  body: {
+    before_date?: string;
+    user_id: number;
+  };
+}
+
+export interface BulkDeleteAdminLogsResponse {
+  statusCode: number;
+  data: {
+    message: string;
+    deleted_count: number;
+  };
+}

@@ -12,15 +12,20 @@ const FAQCreate: React.FC = () => {
   const navigate = useNavigate();
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
   const [isCreating, setIsCreating] = useState(false);
-  const [category, setCategory] = useState<GetAllFAQCategoryResponse['data']['categories']>([{
-    maincategory_ko: '',
-    maincategory_en: '',
-    category_order: 0,
-    subcategories: {
-      subcategory_ko: [],
-      subcategory_en: []
-    }
-  }]);
+  const [category, setCategory] = useState<GetAllFAQCategoryResponse['data']['categories']>([
+    {
+      maincategory_ko: '',
+      maincategory_en: '',
+      category_order: 0,
+      subcategories: [
+        {
+          subcategory_ko: '',
+          subcategory_en: '',
+          subcategory_order: 0,
+        },
+      ],
+    },
+  ]);
   const [newFAQ, setNewFAQ] = useState<CreateFAQRequest['body']>({
     user_id: user_id ? Number(user_id) : 0,
     maincategory_ko: '',
@@ -139,19 +144,19 @@ const FAQCreate: React.FC = () => {
     }
     if (key === 'subcategory_ko') {
       const index = category.findIndex((item) => item.maincategory_ko === newFAQ.maincategory_ko);
-      const subIndex = category[index].subcategories.subcategory_ko.findIndex((sub) => sub === value);
+      const subCategory = category[index].subcategories.find((sub) => sub.subcategory_ko === value);
       setNewFAQ({
         ...newFAQ,
         subcategory_ko: value,
-        subcategory_en: category[index].subcategories.subcategory_en[subIndex],
+        subcategory_en: subCategory?.subcategory_en || '',
       });
     }
     if (key === 'subcategory_en') {
       const index = category.findIndex((item) => item.maincategory_en === newFAQ.maincategory_en);
-      const subIndex = category[index].subcategories.subcategory_en.findIndex((sub) => sub === value);
+      const subCategory = category[index].subcategories.find((sub) => sub.subcategory_en === value);
       setNewFAQ({
         ...newFAQ,
-        subcategory_ko: category[index].subcategories.subcategory_ko[subIndex],
+        subcategory_ko: subCategory?.subcategory_ko || '',
         subcategory_en: value,
       });
     }

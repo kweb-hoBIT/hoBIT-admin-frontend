@@ -11,6 +11,7 @@ interface SeniorFAQUpdateFormProps {
   handleAddAnswer: () => void;
   handleUpdate: () => void;
   handleDeleteAnswer: (index: number) => void;
+  isUpdating: boolean;
 }
 
 const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
@@ -21,6 +22,7 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
   handleAddAnswer,
   handleUpdate,
   handleDeleteAnswer,
+  isUpdating,
 }) => {
   const {
     maincategory_ko,
@@ -490,9 +492,14 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
       <div className="flex justify-center">
         <button
           onClick={handleUpdate}
-          className="py-3 px-6 bg-green-500 text-white rounded-lg hover:bg-green-600"
+          disabled={isUpdating}
+          className={`py-3 px-6 rounded-lg ${
+            isUpdating
+              ? 'bg-gray-400 text-white cursor-not-allowed'
+              : 'bg-green-500 text-white hover:bg-green-600'
+          }`}
         >
-          수정
+          {isUpdating ? '수정 중...' : '수정'}
         </button>
       </div>
     </form>

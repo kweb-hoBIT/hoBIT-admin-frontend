@@ -199,6 +199,7 @@ export type GetAllSeniorFAQCategoryResponse = {
       subcategories: {
         subcategory_ko: string;
         subcategory_en: string;
+        subcategory_order: number;
         detailcategories: {
           detailcategory_ko: string[];
           detailcategory_en: string[];
@@ -271,7 +272,18 @@ export interface UpdateSeniorFAQCategoryResponse {
 
 export type UpdateSeniorFAQCategoryOrderRequest = {
   body: {
-    categoryOrder: string[];
+    mainCategories: {
+      maincategory_ko: string;
+      order: number;
+      subcategories?: {
+        subcategory_ko: string;
+        order: number;
+        detailcategories?: {
+          detailcategory_ko: string;
+          order: number;
+        }[];
+      }[];
+    }[];
   };
 };
 

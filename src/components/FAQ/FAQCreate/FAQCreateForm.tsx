@@ -57,9 +57,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
       lang === 'ko' ? cat.maincategory_ko === maincategory : cat.maincategory_en === maincategory
     );
   
-    return selectedCategory 
-      ? selectedCategory.subcategories 
-      : { subcategory_ko: [], subcategory_en: [] };
+    return selectedCategory ? selectedCategory.subcategories : [];
   };
 
   return (
@@ -169,16 +167,16 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
             />
             {isSubCateogoryKoInputFocused && maincategory_ko && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {getSubcategories(maincategory_ko, 'ko').subcategory_ko.filter(subcategory => subcategory.includes(subcategory_ko)).map((subcategory) => (
+                {getSubcategories(maincategory_ko, 'ko').filter(sub => sub.subcategory_ko.includes(subcategory_ko)).map((sub) => (
                   <li
-                    key={`${maincategory_ko}-${subcategory}`}
+                    key={`${maincategory_ko}-${sub.subcategory_ko}`}
                     onClick={() => {
-                      findFilterIndex('subcategory_ko', subcategory);
+                      findFilterIndex('subcategory_ko', sub.subcategory_ko);
                       setIsSubCateogoryKoInputInputFocused(false);
                     }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
                   >
-                    {subcategory}
+                    {sub.subcategory_ko}
                   </li>
                 ))}
               </ul>
@@ -205,16 +203,16 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
             />
             {isSubCateogoryEnInputFocused && maincategory_ko && (
               <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
-                {getSubcategories(maincategory_en, 'en').subcategory_en.filter(subcategory => subcategory.includes(subcategory_en)).map((subcategory) => (
+                {getSubcategories(maincategory_en, 'en').filter(sub => sub.subcategory_en.includes(subcategory_en)).map((sub) => (
                   <li
-                    key={`${maincategory_en}-${subcategory}`}
+                    key={`${maincategory_en}-${sub.subcategory_en}`}
                     onClick={() => {
-                      findFilterIndex('subcategory_en', subcategory);
+                      findFilterIndex('subcategory_en', sub.subcategory_en);
                       setIsSubCateogoryEnInputInputFocused(false);
                     }}
                     className="p-2 cursor-pointer hover:bg-indigo-100"
                   >
-                    {subcategory}
+                    {sub.subcategory_en}
                   </li>
                 ))}
               </ul>

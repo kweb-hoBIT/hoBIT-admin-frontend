@@ -74,6 +74,10 @@ import {
   SpecificFeedbackResponse,
   SpecificLanguageRequest,
   SpecificLanguageResponse,
+  CountQuestionLogsRequest,
+  CountQuestionLogsResponse,
+  BulkDeleteQuestionLogsRequest,
+  BulkDeleteQuestionLogsResponse,
 } from './questionLog';
 
 import {
@@ -83,6 +87,10 @@ import {
   CompareFAQLogResponse,
   CompareSeniorFAQLogRequest,
   CompareSeniorFAQLogResponse,
+  CountAdminLogsRequest,
+  CountAdminLogsResponse,
+  BulkDeleteAdminLogsRequest,
+  BulkDeleteAdminLogsResponse,
 } from './adminLog';
 
 import {
@@ -92,11 +100,19 @@ import {
   UpdateUserFeedbackResponse,
   DeleteUserFeedbackRequest,
   DeleteUserFeedbackResponse,
+  CountFeedbacksRequest,
+  CountFeedbacksResponse,
+  BulkDeleteFeedbacksRequest,
+  BulkDeleteFeedbacksResponse,
 } from './feedback';
 
 import { TranslateFAQRequest, TranslateFAQResponse } from './translate';
 
 import { SwaggerRequest, SwaggerResponse } from './swagger';
+
+import { BulkUpdateEmailRequest, BulkUpdateEmailResponse, GetAllEmailsRequest, GetAllEmailsResponse, BulkDeleteEmailRequest, BulkDeleteEmailResponse } from './email';
+
+import { BulkUpdateAdminRequest, BulkUpdateAdminResponse, GetAllAdminsRequest, GetAllAdminsResponse, BulkDeleteAdminRequest, BulkDeleteAdminResponse } from './admin';
 
 export type HobitAdminGetApiRequest =
   | GetAllFAQRequest
@@ -116,7 +132,12 @@ export type HobitAdminGetApiRequest =
   | GetAllUserFeedbackRequest
   | GetAllFAQCategoryRequest
   | GetAllSeniorFAQCategoryRequest
-  | SwaggerRequest;
+  | SwaggerRequest
+  | GetAllEmailsRequest
+  | GetAllAdminsRequest
+  | CountFeedbacksRequest
+  | CountAdminLogsRequest
+  | CountQuestionLogsRequest;
 
 export type HobitAdminPostApiRequest =
   | LoginRequest
@@ -140,13 +161,20 @@ export type HobitAdminPutApiRequest =
   | UpdateFAQCategoryRequest
   | UpdateSeniorFAQCategoryRequest
   | UpdateFAQCategoryOrderRequest
-  | UpdateSeniorFAQCategoryOrderRequest;
+  | UpdateSeniorFAQCategoryOrderRequest
+  | BulkUpdateEmailRequest
+  | BulkUpdateAdminRequest;
 
 export type HobitAdminDeleteApiRequest =
   | DeleteAccountReqeust
   | DeleteFAQRequest
   | DeleteSeniorFAQRequest
-  | DeleteUserFeedbackRequest;
+  | BulkDeleteFeedbacksRequest
+  | BulkDeleteAdminLogsRequest
+  | BulkDeleteQuestionLogsRequest
+  | DeleteUserFeedbackRequest
+  | BulkDeleteEmailRequest
+  | BulkDeleteAdminRequest;
 
 export type HobitAdminApiResponse =
   | LoginResponse
@@ -188,7 +216,19 @@ export type HobitAdminApiResponse =
   | UpdateSeniorFAQCategoryOrderResponse
   | UpdateFAQCategoryResponse
   | UpdateSeniorFAQCategoryResponse
-  | SwaggerResponse;
+  | SwaggerResponse
+  | BulkUpdateEmailResponse
+  | GetAllEmailsResponse
+  | BulkDeleteEmailResponse
+  | BulkUpdateAdminResponse
+  | GetAllAdminsResponse
+  | BulkDeleteAdminResponse
+  | CountFeedbacksResponse
+  | BulkDeleteFeedbacksResponse
+  | CountAdminLogsResponse
+  | BulkDeleteAdminLogsResponse
+  | CountQuestionLogsResponse
+  | BulkDeleteQuestionLogsResponse;
 
 export type ApiResponse<P> = {
   error: ApiErrorPayload | null;

@@ -208,5 +208,32 @@ export type SpecificLanguageResponse = {
   };
 };
 
+export interface CountQuestionLogsRequest {
+  endpoint: 'questionlogs/count';
+  method: 'get';
+  query?: {
+    before_date?: string;
+  };
+}
 
+export interface CountQuestionLogsResponse {
+  statusCode: number;
+  data: {
+    count: number;
+  };
+}
 
+export interface BulkDeleteQuestionLogsRequest {
+  body: {
+    before_date?: string;
+    user_id: number;
+  };
+}
+
+export interface BulkDeleteQuestionLogsResponse {
+  statusCode: number;
+  data: {
+    message: string;
+    deleted_count: number;
+  };
+}
