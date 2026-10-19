@@ -7,6 +7,7 @@ import { GetFAQRequest, GetFAQResponse, UpdateFAQRequest, UpdateFAQResponse, Get
 import { RootState } from '../../../redux/store';
 import { useNavigate } from 'react-router-dom';
 import FAQCategoryConflict from "../FAQCategoryConflict"
+import { appAlert } from '../../ui/Dialog';
 
 interface FAQUpdateProps {
   faq_id: string;
@@ -116,7 +117,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
           });
         }
       } else {
-        alert('FAQ 데이터를 불러오는 데 실패했습니다.');
+        appAlert('FAQ 데이터를 불러오는 데 실패했습니다.');
         console.log('FAQ 데이터를 불러오는 데 실패했습니다.', FAQFetchApi.error);
       }
     };
@@ -145,7 +146,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
         const data = GetAllFAQCategoryApi.data.payload.data.categories;
         setCategory(data);
       } else {
-        alert('FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
+        appAlert('FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
         console.log('FAQ 카테고리 데이터를 불러오는데 실패했습니다.', GetAllFAQCategoryApi.error);
       }
     };
@@ -206,7 +207,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
 
   const handleDeleteAnswer = (index: number) => {
     if (updatedFAQ.answer_ko.length === 1) {
-      alert('하나 이상의 답변을 입력해야 합니다!');
+      appAlert('하나 이상의 답변을 입력해야 합니다!');
       return;
     }
 
@@ -248,7 +249,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
       answer_ko.some((ans) => !ans.answer) ||
       answer_en.some((ans) => !ans.answer)
     ) {
-      alert('모든 필드를 채워주세요.');
+      appAlert('모든 필드를 채워주세요.');
       return;
     }
 
@@ -258,7 +259,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
     );
 
     if (isDuplicate) {
-      alert('이미 존재하는 질문입니다.');
+      appAlert('이미 존재하는 질문입니다.');
       setIsUpdating(false);
       return;
     }
@@ -281,7 +282,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
         return;
       }
     } else {
-      alert('FAQ 카테고리 중복 확인 중 오류가 발생했습니다. 다시 시도해주세요.');
+      appAlert('FAQ 카테고리 중복 확인 중 오류가 발생했습니다. 다시 시도해주세요.');
       setIsUpdating(false);
       console.log('FAQ 카테고리 중복 확인 중 오류가 발생했습니다.', checkResponse.error);
       return;
@@ -294,10 +295,10 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
     });
 
     if (updateResponse.payload?.statusCode === 200) {
-      alert('FAQ가 성공적으로 수정되었습니다!');
+      appAlert('FAQ가 성공적으로 수정되었습니다!');
       navigate('/faqs');
     } else {
-      alert('FAQ 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
+      appAlert('FAQ 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
       console.log('FAQ 수정 중 오류가 발생했습니다.', updateResponse.error);
       setIsUpdating(false);
     }

@@ -5,6 +5,7 @@ import { RootState } from '../../../redux/store';
 import { useHobitMutateDeleteApi } from '../../../hooks/hobitAdmin';
 import { DeleteFAQRequest, DeleteFAQResponse } from '../../../types/faq';
 
+import { appAlert } from '../../ui/Dialog';
 interface FAQDeleteProps {
   faq_id: string;
   question_ko: string;
@@ -35,7 +36,7 @@ const FAQDelete: React.FC<FAQDeleteProps> = ({ faq_id, question_ko, onSuccess })
       });
 
       if (response.payload?.statusCode === 200) {
-        alert('FAQ가 성공적으로 삭제되었습니다.');
+        appAlert('FAQ가 성공적으로 삭제되었습니다.');
         togglePopup();
         onSuccess?.();
       } else {
@@ -55,20 +56,20 @@ const FAQDelete: React.FC<FAQDeleteProps> = ({ faq_id, question_ko, onSuccess })
       <button
         type="button"
         onClick={togglePopup}
-        className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+        className="bg-danger text-white px-4 py-2 rounded-xl hover:bg-danger/90"
       >
         삭제
       </button>
 
       {showPopup && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96 text-center">
-            {error && <p className="text-red-600 mb-2">{error}</p>}
+        <div className="modal-overlay">
+          <div className="modal-panel max-w-[440px] text-center">
+            {error && <p className="text-danger mb-2">{error}</p>}
             <p>
               정말 이 FAQ를 삭제하시겠습니까?
               <br />이 질문과 관련된 모든 정보가 삭제됩니다.
             </p>
-            <p className="mt-4 text-sm text-gray-600">
+            <p className="mt-4 text-sm text-ink-2">
               삭제하려면 "{question_ko}" 질문을 입력하세요:
             </p>
             <input
@@ -76,13 +77,13 @@ const FAQDelete: React.FC<FAQDeleteProps> = ({ faq_id, question_ko, onSuccess })
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               placeholder={question_ko}
-              className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+              className="mt-2 p-2 border border-line rounded-xl w-full"
             />
             <button
               type="button"
               onClick={handleDeleteFAQ}
               disabled={!isDeleteEnabled || isDeleting}
-              className={`mt-4 w-full h-15 bg-red-500 p-2 rounded-lg hover:bg-red-600 ${
+              className={`mt-4 w-full h-15 bg-danger p-2 rounded-xl hover:bg-danger/90 ${
                 !isDeleteEnabled || isDeleting ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
@@ -91,7 +92,7 @@ const FAQDelete: React.FC<FAQDeleteProps> = ({ faq_id, question_ko, onSuccess })
             <button
               type="button"
               onClick={togglePopup}
-              className="mt-4 w-full h-15 bg-gray-300 p-2 rounded-lg hover:bg-gray-400"
+              className="mt-4 w-full h-15 bg-card-2 p-2 rounded-xl hover:bg-card-3"
             >
               취소
             </button>

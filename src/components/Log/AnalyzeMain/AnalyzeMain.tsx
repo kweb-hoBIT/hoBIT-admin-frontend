@@ -54,11 +54,11 @@ const AnalyzeMain: React.FC = () => {
   };
 
   return (
-    <>
+    <section className="panel">
       <SelectAnalyze selectedAnalyze={selectedAnalyze} onFilterChange={handleFilterChange}/>
       {selectedAnalyze === 'Entire' ? (
-        <div className="max-w-[1500px] mx-auto p-8 flex justify-between items-start gap-8">
-          <div className="flex-[0.75] flex flex-col gap-6 min-h-[500px] min-w-[300px] border border-[#ddd] rounded-lg p-4 bg-white shadow-[0_2px_6px_rgba(0,0,0,0.1)]">
+        <div className="p-6 flex justify-between items-start gap-6">
+          <div className="flex-[0.75] flex flex-col gap-6 min-h-[500px] min-w-[300px] border border-line rounded-xl p-5 bg-page">
             {/* Analysis Results and Graph Section */}
             {showEntireAnalyze ? (
               <EntireAnalyze
@@ -70,7 +70,7 @@ const AnalyzeMain: React.FC = () => {
                 limit={'10'}
               />
             ) : (
-              <div className="text-center text-[#888]">
+              <div className="text-center text-ink-2">
                 <h2>검색 결과가 여기에 표시됩니다</h2>
                 <p>검색 조건을 설정한 후 결과를 확인하세요.</p>
                 <p>조건에 맞는 Top 10의 FAQ를 보여줍니다.</p>
@@ -81,8 +81,8 @@ const AnalyzeMain: React.FC = () => {
           <EntireAnalyzeFilter onApplyFilter={handleApplyEntireFilter} />
         </div>
       ) : (
-        <div className="max-w-[1500px] mx-auto p-8 flex justify-between items-start gap-8">
-          <div className="flex-[0.75] flex flex-col gap-6 min-h-[500px] min-w-[300px] border border-[#ddd] rounded-lg p-4 bg-white shadow-[0_2px_6px_rgba(0,0,0,0.1)]">
+        <div className="p-6 flex justify-between items-start gap-6">
+          <div className="flex-[0.75] flex flex-col gap-6 min-h-[500px] min-w-[300px] border border-line rounded-xl p-5 bg-page">
             {/* Analysis Results and Graph Section */}
             {showSpecificAnalyze ? (
               <SpecificAnalyze
@@ -93,7 +93,7 @@ const AnalyzeMain: React.FC = () => {
                 endDate={Specificfilters.endDate}
               />
             ) : (
-              <div className="text-center text-[#888]">
+              <div className="text-center text-ink-2">
                 <h2>검색 결과가 여기에 표시됩니다</h2>
                 <p>검색 조건을 설정한 후 결과를 확인하세요.</p>
                 <p>해당 FAQ에 대한 분석 결과를 보여줍니다.</p>
@@ -104,7 +104,7 @@ const AnalyzeMain: React.FC = () => {
           <SpecificAnalyzeFilter onApplyFilter={handleApplySpecificFilter} />
         </div>
       )}
-    </>
+    </section>
   );
 };
 

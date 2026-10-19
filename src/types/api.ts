@@ -110,6 +110,12 @@ import { TranslateFAQRequest, TranslateFAQResponse } from './translate';
 
 import { SwaggerRequest, SwaggerResponse } from './swagger';
 
+import {
+  GetKeywordRulesRequest, GetKeywordRulesResponse, CreateKeywordRuleRequest, CreateKeywordRuleResponse,
+  UpdateKeywordRuleRequest, UpdateKeywordRuleResponse, DeleteKeywordRuleRequest, DeleteKeywordRuleResponse,
+} from './keyword';
+import { GetDashboardRequest, GetDashboardResponse } from './dashboard';
+
 import { BulkUpdateEmailRequest, BulkUpdateEmailResponse, GetAllEmailsRequest, GetAllEmailsResponse, BulkDeleteEmailRequest, BulkDeleteEmailResponse } from './email';
 
 import { BulkUpdateAdminRequest, BulkUpdateAdminResponse, GetAllAdminsRequest, GetAllAdminsResponse, BulkDeleteAdminRequest, BulkDeleteAdminResponse } from './admin';
@@ -137,7 +143,9 @@ export type HobitAdminGetApiRequest =
   | GetAllAdminsRequest
   | CountFeedbacksRequest
   | CountAdminLogsRequest
-  | CountQuestionLogsRequest;
+  | CountQuestionLogsRequest
+  | GetKeywordRulesRequest
+  | GetDashboardRequest;
 
 export type HobitAdminPostApiRequest =
   | LoginRequest
@@ -151,7 +159,8 @@ export type HobitAdminPostApiRequest =
   | UpdateCheckFAQCategoryConflictRequest
   | CreateCheckSeniorFAQCategoryConflictRequest
   | UpdateCheckSeniorFAQCategoryConflictRequest
-  | TranslateFAQRequest;
+  | TranslateFAQRequest
+  | CreateKeywordRuleRequest;
 
 export type HobitAdminPutApiRequest =
   | UpdatePasswordRequest
@@ -163,7 +172,8 @@ export type HobitAdminPutApiRequest =
   | UpdateFAQCategoryOrderRequest
   | UpdateSeniorFAQCategoryOrderRequest
   | BulkUpdateEmailRequest
-  | BulkUpdateAdminRequest;
+  | BulkUpdateAdminRequest
+  | UpdateKeywordRuleRequest;
 
 export type HobitAdminDeleteApiRequest =
   | DeleteAccountReqeust
@@ -174,9 +184,15 @@ export type HobitAdminDeleteApiRequest =
   | BulkDeleteQuestionLogsRequest
   | DeleteUserFeedbackRequest
   | BulkDeleteEmailRequest
-  | BulkDeleteAdminRequest;
+  | BulkDeleteAdminRequest
+  | DeleteKeywordRuleRequest;
 
 export type HobitAdminApiResponse =
+  | GetKeywordRulesResponse
+  | CreateKeywordRuleResponse
+  | UpdateKeywordRuleResponse
+  | DeleteKeywordRuleResponse
+  | GetDashboardResponse
   | LoginResponse
   | LogoutResponse
   | SignupResponse

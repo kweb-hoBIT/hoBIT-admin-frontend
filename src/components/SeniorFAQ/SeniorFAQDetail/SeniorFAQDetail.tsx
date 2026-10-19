@@ -3,6 +3,7 @@ import { useHobitQueryGetApi } from '../../../hooks/hobitAdmin';
 import { GetSeniorFAQRequest, GetSeniorFAQResponse } from '../../../types/seniorfaq';
 import SeniorFAQDetailForm from './SeniorFAQDetailForm';
 
+import { appAlert } from '../../ui/Dialog';
 interface SeniorFAQDetailProps {
   senior_faq_id: string;
 }
@@ -33,7 +34,7 @@ const SeniorFAQDetail: React.FC<SeniorFAQDetailProps> = ({ senior_faq_id }) => {
         const seniorFaq = seniorFAQFetchApi.data?.payload?.data?.seniorFaq;
         setSeniorFaqData(seniorFaq);
       } else {
-        alert('Senior FAQ 데이터를 불러오는 데 실패했습니다.');
+        appAlert('Senior FAQ 데이터를 불러오는 데 실패했습니다.');
         console.log('Senior FAQ 데이터를 불러오는 데 실패했습니다.', seniorFAQFetchApi.error);
       }
     };

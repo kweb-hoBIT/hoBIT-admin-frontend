@@ -13,6 +13,7 @@ import SeniorFAQDelete from './SeniorFAQDelete';
 import SeniorFAQFilter from './SeniorFAQFilter';
 import SeniorFAQSort from './SeniorFAQSort';
 import { selectSeniorFAQItemsPerPage, setSeniorFAQItemsPerPage } from '../../../redux/itemSlice';
+import Select from '../../ui/Select';
 
 interface SeniorFAQMainFormProps {
   seniorFaqs: GetAllSeniorFAQResponse['data']['seniorFaqs'];
@@ -68,7 +69,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
     currentPage > 1 && setCurrentPage(Math.max(currentPageGroup * pagesPerGroup, 1));
 
   return (
-    <div className="p-6 bg-white-50 rounded-lg">
+    <div className="my-6 p-6 bg-surface rounded-2xl border border-line">
       <SeniorFAQFilter
         seniorFaqs={seniorFaqs}
         filter={filter}
@@ -80,7 +81,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
       <div className="p-6">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center space-x-4">
-          <h4 className="text-2xl font-bold text-gray-800 flex-grow">선배 FAQ 리스트</h4>
+          <h4 className="text-xl font-bold text-ink flex-grow">선배 FAQ 리스트</h4>
           <SeniorFAQSort
             filteredSeniorFaqs={filteredSeniorFaqs}
             sort={seniorFaqSortValue}
@@ -89,22 +90,22 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
           />
           </div>
             <div className="flex items-center space-x-4">
-              <select
+              <Select
                 value={itemsPerPage}
                 onChange={(e) => {
                   dispatch(setSeniorFAQItemsPerPage(Number(e.target.value)))
                   setCurrentPage(1);
                 }}
-                className="p-2 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="p-2 rounded-xl border-2 border-line focus:outline-none focus:ring-2 focus:ring-accent-ink/40"
               >
                 <option value={4}>4개씩 보기</option>
                 <option value={6}>6개씩 보기</option>
                 <option value={8}>8개씩 보기</option>
                 <option value={10}>10개씩 보기</option>
-              </select>
+              </Select>
           <button
             onClick={() => window.location.assign('/seniorfaqs/create')}
-            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+            className="bg-success text-white px-4 py-2 rounded-xl hover:bg-success/90"
           >
             추가
           </button>
@@ -115,7 +116,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
             {currentItems.map(faq => (
               <div
                 key={faq.senior_faq_id}
-                className="relative bg-gray-200 p-4 rounded-lg cursor-pointer"
+                className="relative bg-card-2 p-4 rounded-xl cursor-pointer"
                 onClick={() => navigate(`/seniorfaqs/${faq.senior_faq_id}`)}
               >
                 <button
@@ -123,7 +124,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
                     e.stopPropagation();
                     navigate(`/seniorfaqs/update/${faq.senior_faq_id}`);
                   }}
-                  className="absolute top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                  className="absolute top-5 right-5 bg-accent text-white px-4 py-2 rounded-xl hover:bg-accent/90"
                 >
                   수정
                 </button>
@@ -142,9 +143,9 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
                 <div className="pr-24">
                   <div className="mb-2"><strong>세부 카테고리: {faq.detailcategory_ko}</strong></div>
                   <div className="flex flex-col">
-                    <div className="mb-1 text-sm text-gray-600"><strong>주요 카테고리:</strong> {faq.maincategory_ko}</div>
-                    <div className="mb-1 text-sm text-gray-600"><strong>하위 카테고리:</strong> {faq.subcategory_ko}</div>
-                    <div className="mb-1 text-sm text-gray-600"><strong>관리자:</strong> {faq.manager}</div>
+                    <div className="mb-1 text-sm text-ink-2"><strong>주요 카테고리:</strong> {faq.maincategory_ko}</div>
+                    <div className="mb-1 text-sm text-ink-2"><strong>하위 카테고리:</strong> {faq.subcategory_ko}</div>
+                    <div className="mb-1 text-sm text-ink-2"><strong>관리자:</strong> {faq.manager}</div>
                   </div>
                 </div>
               </div>
@@ -154,7 +155,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
         <div className="flex justify-center mt-4 items-center space-x-4">
           <button
             onClick={handlePrevPage}
-            className="px-4 py-2 bg-gray-300 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-400"
+            className="px-4 py-2 bg-card-2 rounded-xl text-sm font-semibold text-ink hover:bg-card-3"
             disabled={currentPage === 1}
           >
             이전
@@ -164,7 +165,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
               <button
                 key={page}
                 onClick={() => handlePageChange(page)}
-                className={`px-3 py-2 text-sm font-semibold rounded-md ${currentPage === page ? 'bg-crimson text-white' : 'bg-gray-200 text-gray-700'}`}
+                className={`px-3 py-2 text-sm font-semibold rounded-xl ${currentPage === page ? 'bg-accent text-white' : 'bg-card-2 text-ink'}`}
                 style={{ width: '40px', textAlign: 'center' }}
               >
                 {page}
@@ -173,7 +174,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
           </div>
           <button
             onClick={handleNextPage}
-            className="px-4 py-2 bg-gray-300 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-400"
+            className="px-4 py-2 bg-card-2 rounded-xl text-sm font-semibold text-ink hover:bg-card-3"
             disabled={currentPage === totalPages}
           >
             다음

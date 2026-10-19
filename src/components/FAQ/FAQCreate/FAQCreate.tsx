@@ -8,6 +8,7 @@ import { CreateFAQRequest, CreateFAQResponse, GetAllFAQCategoryRequest, GetAllFA
 import { RootState } from '../../../redux/store';
 import { useNavigate } from 'react-router-dom';
 
+import { appAlert } from '../../ui/Dialog';
 const FAQCreate: React.FC = () => {
   const navigate = useNavigate();
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
@@ -100,7 +101,7 @@ const FAQCreate: React.FC = () => {
         const data = GetAllFAQCategoryApi.data.payload.data.categories;
         setCategory(data);
       } else {
-        alert('FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
+        appAlert('FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
         console.log('FAQ 카테고리 데이터를 불러오는데 실패했습니다.', GetAllFAQCategoryApi.error);
       }
     };
@@ -172,7 +173,7 @@ const FAQCreate: React.FC = () => {
 
   const handleDeleteAnswer = (index: number) => {
     if (newFAQ.answer_ko.length === 1) {
-      alert('하나 이상의 답변을 입력해야 합니다!');
+      appAlert('하나 이상의 답변을 입력해야 합니다!');
       return;
     }
 
@@ -214,7 +215,7 @@ const FAQCreate: React.FC = () => {
       answer_ko.some((ans) => !ans.answer) ||
       answer_en.some((ans) => !ans.answer)
     ) {
-      alert('모든 필드를 채워주세요.');
+      appAlert('모든 필드를 채워주세요.');
       setIsCreating(false);
       return;
     }
@@ -225,7 +226,7 @@ const FAQCreate: React.FC = () => {
     );
 
     if (isDuplicate) {
-      alert('이미 존재하는 질문입니다.');
+      appAlert('이미 존재하는 질문입니다.');
       setIsCreating(false);
       return;
     }
@@ -248,7 +249,7 @@ const FAQCreate: React.FC = () => {
           return;
         }
       } else {
-        alert('FAQ 카테고리 중복 체크 중 오류가 발생했습니다.');
+        appAlert('FAQ 카테고리 중복 체크 중 오류가 발생했습니다.');
         setIsCreating(false);
         console.log('FAQ 카테고리 중복 체크 중 오류가 발생했습니다.', checkResponse.error);
         return;
@@ -259,11 +260,11 @@ const FAQCreate: React.FC = () => {
       });
     
       if (createResponse.payload?.statusCode === 201) {
-        alert('FAQ가 성공적으로 생성되었습니다!');
+        appAlert('FAQ가 성공적으로 생성되었습니다!');
         navigate('/faqs');
       } else {
         setIsCreating(false);
-        alert('FAQ 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
+        appAlert('FAQ 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
         console.log('FAQ 생성 중 오류가 발생했습니다.', createResponse.error);
       }
     } 

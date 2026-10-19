@@ -3,6 +3,7 @@ import { useHobitQueryGetApi } from "../../../hooks/hobitAdmin";
 import { CompareSeniorFAQLogRequest, CompareSeniorFAQLogResponse } from "../../../types/adminLog";
 import SeniorFAQLogDetailForm from "./SeniorFAQLogDetailForm";
 
+import { appAlert } from '../../ui/Dialog';
 interface SeniorFAQLogDetailProps {
   senior_faq_log_id: string;
 }
@@ -46,7 +47,7 @@ const SeniorFAQLogDetail: React.FC<SeniorFAQLogDetailProps> = ({ senior_faq_log_
         setPrevSeniorFaq(prev_senior_faq);
         setNewSeniorFaq(new_senior_faq);
       } else {
-        alert("Senior FAQ Log 데이터를 불러오는 데 실패했습니다.");
+        appAlert("Senior FAQ Log 데이터를 불러오는 데 실패했습니다.");
         console.log("Senior FAQ Log 데이터를 불러오는 데 실패했습니다.", SeniorFAQCompareApi.error);
       }
     };

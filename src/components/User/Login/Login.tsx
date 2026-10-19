@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import LoginForm from './LoginForm';
 import { LoginRequest, LoginResponse } from '../../../types/user';
 
+import { appAlert } from '../../ui/Dialog';
 const Login: React.FC = () => {
   const [userData, setUserData] = useState<LoginRequest['body']>({ email: '', password: '' });
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +20,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     
     if (!userData.email || !userData.password) {
-      alert('이메일과 비밀번호를 입력해주세요.');
+      appAlert('이메일과 비밀번호를 입력해주세요.');
       return;
     }
     

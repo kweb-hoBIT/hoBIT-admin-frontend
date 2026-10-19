@@ -1,5 +1,7 @@
+import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import { LoginRequest } from '../../../types/user';
+import EyeIcon from '../../ui/EyeIcon';
 import UpdatePassword from './UpdatePassword';
 
 const LoginForm: React.FC<{
@@ -20,13 +22,17 @@ const LoginForm: React.FC<{
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="flex justify-center items-center min-h-screen p-1 rounded-3xl max-w-2xl mx-auto space-y-8">
-      <div className="bg-white p-6 rounded-lg w-96">
-        <h2 className="text-2xl font-semibold mb-4 text-center">로그인</h2>
+    <div className="flex min-h-[calc(100vh-4.5rem)] items-center justify-center py-10">
+      <div className="animate-appear w-[420px] rounded-[24px] border border-line bg-surface p-8 shadow-xl">
+        <div className="mb-6 flex flex-col items-center gap-2">
+          <img src="/hoBIT64.ico" alt="" className="h-14 w-14 rounded-full" />
+          <p className="text-[26px] font-bold tracking-tight text-accent-ink">hoBIT <span className="text-ink-3 text-lg font-semibold">관리자</span></p>
+        </div>
+        <h2 className="mb-5 text-center text-xl font-bold text-ink">로그인</h2>
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
-          {error && <div className="text-red-600 text-sm">{error}</div>}
+          {error && <div className="rounded-xl bg-danger-soft px-3.5 py-2.5 text-sm text-danger">{error}</div>}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="email" className="mb-1.5 block text-sm font-semibold text-ink">
               이메일
             </label>
             <input
@@ -35,71 +41,36 @@ const LoginForm: React.FC<{
               value={userData.email}
               onChange={onEmailChange}
               placeholder="이메일을 입력하세요"
-              className="w-full p-2 border border-gray-300 rounded-md text-base"
+              className="w-full rounded-xl border border-line px-3.5 py-3 text-base"
             />
           </div>
-          <div className="relative">
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                비밀번호
-              </label>
+          <div>
+            <label htmlFor="password" className="mb-1.5 block text-sm font-semibold text-ink">
+              비밀번호
+            </label>
+            {/* 입력칸만 감싸서 아이콘을 입력칸 높이의 가운데에 (예전엔 고정 높이라 위아래가 어긋났음) */}
+            <div className="relative">
               <input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 value={userData.password}
                 onChange={onPasswordChange}
                 placeholder="비밀번호를 입력하세요"
-                className="w-full p-2 border border-gray-300 rounded-md text-base"
+                className="w-full rounded-xl border border-line py-3 pl-3.5 pr-12 text-base"
               />
-            </div>
-            <div
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2  flex items-center text-gray-500 cursor-pointer"
-              role="button"
-              aria-label="비밀번호 보기/숨기기"
-            >
-              {showPassword ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  className="w-5 h-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-.268.803-.678 1.544-1.208 2.182C17.768 16.057 14.477 19 12 19c-2.477 0-5.768-2.943-8.334-5.818C3.136 13.544 2.726 12.803 2.458 12z"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  className="w-5 h-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 3l18 18M9.36 9.36C8.708 10.473 8.5 11.5 8.5 12c0 1.105.395 2.105 1.036 2.786M15 15c.65-.876 1.036-1.876 1.036-2.786 0-1.105-.395-2.105-1.036-2.786M9.36 9.36L3 3m18 18l-6.36-6.36"
-                  />
-                </svg>
-              )}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-1.5 my-auto flex h-9 w-9 items-center justify-center rounded-full text-ink-2 hover:bg-card hover:text-ink"
+                aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
+              >
+                <EyeIcon open={showPassword} />
+              </button>
             </div>
           </div>
           <button
             type="submit"
-            className="w-full bg-crimson text-white font-semibold text-xl p-2 rounded-md transition-colors duration-300 hover:bg-crimson-dark flex justify-center items-center min-h-[48px]"
+            className="mt-2 flex min-h-[52px] w-full items-center justify-center rounded-full bg-accent text-lg font-semibold text-white transition-colors hover:bg-accent/90 disabled:opacity-70"
             disabled={isLoading}
           >
             {isLoading ? (
@@ -109,13 +80,14 @@ const LoginForm: React.FC<{
             )}
           </button>
         </form>
-        <div className="mt-4 text-center flex flex-col gap-2">
-          <a
-            href="/signup"
-            className="text-indigo-600 hover:underline text-lg font-medium"
+        <div className="mt-6 flex items-center justify-center gap-1 text-ink-3">
+          <Link
+            to="/signup"
+            className="rounded-full px-3 py-1.5 text-[17px] font-semibold text-ink-2 hover:bg-card hover:text-accent-ink"
           >
             회원가입
-          </a>
+          </Link>
+          <span aria-hidden="true">·</span>
           <UpdatePassword />
         </div>
       </div>

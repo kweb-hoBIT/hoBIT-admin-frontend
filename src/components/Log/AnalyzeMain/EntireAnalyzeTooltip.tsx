@@ -29,7 +29,7 @@ const EntireAnalyzeTooltip: React.FC<EntireAnalyzeTooltipProps> = ({ active, pay
 
     if (searchSubject === 'language') {
       return (
-        <div className="custom-tooltip" style={{ backgroundColor: '#fff', padding: '10px', border: '1px solid #ccc' }}>
+        <div className="custom-tooltip" style={{ backgroundColor: 'rgb(var(--c-surface))', color: 'rgb(var(--c-ink))', padding: '10px', border: '1px solid rgb(var(--c-line))', borderRadius: 12 }}>
           <p className="label" >{`기간: ${data.startDate} ~ ${data.endDate}`}</p>
           <p className="label" style={{ color: '#8884d8' }}>{`한국어: ${data.한국어}`}</p>
           <p className="intro" style={{ color: '#82ca9d' }}>{`영어: ${data.영어}`}</p>
@@ -38,7 +38,7 @@ const EntireAnalyzeTooltip: React.FC<EntireAnalyzeTooltipProps> = ({ active, pay
     }
 
     return (
-      <div className="custom-tooltip" style={{ backgroundColor: '#fff', padding: '10px', border: '1px solid #ccc' }}>
+      <div className="custom-tooltip" style={{ backgroundColor: 'rgb(var(--c-surface))', color: 'rgb(var(--c-ink))', padding: '10px', border: '1px solid rgb(var(--c-line))', borderRadius: 12 }}>
         <p className="label" style={{ color, whiteSpace: 'pre-wrap' }}>{`Q: ${data.question}`}</p>
         <p className="intro" style={{ color }}>{`${payload[0].name}: ${payload[0].value}`}</p>
       </div>

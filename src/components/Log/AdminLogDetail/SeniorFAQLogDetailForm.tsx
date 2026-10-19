@@ -20,110 +20,110 @@ const SeniorFAQLogDetailForm: React.FC<SeniorFAQLogDetailFormProps> = ({
   const getColor = (prevValue: string, newValue: string, order: number) => {
     if (prevValue !== newValue) {
       if (order === 0) {
-        return prevValue === '' ? 'bg-gray-100' : 'bg-red-100';
+        return prevValue === '' ? 'bg-card' : 'bg-danger-soft';
       } else if(order === 1) {
-        return newValue === '' ? 'bg-gray-100' : 'bg-green-100';
+        return newValue === '' ? 'bg-card' : 'bg-success-soft';
       }
     }
-    return 'bg-gray-100';
+    return 'bg-card';
   };
 
   return (
-    <form onSubmit={(e) => e.preventDefault()} className="max-w-8xl mx-auto p-8 bg-white rounded-xl shadow-lg space-y-8">
-      <h2 className="text-2xl font-bold text-gray-800 text-center">선배 FAQ 로그 상세</h2>
+    <form onSubmit={(e) => e.preventDefault()} className="max-w-8xl mx-auto p-8 bg-surface rounded-xl shadow-lg space-y-8">
+      <h2 className="text-2xl font-bold text-ink text-center">선배 FAQ 로그 상세</h2>
 
       <div className="grid grid-cols-2 gap-8">
         {/* Left Side: prev_senior_faq */}
-        <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-          <h3 className="text-xl font-bold text-gray-800">기존 선배 FAQ</h3>
+        <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+          <h3 className="text-xl font-bold text-ink">기존 선배 FAQ</h3>
 
           {/* 카테고리 및 상세카테고리 필드 */}
           <div>
-            <label className="block text-lg font-medium text-gray-700 mb-2">주요카테고리 (한글)</label>
+            <label className="block text-lg font-medium text-ink mb-2">주요카테고리 (한글)</label>
             <input
               type="text"
               value={prev_senior_faq.maincategory_ko}
               readOnly
-              className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prev_senior_faq.maincategory_ko, new_senior_faq.maincategory_ko, 0)} text-black-500`}
+              className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(prev_senior_faq.maincategory_ko, new_senior_faq.maincategory_ko, 0)} text-ink`}
             />
-            <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">MainCategory (English)</label>
+            <label className="block text-lg font-medium text-ink mt-4 mb-2">MainCategory (English)</label>
             <input
               type="text"
               value={prev_senior_faq.maincategory_en}
               readOnly
-              className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prev_senior_faq.maincategory_en, new_senior_faq.maincategory_en, 0)} text-black-500`}
+              className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(prev_senior_faq.maincategory_en, new_senior_faq.maincategory_en, 0)} text-ink`}
             />
           </div>
 
           {/* 서브카테고리 필드 */}
           <div>
-            <label className="block text-lg font-medium text-gray-700 mb-2">하위카테고리 (한글)</label>
+            <label className="block text-lg font-medium text-ink mb-2">하위카테고리 (한글)</label>
             <input
               type="text"
               value={prev_senior_faq.subcategory_ko}
               readOnly
-              className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prev_senior_faq.subcategory_ko, new_senior_faq.subcategory_ko, 0)} text-black-500`}
+              className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(prev_senior_faq.subcategory_ko, new_senior_faq.subcategory_ko, 0)} text-ink`}
             />
-            <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Subcategory (English)</label>
+            <label className="block text-lg font-medium text-ink mt-4 mb-2">Subcategory (English)</label>
             <input
               type="text"
               value={prev_senior_faq.subcategory_en}
               readOnly
-              className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prev_senior_faq.subcategory_en, new_senior_faq.subcategory_en, 0)} text-black-500`}
+              className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(prev_senior_faq.subcategory_en, new_senior_faq.subcategory_en, 0)} text-ink`}
             />
           </div>
 
           {/* 상세카테고리 필드 */}
           <div>
-            <label className="block text-lg font-medium text-gray-700 mb-2">상세카테고리 (한글)</label>
+            <label className="block text-lg font-medium text-ink mb-2">상세카테고리 (한글)</label>
             <input
               type="text"
               value={prev_senior_faq.detailcategory_ko}
               readOnly
-              className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prev_senior_faq.detailcategory_ko, new_senior_faq.detailcategory_ko, 0)} text-black-500`}
+              className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(prev_senior_faq.detailcategory_ko, new_senior_faq.detailcategory_ko, 0)} text-ink`}
             />
-            <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">DetailCategory (English)</label>
+            <label className="block text-lg font-medium text-ink mt-4 mb-2">DetailCategory (English)</label>
             <input
               type="text"
               value={prev_senior_faq.detailcategory_en}
               readOnly
-              className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prev_senior_faq.detailcategory_en, new_senior_faq.detailcategory_en, 0)} text-black-500`}
+              className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(prev_senior_faq.detailcategory_en, new_senior_faq.detailcategory_en, 0)} text-ink`}
             />
           </div>
 
           {/* FAQ 답변 */}
-          <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-            <h3 className="text-xl font-bold text-gray-800">FAQ 답변</h3>
+          <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+            <h3 className="text-xl font-bold text-ink">FAQ 답변</h3>
             {prevAnswersKo.map((answer, index) => {
               const answerEn = prevAnswersEn[index] || { title: '', answer: '', url: '', map: { latitude: '', longitude: '' } };
               return (
-                <div key={index} className="p-4 border border-gray-300 rounded-lg bg-white space-y-2">
-                  <label className="block text-lg font-medium text-gray-700 mt-2">답변 제목 (한글)</label>
+                <div key={index} className="p-4 border border-line rounded-xl bg-surface space-y-2">
+                  <label className="block text-lg font-medium text-ink mt-2">답변 제목 (한글)</label>
                   <input
                     type="text"
                     value={answer.title || ''}
                     readOnly
-                    className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(answer.title, newAnswersKo[index]?.title || '', 0)} text-black-500 mb-2`}
+                    className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(answer.title, newAnswersKo[index]?.title || '', 0)} text-ink mb-2`}
                   />
-                  <label className="block text-lg font-medium text-gray-700 mb-2">Answer Title (영어)</label>
+                  <label className="block text-lg font-medium text-ink mb-2">Answer Title (영어)</label>
                   <input
                     type="text"
                     value={answerEn.title || ''}
                     readOnly
-                    className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(answerEn.title, newAnswersEn[index]?.title || '', 0)} text-black-500 mb-2`}
+                    className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(answerEn.title, newAnswersEn[index]?.title || '', 0)} text-ink mb-2`}
                   />
-                  <label className="block text-lg font-medium text-gray-700 mb-2">답변 (한글)</label>
+                  <label className="block text-lg font-medium text-ink mb-2">답변 (한글)</label>
                   <textarea
                     value={answer.answer || ''}
                     readOnly
-                    className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(answer.answer, newAnswersKo[index]?.answer || '', 0)} text-black-500 mb-2`}
+                    className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(answer.answer, newAnswersKo[index]?.answer || '', 0)} text-ink mb-2`}
                     rows={6}
                   />
-                  <label className="block text-lg font-medium text-gray-700 mb-2">Answer (영어)</label>
+                  <label className="block text-lg font-medium text-ink mb-2">Answer (영어)</label>
                   <textarea
                     value={answerEn.answer || ''}
                     readOnly
-                    className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(answerEn.answer, newAnswersEn[index]?.answer || '', 0)} text-black-500 mb-2`}
+                    className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(answerEn.answer, newAnswersEn[index]?.answer || '', 0)} text-ink mb-2`}
                     rows={6}
                   />
                   <div className="flex space-x-4">
@@ -132,21 +132,21 @@ const SeniorFAQLogDetailForm: React.FC<SeniorFAQLogDetailFormProps> = ({
                       value={answer.url || ''}
                       readOnly
                       placeholder="URL"
-                      className={`w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(answer.url, newAnswersKo[index]?.url || '', 0)} text-black-500 mb-2`}
+                      className={`w-1/3 p-3 border border-line rounded-xl shadow-sm ${getColor(answer.url, newAnswersKo[index]?.url || '', 0)} text-ink mb-2`}
                     />
                     <input
                       type="text"
                       value={answer.map.latitude || ''}
                       readOnly
                       placeholder="위도"
-                      className={`w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(answer.map.latitude, newAnswersKo[index]?.map.latitude || '', 0)} text-black-500 mb-2`}
+                      className={`w-1/3 p-3 border border-line rounded-xl shadow-sm ${getColor(answer.map.latitude, newAnswersKo[index]?.map.latitude || '', 0)} text-ink mb-2`}
                     />
                     <input
                       type="text"
                       value={answer.map.longitude || ''}
                       readOnly
                       placeholder="경도"
-                      className={`w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(answer.map.longitude, newAnswersKo[index]?.map.longitude || '', 0)} text-black-500 mb-2`}
+                      className={`w-1/3 p-3 border border-line rounded-xl shadow-sm ${getColor(answer.map.longitude, newAnswersKo[index]?.map.longitude || '', 0)} text-ink mb-2`}
                     />
                   </div>
                 </div>
@@ -156,107 +156,107 @@ const SeniorFAQLogDetailForm: React.FC<SeniorFAQLogDetailFormProps> = ({
 
           {/* 관리자 정보 */}
           <div>
-            <label className="block text-lg font-medium text-gray-700 mb-2">관리자 이름</label>
+            <label className="block text-lg font-medium text-ink mb-2">관리자 이름</label>
             <input
               type="text"
               value={prev_senior_faq.manager}
               readOnly
-              className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prev_senior_faq.manager, new_senior_faq.manager, 0)} text-black-500`}
+              className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(prev_senior_faq.manager, new_senior_faq.manager, 0)} text-ink`}
             />
           </div>
         </div>
 
         {/* Right Side: new_senior_faq */}
-        <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-          <h3 className="text-xl font-bold text-gray-800">새로운 선배 FAQ</h3>
+        <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+          <h3 className="text-xl font-bold text-ink">새로운 선배 FAQ</h3>
 
           {/* 카테고리 및 상세카테고리 필드 */}
           <div>
-            <label className="block text-lg font-medium text-gray-700 mb-2">주요카테고리 (한글)</label>
+            <label className="block text-lg font-medium text-ink mb-2">주요카테고리 (한글)</label>
             <input
               type="text"
               value={new_senior_faq.maincategory_ko}
               readOnly
-              className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prev_senior_faq.maincategory_ko, new_senior_faq.maincategory_ko, 1)} text-black-500`}
+              className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(prev_senior_faq.maincategory_ko, new_senior_faq.maincategory_ko, 1)} text-ink`}
             />
-            <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">MainCategory (English)</label>
+            <label className="block text-lg font-medium text-ink mt-4 mb-2">MainCategory (English)</label>
             <input
               type="text"
               value={new_senior_faq.maincategory_en}
               readOnly
-              className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prev_senior_faq.maincategory_en, new_senior_faq.maincategory_en, 1)} text-black-500`}
+              className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(prev_senior_faq.maincategory_en, new_senior_faq.maincategory_en, 1)} text-ink`}
             />
           </div>
 
           {/* 서브카테고리 필드 */}
           <div>
-            <label className="block text-lg font-medium text-gray-700 mb-2">하위카테고리 (한글)</label>
+            <label className="block text-lg font-medium text-ink mb-2">하위카테고리 (한글)</label>
             <input
               type="text"
               value={new_senior_faq.subcategory_ko}
               readOnly
-              className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prev_senior_faq.subcategory_ko, new_senior_faq.subcategory_ko, 1)} text-black-500`}
+              className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(prev_senior_faq.subcategory_ko, new_senior_faq.subcategory_ko, 1)} text-ink`}
             />
-            <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Subcategory (English)</label>
+            <label className="block text-lg font-medium text-ink mt-4 mb-2">Subcategory (English)</label>
             <input
               type="text"
               value={new_senior_faq.subcategory_en}
               readOnly
-              className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prev_senior_faq.subcategory_en, new_senior_faq.subcategory_en, 1)} text-black-500`}
+              className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(prev_senior_faq.subcategory_en, new_senior_faq.subcategory_en, 1)} text-ink`}
             />
           </div>
 
           {/* 상세카테고리 필드 */}
           <div>
-            <label className="block text-lg font-medium text-gray-700 mb-2">상세카테고리 (한글)</label>
+            <label className="block text-lg font-medium text-ink mb-2">상세카테고리 (한글)</label>
             <input
               type="text"
               value={new_senior_faq.detailcategory_ko}
               readOnly
-              className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prev_senior_faq.detailcategory_ko, new_senior_faq.detailcategory_ko, 1)} text-black-500`}
+              className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(prev_senior_faq.detailcategory_ko, new_senior_faq.detailcategory_ko, 1)} text-ink`}
             />
-            <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">DetailCategory (English)</label>
+            <label className="block text-lg font-medium text-ink mt-4 mb-2">DetailCategory (English)</label>
             <input
               type="text"
               value={new_senior_faq.detailcategory_en}
               readOnly
-              className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prev_senior_faq.detailcategory_en, new_senior_faq.detailcategory_en, 1)} text-black-500`}
+              className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(prev_senior_faq.detailcategory_en, new_senior_faq.detailcategory_en, 1)} text-ink`}
             />
           </div>
 
           {/* FAQ 답변 */}
-          <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-            <h3 className="text-xl font-bold text-gray-800">FAQ 답변</h3>
+          <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+            <h3 className="text-xl font-bold text-ink">FAQ 답변</h3>
             {newAnswersKo.map((answer, index) => {
               const answerEn = newAnswersEn[index] || { title: '', answer: '', url: '', map: { latitude: '', longitude: '' } };
               return (
-                <div key={index} className="p-4 border border-gray-300 rounded-lg bg-white space-y-2">
-                  <label className="block text-lg font-medium text-gray-700 mt-2">답변 제목 (한글)</label>
+                <div key={index} className="p-4 border border-line rounded-xl bg-surface space-y-2">
+                  <label className="block text-lg font-medium text-ink mt-2">답변 제목 (한글)</label>
                   <input
                     type="text"
                     value={answer.title || ''}
                     readOnly
-                    className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prevAnswersKo[index]?.title || '', answer.title, 1)} text-black-500 mb-2`}
+                    className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(prevAnswersKo[index]?.title || '', answer.title, 1)} text-ink mb-2`}
                   />
-                  <label className="block text-lg font-medium text-gray-700 mb-2">Answer Title (영어)</label>
+                  <label className="block text-lg font-medium text-ink mb-2">Answer Title (영어)</label>
                   <input
                     type="text"
                     value={answerEn.title || ''}
                     readOnly
-                    className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prevAnswersEn[index]?.title || '', answerEn.title, 1)} text-black-500 mb-2`}
+                    className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(prevAnswersEn[index]?.title || '', answerEn.title, 1)} text-ink mb-2`}
                   />
-                  <label className="block text-lg font-medium text-gray-700 mb-2">답변 (한글)</label>
+                  <label className="block text-lg font-medium text-ink mb-2">답변 (한글)</label>
                   <textarea
                     value={answer.answer || ''}
                     readOnly
-                    className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prevAnswersKo[index]?.answer || '', answer.answer, 1)} text-black-500 mb-2`}
+                    className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(prevAnswersKo[index]?.answer || '', answer.answer, 1)} text-ink mb-2`}
                     rows={6}
                   />
-                  <label className="block text-lg font-medium text-gray-700 mb-2">Answer (영어)</label>
+                  <label className="block text-lg font-medium text-ink mb-2">Answer (영어)</label>
                   <textarea
                     value={answerEn.answer || ''}
                     readOnly
-                    className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prevAnswersEn[index]?.answer || '', answerEn.answer, 1)} text-black-500 mb-2`}
+                    className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(prevAnswersEn[index]?.answer || '', answerEn.answer, 1)} text-ink mb-2`}
                     rows={6}
                   />
                   <div className="flex space-x-4">
@@ -265,21 +265,21 @@ const SeniorFAQLogDetailForm: React.FC<SeniorFAQLogDetailFormProps> = ({
                       value={answer.url || ''}
                       readOnly
                       placeholder='URL'
-                      className={`w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prevAnswersKo[index]?.url || '', answer.url, 1)} text-black-500 mb-2`}
+                      className={`w-1/3 p-3 border border-line rounded-xl shadow-sm ${getColor(prevAnswersKo[index]?.url || '', answer.url, 1)} text-ink mb-2`}
                     />
                     <input
                       type="text"
                       value={answer.map.latitude || ''}
                       readOnly
                       placeholder='위도'
-                      className={`w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prevAnswersKo[index]?.map.latitude || '', answer.map.latitude, 1)} text-black-500 mb-2`}
+                      className={`w-1/3 p-3 border border-line rounded-xl shadow-sm ${getColor(prevAnswersKo[index]?.map.latitude || '', answer.map.latitude, 1)} text-ink mb-2`}
                     />
                     <input
                       type="text"
                       value={answer.map.longitude || ''}
                       readOnly
                       placeholder='경도'
-                      className={`w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prevAnswersKo[index]?.map.longitude || '', answer.map.longitude, 1)} text-black-500 mb-2`}
+                      className={`w-1/3 p-3 border border-line rounded-xl shadow-sm ${getColor(prevAnswersKo[index]?.map.longitude || '', answer.map.longitude, 1)} text-ink mb-2`}
                     />
                   </div>
                 </div>
@@ -289,12 +289,12 @@ const SeniorFAQLogDetailForm: React.FC<SeniorFAQLogDetailFormProps> = ({
 
           {/* 관리자 정보 */}
           <div>
-            <label className="block text-lg font-medium text-gray-700 mb-2">관리자 이름</label>
+            <label className="block text-lg font-medium text-ink mb-2">관리자 이름</label>
             <input
               type="text"
               value={new_senior_faq.manager}
               readOnly
-              className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm ${getColor(prev_senior_faq.manager, new_senior_faq.manager, 1)} text-black-500`}
+              className={`w-full p-3 border border-line rounded-xl shadow-sm ${getColor(prev_senior_faq.manager, new_senior_faq.manager, 1)} text-ink`}
             />
           </div>
         </div>

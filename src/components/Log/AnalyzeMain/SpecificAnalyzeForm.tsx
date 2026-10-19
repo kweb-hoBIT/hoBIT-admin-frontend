@@ -50,8 +50,8 @@ const SpecificAnalyzeForm: React.FC<SpecificAnalyzeFormProps> = ({ analyzeData, 
   return (
     <div className="flex flex-col space-y-6 max-h-[1000px] p-8">
     {/* 분석 결과 */}
-    <div className="min-h-[400px] max-h-[800px] h-auto overflow-y-auto rounded-lg border border-gray-200 p-4 flex-1 bg-white shadow-[0_2px_6px_rgba(0,0,0,0.1)]">
-      <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
+    <div className="min-h-[400px] max-h-[800px] h-auto overflow-y-auto rounded-xl border border-line p-4 flex-1 bg-surface shadow-[0_2px_6px_rgba(0,0,0,0.1)]">
+      <h2 className="text-2xl font-semibold mb-6 text-center text-ink">
           {searchSubject === 'frequency' && 'FAQ 검색 빈도 분석 결과'}
           {searchSubject === 'feedback' && 'FAQ 피드백 점수 분석 결과'}
           {searchSubject === 'language' && '사용 언어 빈도 분석 결과'}
@@ -63,14 +63,14 @@ const SpecificAnalyzeForm: React.FC<SpecificAnalyzeFormProps> = ({ analyzeData, 
               <button
                 onClick={goToPreviousPage}
                 disabled={currentPage === 0}
-                className="px-6 py-3 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-all duration-300 ease-in-out disabled:opacity-50"
+                className="px-6 py-3 bg-card-2 text-ink rounded-xl hover:bg-card-3 transition-all duration-300 ease-in-out disabled:opacity-50"
               >
                 이전
               </button>
               <button
                 onClick={goToNextPage}
                 disabled={currentPage >= Math.ceil(data.length / itemsPerPage) - 1}
-                className="px-6 py-3 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-all duration-300 ease-in-out disabled:opacity-50"
+                className="px-6 py-3 bg-card-2 text-ink rounded-xl hover:bg-card-3 transition-all duration-300 ease-in-out disabled:opacity-50"
               >
                 다음
               </button>
@@ -79,9 +79,9 @@ const SpecificAnalyzeForm: React.FC<SpecificAnalyzeFormProps> = ({ analyzeData, 
             {currentPageData.map((groupData: any, index: number) => (
               <div key={index} className="mb-6">
                 <div className="flex justify-center mb-4">
-                  <h3 className="text-xl font-semibold text-gray-700">{`날짜: ${groupData.startDate} ~ ${groupData.endDate}`}</h3>
+                  <h3 className="text-xl font-semibold text-ink">{`날짜: ${groupData.startDate} ~ ${groupData.endDate}`}</h3>
                 </div>
-                <div className="overflow-x-auto rounded-lg border border-gray-200">
+                <div className="overflow-x-auto rounded-xl border border-line">
                   <table className="min-w-full table-auto">
                     <thead>
                       <tr>
@@ -89,13 +89,13 @@ const SpecificAnalyzeForm: React.FC<SpecificAnalyzeFormProps> = ({ analyzeData, 
                           Object.keys(groupData.data).map((key, idx) => (
                             <th
                               key={idx}
-                              className="px-6 py-4 text-left text-sm font-medium text-gray-600 border-b"
+                              className="px-6 py-4 text-left text-sm font-medium text-ink-2 border-b"
                             >
                               {renderField(key)}
                             </th>
                           ))
                         ) : (
-                          <th className="px-6 py-4 text-left text-sm font-medium text-gray-600 border-b">
+                          <th className="px-6 py-4 text-left text-sm font-medium text-ink-2 border-b">
                             데이터가 없습니다
                           </th>
                         )}
@@ -107,7 +107,7 @@ const SpecificAnalyzeForm: React.FC<SpecificAnalyzeFormProps> = ({ analyzeData, 
                           {Object.entries(groupData.data).map(([key, value], cellIndex) => (
                             <td
                               key={cellIndex}
-                              className="px-6 py-4 text-sm text-gray-700 border-b"
+                              className="px-6 py-4 text-sm text-ink border-b"
                             >
                               {String(value)}
                             </td>
@@ -115,7 +115,7 @@ const SpecificAnalyzeForm: React.FC<SpecificAnalyzeFormProps> = ({ analyzeData, 
                         </tr>
                       ) : (
                         <tr>
-                          <td colSpan={Object.keys(fieldTranslations).length} className="text-center text-gray-600">
+                          <td colSpan={Object.keys(fieldTranslations).length} className="text-center text-ink-2">
                             데이터가 없습니다.
                           </td>
                         </tr>
@@ -127,7 +127,7 @@ const SpecificAnalyzeForm: React.FC<SpecificAnalyzeFormProps> = ({ analyzeData, 
             ))}
           </div>
         ) : (
-          <div className="text-center text-gray-600">
+          <div className="text-center text-ink-2">
             데이터가 없습니다. 검색 필터를 변경한 후 다시 시도해주세요.
           </div>
         )}

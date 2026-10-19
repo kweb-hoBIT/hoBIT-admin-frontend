@@ -14,6 +14,7 @@ import FAQDelete from './FAQDelete';
 import FAQFilter from './FAQFilter';
 import FAQSort from './FAQSort';
 import { GetAllFAQResponse } from '../../../types/faq';
+import Select from '../../ui/Select';
 
 interface FAQMainFormProps {
   faqs: GetAllFAQResponse['data']['faqs'];
@@ -81,7 +82,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
     setCurrentPage(Math.max(currentPageGroup * pagesPerGroup, 1));
 
   return (
-    <div className="p-6 bg-white-50 rounded-lg">
+    <div className="my-6 p-6 bg-surface rounded-2xl border border-line">
       <FAQFilter
         faqs={faqs}
         filter={filter}
@@ -94,7 +95,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
       <div className="p-6">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center space-x-4">
-          <h4 className="text-2xl font-bold text-gray-800 flex-grow">FAQ 리스트</h4>
+          <h4 className="text-xl font-bold text-ink flex-grow">FAQ 리스트</h4>
           <FAQSort 
             filteredFaqs={filteredFaqs}
             sort={faqSortValue} 
@@ -103,22 +104,22 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
           />
           </div>
           <div className="flex items-center space-x-4">
-            <select
+            <Select
               value={itemsPerPage}
               onChange={(e) => {
                 dispatch(setFAQItemsPerPage(Number(e.target.value)))
                 setCurrentPage(1);
               }}
-              className="p-2 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="p-2 rounded-xl border-2 border-line focus:outline-none focus:ring-2 focus:ring-accent-ink/40"
             >
               <option value={4}>4개씩 보기</option>
               <option value={6}>6개씩 보기</option>
               <option value={8}>8개씩 보기</option>
               <option value={10}>10개씩 보기</option>
-            </select>
+            </Select>
             <button
               onClick={() => window.location.assign('/faqs/create')}
-              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+              className="bg-success text-white px-4 py-2 rounded-xl hover:bg-success/90"
             >
               추가
             </button>
@@ -129,7 +130,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
             {currentItems.map(faq => (
               <div
                 key={faq.faq_id}
-                className="relative bg-gray-200 p-4 rounded-lg cursor-pointer"
+                className="relative bg-card-2 p-4 rounded-xl cursor-pointer"
                 onClick={() => navigate(`/faqs/${faq.faq_id}`)}
               >
                 <button
@@ -137,7 +138,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
                     e.stopPropagation();
                     navigate(`/faqs/update/${faq.faq_id}`);
                   }}
-                  className="absolute top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                  className="absolute top-5 right-5 bg-accent text-white px-4 py-2 rounded-xl hover:bg-accent/90"
                 >
                   수정
                 </button>
@@ -161,13 +162,13 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
                     <strong>질문: {faq.question_ko}</strong>
                   </div>
                   <div className="flex flex-col">
-                    <div className="mb-1 text-sm text-gray-600">
+                    <div className="mb-1 text-sm text-ink-2">
                       <strong>주요 카테고리:</strong> {faq.maincategory_ko}
                     </div>
-                    <div className="mb-1 text-sm text-gray-600">
+                    <div className="mb-1 text-sm text-ink-2">
                       <strong>하위 카테고리:</strong> {faq.subcategory_ko}
                     </div>
-                    <div className="mb-1 text-sm text-gray-600">
+                    <div className="mb-1 text-sm text-ink-2">
                       <strong>관리자:</strong> {faq.manager}
                     </div>
                   </div>
@@ -179,7 +180,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
         <div className="flex justify-center mt-4 items-center space-x-4">
           <button
             onClick={handlePrevPage}
-            className="px-4 py-2 bg-gray-300 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-400"
+            className="px-4 py-2 bg-card-2 rounded-xl text-sm font-semibold text-ink hover:bg-card-3"
             disabled={currentPage === 1}
           >
             이전
@@ -189,8 +190,8 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
               <button
                 key={page}
                 onClick={() => handlePageChange(page)}
-                className={`px-3 py-2 text-sm font-semibold rounded-md ${
-                  currentPage === page ? 'bg-crimson text-white' : 'bg-gray-200 text-gray-700'
+                className={`px-3 py-2 text-sm font-semibold rounded-xl ${
+                  currentPage === page ? 'bg-accent text-white' : 'bg-card-2 text-ink'
                 }`}
                 style={{ width: '40px', textAlign: 'center' }}
               >
@@ -200,7 +201,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
           </div>
           <button
             onClick={handleNextPage}
-            className="px-4 py-2 bg-gray-300 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-400"
+            className="px-4 py-2 bg-card-2 rounded-xl text-sm font-semibold text-ink hover:bg-card-3"
             disabled={currentPage === totalPages}
           >
             다음

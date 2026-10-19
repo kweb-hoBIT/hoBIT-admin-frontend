@@ -1,13 +1,24 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/hoBIT32.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#ffffff" />
+    <!-- 나이트 모드: 저장값 > 시스템 설정. 화면을 그리기 전에 적용해 흰 화면 깜빡임 방지 (호빗 사용자 화면과 같은 키) -->
+    <script>
+      (function () {
+        var saved = null;
+        try { saved = localStorage.getItem('hobit-theme'); } catch (e) {}
+        var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.classList.toggle('dark', dark);
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', dark ? '#1e1e22' : '#ffffff');
+      })();
+    </script>
+    <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin />
     <meta
       name="description"
-      content="Web site created using create-react-app"
+      content="호빗(hoBIT) 관리자 사이트"
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--

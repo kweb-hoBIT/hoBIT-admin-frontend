@@ -1,42 +1,65 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { prefetchRoute } from '../../routes';
+import { useChat } from '../Chat/ChatProvider';
+
+const GROUPS = [
+  {
+    title: '카테고리',
+    items: [
+      { path: '/categories/faq/rename', label: 'FAQ 카테고리 이름 수정' },
+      { path: '/categories/faq/reorder', label: 'FAQ 카테고리 순서 수정' },
+      { path: '/categories/seniorfaq/rename', label: '선배 FAQ 카테고리 이름 수정' },
+      { path: '/categories/seniorfaq/reorder', label: '선배 FAQ 카테고리 순서 수정' },
+    ],
+  },
+  {
+    title: '일괄 관리',
+    items: [
+      { path: '/categories/email/bulk-update', label: '이메일 변경' },
+      { path: '/categories/email/bulk-delete', label: '이메일 삭제', danger: true },
+      { path: '/categories/admin/bulk-update', label: '관리자 변경' },
+      { path: '/categories/admin/bulk-delete', label: '관리자 삭제', danger: true },
+    ],
+  },
+];
 
 const CategoryMain: React.FC = () => {
-  const navigate = useNavigate();
-
-  const options = [
-    { path: "/categories/faq/rename", label: "FAQ 카테고리 수정", disabled: false },
-    { path: "/categories/faq/reorder", label: "FAQ 카테고리 순서 수정", disabled: false },
-    { path: "/categories/seniorfaq/rename", label: "선배 FAQ 카테고리 수정", disabled: false },
-    { path: "/categories/seniorfaq/reorder", label: "선배 FAQ 카테고리 순서 수정", disabled: false },
-    { path: "/categories/email/bulk-update", label: "이메일 변경", disabled: false },
-    { path: "/categories/email/bulk-delete", label: "이메일 삭제", disabled: false },
-    { path: "/categories/admin/bulk-update", label: "관리자 변경", disabled: false },
-    { path: "/categories/admin/bulk-delete", label: "관리자 삭제", disabled: false },
-  ];
-
+  const { role } = useChat();
+  // 근로장학생은 선배 FAQ 카테고리만
+  const groups =
+    role === 'senior'
+      ? GROUPS.map((g) => ({ ...g, items: g.items.filter((i) => i.path.startsWith('/categories/seniorfaq/')) })).filter((g) => g.items.length)
+      : GROUPS;
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">관리 페이지</h2>
-        <div className="space-y-4">
-          {options.map((option, index) => (
-            <button
-              key={index}
-              onClick={() => !option.disabled && navigate(option.path)}
-              disabled={option.disabled}
-              className={`block w-full text-white font-semibold text-lg py-3 px-4 rounded-lg transition-all duration-300 transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-md ${
-                option.disabled
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-crimson hover:bg-crimson-dark hover:scale-105"
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      </div>
+  <div className="mx-auto max-w-[880px] py-10">
+    <h1 className="mb-1 text-[28px] font-bold text-ink">관리</h1>
+    <p className="mb-6 text-ink-2">{role === 'senior' ? '선배 FAQ 카테고리 이름·순서를 바꿉니다.' : '카테고리 이름·순서와 이메일·관리자를 한꺼번에 바꿉니다.'}</p>
+    <div className={`grid gap-6 ${groups.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+      {groups.map((group) => (
+        <section key={group.title} className="rounded-2xl border border-line bg-surface p-5">
+          <h2 className="mb-3 text-sm font-semibold text-ink-3">{group.title}</h2>
+          <ul className="flex flex-col gap-1">
+            {group.items.map((item) => (
+              <li key={item.path}>
+                <Link
+                  to={item.path}
+                  onMouseEnter={() => prefetchRoute(item.path)}
+                  onFocus={() => prefetchRoute(item.path)}
+                  className={`flex items-center justify-between rounded-xl px-4 py-3 font-semibold transition-colors hover:bg-card ${
+                    'danger' in item && item.danger ? 'text-danger' : 'text-ink hover:text-accent-ink'
+                  }`}
+                >
+                  {item.label}
+                  <span aria-hidden="true" className="text-ink-3">›</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
     </div>
+  </div>
   );
 };
 

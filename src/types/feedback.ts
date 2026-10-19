@@ -10,6 +10,7 @@ export type GetAllUserFeedbackResponse = {
       user_question: string;
       feedback_reason: string;
       feedback_detail: string;
+      language?: string; // 피드백을 남긴 화면 언어 KO / EN
       resolved: number;
       created_at: string;
     }[];

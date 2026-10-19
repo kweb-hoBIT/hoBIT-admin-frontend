@@ -3,6 +3,7 @@ import { useHobitQueryGetApi } from "../../../hooks/hobitAdmin";
 import { CompareFAQLogRequest, CompareFAQLogResponse } from "../../../types/adminLog";
 import FAQLogDetailForm from "./FAQLogDetailForm";
 
+import { appAlert } from '../../ui/Dialog';
 interface FAQLogDetailProps {
   faq_log_id: string;
 }
@@ -43,7 +44,7 @@ const FAQLogDetail: React.FC<FAQLogDetailProps> = ({ faq_log_id }) => {
         setPrevFaq(prev_faq);
         setNewFaq(new_faq);
       } else {
-        alert("FAQ Log 데이터를 불러오는 데 실패했습니다.");
+        appAlert("FAQ Log 데이터를 불러오는 데 실패했습니다.");
         console.log("FAQ Log 데이터를 불러오는 데 실패했습니다.", FAQCompareApi.error);
       }
     };

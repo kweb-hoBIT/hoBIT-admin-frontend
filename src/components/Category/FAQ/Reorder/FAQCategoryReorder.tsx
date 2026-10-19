@@ -5,6 +5,7 @@ import FAQCategoryReorderForm from './FAQCategoryReorderForm';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
+import { appAlert } from '../../../ui/Dialog';
 interface CategoryData {
   maincategory_ko: string;
   order: number;
@@ -53,7 +54,7 @@ const FAQCategoryReorder: React.FC = () => {
         setOriginalCategories(JSON.parse(JSON.stringify(structuredCategories)));
         setCategories(structuredCategories);
       } else {
-        alert('⚠️ FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
+        appAlert('⚠️ FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
         console.log('FAQ 카테고리 데이터 오류:', GetFAQCategoriesApi.data?.payload?.message);
       }
     };
@@ -106,15 +107,15 @@ const FAQCategoryReorder: React.FC = () => {
       });
 
       if (fetchUpdateFAQCategoryOrderApi?.payload?.statusCode === 200) {
-        alert('카테고리 순서가 성공적으로 변경되었습니다.');
+        appAlert('카테고리 순서가 성공적으로 변경되었습니다.');
         setOriginalCategories(JSON.parse(JSON.stringify(categories)));
       } else {
         console.error('카테고리 순서 변경 실패:', fetchUpdateFAQCategoryOrderApi?.payload?.message);
-        alert('카테고리 순서 변경 중 오류가 발생했습니다.');
+        appAlert('카테고리 순서 변경 중 오류가 발생했습니다.');
       }
     } catch (error) {
       console.error('카테고리 순서 변경 실패:', error);
-      alert('카테고리 순서 변경 중 오류가 발생했습니다.');
+      appAlert('카테고리 순서 변경 중 오류가 발생했습니다.');
     } finally {
       setIsUpdating(false);
     }

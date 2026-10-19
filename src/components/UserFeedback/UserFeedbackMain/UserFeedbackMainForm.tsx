@@ -4,14 +4,19 @@ import { RootState } from '../../../redux/store';
 import { selectUserFeedbackFilter, setUnresolvedFeedbackCurrentPage, setResolvedFeedbackCurrentPage, setUserFeedbackFilterName } from '../../../redux/filterSlice';
 import { GetAllUserFeedbackResponse } from '../../../types/feedback';
 import UserFeedbackResolvedUpdate from './UserFeedbackResolvedUpdate';
+import LanguageBadge from '../../ui/LanguageBadge';
 import SelectUserFeedback from './SelectUserFeedback';
 import UserFeedbackDelete from './UserFeedbackDelete';
 import { selectUserFeedbackItemsPerPage, setUserFeedbackItemsPerPage } from '../../../redux/itemSlice';
 import BulkDeleteFeedbackModal from './BulkDeleteFeedbackModal';
+import Select from '../../ui/Select';
 
 interface UserFeedbackMainFormProps {
   userFeedbacks: GetAllUserFeedbackResponse['data']['userFeedbacks'];
 }
+
+type LangFilter = 'all' | 'KO' | 'EN';
+const LANG_FILTER_KEY = 'hobit-admin-feedback-lang';
 
 const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbacks }) => {
   const dispatch = useDispatch();
@@ -24,6 +29,22 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
   );
   const [feedbacks, setFeedbacks] = useState(userFeedbacks);
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
+  // 피드백을 남긴 화면 언어로 거르기 — 영어 사용자(대부분 외국인 학생) 피드백만 모아 보기
+  const [langFilter, setLangFilter] = useState<LangFilter>(() => {
+    try {
+      return (sessionStorage.getItem(LANG_FILTER_KEY) as LangFilter) || 'all';
+    } catch {
+      return 'all';
+    }
+  });
+  const changeLangFilter = (next: LangFilter) => {
+    setLangFilter(next);
+    setUnresolvedCurrentPage(1);
+    setResolvedCurrentPage(1);
+    try {
+      sessionStorage.setItem(LANG_FILTER_KEY, next);
+    } catch {}
+  };
 
   useEffect(() => {
     setFeedbacks(userFeedbacks);
@@ -36,12 +57,15 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
   }, [unresolvedCurrentPage, resolvedCurrentPage, filter]);
 
   // 필터링된 피드백
-  const filteredFeedbacks = feedbacks.filter(feedback => {
-    if (filter === 'unresolved') {
-      return feedback.resolved === 0;
-    }
-    return feedback.resolved === 1;
-  });
+  const unresolvedCount = feedbacks.filter((feedback) => feedback.resolved === 0).length;
+  const inTab = feedbacks.filter((feedback) => feedback.resolved === (filter === 'unresolved' ? 0 : 1));
+  const langOf = (feedback: { language?: string }) => ((feedback.language || '').toUpperCase() === 'EN' ? 'EN' : 'KO');
+  const langCounts = {
+    all: inTab.length,
+    KO: inTab.filter((f) => langOf(f) === 'KO').length,
+    EN: inTab.filter((f) => langOf(f) === 'EN').length,
+  };
+  const filteredFeedbacks = inTab.filter((feedback) => langFilter === 'all' || langOf(feedback) === langFilter);
 
   const itemsPerPage = useSelector(selectUserFeedbackItemsPerPage);
   const pagesPerGroup = 10;
@@ -121,30 +145,49 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
   };
 
   return (
-    <div>
-      <SelectUserFeedback filter={filter} onFilterChange={handleFilterChange} />
-      <div className="p-6 bg-white-50 rounded-lg">
+    <section className="panel">
+      <SelectUserFeedback filter={filter} onFilterChange={handleFilterChange} unresolvedCount={unresolvedCount} />
+      <div>
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h4 className="text-2xl font-bold text-gray-800 flex-grow">유저 피드백 리스트</h4>
+            <h4 className="text-xl font-bold text-ink flex-grow">유저 피드백 리스트</h4>
               <div className="flex items-center space-x-4">
-                <select
+                <div className="flex rounded-full bg-card p-1" role="group" aria-label="언어로 거르기">
+                  {([
+                    ['all', '전체'],
+                    ['KO', '한국어'],
+                    ['EN', '영어'],
+                  ] as [LangFilter, string][]).map(([value, label]) => (
+                    <button
+                      key={value}
+                      type="button"
+                      aria-pressed={langFilter === value}
+                      onClick={() => changeLangFilter(value)}
+                      className={`rounded-full px-3.5 py-1.5 text-sm font-semibold transition-colors ${
+                        langFilter === value ? 'bg-surface text-ink shadow-sm' : 'text-ink-2 hover:text-ink'
+                      }`}
+                    >
+                      {label} <span className={value === 'EN' && langCounts.EN > 0 ? 'text-link' : 'text-ink-3'}>{langCounts[value]}</span>
+                    </button>
+                  ))}
+                </div>
+                <Select
                   value={itemsPerPage}
                   onChange={(e) => {
                     dispatch(setUserFeedbackItemsPerPage(Number(e.target.value)))
                     setUnresolvedCurrentPage(1);
                     setResolvedCurrentPage(1);
                   }}
-                  className="p-2 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="p-2 rounded-xl border-2 border-line focus:outline-none focus:ring-2 focus:ring-accent-ink/40"
                 >
                   <option value={4}>4개씩 보기</option>
                   <option value={6}>6개씩 보기</option>
                   <option value={8}>8개씩 보기</option>
                   <option value={10}>10개씩 보기</option>
-                </select>
+                </Select>
                 <button
                   onClick={() => setShowBulkDeleteModal(true)}
-                  className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 font-semibold"
+                  className="px-4 py-2 bg-danger text-white rounded-xl hover:bg-danger/90 font-semibold"
                 >
                   전체 삭제
                 </button>
@@ -153,7 +196,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
         <div style={{ minHeight: '320px' }}>
           <div className="grid grid-cols-2 gap-4">
             {(filter === 'unresolved' ? unresolvedCurrentItems : resolvedCurrentItems).map((feedback) => (
-              <div key={feedback.user_feedback_id} className="relative bg-gray-200 p-4 rounded-lg">
+              <div key={feedback.user_feedback_id} className="relative bg-card-2 p-4 rounded-xl">
                 {/* 수정 버튼 */}
                 <UserFeedbackResolvedUpdate
                   user_feedback_id={feedback.user_feedback_id}
@@ -183,7 +226,8 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                   />
                 </div>
                 <div className="pr-24">
-                  <div className="mb-2">
+                  <div className="mb-2 flex items-start gap-2">
+                      <LanguageBadge language={feedback.language} className="mt-0.5" />
                       <strong> {feedback.question_ko ? (
                       `피드백 질문: ${feedback.question_ko}`
                       ) : (
@@ -192,17 +236,17 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                   </div>
                   <div className="flex flex-col">
                     {feedback.question_ko && (
-                      <div className="mb-1 text-sm text-gray-600">
+                      <div className="mb-1 text-sm text-ink-2">
                         <strong>유저 질문:</strong> {feedback.user_question ? feedback.user_question : 'X'}
                       </div>
                     )}
-                    <div className="mb-1 text-sm text-gray-600">
+                    <div className="mb-1 text-sm text-ink-2">
                       <strong>피드백 사유:</strong> {feedback.feedback_reason ? feedback.feedback_reason : 'X'}
                     </div>
-                    <div className="mb-1 text-sm text-gray-600">
+                    <div className="mb-1 text-sm text-ink-2">
                       <strong>피드백 상세:</strong> {feedback.feedback_detail && !feedback.feedback_detail.startsWith('Unresolved') ? feedback.feedback_detail : 'X'}
                     </div>
-                    <div className="mb-1 text-sm text-gray-600">
+                    <div className="mb-1 text-sm text-ink-2">
                       <strong>피드백 시각:</strong> {formatDateToKST(feedback.created_at)}
                     </div>
                   </div>
@@ -216,7 +260,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
           <div className="flex justify-center mt-4 items-center space-x-4">
             <button
               onClick={handlePrevPage}
-              className="px-4 py-2 bg-gray-300 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-400"
+              className="px-4 py-2 bg-card-2 rounded-xl text-sm font-semibold text-ink hover:bg-card-3"
               disabled={(filter === 'unresolved' ? unresolvedCurrentPage : resolvedCurrentPage) === 1}
             >
               이전
@@ -228,8 +272,8 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                 <button
                   key={page}
                   onClick={() => handlePageChange(page)}
-                  className={`px-3 py-2 text-sm font-semibold rounded-md ${
-                    (filter === 'unresolved' ? unresolvedCurrentPage : resolvedCurrentPage) === page ? 'bg-crimson text-white' : 'bg-gray-200 text-gray-700'
+                  className={`px-3 py-2 text-sm font-semibold rounded-xl ${
+                    (filter === 'unresolved' ? unresolvedCurrentPage : resolvedCurrentPage) === page ? 'bg-accent text-white' : 'bg-card-2 text-ink'
                   }`}
                   style={{ width: '40px', textAlign: 'center' }}
                 >
@@ -240,7 +284,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
 
             <button
               onClick={handleNextPage}
-              className="px-4 py-2 bg-gray-300 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-400"
+              className="px-4 py-2 bg-card-2 rounded-xl text-sm font-semibold text-ink hover:bg-card-3"
               disabled={(filter === 'unresolved' ? unresolvedCurrentPage : resolvedCurrentPage) === (filter === 'unresolved' ? unresolvedTotalPages : resolvedTotalPages)}
             >
               다음
@@ -259,7 +303,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
           }}
         />
       )}
-    </div>
+    </section>
   );
 };
 

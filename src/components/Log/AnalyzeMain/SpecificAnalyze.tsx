@@ -10,6 +10,7 @@ import {
 } from '../../../types/questionLog';
 import SpecificAnalyzeForm from './SpecificAnalyzeForm';
 
+import { appAlert } from '../../ui/Dialog';
 interface SpecificAnalyzeProps {
   faq_id: number;
   searchSubject: string;
@@ -48,7 +49,7 @@ const SpecificAnalyze: React.FC<SpecificAnalyzeProps> = ({
       if (analyzeApi?.isSuccess && analyzeApi.data?.payload?.statusCode === 200) {
         setanalyzeData(analyzeApi.data.payload ?? null);
       } else {
-        alert('분석 데이터를 가져오는 중 오류 발생');
+        appAlert('분석 데이터를 가져오는 중 오류 발생');
         console.error('분석 데이터를 가져오는 중 오류 발생:', analyzeApi.error);
         setanalyzeData(null);
       }

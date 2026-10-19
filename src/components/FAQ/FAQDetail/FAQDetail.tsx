@@ -3,6 +3,7 @@ import { useHobitQueryGetApi } from '../../../hooks/hobitAdmin';
 import { GetFAQRequest, GetFAQResponse } from '../../../types/faq';
 import FAQDetailForm from './FAQDetailForm';
 
+import { appAlert } from '../../ui/Dialog';
 interface FAQDetailProps {
   faq_id: string;
 }
@@ -31,7 +32,7 @@ const FAQDetail: React.FC<FAQDetailProps> = ({ faq_id }) => {
         const faq = FAQFetchApi.data?.payload?.data?.faq;
         setFaqData(faq);
       } else {
-        alert('FAQ 데이터를 불러오는 데 실패했습니다.');
+        appAlert('FAQ 데이터를 불러오는 데 실패했습니다.');
         console.log('FAQ 데이터를 불러오는 데 실패했습니다.', FAQFetchApi.error);
       }
     };

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { GetAllSeniorFAQResponse } from '../../../types/seniorfaq';
+import Select from '../../ui/Select';
 
 type SeniorFAQSortProps = {
     filteredSeniorFaqs: GetAllSeniorFAQResponse['data']['seniorFaqs'];
@@ -29,10 +30,10 @@ const SeniorFAQSort: React.FC<SeniorFAQSortProps> = ({ filteredSeniorFaqs: filte
 
     return (
         <div className="px-6">
-            <select
+            <Select
                 value={sort}
                 onChange={(e) => onSortChange(Number(e.target.value))}
-                className="p-2 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="p-2 rounded-xl border-2 border-line focus:outline-none focus:ring-2 focus:ring-accent-ink/40"
             >
                 <option value={1}>최신순</option>
                 <option value={0}>오래된순</option>
@@ -42,7 +43,7 @@ const SeniorFAQSort: React.FC<SeniorFAQSortProps> = ({ filteredSeniorFaqs: filte
                 <option value={5}>하위 카테고리(역순)</option>
                 <option value={6}>세부 카테고리(가나다순)</option>
                 <option value={7}>세부 카테고리(역순)</option>
-            </select>
+            </Select>
         </div>
     );
 };

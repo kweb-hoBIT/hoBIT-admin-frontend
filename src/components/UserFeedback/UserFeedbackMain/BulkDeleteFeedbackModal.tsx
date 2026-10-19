@@ -5,6 +5,7 @@ import { BulkDeleteFeedbacksRequest, BulkDeleteFeedbacksResponse } from '../../.
 import { selectAuth } from '../../../redux/authSlice';
 import envs from '../../../config/envs';
 
+import { appAlert, appConfirm } from '../../ui/Dialog';
 interface BulkDeleteFeedbackModalProps {
   onClose: () => void;
   onSuccess: () => void;
@@ -40,7 +41,7 @@ const BulkDeleteFeedbackModal: React.FC<BulkDeleteFeedbackModalProps> = ({ onClo
 
   const handlePreviewCount = async () => {
     if (!includeResolved && !includeUnresolved) {
-      alert('해결된 피드백 또는 미해결 피드백 중 최소 하나는 선택해야 합니다.');
+      appAlert('해결된 피드백 또는 미해결 피드백 중 최소 하나는 선택해야 합니다.');
       return;
     }
 
@@ -69,7 +70,7 @@ const BulkDeleteFeedbackModal: React.FC<BulkDeleteFeedbackModalProps> = ({ onClo
       setPreviewCount(data.data.count);
     } catch (error) {
       console.error('Count preview error:', error);
-      alert('삭제 예정 건수를 가져오는데 실패했습니다.');
+      appAlert('삭제 예정 건수를 가져오는데 실패했습니다.');
     } finally {
       setIsCountLoading(false);
     }
@@ -77,22 +78,22 @@ const BulkDeleteFeedbackModal: React.FC<BulkDeleteFeedbackModalProps> = ({ onClo
 
   const handleDelete = async () => {
     if (!includeResolved && !includeUnresolved) {
-      alert('해결된 피드백 또는 미해결 피드백 중 최소 하나는 선택해야 합니다.');
+      appAlert('해결된 피드백 또는 미해결 피드백 중 최소 하나는 선택해야 합니다.');
       return;
     }
 
     if (previewCount === null) {
-      alert('먼저 삭제 예정 건수를 확인해주세요.');
+      appAlert('먼저 삭제 예정 건수를 확인해주세요.');
       return;
     }
 
     if (previewCount === 0) {
-      alert('삭제할 피드백이 없습니다.');
+      appAlert('삭제할 피드백이 없습니다.');
       return;
     }
 
     const confirmMessage = `정말로 ${previewCount}건의 피드백을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.`;
-    if (!window.confirm(confirmMessage)) {
+    if (!(await appConfirm(confirmMessage, { danger: true }))) {
       return;
     }
 
@@ -108,19 +109,19 @@ const BulkDeleteFeedbackModal: React.FC<BulkDeleteFeedbackModalProps> = ({ onClo
         },
       });
       
-      alert('피드백이 성공적으로 삭제되었습니다.');
+      appAlert('피드백이 성공적으로 삭제되었습니다.');
       onSuccess();
     } catch (error) {
       console.error('Bulk delete error:', error);
-      alert('피드백 삭제에 실패했습니다.');
+      appAlert('피드백 삭제에 실패했습니다.');
     } finally {
       setIsDeleting(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-[500px] max-h-[90vh] overflow-y-auto">
+    <div className="modal-overlay">
+      <div className="modal-panel max-w-[520px] max-h-[90vh] overflow-y-auto">
         <h2 className="text-2xl font-bold mb-4">피드백 전체 삭제</h2>
 
         {/* 기간 선택 */}
@@ -176,7 +177,7 @@ const BulkDeleteFeedbackModal: React.FC<BulkDeleteFeedbackModalProps> = ({ onClo
                 type="date"
                 value={customDate}
                 onChange={(e) => setCustomDate(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className="w-full p-2 border border-line rounded-xl"
               />
             </div>
           )}
@@ -212,13 +213,13 @@ const BulkDeleteFeedbackModal: React.FC<BulkDeleteFeedbackModalProps> = ({ onClo
           <button
             onClick={handlePreviewCount}
             disabled={isCountLoading || (!includeResolved && !includeUnresolved)}
-            className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 font-semibold"
+            className="w-full px-4 py-2 bg-accent text-white rounded-xl hover:bg-accent/90 disabled:bg-card-3 font-semibold"
           >
             {isCountLoading ? '확인 중...' : '삭제 예정 건수 확인'}
           </button>
           {previewCount !== null && (
             <div className="mt-2 text-center text-lg font-semibold">
-              삭제 예정: <span className="text-red-600">{previewCount}건</span>
+              삭제 예정: <span className="text-danger">{previewCount}건</span>
             </div>
           )}
         </div>
@@ -228,14 +229,14 @@ const BulkDeleteFeedbackModal: React.FC<BulkDeleteFeedbackModalProps> = ({ onClo
           <button
             onClick={handleDelete}
             disabled={isDeleting || previewCount === null || previewCount === 0}
-            className="flex-1 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 disabled:bg-gray-300 font-semibold"
+            className="flex-1 px-4 py-2 bg-danger text-white rounded-xl hover:bg-danger/90 disabled:bg-card-3 font-semibold"
           >
             {isDeleting ? '삭제 중...' : '삭제'}
           </button>
           <button
             onClick={onClose}
             disabled={isDeleting}
-            className="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 font-semibold"
+            className="flex-1 px-4 py-2 bg-card-2 text-ink rounded-xl hover:bg-card-3 font-semibold"
           >
             취소
           </button>

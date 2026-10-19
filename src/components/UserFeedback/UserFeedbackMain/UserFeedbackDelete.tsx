@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useHobitMutateDeleteApi } from '../../../hooks/hobitAdmin';
 import { DeleteUserFeedbackRequest, DeleteUserFeedbackResponse } from '../../../types/feedback';
 
+import { appAlert } from '../../ui/Dialog';
 interface FAQDeleteProps {
   user_feedback_id: string;
   onSuccess?: () => void;
@@ -20,11 +21,11 @@ const UserFeedbackDelete: React.FC<FAQDeleteProps> = ({ user_feedback_id, onSucc
     });
 
     if (response.payload?.statusCode === 200) {
-      alert('피드백이 성공적으로 삭제되었습니다.');
+      appAlert('피드백이 성공적으로 삭제되었습니다.');
       setShowPopup(false);
       if (onSuccess) onSuccess();
     } else {
-      alert('피드백 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+      appAlert('피드백 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
       console.log('피드백 삭제 중 오류가 발생했습니다.', response.error);
     }
     
@@ -41,27 +42,27 @@ const UserFeedbackDelete: React.FC<FAQDeleteProps> = ({ user_feedback_id, onSucc
       <button
         type="button"
         onClick={togglePopup}
-        className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+        className="bg-danger text-white px-4 py-2 rounded-xl hover:bg-danger/90"
       >
         삭제
       </button>
       {showPopup && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+        <div className="modal-overlay">
+          <div className="modal-panel max-w-[440px]">
             <div className="text-center">
-              {error && <p className="text-red-600 mb-2">{error}</p>}
+              {error && <p className="text-danger mb-2">{error}</p>}
               <p>정말 이 피드백를 삭제하시겠습니까?</p>
               <button
                 type="button"
                 onClick={handleDeleteFAQ}
-                className={`mt-4 w-full h-15 text-center bg-red-500 p-2 rounded-lg hover:bg-red-600`}
+                className={`mt-4 w-full h-15 text-center bg-danger p-2 rounded-xl hover:bg-danger/90`}
               >
                 삭제
               </button>
               <button
                 type="button"
                 onClick={togglePopup}
-                className="mt-4 w-full h-15 text-center bg-gray-300 p-2 rounded-lg hover:bg-gray-400"
+                className="mt-4 w-full h-15 text-center bg-card-2 p-2 rounded-xl hover:bg-card-3"
               >
                 취소
               </button>

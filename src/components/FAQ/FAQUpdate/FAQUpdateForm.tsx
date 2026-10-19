@@ -60,15 +60,15 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
-      className="max-w-4xl mx-auto p-8 bg-white rounded-xl shadow-lg space-y-8"
+      className="max-w-4xl mx-auto p-8 bg-surface rounded-xl shadow-lg space-y-8"
     >
-      <h2 className="text-2xl font-bold text-gray-800 text-center">FAQ 수정</h2>
+      <h2 className="text-2xl font-bold text-ink text-center">FAQ 수정</h2>
 
       {/* 카테고리 필드 */}
-      <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">주요카테고리</h3>
+      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+        <h3 className="text-xl font-bold text-ink">주요카테고리</h3>
         <div>
-          <label className="block text-lg font-medium text-gray-700 mb-2">주요카테고리 (한글)</label>
+          <label className="block text-lg font-medium text-ink mb-2">주요카테고리 (한글)</label>
           <div>
             <input
               type="text"
@@ -82,11 +82,11 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                   setIsMainCateogoryKoInputInputFocused(false);
                 }, 100);
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
               placeholder="주요카테고리를 입력하세요"
             />
             {isMainCateogoryKoInputFocused && (
-              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+              <ul className="mt-2 bg-surface border border-line rounded-xl shadow-md max-h-[120px] overflow-y-auto">
                 {category.flatMap(cat => cat.maincategory_ko).filter(cat => cat.includes(maincategory_ko)).map((cat) => (
                   <li
                     key={cat}
@@ -94,7 +94,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                       findFilterIndex('maincategory_ko', cat);
                       setIsMainCateogoryKoInputInputFocused(false);
                     }}
-                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                    className="p-2 cursor-pointer hover:bg-card"
                   >
                     {cat}
                   </li>
@@ -108,7 +108,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
               setupdatedFAQ({ ...updatedFAQ, maincategory_en: text })
             }
           />
-          <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">MainCategory (English)</label>
+          <label className="block text-lg font-medium text-ink mt-4 mb-2">MainCategory (English)</label>
           <div>
             <input
               type="text"
@@ -122,11 +122,11 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                   setIsMainCateogoryEnInputInputFocused(false);
                 }, 100);
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
               placeholder="Enter maincategory"
             />
             {isMainCateogoryEnInputFocused && (
-              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+              <ul className="mt-2 bg-surface border border-line rounded-xl shadow-md max-h-[120px] overflow-y-auto">
                 {category.flatMap(cat => cat.maincategory_en).filter(cat => cat.includes(maincategory_en)).map((cat) => (
                   <li
                     key={cat}
@@ -134,7 +134,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                       findFilterIndex('maincategory_en', cat);
                       setIsMainCateogoryEnInputInputFocused(false);
                     }}
-                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                    className="p-2 cursor-pointer hover:bg-card"
                   >
                     {cat}
                   </li>
@@ -146,10 +146,10 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
       </div>
 
       {/* 서브카테고리 필드 */}
-      <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">하위카테고리</h3>
+      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+        <h3 className="text-xl font-bold text-ink">하위카테고리</h3>
         <div>
-          <label className="block text-lg font-medium text-gray-700 mb-2">하위카테고리 (한글)</label>
+          <label className="block text-lg font-medium text-ink mb-2">하위카테고리 (한글)</label>
           <div>
             <input
               type="text"
@@ -163,12 +163,12 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                   setIsSubCateogoryKoInputInputFocused(false);
                 }, 100);
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
               placeholder="하위카테고리를 입력하세요"
               disabled={!maincategory_ko}
             />
             {isSubCateogoryKoInputFocused && maincategory_ko && (
-              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+              <ul className="mt-2 bg-surface border border-line rounded-xl shadow-md max-h-[120px] overflow-y-auto">
                 {getSubcategories(maincategory_ko, 'ko').filter(sub => sub.subcategory_ko.includes(subcategory_ko)).map((sub) => (
                   <li
                     key={`${maincategory_ko}-${sub.subcategory_ko}`}
@@ -176,7 +176,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                       findFilterIndex('subcategory_ko', sub.subcategory_ko);
                       setIsSubCateogoryKoInputInputFocused(false);
                     }}
-                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                    className="p-2 cursor-pointer hover:bg-card"
                   >
                     {sub.subcategory_ko}
                   </li>
@@ -190,7 +190,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
               setupdatedFAQ({ ...updatedFAQ, subcategory_en: text })
             }
           />
-          <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Subcategory (English)</label>
+          <label className="block text-lg font-medium text-ink mt-4 mb-2">Subcategory (English)</label>
           <div>
             <input
               type="text"
@@ -204,12 +204,12 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                   setIsSubCateogoryEnInputInputFocused(false);
                 }, 100);
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
               placeholder="Enter subcategory"
               disabled={!maincategory_ko}
             />
             {isSubCateogoryEnInputFocused && maincategory_ko && (
-              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+              <ul className="mt-2 bg-surface border border-line rounded-xl shadow-md max-h-[120px] overflow-y-auto">
                 {getSubcategories(maincategory_en, 'en').filter(sub => sub.subcategory_en.includes(subcategory_en)).map((sub) => (
                   <li
                     key={`${maincategory_en}-${sub.subcategory_en}`}
@@ -217,7 +217,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                       findFilterIndex('subcategory_en', sub.subcategory_en);
                       setIsSubCateogoryEnInputInputFocused(false);
                     }}
-                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                    className="p-2 cursor-pointer hover:bg-card"
                   >
                     {sub.subcategory_en}
                   </li>
@@ -229,17 +229,17 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
       </div>
 
       {/* 질문 필드 */}
-      <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">질문</h3>
+      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+        <h3 className="text-xl font-bold text-ink">질문</h3>
         <div>
-          <label className="block text-lg font-medium text-gray-700 mb-2">질문 (한글)</label>
+          <label className="block text-lg font-medium text-ink mb-2">질문 (한글)</label>
           <input
             type="text"
             value={question_ko}
             onChange={(e) =>
               setupdatedFAQ({ ...updatedFAQ, question_ko: e.target.value })
             }
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
             placeholder="질문을 입력하세요"
           />
           <Translate
@@ -248,30 +248,30 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
               setupdatedFAQ({ ...updatedFAQ, question_en: text })
             }
           />
-          <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Question (English)</label>
+          <label className="block text-lg font-medium text-ink mt-4 mb-2">Question (English)</label>
           <input
             type="text"
             value={question_en}
             onChange={(e) =>
               setupdatedFAQ({ ...updatedFAQ, question_en: e.target.value })
             }
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
             placeholder="Enter question"
           />
         </div>
       </div>
 
       {/* 답변 필드 */}
-      <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">답변</h3>
+      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+        <h3 className="text-xl font-bold text-ink">답변</h3>
         {answer_ko.map((answer, index) => (
-          <div key={index} className="p-4 border border-gray-300 rounded-lg bg-white space-y-2">
+          <div key={index} className="p-4 border border-line rounded-xl bg-surface space-y-2">
             <div className="flex items-center justify-between">
-              <label className="block text-lg font-medium text-gray-700 mb-2">답변 (한글)</label>
+              <label className="block text-lg font-medium text-ink mb-2">답변 (한글)</label>
               <button
                 type="button"
                 onClick={() => handleDeleteAnswer(index)}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg mb-2 hover:bg-red-600"
+                className="bg-danger text-white px-4 py-2 rounded-xl mb-2 hover:bg-danger/90"
               >
                 답변 제거
               </button>
@@ -287,7 +287,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                   ),
                 })
               }
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 resize-y"
+              className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink resize-y"
               rows={6}
             />
             <Translate
@@ -301,7 +301,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                 });
               }}
             />
-            <label className="block text-lg font-medium text-gray-700 mb-2">Answer (영어)</label>
+            <label className="block text-lg font-medium text-ink mb-2">Answer (영어)</label>
             <textarea
               placeholder="Enter Answer"
               value={answer_en[index]?.answer || ''}
@@ -313,7 +313,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                   ),
                 })
               }
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 resize-y"
+              className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink resize-y"
               rows={6}
             />
             <div className="grid grid-cols-3 gap-4">
@@ -332,7 +332,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                     ),
                   });
                 }}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
               />
               <div className="relative">
                 <input
@@ -352,11 +352,11 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                   }}
                   onFocus={() => setIsEmailFocused(true)}
                   onBlur={() => setTimeout(() => setIsEmailFocused(false), 100)}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
                   placeholder="Email"
                 />
                 {isEmailFocused && emailList?.filter((email) => email.includes(answer.email)).length > 0 && (
-                  <ul className="absolute left-0 right-0 z-10 mt-1 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+                  <ul className="absolute left-0 right-0 z-10 mt-1 bg-surface border border-line rounded-xl shadow-md max-h-[120px] overflow-y-auto">
                     {emailList
                       ?.filter((email) => email.includes(answer.email))
                       .map((email) => (
@@ -374,7 +374,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                             });
                             setIsEmailFocused(false);
                           }}
-                          className="p-2 cursor-pointer hover:bg-indigo-100"
+                          className="p-2 cursor-pointer hover:bg-card"
                         >
                           {email}
                         </li>
@@ -400,11 +400,11 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                   }}
                   onFocus={() => setIsPhoneFocused(true)}
                   onBlur={() => setTimeout(() => setIsPhoneFocused(false), 100)}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
                   placeholder="Phone"
                 />
                 {isPhoneFocused && phoneList?.filter((phone) => phone.includes(answer.phone)).length > 0 && (
-                  <ul className="absolute left-0 right-0 z-10 mt-1 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+                  <ul className="absolute left-0 right-0 z-10 mt-1 bg-surface border border-line rounded-xl shadow-md max-h-[120px] overflow-y-auto">
                     {phoneList
                       ?.filter((phone) => phone.includes(answer.phone))
                       .map((phone) => (
@@ -422,7 +422,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                             });
                             setIsPhoneFocused(false);
                           }}
-                          className="p-2 cursor-pointer hover:bg-indigo-100"
+                          className="p-2 cursor-pointer hover:bg-card"
                         >
                           {phone}
                         </li>
@@ -438,7 +438,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
           <button
             type="button"
             onClick={handleAddAnswer}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+            className="bg-accent text-white px-4 py-2 rounded-xl hover:bg-accent/90"
           >
             답변 추가
           </button>
@@ -446,9 +446,9 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
       </div>
 
       {/* 관리자 필드 */}
-      <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">관리자</h3>
-        <label className="block text-lg font-medium text-gray-700 mb-2">관리자 이름</label>
+      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+        <h3 className="text-xl font-bold text-ink">관리자</h3>
+        <label className="block text-lg font-medium text-ink mb-2">관리자 이름</label>
         <div className="relative">
           <input
             type="text"
@@ -458,11 +458,11 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
             }
             onFocus={() => setIsManagerFocused(true)}
             onBlur={() => setTimeout(() => setIsManagerFocused(false), 100)}
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
             placeholder="관리자 이름을 입력하세요"
           />
           {isManagerFocused && (
-            <ul className="absolute left-0 right-0 z-10 mt-1 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+            <ul className="absolute left-0 right-0 z-10 mt-1 bg-surface border border-line rounded-xl shadow-md max-h-[120px] overflow-y-auto">
               {managerList
                 ?.filter((name) => name.includes(manager))
                 .map((name) => (
@@ -472,7 +472,7 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
                       setupdatedFAQ({ ...updatedFAQ, manager: name });
                       setIsManagerFocused(false);
                     }}
-                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                    className="p-2 cursor-pointer hover:bg-card"
                   >
                     {name}
                   </li>
@@ -499,8 +499,8 @@ const FAQUpdateForm: React.FC<FAQUpdateFormProps> = ({
         <button
           type="button"
           onClick={handleUpdate}
-          className={`px-6 py-3 rounded-lg ${
-            isUpdating ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600 text-white'
+          className={`px-6 py-3 rounded-xl ${
+            isUpdating ? 'bg-card-3 cursor-not-allowed' : 'bg-success hover:bg-success/90 text-white'
           }`}
           disabled={isUpdating}
         >

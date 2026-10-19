@@ -1,5 +1,4 @@
 import ProtectedPage from '../components/ProtectedPage';
-import Header from '../components/Header/Header';
 import SeniorFAQCreate from '../components/SeniorFAQ/SeniorFAQCreate/SeniorFAQCreate';
 
 const FAQCreatePage: React.FC = () => {
@@ -7,7 +6,6 @@ const FAQCreatePage: React.FC = () => {
   return (
     <ProtectedPage>
     <div>
-      <Header />
       <main>
         <SeniorFAQCreate />
       </main>

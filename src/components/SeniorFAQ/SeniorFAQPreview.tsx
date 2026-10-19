@@ -73,10 +73,10 @@ const SeniorFAQPreview: React.FC<SeniorFAQPreviewProps> = ({
   ) => (
     <div
       key={index}
-      className="font-5medium text-base md:text-lg bg-[#FFEFEF] mt-[10px] rounded-[20px] px-[20px] py-[15px] w-full max-w-[330px] md:max-w-none md:w-[350px] break-words flex-shrink-0"
+      className="font-5medium text-base md:text-lg bg-senior mt-[10px] rounded-[20px] px-[20px] py-[15px] w-full max-w-[330px] md:max-w-none md:w-[350px] break-words flex-shrink-0"
     >
       {index === 0 && (
-        <div className="flex flex-wrap text-sm md:text-base text-[#686D76] items-center mb-[10px]">
+        <div className="flex flex-wrap text-sm md:text-base text-ink-2 items-center mb-[10px]">
           <h3>{category.main}</h3>
           <IoIosArrowForward className="mx-1" />
           <h3>{category.sub}</h3>
@@ -102,13 +102,13 @@ const SeniorFAQPreview: React.FC<SeniorFAQPreviewProps> = ({
       <div className="mt-[10px] whitespace-pre-wrap">{item.answer}</div>
 
       {(item.url || item.map?.latitude || item.map?.longitude) && (
-        <div className="w-full h-[1px] bg-gray-300 mt-[20px]" />
+        <div className="w-full h-[1px] bg-card-2 mt-[20px]" />
       )}
 
       {item.url && (
         <div className="flex flex-row items-center mt-[20px]">
-          <div className="flex items-center justify-center mr-[10px] bg-white p-[8px] rounded-full flex-shrink-0">
-            <FaLink className="text-xl text-[#686D76]" />
+          <div className="flex items-center justify-center mr-[10px] bg-surface p-[8px] rounded-full flex-shrink-0">
+            <FaLink className="text-xl text-ink-2" />
           </div>
           <a
             href={
@@ -118,7 +118,7 @@ const SeniorFAQPreview: React.FC<SeniorFAQPreviewProps> = ({
             }
             target="_blank"
             rel="noopener noreferrer"
-            className="text-base md:text-lg text-[#0A5EB0] hover:underline break-all"
+            className="text-base md:text-lg text-link hover:underline break-all"
           >
             {isKorean ? '사이트 바로가기' : 'Visit Site'}
           </a>
@@ -127,14 +127,14 @@ const SeniorFAQPreview: React.FC<SeniorFAQPreviewProps> = ({
 
       {(item.map?.latitude || item.map?.longitude) && (
         <div className="flex flex-row items-center mt-[10px]">
-          <div className="flex items-center justify-center mr-[10px] bg-white p-[8px] rounded-full flex-shrink-0">
-            <FaMapMarkerAlt className="text-xl text-[#686D76]" />
+          <div className="flex items-center justify-center mr-[10px] bg-surface p-[8px] rounded-full flex-shrink-0">
+            <FaMapMarkerAlt className="text-xl text-ink-2" />
           </div>
           <a
             href={campusMapUrl(category.detail)}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-base md:text-lg text-[#0A5EB0] hover:underline"
+            className="text-base md:text-lg text-link hover:underline"
           >
             {isKorean
               ? '고려대학교 캠퍼스맵'
@@ -146,7 +146,7 @@ const SeniorFAQPreview: React.FC<SeniorFAQPreviewProps> = ({
   );
 
   return (
-    <div className="mt-8 p-6 border border-gray-300 rounded-lg bg-white shadow-md">
+    <div className="mt-8 p-6 border border-line rounded-xl bg-surface shadow-md">
       <h3 className="text-xl font-bold mb-4">미리보기</h3>
 
       {/* 한국어 */}

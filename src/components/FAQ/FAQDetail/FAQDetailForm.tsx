@@ -38,116 +38,116 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
   };
 
   return (
-    <form onSubmit={(e) => e.preventDefault()} className="max-w-4xl mx-auto p-8 bg-white rounded-xl shadow-lg space-y-8">
-      <h2 className="text-2xl font-bold text-gray-800 text-center">FAQ 상세</h2>
+    <form onSubmit={(e) => e.preventDefault()} className="max-w-4xl mx-auto p-8 bg-surface rounded-xl shadow-lg space-y-8">
+      <h2 className="text-2xl font-bold text-ink text-center">FAQ 상세</h2>
 
       { /* 생성 및 수정일자 */ }
-      <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">일자</h3>
+      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+        <h3 className="text-xl font-bold text-ink">일자</h3>
         <div>
-          <label className="block text-lg font-medium text-gray-700 mb-2">생성일</label>
+          <label className="block text-lg font-medium text-ink mb-2">생성일</label>
           <input
             type="text"
             value={formatDate(created_at)}
             readOnly
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
+            className="w-full p-3 border border-line rounded-xl shadow-sm bg-card text-ink"
           />
-          <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">수정일</label>
+          <label className="block text-lg font-medium text-ink mt-4 mb-2">수정일</label>
           <input
             type="text"
             value={formatDate(updated_at)}
             readOnly
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
+            className="w-full p-3 border border-line rounded-xl shadow-sm bg-card text-ink"
           />
         </div>
       </div>
       
       {/* 카테고리 및 질문 필드 */}
-      <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">주요카테고리</h3>
+      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+        <h3 className="text-xl font-bold text-ink">주요카테고리</h3>
         <div>
-          <label className="block text-lg font-medium text-gray-700 mb-2">주요카테고리 (한글)</label>
+          <label className="block text-lg font-medium text-ink mb-2">주요카테고리 (한글)</label>
           <input
             type="text"
             value={maincategory_ko}
             readOnly
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
+            className="w-full p-3 border border-line rounded-xl shadow-sm bg-card text-ink"
           />
-          <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">MainCategory (English)</label>
+          <label className="block text-lg font-medium text-ink mt-4 mb-2">MainCategory (English)</label>
           <input
             type="text"
             value={maincategory_en}
             readOnly
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
+            className="w-full p-3 border border-line rounded-xl shadow-sm bg-card text-ink"
           />
         </div>
       </div>
 
       {/* 서브카테고리 필드 */}
-      <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">하위카테고리</h3>
+      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+        <h3 className="text-xl font-bold text-ink">하위카테고리</h3>
         <div>
-          <label className="block text-lg font-medium text-gray-700 mb-2">하위카테고리 (한글)</label>
+          <label className="block text-lg font-medium text-ink mb-2">하위카테고리 (한글)</label>
           <input
             type="text"
             value={subcategory_ko}
             readOnly
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
+            className="w-full p-3 border border-line rounded-xl shadow-sm bg-card text-ink"
           />
-          <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Subcategory (English)</label>
+          <label className="block text-lg font-medium text-ink mt-4 mb-2">Subcategory (English)</label>
           <input
             type="text"
             value={subcategory_en}
             readOnly
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
+            className="w-full p-3 border border-line rounded-xl shadow-sm bg-card text-ink"
           />
         </div>
       </div>
 
       {/* 질문 필드 */}
-      <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">질문</h3>
+      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+        <h3 className="text-xl font-bold text-ink">질문</h3>
         <div>
-          <label className="block text-lg font-medium text-gray-700 mb-2">질문 (한글)</label>
+          <label className="block text-lg font-medium text-ink mb-2">질문 (한글)</label>
           <input
             type="text"
             value={question_ko}
             readOnly
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
+            className="w-full p-3 border border-line rounded-xl shadow-sm bg-card text-ink"
           />
-          <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Question (English)</label>
+          <label className="block text-lg font-medium text-ink mt-4 mb-2">Question (English)</label>
           <input
             type="text"
             value={question_en}
             readOnly
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
+            className="w-full p-3 border border-line rounded-xl shadow-sm bg-card text-ink"
           />
         </div>
       </div>
 
       {/* 번갈아가며 답변 필드 */}
-      <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">FAQ 답변</h3>
+      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+        <h3 className="text-xl font-bold text-ink">FAQ 답변</h3>
         {answer_ko.map((answer, index) => {
           const answerEn = answer_en[index] || {};
           return (
-            <div key={index} className="p-4 border border-gray-300 rounded-lg bg-white space-y-2">
+            <div key={index} className="p-4 border border-line rounded-xl bg-surface space-y-2">
               {/* 한글 답변 */}
-              <label className="block text-lg font-medium text-gray-700 mb-2">답변 (한글)</label>
+              <label className="block text-lg font-medium text-ink mb-2">답변 (한글)</label>
               <textarea
                 placeholder="답변"
                 value={answer.answer}
                 readOnly
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
+                className="w-full p-3 border border-line rounded-xl shadow-sm bg-card text-ink"
                 rows={6}
               />
               {/* 영어 답변 */}
-              <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Answer (English)</label>
+              <label className="block text-lg font-medium text-ink mt-4 mb-2">Answer (English)</label>
               <textarea
                 placeholder="Answer"
                 value={answerEn.answer || ''}
                 readOnly
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
+                className="w-full p-3 border border-line rounded-xl shadow-sm bg-card text-ink"
                 rows={6}
               />
 
@@ -158,21 +158,21 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
                   placeholder="URL"
                   value={answer.url}
                   readOnly
-                  className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500 mb-2"
+                  className="w-1/3 p-3 border border-line rounded-xl shadow-sm bg-card text-ink mb-2"
                 />
                 <input
                   type="email"
                   placeholder="Email"
                   value={answer.email}
                   readOnly
-                  className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500 mb-2"
+                  className="w-1/3 p-3 border border-line rounded-xl shadow-sm bg-card text-ink mb-2"
                 />
                 <input
                   type="tel"
                   placeholder="Phone"
                   value={answer.phone}
                   readOnly
-                  className="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500 mb-2"
+                  className="w-1/3 p-3 border border-line rounded-xl shadow-sm bg-card text-ink mb-2"
                 />
               </div>
             </div>
@@ -195,15 +195,15 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
       />
       
       {/* 관리자 필드 */}
-      <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">관리자 정보</h3>
+      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+        <h3 className="text-xl font-bold text-ink">관리자 정보</h3>
         <div>
-          <label className="block text-lg font-medium text-gray-700 mb-2">관리자 이름</label>
+          <label className="block text-lg font-medium text-ink mb-2">관리자 이름</label>
           <input
             type="text"
             value={manager}
             readOnly
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-black-500"
+            className="w-full p-3 border border-line rounded-xl shadow-sm bg-card text-ink"
           />
         </div>
       </div>

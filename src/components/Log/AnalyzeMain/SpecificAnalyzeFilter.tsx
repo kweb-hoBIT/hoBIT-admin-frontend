@@ -4,6 +4,8 @@ import { useHobitQueryGetApi } from '../../../hooks/hobitAdmin';
 import { GetAllFAQRequest, GetAllFAQResponse } from '../../../types/faq';
 import "react-datepicker/dist/react-datepicker.css";
 
+import { appAlert } from '../../ui/Dialog';
+import Select from '../../ui/Select';
 interface SpecificAnalyzeFilterProps {
   onApplyFilter: (filters: any) => void;
 }
@@ -26,7 +28,7 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
         const data = GetFAQsApi.data.payload.data.faqs;
         setFaqData(data);
       } else {
-        alert('FAQ 데이터를 가져오는 중 오류 발생');
+        appAlert('FAQ 데이터를 가져오는 중 오류 발생');
         console.error('FAQ 데이터를 가져오는 중 오류 발생:', GetFAQsApi.error);
       }
     };
@@ -94,13 +96,13 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
   );
 
   return (
-    <div className="flex-[0.25] w-full h-[500px] p-4 bg-[#f9f9f9] border border-[#ddd] rounded-lg shadow-[0_2px_6px_rgba(0,0,0,0.1)] overflow-y-auto">
+    <div className="flex-[0.25] w-full h-[500px] p-4 bg-card border border-line rounded-xl shadow-[0_2px_6px_rgba(0,0,0,0.1)] overflow-y-auto">
       <div className="p-4 rounded-3xl max-w-sm mx-auto space-y-4">
-        <h4 className="text-xl font-semibold text-gray-800">분석 필터 설정</h4>
+        <h4 className="text-xl font-semibold text-ink">분석 필터 설정</h4>
         <div className="space-y-3">
           {/* FAQ 질문 검색 */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">FAQ 질문 검색</label>
+            <label className="block text-sm font-medium text-ink">FAQ 질문 검색</label>
             <input
               type="text"
               value={faq}
@@ -112,15 +114,15 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
                 }, 100);
               }}
               placeholder="FAQ 질문을 입력하세요"
-              className="w-full p-1 rounded-xl border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-600 transition ease-in-out"
+              className="w-full p-1 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
             />
             {isFaqInputFocused && filteredFAQ.length > 0 && (
-              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+              <ul className="mt-2 bg-surface border border-line rounded-xl shadow-md max-h-[120px] overflow-y-auto">
                 {filteredFAQ.map(faqItem => (
                   <li
                     key={faqItem.faq_id}
                     onClick={() => setFaq(faqItem.question_ko)}
-                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                    className="p-2 cursor-pointer hover:bg-card"
                   >
                     {faqItem.question_ko}
                   </li>
@@ -131,44 +133,44 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
 
           {/* 검색 주제 */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">검색 주제</label>
-            <select
+            <label className="block text-sm font-medium text-ink">검색 주제</label>
+            <Select
               value={searchSubject}
               onChange={(e) => setSearchSubject(e.target.value)}
-              className="w-full p-1 rounded-xl border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-600 transition ease-in-out"
+              className="w-full p-1 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
             >
               <option value="frequency">FAQ 검색 빈도</option>
               <option value="feedback">FAQ 피드백 점수</option>
               <option value="language">사용 언어 빈도</option>
-            </select>
+            </Select>
           </div>
 
           {/* 검색 주기 */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">검색 주기</label>
-            <select
+            <label className="block text-sm font-medium text-ink">검색 주기</label>
+            <Select
               value={period}
               onChange={(e) => {
                 setPeriod(e.target.value);
                 setStartDate(null);
                 setEndDate(null);
               }}
-              className="w-full p-1 rounded-xl border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-600 transition ease-in-out"
+              className="w-full p-1 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
             >
               <option value="day">일</option>
               <option value="week">주</option>
               <option value="month">달</option>
-            </select>
+            </Select>
           </div>
 
           {/* 시작 일자 */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">시작 일자</label>
+            <label className="block text-sm font-medium text-ink">시작 일자</label>
             <DatePicker
               selected={startDate}
               onChange={(date: Date | null) => setStartDate(date)}
               dateFormat="yyyy-MM-dd"
-              className="w-full p-1 rounded-xl border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-600 transition ease-in-out"
+              className="w-full p-1 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
               filterDate={(date) => !disableDates(date, "start")}
               placeholderText="시작 일자 선택"
               maxDate={endDate || undefined}
@@ -177,12 +179,12 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
 
           {/* 종료 일자 */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">종료 일자</label>
+            <label className="block text-sm font-medium text-ink">종료 일자</label>
             <DatePicker
               selected={endDate}
               onChange={(date: Date | null) => setEndDate(date)}
               dateFormat="yyyy-MM-dd"
-              className="w-full p-1 rounded-xl border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-600 transition ease-in-out"
+              className="w-full p-1 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
               filterDate={(date) => !disableDates(date, "end")}
               placeholderText="종료 일자 선택"
               minDate={startDate || undefined}
@@ -196,8 +198,8 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
               disabled={!startDate || !endDate || !isSearchButtonEnabled}
               className={`w-full p-2 text-sm font-semibold rounded-xl mt-4 transition duration-300 ${
                 !startDate || !endDate || !isSearchButtonEnabled
-                  ? 'bg-gray-300 cursor-not-allowed'
-                  : 'bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-600'
+                  ? 'bg-card-2 cursor-not-allowed'
+                  : 'bg-accent text-white hover:bg-accent/90 focus:ring-2 focus:ring-accent-ink/40'
               }`}
             >
               검색

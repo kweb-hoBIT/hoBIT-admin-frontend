@@ -66,15 +66,15 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
-      className="max-w-4xl mx-auto p-8 bg-white rounded-xl shadow-lg space-y-8"
+      className="max-w-4xl mx-auto p-8 bg-surface rounded-xl shadow-lg space-y-8"
     >
-      <h2 className="text-2xl font-bold text-gray-800 text-center">선배 FAQ 생성</h2>
+      <h2 className="text-2xl font-bold text-ink text-center">선배 FAQ 생성</h2>
 
       {/*메인 카테고리 필드 */}
-      <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">주요카테고리</h3>
+      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+        <h3 className="text-xl font-bold text-ink">주요카테고리</h3>
         <div>
-          <label className="block text-lg font-medium text-gray-700 mb-2">주요카테고리 (한글)</label>
+          <label className="block text-lg font-medium text-ink mb-2">주요카테고리 (한글)</label>
           <div>
             <input
               type="text"
@@ -88,11 +88,11 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                   setIsMainCateogoryKoInputInputFocused(false);
                 }, 100);
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
               placeholder="주요카테고리를 입력하세요"
             />
             {isMainCateogoryKoInputFocused && (
-              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+              <ul className="mt-2 bg-surface border border-line rounded-xl shadow-md max-h-[120px] overflow-y-auto">
                 {category.flatMap(cat => cat.maincategory_ko).filter(cat => cat.includes(maincategory_ko)).map((cat) => (
                   <li
                     key={cat}
@@ -100,7 +100,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                       findFilterIndex('maincategory_ko', cat);
                       setIsMainCateogoryKoInputInputFocused(false);
                     }}
-                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                    className="p-2 cursor-pointer hover:bg-card"
                   >
                     {cat}
                   </li>
@@ -109,7 +109,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
             )}
           </div>
           <Translate sourceText={maincategory_ko} setTargetText={(text) => setNewSeniorFAQ({ ...newSeniorFAQ, maincategory_en: text })} />
-          <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">MainCategory (English)</label>
+          <label className="block text-lg font-medium text-ink mt-4 mb-2">MainCategory (English)</label>
           <div>
             <input
               type="text"
@@ -123,11 +123,11 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                   setIsMainCateogoryEnInputInputFocused(false);
                 }, 100);
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
               placeholder="Enter maincategory"
             />
             {isMainCateogoryEnInputFocused && (
-              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+              <ul className="mt-2 bg-surface border border-line rounded-xl shadow-md max-h-[120px] overflow-y-auto">
                 {category.flatMap(cat => cat.maincategory_en).filter(cat => cat.includes(maincategory_en)).map((cat) => (
                   <li
                     key={cat}
@@ -135,7 +135,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                       findFilterIndex('maincategory_en', cat);
                       setIsMainCateogoryEnInputInputFocused(false);
                     }}
-                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                    className="p-2 cursor-pointer hover:bg-card"
                   >
                     {cat}
                   </li>
@@ -147,10 +147,10 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
       </div>
 
       {/* 서브카테고리 필드 */}
-      <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">하위카테고리</h3>
+      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+        <h3 className="text-xl font-bold text-ink">하위카테고리</h3>
         <div>
-          <label className="block text-lg font-medium text-gray-700 mb-2">하위카테고리 (한글)</label>
+          <label className="block text-lg font-medium text-ink mb-2">하위카테고리 (한글)</label>
           <div>
             <input
               type="text"
@@ -164,12 +164,12 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                   setIsSubCateogoryKoInputInputFocused(false);
                 }, 100);
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
               placeholder="하위카테고리를 입력하세요"
               disabled={!maincategory_ko}
             />
             {isSubCateogoryKoInputFocused && (
-              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+              <ul className="mt-2 bg-surface border border-line rounded-xl shadow-md max-h-[120px] overflow-y-auto">
               {getSubcategories(maincategory_ko, 'ko').flatMap((subcategory) => subcategory.subcategory_ko).filter((subcategory) => subcategory.includes(subcategory_ko)).map((subcategory) => (
                 <li
                 key={`${maincategory_ko}-${subcategory}`}
@@ -177,7 +177,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                     findFilterIndex('subcategory_ko', subcategory);
                     setIsSubCateogoryKoInputInputFocused(false);
                   }}
-                  className="p-2 cursor-pointer hover:bg-indigo-100"
+                  className="p-2 cursor-pointer hover:bg-card"
                 >
                   {subcategory}
                 </li>
@@ -186,7 +186,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
             )}
           </div>
           <Translate sourceText={subcategory_ko} setTargetText={(text) => setNewSeniorFAQ({ ...newSeniorFAQ, subcategory_en: text })} />
-          <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">Subcategory (English)</label>
+          <label className="block text-lg font-medium text-ink mt-4 mb-2">Subcategory (English)</label>
           <div>
             <input
               type="text"
@@ -200,12 +200,12 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                   setIsSubCateogoryEnInputInputFocused(false);
                 }, 100);
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
               placeholder="Enter subcategory"
               disabled={!maincategory_en}
             />
             {isSubCateogoryEnInputFocused && (
-              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+              <ul className="mt-2 bg-surface border border-line rounded-xl shadow-md max-h-[120px] overflow-y-auto">
                 {getSubcategories(maincategory_en, 'en').flatMap((subcategory) => subcategory.subcategory_en).filter((subcategory) => subcategory.includes(subcategory_en)).map((subcategory) => (
                   <li
                   key={`${maincategory_en}-${subcategory}`}
@@ -213,7 +213,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                       findFilterIndex('subcategory_en', subcategory);
                       setIsSubCateogoryEnInputInputFocused(false);
                     }}
-                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                    className="p-2 cursor-pointer hover:bg-card"
                   >
                     {subcategory}
                   </li>
@@ -225,10 +225,10 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
       </div>
 
       {/* 세부 카테고리 필드 */}
-      <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">세부카테고리</h3>
+      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+        <h3 className="text-xl font-bold text-ink">세부카테고리</h3>
         <div>
-          <label className="block text-lg font-medium text-gray-700 mb-2">세부카테고리 (한글)</label>
+          <label className="block text-lg font-medium text-ink mb-2">세부카테고리 (한글)</label>
           <div>
             <input
               type="text"
@@ -242,12 +242,12 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                   setIsDetailCateogoryKoInputInputFocused(false);
                 }, 100);
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
               placeholder="세부카테고리를 입력하세요"
               disabled={!subcategory_ko}
             />
             {isDetailCateogoryKoInputFocused && (
-              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+              <ul className="mt-2 bg-surface border border-line rounded-xl shadow-md max-h-[120px] overflow-y-auto">
                 {getDetailcategories(maincategory_ko, subcategory_ko, 'ko').detailcategory_ko.filter((detailcategory) => detailcategory.includes(detailcategory_ko)).map((detailcategory) => (
                   <li
                   key={`${maincategory_ko}-${subcategory_ko}-${detailcategory}`}
@@ -255,7 +255,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                       findFilterIndex('detailcategory_ko', detailcategory);
                       setIsDetailCateogoryKoInputInputFocused(false);
                     }}
-                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                    className="p-2 cursor-pointer hover:bg-card"
                   >
                     {detailcategory}
                   </li>
@@ -264,7 +264,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
             )}
           </div>
           <Translate sourceText={detailcategory_ko} setTargetText={(text) => setNewSeniorFAQ({ ...newSeniorFAQ, detailcategory_en: text })} />
-          <label className="block text-lg font-medium text-gray-700 mt-4 mb-2">DetailCategory (English)</label>
+          <label className="block text-lg font-medium text-ink mt-4 mb-2">DetailCategory (English)</label>
           <div>
             <input
               type="text"
@@ -278,12 +278,12 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                   setIsDetailCateogoryEnInputInputFocused(false);
                 }, 100);
               }}
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
               placeholder="Enter detailcategory"
               disabled={!subcategory_en}
             />
             {isDetailCateogoryEnInputFocused && (
-              <ul className="mt-2 bg-white border border-gray-300 rounded-lg shadow-md max-h-[120px] overflow-y-auto">
+              <ul className="mt-2 bg-surface border border-line rounded-xl shadow-md max-h-[120px] overflow-y-auto">
                 {getDetailcategories(maincategory_en, subcategory_en, 'en').detailcategory_en.filter((detailcategory) => detailcategory.includes(detailcategory_en)).map((detailcategory) => (
                   <li
                   key={`${maincategory_en}-${subcategory_en}-${detailcategory}`}
@@ -291,7 +291,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                       findFilterIndex('detailcategory_en', detailcategory);
                       setIsDetailCateogoryEnInputInputFocused(false);
                     }}
-                    className="p-2 cursor-pointer hover:bg-indigo-100"
+                    className="p-2 cursor-pointer hover:bg-card"
                   >
                     {detailcategory}
                   </li>
@@ -303,16 +303,16 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
       </div>
 
       {/* 답변 필드 */}
-      <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">답변</h3>
+      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+        <h3 className="text-xl font-bold text-ink">답변</h3>
         {answer_ko.map((answer, index) => (
-          <div key={index} className="p-4 border border-gray-300 rounded-lg bg-white space-y-4">
+          <div key={index} className="p-4 border border-line rounded-xl bg-surface space-y-4">
             <div className="flex items-center justify-between">
-              <label className="block text-lg font-medium text-gray-700 mt-2">답변 제목 (한글)</label>
+              <label className="block text-lg font-medium text-ink mt-2">답변 제목 (한글)</label>
               <button
                 type="button"
                 onClick={() => handleDeleteAnswer(index)}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg mb-2 hover:bg-red-600"
+                className="bg-danger text-white px-4 py-2 rounded-xl mb-2 hover:bg-danger/90"
               >
                 답변 제거
               </button>
@@ -328,7 +328,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                   ),
                 })
               }
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
             />
             <Translate
               sourceText={answer.title}
@@ -341,7 +341,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                 });
               }}
             />
-            <label className="block text-lg font-medium text-gray-700 mb-2">Answer Title (영어)</label>
+            <label className="block text-lg font-medium text-ink mb-2">Answer Title (영어)</label>
             <input
               placeholder="Enter Answer Title"
               value={answer_en[index]?.title || ''}
@@ -353,9 +353,9 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                   ),
                 })
               }
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 mb-4"
+              className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink mb-4"
             />
-            <label className="block text-lg font-medium text-gray-700 mb-2">답변 (한글)</label>
+            <label className="block text-lg font-medium text-ink mb-2">답변 (한글)</label>
             <textarea
               placeholder="답변을 입력하세요"
               value={answer.answer}
@@ -367,7 +367,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                   ),
                 })
               }
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 resize-y mb-4"
+              className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink resize-y mb-4"
               rows={6}
             />
             <Translate
@@ -381,7 +381,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                 });
               }}
             />
-            <label className="block text-lg font-medium text-gray-700 mb-2">Answer (영어)</label>
+            <label className="block text-lg font-medium text-ink mb-2">Answer (영어)</label>
             <textarea
               placeholder="Enter Answer"
               value={answer_en[index]?.answer || ''}
@@ -393,7 +393,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                   ),
                 })
               }
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 resize-y mb-4"
+              className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink resize-y mb-4"
               rows={6}
             />
             <div className="grid grid-cols-3 gap-4">
@@ -412,7 +412,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                     ),
                   });
                 }}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
               />
               <input
                 type="text"
@@ -429,7 +429,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                     ),
                   });
                 }}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
               />
               <input
                 type="text"
@@ -446,7 +446,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
                     ),
                   });
                 }}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
               />
             </div>
           </div>
@@ -456,7 +456,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
           <button
             type="button"
             onClick={handleAddAnswer}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+            className="bg-accent text-white px-4 py-2 rounded-xl hover:bg-accent/90"
           >
             답변 추가
           </button>
@@ -464,16 +464,16 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
       </div>
 
       {/* 관리자 필드 */}
-      <div className="p-6 border border-gray-200 rounded-lg bg-gray-50 space-y-4">
-        <h3 className="text-xl font-bold text-gray-800">관리자</h3>
-        <label className="block text-lg font-medium text-gray-700 mb-2">관리자 이름</label>
+      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+        <h3 className="text-xl font-bold text-ink">관리자</h3>
+        <label className="block text-lg font-medium text-ink mb-2">관리자 이름</label>
         <input
           type="text"
           value={manager}
           onChange={(e) =>
             setNewSeniorFAQ({ ...newSeniorFAQ, manager: e.target.value })
           }
-          className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
           placeholder="관리자 이름을 입력하세요"
         />
       </div>
@@ -495,10 +495,10 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
         <button
           onClick={handleSubmit}
           disabled={isCreating}
-          className={`py-3 px-6 rounded-lg ${
+          className={`py-3 px-6 rounded-xl ${
             isCreating
-              ? 'bg-gray-400 text-white cursor-not-allowed'
-              : 'bg-green-500 text-white hover:bg-green-600'
+              ? 'bg-card-2 text-ink-3 cursor-not-allowed'
+              : 'bg-success text-white hover:bg-success/90'
           }`}
         >
           {isCreating ? '추가 중...' : '추가'}

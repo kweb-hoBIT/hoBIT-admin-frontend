@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Select from '../../../ui/Select';
 
 interface Category {
   maincategory_ko: string;
@@ -132,18 +133,18 @@ const SeniorFAQCategoryRenameForm: React.FC<SeniorFAQCategoryRenameFormProps> = 
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100"> 
-      <div className="p-6 bg-white rounded-lg shadow-md w-full max-w-lg">
-      <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">선배 FAQ 카테고리 이름 변경</h1>
+    <div className="flex items-center justify-center min-h-[calc(100vh-4.5rem)] py-10"> 
+      <div className="p-6 bg-surface rounded-xl shadow-md w-full max-w-lg">
+      <h1 className="text-2xl font-bold text-ink text-center mb-6">선배 FAQ 카테고리 이름 변경</h1>
       <p className="text-center mb-4">해당되는 카테고리를 한번에 바꿀 수 있습니다.</p>
 
         {/* 카테고리 유형 선택 */}
         <div className="mb-4">
-          <label className="block text-lg font-medium text-gray-700 mb-2">카테고리 유형 선택:</label>
-          <select
+          <label className="block text-lg font-medium text-ink mb-2">카테고리 유형 선택:</label>
+          <Select
             value={renameData.category_field}
             onChange={(e) => handleCategorySelect("category_field", e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg"
+            className="w-full p-3 border border-line rounded-xl"
           >
             <option value="">카테고리 선택</option>
             <option value="maincategory_ko">주요 카테고리 (KO)</option>
@@ -152,16 +153,16 @@ const SeniorFAQCategoryRenameForm: React.FC<SeniorFAQCategoryRenameFormProps> = 
             <option value="subcategory_en">하위 카테고리 (EN)</option>
             <option value="detailcategory_ko">세부 카테고리 (KO)</option>
             <option value="detailcategory_en">세부 카테고리 (EN)</option>
-          </select>
+          </Select>
         </div>
 
         {/* 주요 카테고리 선택 */}
         <div className="mb-4">
-          <label className="block text-lg font-medium text-gray-700 mb-2">주요 카테고리:</label>
-          <select
+          <label className="block text-lg font-medium text-ink mb-2">주요 카테고리:</label>
+          <Select
             value={selectedMainCategory}
             onChange={(e) => setSelectedMainCategory(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg"
+            className="w-full p-3 border border-line rounded-xl"
           >
             <option value="">주요 카테고리 선택</option>
             {categories.map((cat) => (
@@ -172,17 +173,17 @@ const SeniorFAQCategoryRenameForm: React.FC<SeniorFAQCategoryRenameFormProps> = 
                 {renameData.category_field.includes("ko") ? cat.maincategory_ko : cat.maincategory_en}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
 
         {/* 하위 카테고리 선택 */}
         {(renameData.category_field.includes("subcategory") || renameData.category_field.includes("detailcategory")) && (
           <div className="mb-4">
-            <label className="block text-lg font-medium text-gray-700 mb-2">하위 카테고리:</label>
-            <select
+            <label className="block text-lg font-medium text-ink mb-2">하위 카테고리:</label>
+            <Select
               value={selectedSubCategory}
               onChange={(e) => setSelectedSubCategory(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg"
+              className="w-full p-3 border border-line rounded-xl"
             >
               <option value="">하위 카테고리 선택</option>
               {availableSubcategories.map((sub) => (
@@ -190,18 +191,18 @@ const SeniorFAQCategoryRenameForm: React.FC<SeniorFAQCategoryRenameFormProps> = 
                   {renameData.category_field.includes("ko") ? sub.ko : sub.en}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
         )}
 
         {/* 세부 카테고리 선택 */}
         {renameData.category_field.includes("detailcategory") && (
           <div className="mb-4">
-            <label className="block text-lg font-medium text-gray-700 mb-2">세부 카테고리:</label>
-            <select
+            <label className="block text-lg font-medium text-ink mb-2">세부 카테고리:</label>
+            <Select
               value={renameData.prev_category}
               onChange={(e) => handleCategorySelect("prev_category", e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg"
+              className="w-full p-3 border border-line rounded-xl"
             >
               <option value="">세부 카테고리 선택</option>
               {availableDetailCategories.map((detail) => (
@@ -209,19 +210,19 @@ const SeniorFAQCategoryRenameForm: React.FC<SeniorFAQCategoryRenameFormProps> = 
                   {renameData.category_field.includes("ko") ? detail.ko : detail.en}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
         )}
 
       {/* 새로운 카테고리 입력 필드 */}
       <div className="mb-4">
-        <label className="block text-lg font-medium text-gray-700 mb-2">새로운 카테고리:</label>
+        <label className="block text-lg font-medium text-ink mb-2">새로운 카테고리:</label>
         <input
           type="text"
           value={renameData.new_category}
           onChange={(e) => handleCategorySelect("new_category", e.target.value)}
           placeholder="새 카테고리 입력"
-          className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink"
         />
       </div>
 
@@ -229,10 +230,10 @@ const SeniorFAQCategoryRenameForm: React.FC<SeniorFAQCategoryRenameFormProps> = 
       <button
         onClick={handleRename}
         disabled={isUpdating || !isFormValid()}
-        className={`w-full py-3 rounded-lg text-white font-bold transition ${
+        className={`w-full py-3 rounded-xl text-white font-bold transition ${
           isUpdating || !isFormValid()
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-crimson hover:bg-crimson-dark"
+            ? "bg-card-3 cursor-not-allowed"
+            : "bg-accent hover:bg-accent/90"
         }`}
       >
         {isUpdating ? "변경 중..." : "카테고리 이름 변경"}

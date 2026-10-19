@@ -53,7 +53,7 @@ const FAQCategoryReorderForm: React.FC<FAQCategoryReorderFormProps> = ({
     });
 
     return (
-      <li className="border border-gray-300 rounded-lg shadow-sm bg-white mb-3">
+      <li className="border border-line rounded-xl shadow-sm bg-surface mb-3">
         <div
           ref={(node) => drag(drop(node))}
           className="flex items-center justify-between p-3"
@@ -62,13 +62,13 @@ const FAQCategoryReorderForm: React.FC<FAQCategoryReorderFormProps> = ({
             cursor: 'move',
           }}
         >
-          <span className="text-gray-800 font-bold flex-1">
+          <span className="text-ink font-bold flex-1">
             {index + 1}. {category.maincategory_ko}
           </span>
           {category.subcategories && category.subcategories.length > 0 && (
             <button
               onClick={() => toggleMainCategory(index)}
-              className="ml-2 text-blue-600 hover:text-blue-800"
+              className="ml-2 text-link hover:text-link"
             >
               {expandedMain[index] ? '▼' : '▶'}
             </button>
@@ -120,13 +120,13 @@ const FAQCategoryReorderForm: React.FC<FAQCategoryReorderFormProps> = ({
     return (
       <div
         ref={(node) => drag(drop(node))}
-        className="flex items-center p-2 border border-gray-200 rounded-md bg-gray-50"
+        className="flex items-center p-2 border border-line rounded-xl bg-card"
         style={{
           opacity: isDragging ? 0.5 : 1,
           cursor: 'move',
         }}
       >
-        <span className="text-gray-700 font-medium">
+        <span className="text-ink font-medium">
           {subIndex + 1}. {subcategory.subcategory_ko}
         </span>
       </div>
@@ -134,15 +134,15 @@ const FAQCategoryReorderForm: React.FC<FAQCategoryReorderFormProps> = ({
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="p-6 bg-white rounded-lg shadow-md w-full max-w-2xl">
-        <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">FAQ 카테고리 순서 변경</h2>
+    <div className="flex items-center justify-center min-h-[calc(100vh-4.5rem)] py-10">
+      <div className="p-6 bg-surface rounded-xl shadow-md w-full max-w-2xl">
+        <h2 className="text-2xl font-bold text-ink text-center mb-6">FAQ 카테고리 순서 변경</h2>
         <p className="text-center mb-4">주요 카테고리와 하위 카테고리 순서를 자유롭게 조정할 수 있습니다.</p>
         {onReset && (
           <div className="flex justify-end mb-4">
             <button
               onClick={onReset}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+              className="bg-accent text-white px-4 py-2 rounded-xl hover:bg-accent/90 transition"
             >
               초기화
             </button>
@@ -156,7 +156,7 @@ const FAQCategoryReorderForm: React.FC<FAQCategoryReorderFormProps> = ({
         <button
           onClick={onSubmit}
           disabled={isUpdating}
-          className="w-full py-3 bg-crimson text-white font-bold rounded-lg hover:bg-crimson-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-3 bg-accent text-white font-bold rounded-xl hover:bg-accent/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isUpdating ? '변경 중...' : '순서 변경'}
         </button>

@@ -63,7 +63,7 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
             key={index}
             className="
               h-fit
-              bg-gray-100
+              bg-card
               font-5medium
               text-base md:text-lg
               mt-[10px]
@@ -77,12 +77,12 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
             {/* 카테고리 헤더 (첫 카드만) */}
             {index === 0 && (
               <>
-                <div className="flex flex-row text-sm md:text-base text-[#686D76] items-center mb-[10px]">
+                <div className="flex flex-row text-sm md:text-base text-ink-2 items-center mb-[10px]">
                   <h3>{maincategory}</h3>
                   <IoIosArrowForward className="mx-1" />
                   <h3 className="font-4regular">{subcategory}</h3>
                 </div>
-                <div className="text-black font-6semibold text-base md:text-lg mb-[15px] break-words">
+                <div className="text-ink font-6semibold text-base md:text-lg mb-[15px] break-words">
                   {question}
                 </div>
               </>
@@ -97,22 +97,22 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
 
             {/* Divider */}
             {(item.url || item.email || item.phone) && (
-              <div className="w-full h-[1px] bg-gray-300 mt-[20px]" />
+              <div className="w-full h-[1px] bg-card-2 mt-[20px]" />
             )}
 
             {/* URL */}
             {item.url && (
               <div className="flex flex-row items-center mt-[20px]">
                 <div className="flex items-center justify-center mr-[10px] 
-                                bg-white p-[8px] rounded-full 
+                                bg-surface p-[8px] rounded-full 
                                 min-w-[36px] min-h-[36px]">
-                  <FaLink className="text-xl text-[#686D76]" />
+                  <FaLink className="text-xl text-ink-2" />
                 </div>
                 <a
                   href={item.url.startsWith('http') ? item.url : `http://${item.url}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[18px] text-[#0A5EB0] cursor-pointer hover:underline break-all"
+                  className="text-[18px] text-link cursor-pointer hover:underline break-all"
                 >
                   사이트 바로가기
                 </a>
@@ -123,9 +123,9 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
             {item.email && (
               <div className="flex flex-row items-center mt-[10px]">
                 <div className="flex items-center justify-center mr-[10px] 
-                                bg-white p-[8px] rounded-full 
+                                bg-surface p-[8px] rounded-full 
                                 min-w-[36px] min-h-[36px]">
-                  <MdOutlineEmail className="text-xl text-[#686D76]" />
+                  <MdOutlineEmail className="text-xl text-ink-2" />
                 </div>
                 <p className="text-[18px] break-all">{item.email}</p>
               </div>
@@ -135,9 +135,9 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
             {item.phone && (
               <div className="flex flex-row items-center mt-[10px]">
                 <div className="flex items-center justify-center mr-[10px] 
-                                bg-white p-[8px] rounded-full 
+                                bg-surface p-[8px] rounded-full 
                                 min-w-[36px] min-h-[36px]">
-                  <FaPhoneVolume className="text-xl text-[#686D76]" />
+                  <FaPhoneVolume className="text-xl text-ink-2" />
                 </div>
                 <p className="text-[18px]">{item.phone}</p>
               </div>
@@ -145,7 +145,7 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
           </div>
         ))
       ) : (
-        <p className="text-gray-400">
+        <p className="text-ink-3">
           {isKorean ? '답변 미리보기.' : 'Answer preview.'}
         </p>
       )}
@@ -153,8 +153,8 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
   );
 
   return (
-    <div className="mt-8 p-6 border border-gray-300 rounded-lg bg-white shadow-md">
-      <h3 className="text-xl font-bold text-gray-800 mb-4">미리보기</h3>
+    <div className="mt-8 p-6 border border-line rounded-xl bg-surface shadow-md">
+      <h3 className="text-xl font-bold text-ink mb-4">미리보기</h3>
 
       {/* 한국어 */}
       <div

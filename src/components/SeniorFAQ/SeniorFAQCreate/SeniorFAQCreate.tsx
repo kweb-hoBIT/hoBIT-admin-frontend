@@ -8,6 +8,7 @@ import { CreateSeniorFAQRequest, CreateSeniorFAQResponse, GetAllSeniorFAQCategor
 import { RootState } from '../../../redux/store';
 import { useNavigate } from 'react-router-dom';
 
+import { appAlert } from '../../ui/Dialog';
 const SeniorFAQCreate: React.FC = () => {
   const navigate = useNavigate();
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
@@ -86,7 +87,7 @@ const SeniorFAQCreate: React.FC = () => {
         const data = GetAllSeniorFAQCategoryApi.data.payload.data.categories;
         setCategory(data);
       } else {
-        alert('선배 FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
+        appAlert('선배 FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
         console.log('선배 FAQ 카테고리 데이터를 불러오는데 실패했습니다.', GetAllSeniorFAQCategoryApi.error);
       }
     };
@@ -175,7 +176,7 @@ const SeniorFAQCreate: React.FC = () => {
 
   const handleDeleteAnswer = (index: number) => {
     if (newSeniorFAQ.answer_ko.length === 1) {
-      alert('하나 이상의 답변을 입력해야 합니다!');
+      appAlert('하나 이상의 답변을 입력해야 합니다!');
       return;
     }
 
@@ -215,7 +216,7 @@ const SeniorFAQCreate: React.FC = () => {
       answer_ko.some((ans) => !ans.answer || !ans.title) ||
       answer_en.some((ans) => !ans.answer || !ans.title)
     ) {
-      alert('모든 필드를 채워주세요.');
+      appAlert('모든 필드를 채워주세요.');
       setIsCreating(false);
       return;
     }
@@ -232,7 +233,7 @@ const SeniorFAQCreate: React.FC = () => {
     });
 
     if (hasDuplicate) {
-      alert('이미 존재하는 제목의 답변이 있습니다. 중복을 확인해주세요.');
+      appAlert('이미 존재하는 제목의 답변이 있습니다. 중복을 확인해주세요.');
       setIsCreating(false);
       return;
     }
@@ -256,7 +257,7 @@ const SeniorFAQCreate: React.FC = () => {
         return;
       }
     } else {
-      alert('선배 FAQ 카테고리 중복 체크 중 오류가 발생했습니다.');
+      appAlert('선배 FAQ 카테고리 중복 체크 중 오류가 발생했습니다.');
       console.log('선배 FAQ 카테고리 중복 체크 중 오류가 발생했습니다.', checkResponse.error);
       setIsCreating(false);
       return;
@@ -267,11 +268,11 @@ const SeniorFAQCreate: React.FC = () => {
     });
   
     if (createResponse.payload?.statusCode === 201) {
-      alert('선배 FAQ가 성공적으로 생성되었습니다!');
+      appAlert('선배 FAQ가 성공적으로 생성되었습니다!');
       setIsCreating(false);
       navigate('/seniorfaqs');
     } else {
-      alert('선배 FAQ 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
+      appAlert('선배 FAQ 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
       console.log('선배 FAQ 생성 중 오류가 발생했습니다.', createResponse.error);
       setIsCreating(false);
     }

@@ -8,6 +8,7 @@ import { GetSeniorFAQRequest, GetSeniorFAQResponse, UpdateSeniorFAQRequest, Upda
 import { RootState } from '../../../redux/store';
 import { useNavigate } from 'react-router-dom';
 
+import { appAlert } from '../../ui/Dialog';
 interface SeniorFAQUpdateProps {
   senior_faq_id: string;
 }
@@ -107,7 +108,7 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
           });
         }
       } else {
-        alert('Senior FAQ 데이터를 불러오는 데 실패했습니다.');
+        appAlert('Senior FAQ 데이터를 불러오는 데 실패했습니다.');
         console.error('Senior FAQ 데이터를 불러오는 데 실패했습니다.', seniorFAQFetchApi.error);
       }
     };
@@ -123,7 +124,7 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
         const data = GetAllSeniorFAQCategoryApi.data.payload.data.categories;
         setCategory(data);
       } else {
-        alert('Senior FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
+        appAlert('Senior FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
         console.error('Senior FAQ 카테고리 데이터를 불러오는데 실패했습니다.', GetAllSeniorFAQCategoryApi.error);
       }
     };
@@ -212,7 +213,7 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
 
   const handleDeleteAnswer = (index: number) => {
     if (updatedSeniorFAQ.answer_ko.length === 1) {
-      alert('하나 이상의 답변을 입력해야 합니다!');
+      appAlert('하나 이상의 답변을 입력해야 합니다!');
       return;
     }
 
@@ -252,7 +253,7 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
       answer_ko.some((ans) => !ans.answer || !ans.title) ||
       answer_en.some((ans) => !ans.answer || !ans.title)
     ) {
-      alert('모든 필드를 채워주세요.');
+      appAlert('모든 필드를 채워주세요.');
       setIsUpdating(false);
       return;
     }
@@ -270,7 +271,7 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
     });
 
     if (hasDuplicate) {
-      alert('이미 존재하는 제목의 답변이 있습니다. 중복을 확인해주세요.');
+      appAlert('이미 존재하는 제목의 답변이 있습니다. 중복을 확인해주세요.');
       setIsUpdating(false);
       return;
     }
@@ -295,7 +296,7 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
         return;
       }
     } else {
-      alert('선배 FAQ 카테고리 중복 확인 중 오류가 발생했습니다.');
+      appAlert('선배 FAQ 카테고리 중복 확인 중 오류가 발생했습니다.');
       console.error('선배 FAQ 카테고리 중복 확인 중 오류가 발생했습니다.', checkResponse.error);
       setIsUpdating(false);
       return;
@@ -308,11 +309,11 @@ const SeniorFAQUpdate: React.FC<SeniorFAQUpdateProps> = ({ senior_faq_id }) => {
     });
 
     if (updateResponse.payload?.statusCode === 200) {
-      alert('선배 FAQ가 성공적으로 수정되었습니다!');
+      appAlert('선배 FAQ가 성공적으로 수정되었습니다!');
       setIsUpdating(false);
       navigate('/seniorfaqs');
     } else {
-      alert('선배 FAQ 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
+      appAlert('선배 FAQ 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
       console.error('선배 FAQ 수정 중 오류가 발생했습니다.', updateResponse.error);
       setIsUpdating(false);
     }

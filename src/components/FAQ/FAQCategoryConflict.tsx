@@ -11,32 +11,32 @@ const FAQCategoryConflict: React.FC<FAQCategoryConflictProps> = ({ conflictedDat
   const navigate = useNavigate();
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-2xl shadow-2xl w-[420px]">
-        <h2 className="text-xl font-bold text-gray-900 text-center">FAQ 카테고리 변경</h2>
-        <p className="text-sm text-gray-600 text-center mt-1">변경 사항이 기존 카테고리와 충돌이 발생했습니다.</p>
+    <div className="modal-overlay">
+      <div className="modal-panel max-w-[440px]">
+        <h2 className="text-xl font-bold text-ink text-center">FAQ 카테고리 변경</h2>
+        <p className="text-sm text-ink-2 text-center mt-1">변경 사항이 기존 카테고리와 충돌이 발생했습니다.</p>
 
         <div className="mt-5 space-y-4">
           {conflictedData.map((item, index) => (
-            <div key={index} className="p-4 border border-gray-300 rounded-lg bg-gray-50 shadow-sm">
-              <p className="text-sm font-semibold text-gray-900 mb-2">
+            <div key={index} className="p-4 border border-line rounded-xl bg-card shadow-sm">
+              <p className="text-sm font-semibold text-ink mb-2">
                 {item.field === "maincategory" ? "주요카테고리" : "하위카테고리"}
               </p>
 
               {/* 입력 카테고리 */}
-              <div className="p-3 bg-white border border-red-300 rounded-lg shadow-sm">
-                <p className="text-xs font-medium text-red-500">입력 카테고리</p>
-                <p className="text-sm text-gray-800 mt-1">한글: <span className="font-semibold">{item.input.ko}</span></p>
-                <p className="text-sm text-gray-800 mt-1">영어: <span className="font-semibold">{item.input.en }</span></p>
+              <div className="p-3 bg-surface border border-danger/40 rounded-xl shadow-sm">
+                <p className="text-xs font-medium text-danger">입력 카테고리</p>
+                <p className="text-sm text-ink mt-1">한글: <span className="font-semibold">{item.input.ko}</span></p>
+                <p className="text-sm text-ink mt-1">영어: <span className="font-semibold">{item.input.en }</span></p>
               </div>
 
               {/* 충돌 카테고리 (여러 개일 경우) */}
               <div className="mt-2 space-y-2">
                 {item.conflict.map((conflictItem, conflictIndex) => (
-                  <div key={conflictIndex} className="p-3 bg-white border border-green-300 rounded-lg shadow-sm">
-                    <p className="text-xs font-medium text-green-500">⚠️ 충돌 카테고리</p>
-                    <p className="text-sm text-gray-800 mt-1">한글: <span className="font-semibold">{conflictItem.ko}</span></p>
-                    <p className="text-sm text-gray-800 mt-1">영어: <span className="font-semibold">{conflictItem.en }</span></p>
+                  <div key={conflictIndex} className="p-3 bg-surface border border-success/40 rounded-xl shadow-sm">
+                    <p className="text-xs font-medium text-success">⚠️ 충돌 카테고리</p>
+                    <p className="text-sm text-ink mt-1">한글: <span className="font-semibold">{conflictItem.ko}</span></p>
+                    <p className="text-sm text-ink mt-1">영어: <span className="font-semibold">{conflictItem.en }</span></p>
                   </div>
                 ))}
               </div>
@@ -45,7 +45,7 @@ const FAQCategoryConflict: React.FC<FAQCategoryConflictProps> = ({ conflictedDat
         </div>
 
         <div className="mt-5 text-center">
-          <p className="text-sm text-gray-700 leading-relaxed">
+          <p className="text-sm text-ink leading-relaxed">
             충돌 카테고리 중 하나와 맞게 설정해주세요.
             <br />
             기존 카테고리를 변경하려면 수정 페이지로 이동해주세요.
@@ -54,14 +54,14 @@ const FAQCategoryConflict: React.FC<FAQCategoryConflictProps> = ({ conflictedDat
 
         <div className="mt-6 flex justify-center space-x-4">
           <button
-            className="bg-indigo-600 text-white font-medium px-5 py-2 rounded-lg hover:bg-indigo-700 transition shadow-md"
+            className="bg-accent text-white font-medium px-5 py-2 rounded-xl hover:bg-accent/90 transition shadow-md"
             onClick={() => navigate("/categories/faq/rename")}
           >
             카테고리 수정페이지로 이동
           </button>
           <button
             onClick={onHandleCategoryConflictClose}
-            className="bg-gray-300 text-gray-800 font-medium px-5 py-2 rounded-lg hover:bg-gray-400 transition"
+            className="bg-card-2 text-ink font-medium px-5 py-2 rounded-xl hover:bg-card-3 transition"
           >
             닫기
           </button>

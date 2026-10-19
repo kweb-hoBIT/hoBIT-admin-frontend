@@ -10,6 +10,7 @@ import {
 } from '../../../types/questionLog';
 import EntireAnalyzeForm from './EntireAnalyzeForm';
 
+import { appAlert } from '../../ui/Dialog';
 interface EntireAnalyzeProps {
   searchSubject: string;
   period: string;
@@ -50,7 +51,7 @@ const EntireAnalyze: React.FC<EntireAnalyzeProps> = ({
       if (analyzeApi?.data?.payload?.statusCode === 200) {
         setanalyzeData(analyzeApi.data.payload ?? null);
       } else {
-        alert('분석 데이터를 가져오는 중 오류 발생');
+        appAlert('분석 데이터를 가져오는 중 오류 발생');
         console.error('분석 데이터를 가져오는 중 오류 발생:', analyzeApi.error);
         setanalyzeData(null);
       }

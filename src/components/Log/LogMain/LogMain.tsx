@@ -20,14 +20,14 @@ const LogMain: React.FC = () => {
   };
 
   return (
-    <>
+    <section className="panel">
       <SelectLog selectedLog={selectedLog} onFilterChange={handleFilterChange}/>
       {selectedLog === 'FAQ' ?
         <AdminLogMain />
         :
         <QuestionLogMain />
       }
-    </>
+    </section>
   );
 };
 

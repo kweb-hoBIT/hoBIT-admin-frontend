@@ -13,6 +13,7 @@ import {
 
 import { RootState } from '../../../../redux/store';
 
+import { appAlert } from '../../../ui/Dialog';
 const SeniorFAQCategoryRename: React.FC = () => {
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
 
@@ -48,7 +49,7 @@ const SeniorFAQCategoryRename: React.FC = () => {
         }));
         setCategories(formattedCategories);
       } else {
-        alert('⚠️ 선배 FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
+        appAlert('⚠️ 선배 FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
         console.log(' 선배 FAQ 카테고리 데이터 오류:', GetAllSeniorFAQCategoryApi.data?.payload?.message);
       }
     }
@@ -96,7 +97,7 @@ const SeniorFAQCategoryRename: React.FC = () => {
     if (isUpdating) return;
     setIsUpdating(true);
     if (!renameData.prev_category || !renameData.new_category) {
-      alert('⚠️ 모든 필드를 입력해주세요.');
+      appAlert('⚠️ 모든 필드를 입력해주세요.');
       return;
     }
 
@@ -106,22 +107,22 @@ const SeniorFAQCategoryRename: React.FC = () => {
       });
 
       if (renameResponse.payload?.statusCode === 200) {
-        alert('카테고리 이름이 성공적으로 변경되었습니다.');
+        await appAlert('카테고리 이름이 성공적으로 변경되었습니다.');
         window.location.reload();
       } else if (renameResponse.payload?.statusCode === 400) {
-        alert('⚠️ 기존에 존재하는 카테고리로는 수정할 수 없습니다.');
+        appAlert('⚠️ 기존에 존재하는 카테고리로는 수정할 수 없습니다.');
         console.log('FAQ 카테고리 데이터 오류:', renameResponse.payload?.message);
         setIsUpdating(false);
         return;
       } else {
-        alert('⚠️ 카테고리 변경 중 오류가 발생했습니다.');
+        appAlert('⚠️ 카테고리 변경 중 오류가 발생했습니다.');
         console.log('FAQ 카테고리 데이터 오류:', renameResponse.payload?.message);
         setIsUpdating(false);
         return;
       }
     } catch (error) {
       console.log('카테고리 변경 오류:', error);
-      alert('⚠️ 카테고리 변경 중 오류가 발생했습니다.');
+      appAlert('⚠️ 카테고리 변경 중 오류가 발생했습니다.');
       setIsUpdating(false);
       return;
     }

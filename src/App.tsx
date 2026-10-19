@@ -1,101 +1,100 @@
 // App.tsx
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React, { Suspense, useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { MutationCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Provider } from 'react-redux';
 
 import store from './redux/store';
-
-// 페이지 컴포넌트 임포트
 import Layout from './components/Layout/Layout';
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
-import HomePage from './pages/HomePage';
-import FAQMainPage from './pages/FAQMainPage';
-import FAQDetailPage from './pages/FAQDetailPage';
-import FAQCreatePage from './pages/FAQCreatePage';
-import FAQUpdatePage from './pages/FAQUpdatePage';
-import SeniorFAQMainPage from './pages/SeniorFAQMainPage';
-import SeniorFAQDetailPage from './pages/SeniorFAQDetailPage';
-import SeniorFAQCreatePage from './pages/SeniorFAQCreatePage';
-import SeniorFAQUpdatePage from './pages/SeniorFAQUpdatePage';
-import CategoryMainPage from './pages/CategoryMainPage';
-import FAQCategoryRenamePage from './pages/FAQCategoryRenamePage';
-import FAQCategoryReorderPage from './pages/FAQCategoryReorderPage';
-import SeniorFAQCategoryRenamePage from './pages/SeniorFAQCategoryRenamePage';
-import SeniorFAQCategoryReorderPage from './pages/SeniorFAQCategoryReorderPage';
-import BulkUpdateEmailPage from './pages/BulkUpdateEmailPage';
-import BulkDeleteEmailPage from './pages/BulkDeleteEmailPage';
-import BulkUpdateAdminPage from './pages/BulkUpdateAdminPage';
-import BulkDeleteAdminPage from './pages/BulkDeleteAdminPage';
+import { DialogHost } from './components/ui/Dialog';
+import envs from './config/envs';
+import { ROUTES, warmRoutes, seniorCanOpen } from './routes';
+import { ChatProvider, useChat } from './components/Chat/ChatProvider';
 
-import LogsPage from './pages/LogsPage';
-import FAQLogDetailPage from './pages/FAQLogDetailPage';
-import SeniorFAQLogDetailPage from './pages/SeniorFAQLogDetailPage';
-import LogAnalyticsPage from './pages/LogAnalyticsPage';
-import UserFeedbackPage from './pages/UserFeedbackPage';
-import SwaggerPage from './pages/SwaggerPage';
+// 목록을 오가도 30초 안에는 받아 둔 데이터를 바로 보여줌 (예전엔 화면에 들어갈 때마다 새로 받았음).
+// 창을 다시 볼 때마다 다시 받던 것(refetchOnWindowFocus)도 끔.
+// 등록·수정·삭제(POST/PUT/DELETE)가 끝나면 받아 둔 데이터를 모두 낡은 것으로 표시 → 목록에 바로 반영
+const queryClient: QueryClient = new QueryClient({
+  mutationCache: new MutationCache({
+    onSuccess: () => queryClient.invalidateQueries(),
+  }),
+  defaultOptions: {
+    queries: { staleTime: 30_000, gcTime: 10 * 60_000, refetchOnWindowFocus: false, retry: 1 },
+  },
+});
 
-const queryClient = new QueryClient();
+/** 화면 코드를 받는 동안 — 헤더는 그대로 두고 본문 자리만 */
+const PageFallback: React.FC = () => (
+  <div className="flex justify-center py-24" aria-busy="true">
+    <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-card-2 border-t-accent-ink" />
+  </div>
+);
+
+/** 근로장학생 계정은 허용된 화면만 — 다른 주소로 들어오면 선배 FAQ로 (서버도 막지만 빈 화면·오류 대신) */
+const RoleGate: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { role } = useChat();
+  const { pathname } = useLocation();
+  if (role === 'senior' && !seniorCanOpen(pathname)) return <Navigate to="/seniorfaqs" replace />;
+  return <>{children}</>;
+};
+
+/** 베타 점검 스위치 — 관리자 API가 "점검 중"(503)이라고 알려주면 안내만 (연결 실패는 막지 않음) */
+const MaintenanceGate: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [message, setMessage] = useState<string | null>(null);
+  useEffect(() => {
+    const ctrl = new AbortController();
+    const t = window.setTimeout(() => ctrl.abort(), 4000);
+    fetch(`${envs.HOBIT_ADMIN_BACKEND_ENDPOINT}/health`, { signal: ctrl.signal })
+      .then(async (r) => {
+        if (r.status !== 503) return;
+        const body = await r.json().catch(() => null);
+        if (body?.maintenance) setMessage(body.message || '서비스 점검 중이에요.');
+      })
+      .catch(() => undefined)
+      .finally(() => window.clearTimeout(t));
+    return () => ctrl.abort();
+  }, []);
+  if (!message) return <>{children}</>;
+  return (
+    // 학생 화면의 서버 오류 화면과 같은 모양 (우는 hoBIT)
+    <div className="flex min-h-screen flex-col items-center justify-center bg-card px-4 text-center">
+      <img src="/error_image.png" alt="" className="mb-6 w-48 md:w-64" />
+      <h1 className="mb-2 text-xl font-semibold text-ink">잠시 쉬어가요</h1>
+      <p className="mb-6 text-ink-2">{message}</p>
+      <button type="button" onClick={() => window.location.reload()} className="rounded-full bg-accent px-6 py-2 font-semibold text-white hover:bg-accent/90">
+        새로고침
+      </button>
+    </div>
+  );
+};
 
 const App: React.FC = () => {
+  useEffect(() => {
+    warmRoutes();
+  }, []);
 
   return (
+    <MaintenanceGate>
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <Router>
+          <ChatProvider>
           <Layout>
-            <Routes>
-              {/* 시작 페이지 */}
-              <Route path="/" element={<Navigate to="/login" />} />
-
-              {/* Swagger 페이지 */}
-              <Route path="/api-docs" element={<SwaggerPage />} />
-              
-              {/* 인증 관련 페이지 */}
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<SignupPage />} />
-              
-              {/* 메인 페이지 */}
-              <Route path="/home" element={<HomePage />} />
-
-              {/* FAQ 관련 페이지 */}
-              <Route path="/faqs" element={<FAQMainPage />} />
-              <Route path="/faqs/:id" element={<FAQDetailPage />} />
-              <Route path="/faqs/create" element={<FAQCreatePage />} />
-              <Route path="/faqs/update/:id" element={<FAQUpdatePage />} />
-
-              {/* Senior FAQ 관련 페이지 */}
-              <Route path="/seniorfaqs" element={<SeniorFAQMainPage />} />
-              <Route path="/seniorfaqs/:id" element={<SeniorFAQDetailPage />} />
-              <Route path="/seniorfaqs/create" element={<SeniorFAQCreatePage />} />
-              <Route path="/seniorfaqs/update/:id" element={<SeniorFAQUpdatePage />} />
-
-              {/* 카테고리 관련 페이지*/}
-              <Route path="/categories" element={<CategoryMainPage />} />
-              <Route path="/categories/faq/rename" element={<FAQCategoryRenamePage />} />
-              <Route path="/categories/faq/reorder" element={<FAQCategoryReorderPage />} />
-              <Route path="/categories/seniorfaq/rename" element={<SeniorFAQCategoryRenamePage />} />
-              <Route path="/categories/seniorfaq/reorder" element={<SeniorFAQCategoryReorderPage />} />
-              <Route path="/categories/email/bulk-delete" element={<BulkDeleteEmailPage />} />
-              <Route path="/categories/email/bulk-update" element={<BulkUpdateEmailPage />} />
-              <Route path="/categories/admin/bulk-delete" element={<BulkDeleteAdminPage />} />
-              <Route path="/categories/admin/bulk-update" element={<BulkUpdateAdminPage />} />
-              
-              {/* 로그 관련 페이지 */}
-              <Route path="/logs" element={<LogsPage />} />
-              <Route path="/adminlogs/faqlogs/:id" element={<FAQLogDetailPage />} />
-              <Route path="/adminlogs/seniorfaqlogs/:id" element={<SeniorFAQLogDetailPage />} />
-              <Route path="/logs/analytics" element={<LogAnalyticsPage />} />
-
-              {/* 유저 피드백 관련 페이지 */}
-              <Route path="/userfeedbacks" element={<UserFeedbackPage />} />
-              
+            <Suspense fallback={<PageFallback />}>
+              <Routes>
+                <Route path="/" element={<Navigate to="/login" />} />
+                {ROUTES.map(({ path, Component }) => (
+                  <Route key={path} path={path} element={<RoleGate><Component /></RoleGate>} />
+                ))}
               </Routes>
-            </Layout>
+            </Suspense>
+          </Layout>
+          </ChatProvider>
+          <DialogHost />
         </Router>
       </QueryClientProvider>
     </Provider>
+    </MaintenanceGate>
   );
 };
 
