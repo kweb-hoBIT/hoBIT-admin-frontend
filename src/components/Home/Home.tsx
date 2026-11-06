@@ -369,14 +369,14 @@ const Home: React.FC = () => {
         </Reveal>
       </div>
 
-      {/* 많이 본 FAQ · FAQ 없이 들어온 질문 */}
+      {/* 많이 쓰인 FAQ · 답을 못 찾은 질문 */}
       <div className="mt-4 grid grid-cols-2 gap-4">
         <Reveal index={6}>
-          <Card title="이번 주 많이 본 FAQ">
+          <Card title="이번 주 많이 쓰인 FAQ" action={<span className="text-xs text-ink-3">직접 열람 + 답변 근거로 인용</span>}>
             {dash ? (
               <RankBars
                 items={dash.top_faqs.map((f) => ({ label: f.question_ko, count: f.count, to: `/faqs/${f.faq_id}` }))}
-                empty="이번 주 FAQ 조회 기록이 없어요"
+                empty="이번 주 FAQ가 쓰인 기록이 없어요"
               />
             ) : (
               <Placeholder failed={failed} className="h-[200px]" />
@@ -384,11 +384,11 @@ const Home: React.FC = () => {
           </Card>
         </Reveal>
         <Reveal index={7}>
-          <Card title="FAQ 없이 많이 들어온 질문" action={<span className="text-xs text-ink-3">FAQ로 만들면 좋은 후보</span>}>
+          <Card title="이번 주 답을 못 찾은 질문" action={<span className="text-xs text-ink-3">FAQ로 만들면 좋은 후보</span>}>
             {dash ? (
               <RankBars
                 items={dash.top_questions.map((q) => ({ label: q.question, count: q.count }))}
-                empty="이번 주 기록이 없어요"
+                empty="이번 주에는 답을 못 찾은 질문이 없어요 🎉"
               />
             ) : (
               <Placeholder failed={failed} className="h-[200px]" />
