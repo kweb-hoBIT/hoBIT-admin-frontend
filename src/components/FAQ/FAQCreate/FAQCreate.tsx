@@ -6,11 +6,13 @@ import FAQCategoryConflict from '../FAQCategoryConflict';
 import { selectAuth } from '../../../redux/authSlice';
 import { CreateFAQRequest, CreateFAQResponse, GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, CreateCheckFAQCategoryConflictRequest, CheckFAQCategoryConflictResponse, GetAllFAQResponse, GetAllFAQRequest } from '../../../types/faq';
 import { RootState } from '../../../redux/store';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { appAlert } from '../../ui/Dialog';
 const FAQCreate: React.FC = () => {
   const navigate = useNavigate();
+  // 대시보드 "답을 못 찾은 질문"에서 들어오면 그 질문을 미리 채움 (/faqs/create?question=...)
+  const [searchParams] = useSearchParams();
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
   const [isCreating, setIsCreating] = useState(false);
   const [category, setCategory] = useState<GetAllFAQCategoryResponse['data']['categories']>([
@@ -33,7 +35,7 @@ const FAQCreate: React.FC = () => {
     maincategory_en: '',
     subcategory_ko: '',
     subcategory_en: '',
-    question_ko: '',
+    question_ko: (searchParams.get('question') ?? '').slice(0, 300),
     question_en: '',
     answer_ko: [{ answer: '', url: '', email: '', phone: '' }],
     answer_en: [{ answer: '', url: '', email: '', phone: '' }],

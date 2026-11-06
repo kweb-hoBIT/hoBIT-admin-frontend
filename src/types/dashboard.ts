@@ -16,6 +16,8 @@ export type GetDashboardResponse = {
     daily: { date: string; ko: number; en: number }[];
     top_faqs: { faq_id: number; question_ko: string; count: number }[];
     top_questions: { question: string; count: number }[];
+    // 홈페이지·FAQ 정기 수집의 마지막 결과 (RAG를 못 부르면 null)
+    pipeline: { finished_at: string; scope: string; ok: boolean; problems: string[]; last_ok_at: string | null } | null;
     recent_feedbacks: {
       user_feedback_id: number;
       question_ko: string | null;

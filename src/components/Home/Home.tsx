@@ -252,6 +252,40 @@ const UpdatesButton: React.FC = () => {
   );
 };
 
+// 정기 수집은 3시간마다 — 8시간 넘게 기록이 없으면 멈춘 것으로 봄
+const PIPELINE_STALE_MS = 8 * 3600 * 1000;
+const SCOPE_LABEL: Record<string, string> = { all: '전체', boards: '공지 게시판', static: '안내 페이지' };
+
+/** 데이터 수집 상태 — 정상이면 한 줄, 문제가 있으면 눈에 띄게 (조용히 실패하던 문제를 바로 알 수 있게) */
+const PipelineStatus: React.FC<{ p: NonNullable<GetDashboardResponse['data']['pipeline']> }> = ({ p }) => {
+  const stale = Date.now() - new Date(p.finished_at).getTime() > PIPELINE_STALE_MS;
+  if (p.ok && !stale) {
+    return (
+      <p className="mb-4 flex items-center gap-2 text-sm text-ink-3">
+        <span className="h-2 w-2 rounded-full bg-success" />
+        홈페이지·FAQ 데이터 수집 정상 · 마지막 {timeAgo(p.finished_at)} ({SCOPE_LABEL[p.scope] ?? p.scope})
+      </p>
+    );
+  }
+  return (
+    <div className="mb-4 rounded-2xl border border-danger/30 bg-danger-soft px-5 py-4">
+      <p className="font-semibold text-danger">
+        {stale && p.ok ? '데이터 수집이 멈춘 것 같아요' : '데이터 수집에 문제가 있어요'}
+      </p>
+      <ul className="mt-1 list-disc pl-5 text-sm text-ink-2">
+        {stale && <li>마지막 수집이 {timeAgo(p.finished_at)}이에요 (평소 3시간마다)</li>}
+        {p.problems.map((m) => (
+          <li key={m}>{m}</li>
+        ))}
+      </ul>
+      <p className="mt-1 text-sm text-ink-3">
+        챗봇은 마지막으로 정상 수집된 자료로 계속 답해요
+        {p.last_ok_at ? ` (${timeAgo(p.last_ok_at)})` : ''}. 개발자에게 알려 주세요.
+      </p>
+    </div>
+  );
+};
+
 const Home: React.FC = () => {
   const { role } = useChat();
   // 나이트·라이트 모드를 바꾸면 카드가 떠오르고 숫자가 올라가는 모션을 다시 재생 (아래 내용을 새로 그림 — 데이터는 캐시 그대로)
@@ -294,6 +328,8 @@ const Home: React.FC = () => {
           </p>
         </div>
       )}
+
+      {dash?.pipeline && <PipelineStatus p={dash.pipeline} />}
 
       {/* 숫자 카드 */}
       {!t ? (
@@ -384,10 +420,10 @@ const Home: React.FC = () => {
           </Card>
         </Reveal>
         <Reveal index={7}>
-          <Card title="이번 주 답을 못 찾은 질문" action={<span className="text-xs text-ink-3">FAQ로 만들면 좋은 후보</span>}>
+          <Card title="이번 주 답을 못 찾은 질문" action={<span className="text-xs text-ink-3">누르면 FAQ로 만들기</span>}>
             {dash ? (
               <RankBars
-                items={dash.top_questions.map((q) => ({ label: q.question, count: q.count }))}
+                items={dash.top_questions.map((q) => ({ label: q.question, count: q.count, to: `/faqs/create?question=${encodeURIComponent(q.question)}` }))}
                 empty="이번 주에는 답을 못 찾은 질문이 없어요 🎉"
               />
             ) : (
