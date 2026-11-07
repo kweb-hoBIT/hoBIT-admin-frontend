@@ -113,12 +113,14 @@ import { SwaggerRequest, SwaggerResponse } from './swagger';
 import {
   GetKeywordRulesRequest, GetKeywordRulesResponse, CreateKeywordRuleRequest, CreateKeywordRuleResponse,
   UpdateKeywordRuleRequest, UpdateKeywordRuleResponse, DeleteKeywordRuleRequest, DeleteKeywordRuleResponse,
+  GetSearchSourcesRequest, GetSearchSourcesResponse,
 } from './keyword';
 import {
   GetProfileOptionsRequest, GetProfileOptionsResponse, CreateProfileOptionRequest, CreateProfileOptionResponse,
   UpdateProfileOptionRequest, UpdateProfileOptionResponse, DeleteProfileOptionRequest, DeleteProfileOptionResponse,
 } from './profileOption';
 import { GetDashboardRequest, GetDashboardResponse } from './dashboard';
+import { GetNoticeChangesRequest, GetNoticeChangesResponse, UpdateNoticeChangeRequest, UpdateNoticeChangeResponse } from './noticeChange';
 
 import { BulkUpdateEmailRequest, BulkUpdateEmailResponse, GetAllEmailsRequest, GetAllEmailsResponse, BulkDeleteEmailRequest, BulkDeleteEmailResponse } from './email';
 
@@ -150,6 +152,8 @@ export type HobitAdminGetApiRequest =
   | CountQuestionLogsRequest
   | GetKeywordRulesRequest
   | GetProfileOptionsRequest
+  | GetNoticeChangesRequest
+  | GetSearchSourcesRequest
   | GetDashboardRequest;
 
 export type HobitAdminPostApiRequest =
@@ -180,7 +184,8 @@ export type HobitAdminPutApiRequest =
   | BulkUpdateEmailRequest
   | BulkUpdateAdminRequest
   | UpdateKeywordRuleRequest
-  | UpdateProfileOptionRequest;
+  | UpdateProfileOptionRequest
+  | UpdateNoticeChangeRequest;
 
 export type HobitAdminDeleteApiRequest =
   | DeleteAccountReqeust
@@ -198,6 +203,9 @@ export type HobitAdminDeleteApiRequest =
 export type HobitAdminApiResponse =
   | GetKeywordRulesResponse
   | GetProfileOptionsResponse
+  | GetNoticeChangesResponse
+  | GetSearchSourcesResponse
+  | UpdateNoticeChangeResponse
   | CreateProfileOptionResponse
   | UpdateProfileOptionResponse
   | DeleteProfileOptionResponse

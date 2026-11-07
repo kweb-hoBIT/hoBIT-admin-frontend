@@ -7,6 +7,7 @@ import { prefetchRoute } from '../../routes';
 import { CountUp, Reveal } from '../ui/motion';
 import LanguageBadge from '../ui/LanguageBadge';
 import LiveChatCard from './LiveChatCard';
+import NoticeChangesCard from './NoticeChangesCard';
 import { THEME_EVENT } from '../../theme';
 
 type Dashboard = GetDashboardResponse['data'];
@@ -330,6 +331,9 @@ const Home: React.FC = () => {
       )}
 
       {dash?.pipeline && <PipelineStatus p={dash.pipeline} />}
+
+      {/* 공지로 바뀐 FAQ·안내 — 있을 때만 */}
+      <NoticeChangesCard />
 
       {/* 숫자 카드 */}
       {!t ? (

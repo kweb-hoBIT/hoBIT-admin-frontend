@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { useHobitMutatePostApi, useHobitMutatePutApi } from '../../hooks/hobitAdmin';
+import { useHobitMutatePostApi, useHobitMutatePutApi, useHobitQueryGetApi } from '../../hooks/hobitAdmin';
 import {
   CreateKeywordRuleRequest,
   CreateKeywordRuleResponse,
+  GetSearchSourcesRequest,
+  GetSearchSourcesResponse,
   KeywordRule,
   UpdateKeywordRuleRequest,
   UpdateKeywordRuleResponse,
@@ -11,6 +13,7 @@ import { appAlert } from '../ui/Dialog';
 import type { FaqOption } from './KeywordMain';
 
 const MAX_PINNED = 5;
+const MAX_SOURCES = 6;
 
 /** 연관 단어 입력 — Enter·쉼표로 추가, 빈 칸에서 Backspace로 마지막 단어 삭제, "a, b, c" 붙여넣기 */
 export const ChipInput: React.FC<{ value: string[]; onChange: (v: string[]) => void; placeholder: string }> = ({ value, onChange, placeholder }) => {
@@ -160,6 +163,9 @@ const KeywordEditor: React.FC<Props> = ({ rule, rules, faqs, onClose, onSaved })
   const [keyword, setKeyword] = useState(rule?.keyword ?? '');
   const [synonyms, setSynonyms] = useState<string[]>(rule?.synonyms ?? []);
   const [pinned, setPinned] = useState<number[]>(rule?.pinned_faq_ids ?? []);
+  const [sources, setSources] = useState<string[]>(rule?.search_sources ?? []);
+  const sourceApi = useHobitQueryGetApi<GetSearchSourcesRequest, GetSearchSourcesResponse>('keywords/sources');
+  const sourceOptions = sourceApi.data?.payload?.data?.sources ?? [];
   const [saving, setSaving] = useState(false);
   const firstRef = useRef<HTMLInputElement>(null);
   const createApi = useHobitMutatePostApi<CreateKeywordRuleRequest, CreateKeywordRuleResponse>('keywords');
@@ -185,7 +191,7 @@ const KeywordEditor: React.FC<Props> = ({ rule, rules, faqs, onClose, onSaved })
     if (!k) return appAlert('대표 키워드를 입력해주세요.');
     if (rules.some((r) => r.id !== rule?.id && r.keyword === k)) return appAlert(`"${k}"은(는) 이미 등록된 대표 키워드예요.`);
     setSaving(true);
-    const body = { keyword: k, synonyms: synonyms.filter((s) => s !== k), pinned_faq_ids: pinned };
+    const body = { keyword: k, synonyms: synonyms.filter((s) => s !== k), pinned_faq_ids: pinned, search_sources: sources };
     const res = rule ? await updateApi({ params: { id: String(rule.id) }, body }) : await createApi({ body });
     setSaving(false);
     if (res.payload?.statusCode === 200) onSaved();
@@ -217,6 +223,37 @@ const KeywordEditor: React.FC<Props> = ({ rule, rules, faqs, onClose, onSaved })
         </label>
         <p className="mb-1.5 text-xs text-ink-3">예: “현장실습” → “현장실습이 궁금해!”가 추천 첫 번째로</p>
         <FaqPicker faqs={faqs} value={pinned} onChange={setPinned} hint={keyword.trim()} />
+
+        <label className="mt-5 block text-sm font-semibold text-ink">
+          먼저 찾아볼 곳 <span className="font-normal text-ink-3">(선택, 최대 {MAX_SOURCES}개)</span>
+        </label>
+        <p className="mb-1.5 text-xs text-ink-3">
+          이 키워드로 질문하면 고른 자료에서 먼저 찾아 답변 근거로 써요. 예: “휴학” → 학사 운영 규정, 홈페이지 · 학사안내
+        </p>
+        {sourceOptions.length === 0 ? (
+          <p className="text-xs text-ink-3">선택지를 불러오지 못했어요 (챗봇 서버 확인 필요). 저장된 값은 그대로 유지돼요.</p>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {sourceOptions.map((o) => {
+              const on = sources.includes(o.id);
+              return (
+                <button
+                  key={o.id}
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() =>
+                    setSources((cur) =>
+                      on ? cur.filter((x) => x !== o.id) : cur.length >= MAX_SOURCES ? cur : [...cur, o.id]
+                    )
+                  }
+                  className={`rounded-full border px-3 py-1 text-sm ${on ? 'border-accent bg-accent text-white' : 'border-line text-ink-2 hover:bg-card'}`}
+                >
+                  {o.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         <div className="mt-6 flex justify-end gap-2">
           <button type="button" onClick={onClose} className="bg-card px-5 py-2.5 font-semibold text-ink-2 hover:bg-card-2">

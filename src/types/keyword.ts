@@ -5,8 +5,14 @@ export type KeywordRule = {
   synonyms: string[];
   pinned_faq_ids: number[];
   pinned_faqs: { faq_id: number; question_ko: string | null }[];
+  search_sources: string[]; // 먼저 찾아볼 곳 (출처 이름)
   updated_at: string;
 };
+
+// '먼저 찾아볼 곳' 선택지 (RAG 서버 목록)
+export type SearchSource = { id: string; label: string; group: 'static' | 'dynamic' };
+export type GetSearchSourcesRequest = {};
+export type GetSearchSourcesResponse = { statusCode: number; message: string; data: { sources: SearchSource[] } };
 
 export type GetKeywordRulesRequest = {};
 export type GetKeywordRulesResponse = {
@@ -15,7 +21,7 @@ export type GetKeywordRulesResponse = {
   data: { rules: KeywordRule[] };
 };
 
-type KeywordRuleBody = { keyword: string; synonyms: string[]; pinned_faq_ids: number[] };
+type KeywordRuleBody = { keyword: string; synonyms: string[]; pinned_faq_ids: number[]; search_sources: string[] };
 
 export type CreateKeywordRuleRequest = { body: KeywordRuleBody };
 export type CreateKeywordRuleResponse = { statusCode: number; message: string; data?: { id: number } };
