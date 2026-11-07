@@ -14,6 +14,10 @@ const GROUPS = [
     ],
   },
   {
+    title: '챗봇 설정',
+    items: [{ path: '/categories/profile-options', label: '프로필 항목 (학과·전공 유형·학적 상태)' }],
+  },
+  {
     title: '일괄 관리',
     items: [
       { path: '/categories/email/bulk-update', label: '이메일 변경' },
@@ -34,7 +38,7 @@ const CategoryMain: React.FC = () => {
   return (
   <div className="mx-auto max-w-[880px] py-10">
     <h1 className="mb-1 text-[28px] font-bold text-ink">관리</h1>
-    <p className="mb-6 text-ink-2">{role === 'senior' ? '선배 FAQ 카테고리 이름·순서를 바꿉니다.' : '카테고리 이름·순서와 이메일·관리자를 한꺼번에 바꿉니다.'}</p>
+    <p className="mb-6 text-ink-2">{role === 'senior' ? '선배 FAQ 카테고리 이름·순서를 바꿉니다.' : '카테고리 이름·순서, 챗봇 프로필 항목, 이메일·관리자를 관리합니다.'}</p>
     <div className={`grid gap-6 ${groups.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
       {groups.map((group) => (
         <section key={group.title} className="rounded-2xl border border-line bg-surface p-5">

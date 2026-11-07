@@ -13,7 +13,7 @@ import type { FaqOption } from './KeywordMain';
 const MAX_PINNED = 5;
 
 /** 연관 단어 입력 — Enter·쉼표로 추가, 빈 칸에서 Backspace로 마지막 단어 삭제, "a, b, c" 붙여넣기 */
-const ChipInput: React.FC<{ value: string[]; onChange: (v: string[]) => void; placeholder: string }> = ({ value, onChange, placeholder }) => {
+export const ChipInput: React.FC<{ value: string[]; onChange: (v: string[]) => void; placeholder: string }> = ({ value, onChange, placeholder }) => {
   const [draft, setDraft] = useState('');
   const add = (raw: string) => {
     const words = raw.split(/[,，\n]/).map((w) => w.trim()).filter(Boolean);

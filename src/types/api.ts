@@ -114,6 +114,10 @@ import {
   GetKeywordRulesRequest, GetKeywordRulesResponse, CreateKeywordRuleRequest, CreateKeywordRuleResponse,
   UpdateKeywordRuleRequest, UpdateKeywordRuleResponse, DeleteKeywordRuleRequest, DeleteKeywordRuleResponse,
 } from './keyword';
+import {
+  GetProfileOptionsRequest, GetProfileOptionsResponse, CreateProfileOptionRequest, CreateProfileOptionResponse,
+  UpdateProfileOptionRequest, UpdateProfileOptionResponse, DeleteProfileOptionRequest, DeleteProfileOptionResponse,
+} from './profileOption';
 import { GetDashboardRequest, GetDashboardResponse } from './dashboard';
 
 import { BulkUpdateEmailRequest, BulkUpdateEmailResponse, GetAllEmailsRequest, GetAllEmailsResponse, BulkDeleteEmailRequest, BulkDeleteEmailResponse } from './email';
@@ -145,6 +149,7 @@ export type HobitAdminGetApiRequest =
   | CountAdminLogsRequest
   | CountQuestionLogsRequest
   | GetKeywordRulesRequest
+  | GetProfileOptionsRequest
   | GetDashboardRequest;
 
 export type HobitAdminPostApiRequest =
@@ -160,7 +165,8 @@ export type HobitAdminPostApiRequest =
   | CreateCheckSeniorFAQCategoryConflictRequest
   | UpdateCheckSeniorFAQCategoryConflictRequest
   | TranslateFAQRequest
-  | CreateKeywordRuleRequest;
+  | CreateKeywordRuleRequest
+  | CreateProfileOptionRequest;
 
 export type HobitAdminPutApiRequest =
   | UpdatePasswordRequest
@@ -173,7 +179,8 @@ export type HobitAdminPutApiRequest =
   | UpdateSeniorFAQCategoryOrderRequest
   | BulkUpdateEmailRequest
   | BulkUpdateAdminRequest
-  | UpdateKeywordRuleRequest;
+  | UpdateKeywordRuleRequest
+  | UpdateProfileOptionRequest;
 
 export type HobitAdminDeleteApiRequest =
   | DeleteAccountReqeust
@@ -185,10 +192,15 @@ export type HobitAdminDeleteApiRequest =
   | DeleteUserFeedbackRequest
   | BulkDeleteEmailRequest
   | BulkDeleteAdminRequest
-  | DeleteKeywordRuleRequest;
+  | DeleteKeywordRuleRequest
+  | DeleteProfileOptionRequest;
 
 export type HobitAdminApiResponse =
   | GetKeywordRulesResponse
+  | GetProfileOptionsResponse
+  | CreateProfileOptionResponse
+  | UpdateProfileOptionResponse
+  | DeleteProfileOptionResponse
   | CreateKeywordRuleResponse
   | UpdateKeywordRuleResponse
   | DeleteKeywordRuleResponse

@@ -36,6 +36,7 @@ export const ROUTES: RouteDef[] = [
   def('/categories/email/bulk-update', () => import('./pages/BulkUpdateEmailPage')),
   def('/categories/admin/bulk-delete', () => import('./pages/BulkDeleteAdminPage')),
   def('/categories/admin/bulk-update', () => import('./pages/BulkUpdateAdminPage')),
+  def('/categories/profile-options', () => import('./pages/ProfileOptionPage')),
 
   def('/logs', () => import('./pages/LogsPage')),
   def('/logs/analytics', () => import('./pages/LogAnalyticsPage')),
