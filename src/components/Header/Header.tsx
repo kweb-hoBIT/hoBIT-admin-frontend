@@ -34,6 +34,7 @@ const NAV: { path: string; label: string; pin?: boolean }[] = [
   { path: "/logs", label: "로그" },
   { path: "/logs/analytics", label: "로그 분석" },
   { path: "/userfeedbacks", label: "피드백" },
+  { path: "/answer-reviews", label: "답변 확인" },
   { path: "/categories", label: "관리" },
   { path: "/chats", label: "채팅", pin: true }, // 맨 뒤 — 대기·안 읽은 메시지가 있으면 배지, 좁아도 "더보기"로 접지 않음
 ];

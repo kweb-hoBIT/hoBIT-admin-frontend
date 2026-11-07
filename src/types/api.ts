@@ -120,6 +120,7 @@ import {
   UpdateProfileOptionRequest, UpdateProfileOptionResponse, DeleteProfileOptionRequest, DeleteProfileOptionResponse,
 } from './profileOption';
 import { GetDashboardRequest, GetDashboardResponse } from './dashboard';
+import { GetAnswerReviewsRequest, GetAnswerReviewsResponse, GetAnswerTraceRequest, GetAnswerTraceResponse, UpdateAnswerReviewRequest, UpdateAnswerReviewResponse } from './answerReview';
 import { GetNoticeChangesRequest, GetNoticeChangesResponse, UpdateNoticeChangeRequest, UpdateNoticeChangeResponse } from './noticeChange';
 
 import { BulkUpdateEmailRequest, BulkUpdateEmailResponse, GetAllEmailsRequest, GetAllEmailsResponse, BulkDeleteEmailRequest, BulkDeleteEmailResponse } from './email';
@@ -153,6 +154,8 @@ export type HobitAdminGetApiRequest =
   | GetKeywordRulesRequest
   | GetProfileOptionsRequest
   | GetNoticeChangesRequest
+  | GetAnswerReviewsRequest
+  | GetAnswerTraceRequest
   | GetSearchSourcesRequest
   | GetDashboardRequest;
 
@@ -185,7 +188,8 @@ export type HobitAdminPutApiRequest =
   | BulkUpdateAdminRequest
   | UpdateKeywordRuleRequest
   | UpdateProfileOptionRequest
-  | UpdateNoticeChangeRequest;
+  | UpdateNoticeChangeRequest
+  | UpdateAnswerReviewRequest;
 
 export type HobitAdminDeleteApiRequest =
   | DeleteAccountReqeust
@@ -204,6 +208,9 @@ export type HobitAdminApiResponse =
   | GetKeywordRulesResponse
   | GetProfileOptionsResponse
   | GetNoticeChangesResponse
+  | GetAnswerReviewsResponse
+  | GetAnswerTraceResponse
+  | UpdateAnswerReviewResponse
   | GetSearchSourcesResponse
   | UpdateNoticeChangeResponse
   | CreateProfileOptionResponse
