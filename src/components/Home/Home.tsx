@@ -8,6 +8,7 @@ import { CountUp, Reveal } from '../ui/motion';
 import LanguageBadge from '../ui/LanguageBadge';
 import LiveChatCard from './LiveChatCard';
 import NoticeChangesCard from './NoticeChangesCard';
+import QualityCard, { TestsStatus } from './QualityCard';
 import { THEME_EVENT } from '../../theme';
 
 type Dashboard = GetDashboardResponse['data'];
@@ -331,9 +332,12 @@ const Home: React.FC = () => {
       )}
 
       {dash?.pipeline && <PipelineStatus p={dash.pipeline} />}
+      {dash?.tests && <TestsStatus t={dash.tests} />}
 
       {/* 공지로 바뀐 FAQ·안내 — 있을 때만 */}
       <NoticeChangesCard />
+
+      {dash?.quality && <QualityCard weeks={dash.quality} />}
 
       {/* 숫자 카드 */}
       {!t ? (
