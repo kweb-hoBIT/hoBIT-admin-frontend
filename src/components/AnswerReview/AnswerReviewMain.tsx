@@ -181,7 +181,7 @@ const AnswerReviewMain: React.FC = () => {
 
   return (
     <div className="py-8">
-      <h1 className="text-xl sm:text-2xl sm:text-[1.9rem] font-bold text-ink">답변 확인</h1>
+      <h1 className="text-2xl sm:text-[1.9rem] font-bold text-ink">답변 확인</h1>
       <p className="mt-1 text-ink-2">최근 30일 동안 확인이 필요한 AI 답변이에요. 원인을 골라 처리하면 무엇을 고칠지 정할 수 있어요.</p>
 
       <div className="mt-5 flex flex-wrap gap-2">

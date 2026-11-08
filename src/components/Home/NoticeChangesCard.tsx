@@ -61,7 +61,7 @@ const NoticeChangesCard: React.FC = () => {
                 c.notice_title
               )}
             </p>
-            <div className="mt-2 flex gap-2">
+            <div className="mt-2 flex flex-wrap gap-2">
               {c.faq_id && (
                 <Link to={`/faqs/${c.faq_id}`} className="rounded-lg bg-accent px-3 py-1 text-white">
                   FAQ 고치러 가기

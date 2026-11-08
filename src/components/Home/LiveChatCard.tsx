@@ -16,7 +16,7 @@ const waitLabel = (m: number) => (m < 1 ? '방금' : m < 60 ? `${m}분` : `${Mat
 
 const Stat: React.FC<{ label: string; value: number; sub?: string; tone?: 'accent' | 'warn'; delay: number }> = ({ label, value, sub, tone, delay }) => (
   // 이름은 한 줄로 (줄바꿈되면 숫자 높이가 어긋남)
-  <div className="min-w-0 whitespace-nowrap px-4 py-1 first:pl-0">
+  <div className="min-w-0 whitespace-nowrap py-1 sm:px-4 sm:first:pl-0">
     <p className="text-sm font-semibold text-ink-2">{label}</p>
     <p
       className={`mt-1 text-[1.9rem] font-bold leading-none tracking-tight ${
@@ -87,7 +87,7 @@ const LiveChatCard: React.FC<{ className?: string }> = ({ className = '' }) => {
   return (
     <Reveal index={0} className={className}>
       <section className={`flex h-full flex-col rounded-2xl border bg-surface p-5 ${busy ? 'border-accent-ink/40' : 'border-line'}`}>
-        <div className="mb-4 flex items-center gap-3">
+        <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1">
           <h2 className="font-bold text-ink">실시간 채팅</h2>
           <span className={`flex items-center gap-1.5 text-xs ${connected ? 'text-success' : 'text-ink-3'}`}>
             <i className={`h-2 w-2 rounded-full ${connected ? 'bg-success' : 'bg-ink-3'}`} />
@@ -101,7 +101,8 @@ const LiveChatCard: React.FC<{ className?: string }> = ({ className = '' }) => {
 
         <div className="flex flex-1 flex-col gap-4">
           {/* 위: 숫자 네 칸(같은 너비), 아래: 채팅 목록이 남는 높이를 채움 — 옆 품질 카드와 높이를 맞춰도 빈 곳이 안 생김 */}
-          <div className="grid grid-cols-4 divide-x divide-line">
+          {/* 휴대폰: 두 칸씩 두 줄 */}
+          <div className="grid grid-cols-2 gap-y-3 sm:grid-cols-4 sm:gap-y-0 sm:divide-x sm:divide-line">
             <Stat label="대기" value={waiting.length} sub={waiting.length ? `가장 오래 ${waitLabel(oldest)}` : '없음'} tone="warn" delay={0} />
             <Stat label="내 진행 중" value={mine.length} sub={role === 'staff' && summary ? `전체 ${summary.activeCount}건` : undefined} delay={80} />
             <Stat

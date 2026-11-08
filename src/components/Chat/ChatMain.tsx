@@ -513,7 +513,7 @@ const ChatMain: React.FC = () => {
     <div className="py-6">
       {/* 상단: 연결 상태 · (근로장학생) 채팅 가능 · (행정실) 설정 */}
       <div className="mb-4 flex flex-wrap items-center gap-3">
-        <h1 className="text-xl sm:text-2xl sm:text-[1.9rem] font-bold text-ink">채팅</h1>
+        <h1 className="text-2xl sm:text-[1.9rem] font-bold text-ink">채팅</h1>
         <span className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-sm ${chat.connected ? 'bg-success-soft text-success' : 'bg-card text-ink-3'}`}>
           <i className={`h-2 w-2 rounded-full ${chat.connected ? 'bg-success' : 'bg-ink-3'}`} />
           {chat.connected ? '실시간 연결됨' : '연결 중…'}

@@ -49,8 +49,8 @@ const Card: React.FC<{ title: string; action?: React.ReactNode; className?: stri
   className = '',
   children,
 }) => (
-  <section className={`flex h-full flex-col rounded-2xl border border-line bg-surface p-5 ${className}`}>
-    <div className="mb-4 flex items-center justify-between">
+  <section className={`flex h-full flex-col rounded-2xl border border-line bg-surface p-4 sm:p-5 ${className}`}>
+    <div className="mb-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
       <h2 className="font-bold text-ink">{title}</h2>
       {action}
     </div>
@@ -68,7 +68,7 @@ const StatCard: React.FC<{ label: string; value: number; sub?: React.ReactNode; 
 }) => {
   const body = (
     <div
-      className={`h-full rounded-2xl border p-5 transition-all ${
+      className={`h-full rounded-2xl border p-4 transition-all sm:p-5 ${
         tone === 'accent' && value > 0 ? 'border-accent-ink/40 bg-accent/5 dark:bg-accent-ink/10' : 'border-line bg-surface'
       } ${to ? 'hover:-translate-y-0.5 hover:shadow-lg' : ''}`}
     >
@@ -108,9 +108,13 @@ const DailyChart: React.FC<{ daily: Dashboard['daily'] }> = ({ daily }) => {
               className="relative flex h-full flex-1 flex-col justify-end"
               onMouseEnter={() => setHover(i)}
               onMouseLeave={() => setHover(null)}
+              onClick={() => setHover((h) => (h === i ? null : i))} // 휴대폰: 눌러서 값 보기
             >
               {hover === i && (
-                <div className="absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-xl border border-line bg-surface px-3 py-2 text-xs shadow-lg">
+                // 휴대폰: 양 끝 막대는 말풍선이 화면 밖으로 나가지 않게 안쪽으로 붙임 (sm 이상은 가운데)
+                <div className={`absolute bottom-full z-10 mb-2 whitespace-nowrap rounded-xl border border-line bg-surface px-3 py-2 text-xs shadow-lg sm:left-1/2 sm:right-auto sm:-translate-x-1/2 ${
+                  i < 3 ? 'left-0' : i >= daily.length - 3 ? 'right-0' : 'left-1/2 -translate-x-1/2'
+                }`}>
                   <p className="font-semibold text-ink">{shortDate(d.date)} · {total}건</p>
                   <p className="text-ink-2">한국어 {d.ko} · 영어 {d.en}</p>
                 </div>
@@ -248,7 +252,7 @@ const UpdatesButton: React.FC = () => {
         {!seen && <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-accent-ink ring-2 ring-page" aria-label="새 업데이트" />}
       </button>
       {open && (
-        <div className="select-menu absolute right-0 top-full z-30 mt-2 w-[360px] !p-4" style={{ position: 'absolute' }}>
+        <div className="select-menu absolute right-0 top-full z-30 mt-2 w-[min(360px,calc(100vw-2rem))] !p-4" style={{ position: 'absolute' }}>
           <ul className="max-h-[360px] space-y-3 overflow-y-auto pr-1">
             {CHANGES.map((c, i) => (
               <li key={i} className="border-l-2 border-accent-ink/40 pl-3">
@@ -317,9 +321,9 @@ const Home: React.FC = () => {
 
   return (
     <div className="py-8">
-      <div className="mb-6 flex items-end justify-between">
+      <div className="mb-6 flex items-end justify-between gap-3">
         <div>
-          <h1 className="text-xl sm:text-2xl sm:text-[1.9rem] font-bold text-ink">관리자 홈</h1>
+          <h1 className="text-2xl sm:text-[1.9rem] font-bold text-ink">관리자 홈</h1>
           <p className="text-ink-2">
             {new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' })}
           </p>
@@ -346,10 +350,11 @@ const Home: React.FC = () => {
           <>
             {dash?.pipeline && !pipeOk && <PipelineStatus p={dash.pipeline} />}
             {dash?.tests && !testsOk && <TestsStatus t={dash.tests} />}
-            <div className="mb-4 flex items-stretch gap-4">
-              <LiveChatCard className="min-w-0 flex-1" />
+            {/* lg 미만: 위아래로 쌓음 */}
+            <div className="mb-4 flex flex-col gap-4 lg:flex-row lg:items-stretch">
+              <LiveChatCard className="min-w-0 lg:flex-1" />
               {dash?.quality_daily && (
-                <Reveal index={1} className="min-w-[380px] flex-1">
+                <Reveal index={1} className="min-w-0 lg:min-w-[380px] lg:flex-1">
                   <QualityCard
                     q={dash.quality_daily}
                     className="h-full"
@@ -379,11 +384,11 @@ const Home: React.FC = () => {
 
       {/* 숫자 카드 */}
       {!t ? (
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           {[0, 1, 2, 3].map((i) => (failed ? <div key={i} className="h-[124px] rounded-2xl border border-dashed border-line" /> : <Skeleton key={i} className="h-[124px]" />))}
         </div>
       ) : (
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           <StatCard index={1} label="오늘 질문" value={t.today} sub="오늘 0시부터" />
           <StatCard
             index={2}
@@ -412,7 +417,7 @@ const Home: React.FC = () => {
       )}
 
       {/* 그래프 + 최근 피드백 */}
-      <div className="mt-4 grid grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] gap-4">
+      <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <Reveal index={4}>
           <Card title="최근 14일 질문 수">
             {dash ? <DailyChart daily={dash.daily} /> : <Placeholder failed={failed} className="h-[180px]" />}
@@ -452,7 +457,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* 많이 쓰인 FAQ · 답을 못 찾은 질문 */}
-      <div className="mt-4 grid grid-cols-2 gap-4">
+      <div className="mt-4 grid gap-4 lg:grid-cols-2">
         <Reveal index={6}>
           <Card title="이번 주 많이 쓰인 FAQ" action={<span className="text-xs text-ink-3">직접 열람 + 답변 근거로 인용</span>}>
             {dash ? (

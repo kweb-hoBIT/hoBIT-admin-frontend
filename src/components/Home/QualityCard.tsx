@@ -67,7 +67,7 @@ const MiniBars: React.FC<{ m: Metric; days: QualityDaily['daily']; bad: boolean;
         const v = vals[i];
         const recent = i >= days.length - 7;
         return (
-          <div key={d.date} className="relative flex h-full flex-1 items-end" onMouseEnter={() => setHover(i)}>
+          <div key={d.date} className="relative flex h-full flex-1 items-end" onMouseEnter={() => setHover(i)} onClick={() => setHover(i)}>
             {v != null && (
               <div
                 className={`grow-y w-full rounded-t-[2px] ${
@@ -95,12 +95,12 @@ const QualityCard: React.FC<{ q: QualityDaily; footer?: React.ReactNode; classNa
   const { current: cur, previous: prev, daily } = q;
   return (
     <section className={`flex flex-col rounded-2xl border border-line bg-surface p-5 ${className}`}>
-      <div className="mb-3 flex items-baseline gap-2">
+      <div className="mb-3 flex flex-wrap items-baseline gap-x-2 gap-y-1">
         <h2 className="font-bold text-ink">답변 품질</h2>
         <span className="text-xs text-ink-3">최근 7일 · 14일 그래프</span>
         <Link to="/answer-reviews" className="ml-auto text-sm font-semibold text-accent-ink hover:underline">확인할 답변 →</Link>
       </div>
-      <div className="grid flex-1 grid-cols-2 gap-x-5 gap-y-3">
+      <div className="grid flex-1 grid-cols-1 gap-x-5 gap-y-3 sm:grid-cols-2">
         {METRICS.map((m, i) => {
           const v = cur[m.key] as number | null;
           const p = prev[m.key] as number | null;
