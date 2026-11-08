@@ -64,12 +64,12 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
-      className="max-w-4xl mx-auto p-8 bg-surface rounded-xl shadow-lg space-y-8"
+      className="max-w-4xl mx-auto p-4 sm:p-8 bg-surface rounded-xl shadow-lg space-y-8"
     >
       <h2 className="text-xl sm:text-2xl font-bold text-ink text-center">FAQ 생성</h2>
 
       {/*메인카테고리 필드 */}
-      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+      <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
         <h3 className="text-xl font-bold text-ink">주요카테고리</h3>
         <div className="relative">
           <label className="block text-lg font-medium text-ink mb-2">주요카테고리 (한글)</label>
@@ -145,7 +145,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
       </div>
 
       {/* 서브카테고리 필드 */}
-      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+      <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
         <h3 className="text-xl font-bold text-ink">하위카테고리</h3>
         <div>
           <label className="block text-lg font-medium text-ink mb-2">하위카테고리 (한글)</label>
@@ -226,7 +226,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
       <FAQAudienceField value={newFAQ.audience} onChange={(audience) => setNewFAQ({ ...newFAQ, audience })} />
 
       {/* 질문 필드 */}
-      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+      <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
         <h3 className="text-xl font-bold text-ink">질문</h3>
         <div>
           <label className="block text-lg font-medium text-ink mb-2">질문 (한글)</label>
@@ -254,7 +254,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
       </div>
 
       {/* 답변 필드 */}
-      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+      <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
         <h3 className="text-xl font-bold text-ink">답변</h3>
         {answer_ko.map((answer, index) => (
           <div key={index} className="p-4 border border-line rounded-xl bg-surface space-y-2">
@@ -308,7 +308,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
               className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink resize-y"
               rows={6}
             />
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <input
                 type="text"
                 placeholder="URL"
@@ -441,7 +441,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
       </div>
 
       {/* 관리자 필드 */}
-      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+      <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
         <h3 className="text-xl font-bold text-ink">관리자</h3>
         <label className="block text-lg font-medium text-ink mb-2">관리자 이름</label>
         <div className="relative">
@@ -494,7 +494,7 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
         <button
           onClick={handleCreate}
           disabled={isCreating}
-          className={`py-3 px-6 rounded-xl ${
+          className={`w-full sm:w-auto py-3 px-6 rounded-xl ${
             isCreating
               ? 'bg-card-2 text-ink-3 cursor-not-allowed'
               : 'bg-success text-white hover:bg-success/90'

@@ -153,7 +153,7 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
   );
 
   return (
-    <div className="mt-8 p-6 border border-line rounded-xl bg-surface shadow-md">
+    <div className="mt-8 p-4 sm:p-6 border border-line rounded-xl bg-surface shadow-md">
       <h3 className="text-xl font-bold text-ink mb-4">미리보기</h3>
 
       {/* 한국어 */}

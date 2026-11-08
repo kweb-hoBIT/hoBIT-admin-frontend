@@ -38,11 +38,11 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
   };
 
   return (
-    <form onSubmit={(e) => e.preventDefault()} className="max-w-4xl mx-auto p-8 bg-surface rounded-xl shadow-lg space-y-8">
+    <form onSubmit={(e) => e.preventDefault()} className="max-w-4xl mx-auto p-4 sm:p-8 bg-surface rounded-xl shadow-lg space-y-8">
       <h2 className="text-xl sm:text-2xl font-bold text-ink text-center">FAQ 상세</h2>
 
       { /* 생성 및 수정일자 */ }
-      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+      <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
         <h3 className="text-xl font-bold text-ink">일자</h3>
         <div>
           <label className="block text-lg font-medium text-ink mb-2">생성일</label>
@@ -63,7 +63,7 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
       </div>
       
       {/* 카테고리 및 질문 필드 */}
-      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+      <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
         <h3 className="text-xl font-bold text-ink">주요카테고리</h3>
         <div>
           <label className="block text-lg font-medium text-ink mb-2">주요카테고리 (한글)</label>
@@ -84,7 +84,7 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
       </div>
 
       {/* 서브카테고리 필드 */}
-      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+      <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
         <h3 className="text-xl font-bold text-ink">하위카테고리</h3>
         <div>
           <label className="block text-lg font-medium text-ink mb-2">하위카테고리 (한글)</label>
@@ -105,7 +105,7 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
       </div>
 
       {/* 질문 필드 */}
-      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+      <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
         <h3 className="text-xl font-bold text-ink">질문</h3>
         <div>
           <label className="block text-lg font-medium text-ink mb-2">질문 (한글)</label>
@@ -126,7 +126,7 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
       </div>
 
       {/* 번갈아가며 답변 필드 */}
-      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+      <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
         <h3 className="text-xl font-bold text-ink">FAQ 답변</h3>
         {answer_ko.map((answer, index) => {
           const answerEn = answer_en[index] || {};
@@ -195,7 +195,7 @@ const FAQDetailForm: React.FC<FAQDetailFormProps> = ({
       />
       
       {/* 관리자 필드 */}
-      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+      <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
         <h3 className="text-xl font-bold text-ink">관리자 정보</h3>
         <div>
           <label className="block text-lg font-medium text-ink mb-2">관리자 이름</label>

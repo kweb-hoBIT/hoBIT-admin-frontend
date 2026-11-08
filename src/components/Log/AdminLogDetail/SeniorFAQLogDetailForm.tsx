@@ -29,12 +29,13 @@ const SeniorFAQLogDetailForm: React.FC<SeniorFAQLogDetailFormProps> = ({
   };
 
   return (
-    <form onSubmit={(e) => e.preventDefault()} className="max-w-8xl mx-auto p-8 bg-surface rounded-xl shadow-lg space-y-8">
+    <form onSubmit={(e) => e.preventDefault()} className="max-w-8xl mx-auto p-4 sm:p-8 bg-surface rounded-xl shadow-lg space-y-8">
       <h2 className="text-xl sm:text-2xl font-bold text-ink text-center">선배 FAQ 로그 상세</h2>
 
-      <div className="grid grid-cols-2 gap-8">
+      {/* 휴대폰: 기존 → 바뀐 내용을 위아래로 */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-8">
         {/* Left Side: prev_senior_faq */}
-        <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+        <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
           <h3 className="text-xl font-bold text-ink">기존 선배 FAQ</h3>
 
           {/* 카테고리 및 상세카테고리 필드 */}
@@ -92,7 +93,7 @@ const SeniorFAQLogDetailForm: React.FC<SeniorFAQLogDetailFormProps> = ({
           </div>
 
           {/* FAQ 답변 */}
-          <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+          <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
             <h3 className="text-xl font-bold text-ink">FAQ 답변</h3>
             {prevAnswersKo.map((answer, index) => {
               const answerEn = prevAnswersEn[index] || { title: '', answer: '', url: '', map: { latitude: '', longitude: '' } };
@@ -167,7 +168,7 @@ const SeniorFAQLogDetailForm: React.FC<SeniorFAQLogDetailFormProps> = ({
         </div>
 
         {/* Right Side: new_senior_faq */}
-        <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+        <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
           <h3 className="text-xl font-bold text-ink">새로운 선배 FAQ</h3>
 
           {/* 카테고리 및 상세카테고리 필드 */}
@@ -225,7 +226,7 @@ const SeniorFAQLogDetailForm: React.FC<SeniorFAQLogDetailFormProps> = ({
           </div>
 
           {/* FAQ 답변 */}
-          <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+          <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
             <h3 className="text-xl font-bold text-ink">FAQ 답변</h3>
             {newAnswersKo.map((answer, index) => {
               const answerEn = newAnswersEn[index] || { title: '', answer: '', url: '', map: { latitude: '', longitude: '' } };

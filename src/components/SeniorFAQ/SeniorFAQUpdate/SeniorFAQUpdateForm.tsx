@@ -65,12 +65,12 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
-      className="max-w-4xl mx-auto p-8 bg-surface rounded-xl shadow-lg space-y-8"
+      className="max-w-4xl mx-auto p-4 sm:p-8 bg-surface rounded-xl shadow-lg space-y-8"
     >
       <h2 className="text-xl sm:text-2xl font-bold text-ink text-center">선배 FAQ 수정</h2>
 
       {/* 카테고리 필드 */}
-      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+      <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
         <h3 className="text-xl font-bold text-ink">주요카테고리</h3>
         <div>
           <label className="block text-lg font-medium text-ink mb-2">주요카테고리 (한글)</label>
@@ -146,7 +146,7 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
       </div>
 
       {/* 서브카테고리 필드 */}
-      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+      <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
         <h3 className="text-xl font-bold text-ink">하위카테고리</h3>
         <div>
           <label className="block text-lg font-medium text-ink mb-2">하위카테고리 (한글)</label>
@@ -224,7 +224,7 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
       </div>
 
       {/* 세부 카테고리 필드 */}
-      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+      <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
         <h3 className="text-xl font-bold text-ink">세부카테고리</h3>
         <div>
           <label className="block text-lg font-medium text-ink mb-2">세부카테고리 (한글)</label>
@@ -302,7 +302,7 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
       </div>
 
       {/* 답변 필드 */}
-      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+      <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
         <h3 className="text-xl font-bold text-ink">답변</h3>
         {answer_ko.map((answer, index) => (
           <div key={index} className="p-4 border border-line rounded-xl bg-surface space-y-4">
@@ -395,7 +395,7 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
               className="w-full p-3 border border-line rounded-xl shadow-sm focus:ring-accent-ink/40 focus:border-accent-ink resize-y mb-4"
               rows={6}
             />
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <input
                 type="text"
                 placeholder="URL"
@@ -462,7 +462,7 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
       </div>
 
       {/* 관리자 필드 */}
-      <div className="p-6 border border-line rounded-xl bg-card space-y-4">
+      <div className="p-4 sm:p-6 border border-line rounded-xl bg-card space-y-4">
         <h3 className="text-xl font-bold text-ink">관리자</h3>
         <label className="block text-lg font-medium text-ink mb-2">관리자 이름</label>
         <input
@@ -493,7 +493,7 @@ const SeniorFAQUpdateForm: React.FC<SeniorFAQUpdateFormProps> = ({
         <button
           onClick={handleUpdate}
           disabled={isUpdating}
-          className={`py-3 px-6 rounded-xl ${
+          className={`w-full sm:w-auto py-3 px-6 rounded-xl ${
             isUpdating
               ? 'bg-card-2 text-ink-3 cursor-not-allowed'
               : 'bg-success text-white hover:bg-success/90'
