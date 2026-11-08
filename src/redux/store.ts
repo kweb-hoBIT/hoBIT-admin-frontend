@@ -1,13 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { authReducer } from './authSlice';
 import {
-  faqItemReducer,
-  seniorFaqItemReducer,
-  logItemReducer,
-  questionLogItemReducer,
-  userFeedbackItemReducer,
-} from './itemSlice';
-import {
   faqFilterReducer,
   faqSortReducer,
   seniorFaqFilterReducer,
@@ -31,11 +24,6 @@ const store = configureStore({
     questionLogFilter: questionLogFilterReducer,
     logAnalysisFilter: logAnalysisFilterReducer,
     userFeedbackFilter: userFeedbackFilterReducer,
-    faqItem: faqItemReducer,
-    seniorFaqItem: seniorFaqItemReducer,
-    logItem: logItemReducer,
-    questionLogItem: questionLogItemReducer,
-    userFeedbackItem: userFeedbackItemReducer,
   },
 });
 
