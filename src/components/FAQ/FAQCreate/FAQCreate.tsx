@@ -40,6 +40,7 @@ const FAQCreate: React.FC = () => {
     answer_ko: [{ answer: '', url: '', email: '', phone: '' }],
     answer_en: [{ answer: '', url: '', email: '', phone: '' }],
     manager: '',
+    audience: 'undergraduate',
   });
 
 

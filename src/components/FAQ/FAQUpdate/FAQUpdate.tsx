@@ -42,6 +42,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
     answer_ko: [{ answer: '', url: '', email: '', phone: '' }],
     answer_en: [{ answer: '', url: '', email: '', phone: '' }],
     manager: '',
+    audience: 'undergraduate',
   });
 
   const [showCategoryConflict, setShowCategoryConflict] = useState(false);
@@ -114,6 +115,7 @@ const FAQUpdate: React.FC<FAQUpdateProps> = ({ faq_id }) => {
             answer_ko: faq.answer_ko || [{ answer: '', url: '', email: '', phone: '' }],
             answer_en: faq.answer_en || [{ answer: '', url: '', email: '', phone: '' }],
             manager: faq.manager || '',
+            audience: faq.audience || 'undergraduate',
           });
         }
       } else {

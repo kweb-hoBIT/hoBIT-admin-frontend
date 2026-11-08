@@ -1,3 +1,12 @@
+/** FAQ 대상 — 학부 / 대학원 / 공통 */
+export type FAQAudience = 'undergraduate' | 'graduate' | 'all';
+
+export const FAQ_AUDIENCE_OPTIONS: readonly (readonly [FAQAudience, string])[] = [
+  ['undergraduate', '학부'],
+  ['graduate', '대학원'],
+  ['all', '공통'],
+] as const;
+
 export type Faq = {
   id: number;
   maincategory_ko: string;
@@ -36,6 +45,7 @@ export type CreateFAQRequest = {
       phone: string;
     }[];
     manager: string;
+    audience: FAQAudience;
   };
 };
 
@@ -72,6 +82,7 @@ export type GetAllFAQResponse = {
         phone: string;
       }[];
       manager: string;
+      audience?: FAQAudience;
       created_at: string;
       updated_at: string;
     }[];
@@ -109,6 +120,7 @@ export type GetFAQResponse = {
         phone: string;
       }[];
       manager: string;
+      audience?: FAQAudience;
       created_at: string;
       updated_at: string;
     };
@@ -154,6 +166,7 @@ export type UpdateFAQRequest = {
       phone: string;
     }[];
     manager: string;
+    audience: FAQAudience;
   };
 };
 

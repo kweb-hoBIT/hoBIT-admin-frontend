@@ -15,6 +15,8 @@ import FAQFilter from './FAQFilter';
 import FAQSort from './FAQSort';
 import { GetAllFAQResponse } from '../../../types/faq';
 import Select from '../../ui/Select';
+import { FAQAudienceBadge } from '../FAQAudienceField';
+import FAQExcelButtons from '../FAQExcel/FAQExcelButtons';
 
 interface FAQMainFormProps {
   faqs: GetAllFAQResponse['data']['faqs'];
@@ -93,7 +95,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
       />
 
       <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-wrap justify-between items-center gap-3 mb-6">
           <div className="flex items-center space-x-4">
           <h4 className="text-xl font-bold text-ink flex-grow">FAQ 리스트</h4>
           <FAQSort 
@@ -103,7 +105,8 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
             setFilteredFaqs={setFilteredFaqs}
           />
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <FAQExcelButtons />
             <Select
               value={itemsPerPage}
               onChange={(e) => {
@@ -158,8 +161,9 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
                   />
                 </div>
                 <div className="pr-24">
-                  <div className="mb-2">
+                  <div className="mb-2 flex items-start gap-2">
                     <strong>질문: {faq.question_ko}</strong>
+                    <FAQAudienceBadge audience={faq.audience} />
                   </div>
                   <div className="flex flex-col">
                     <div className="mb-1 text-sm text-ink-2">

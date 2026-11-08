@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CreateFAQRequest, GetAllFAQCategoryResponse } from '../../../types/faq';
 import Translate from '../../Translate/Translate';
 import FAQPreview from '../FAQPreviewProps';
+import FAQAudienceField from '../FAQAudienceField';
 
 interface FAQCreateFormProps {
   newFAQ: CreateFAQRequest['body'];
@@ -220,6 +221,9 @@ const FAQCreateForm: React.FC<FAQCreateFormProps> = ({
           </div>
         </div>
       </div>
+
+      {/* 대상 (학부 / 대학원 / 공통) */}
+      <FAQAudienceField value={newFAQ.audience} onChange={(audience) => setNewFAQ({ ...newFAQ, audience })} />
 
       {/* 질문 필드 */}
       <div className="p-6 border border-line rounded-xl bg-card space-y-4">
