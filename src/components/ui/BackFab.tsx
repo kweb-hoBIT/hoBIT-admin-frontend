@@ -22,6 +22,9 @@ const BackFab: React.FC = () => {
   const parent = LIST_PAGES.test(pathname) ? undefined : PARENTS.find((p) => p.match.test(pathname));
   if (!parent) return null;
   return (
+    <>
+    {/* 휴대폰: 버튼이 마지막 내용을 가리지 않게 아래 빈 자리 */}
+    <div className="h-20 sm:hidden" aria-hidden="true" />
     <button
       key={pathname} // 화면이 바뀔 때마다 살짝 떠오름
       type="button"
@@ -35,6 +38,7 @@ const BackFab: React.FC = () => {
       </svg>
       {parent.label}
     </button>
+    </>
   );
 };
 

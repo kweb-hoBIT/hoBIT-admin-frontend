@@ -22,7 +22,7 @@ const LoginForm: React.FC<{
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="flex min-h-[calc(100vh-4.5rem)] min-h-[calc(100dvh-4.5rem)] items-center justify-center py-10">
+    <div className="flex min-h-[calc(100vh-4.5rem)] supports-[height:100dvh]:min-h-[calc(100dvh-4.5rem)] items-center justify-center py-10">
       <div className="animate-appear w-full max-w-[420px] rounded-[24px] border border-line bg-surface p-6 shadow-xl sm:p-8">
         <div className="mb-6 flex flex-col items-center gap-2">
           <img src="/hoBIT64.ico" alt="" className="h-14 w-14 rounded-full" />

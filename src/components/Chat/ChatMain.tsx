@@ -71,7 +71,7 @@ const MessageMenu: React.FC<{ canEdit: boolean; onEdit: () => void; onRemove: ()
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
         className={`flex h-7 w-7 items-center justify-center rounded-full text-ink-3 transition-opacity hover:bg-card hover:text-ink-2 focus-visible:opacity-100 ${
-          open ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+          open ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-70' // 터치 기기는 늘 보임
         }`}
       >
         <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden="true">
@@ -139,13 +139,13 @@ const Bubble: React.FC<{ m: ChatMessage; canModify?: boolean; onEdit?: () => voi
             <span className="rounded-xl border border-line bg-surface px-3 py-2 text-sm text-ink-3">보관 기간이 지나 삭제된 파일</span>
           ) : m.attachment.mime.startsWith('image/') ? (
             <button type="button" onClick={open} className="block overflow-hidden rounded-2xl border border-line" aria-label={m.attachment.name}>
-              <img src={fileUrl(m.attachment.url)} alt={m.attachment.name} className="block max-h-[280px] max-w-[320px] object-cover" />
+              <img src={fileUrl(m.attachment.url)} alt={m.attachment.name} className="block max-h-[280px] max-w-[min(320px,65vw)] object-cover" />
             </button>
           ) : (
             <button
               type="button"
               onClick={open}
-              className="flex max-w-[360px] items-center gap-3 rounded-xl border border-line bg-surface px-3.5 py-2.5 text-left hover:bg-card"
+              className="flex max-w-[min(360px,72vw)] items-center gap-3 rounded-xl border border-line bg-surface px-3.5 py-2.5 text-left hover:bg-card"
             >
               <span className="flex h-10 w-8 shrink-0 items-end justify-center rounded-md bg-[#e5484d] pb-1 text-[10px] font-bold text-white">PDF</span>
               <span className="min-w-0">
@@ -156,7 +156,7 @@ const Bubble: React.FC<{ m: ChatMessage; canModify?: boolean; onEdit?: () => voi
           )
         ) : (
           <div
-            className={`max-w-[460px] whitespace-pre-wrap break-words rounded-2xl px-3.5 py-2 text-[14px] leading-[1.5] ${
+            className={`max-w-[min(460px,72vw)] whitespace-pre-wrap break-words rounded-2xl px-3.5 py-2 text-[14px] leading-[1.5] ${
               mine ? 'rounded-br-md bg-accent text-white' : 'rounded-bl-md bg-card text-ink'
             }`}
           >
@@ -176,7 +176,7 @@ const Bubble: React.FC<{ m: ChatMessage; canModify?: boolean; onEdit?: () => voi
         </button>
       )}
       {mine && m.translation?.lang === 'en' && (
-        <p className="mr-1 mt-0.5 max-w-[460px] text-right text-[11px] text-ink-3">
+        <p className="mr-1 mt-0.5 max-w-[min(460px,72vw)] text-right text-[11px] text-ink-3">
           <span className="mr-1 rounded bg-link/15 px-1 font-bold text-link">EN</span>학생에게: {m.translation.text}
         </p>
       )}
@@ -225,6 +225,8 @@ const ResizeHandle: React.FC<{ label: string; onDrag: (dx: number, start: boolea
   </div>
 );
 
+// 휴대폰 주소창·키보드에 따라 바뀌는 실제 화면 높이(dvh)를 쓸 수 있는지
+const DVH = typeof CSS !== 'undefined' && !!CSS.supports?.('height', '100dvh');
 const LAYOUT_KEY = 'hobit-admin-chat-layout';
 const LIST_W = { def: 300, min: 220, max: 480 };
 const INFO_W = { def: 320, min: 240, max: 560 };
@@ -282,6 +284,15 @@ const ChatMain: React.FC = () => {
     return () => ro.disconnect();
   }, []);
   const fit = fitLayout(layout, frameW);
+  // 휴대폰(md 미만): 목록과 대화를 한 번에 하나만 — 채팅을 고르면 대화, 뒤로 버튼으로 목록
+  const [narrow, setNarrow] = useState(() => window.matchMedia?.('(max-width: 767.98px)').matches ?? false);
+  useEffect(() => {
+    const mq = window.matchMedia?.('(max-width: 767.98px)');
+    if (!mq) return;
+    const on = (e: MediaQueryListEvent) => setNarrow(e.matches);
+    mq.addEventListener?.('change', on);
+    return () => mq.removeEventListener?.('change', on);
+  }, []);
   // 끌 때 다른 칸을 밀어내지 않는 범위까지만
   const listMax = Math.min(LIST_W.max, Math.max(LIST_W.min, frameW - MIN_CONV - HANDLES - fit.info));
   const infoMax = Math.min(INFO_W.max, Math.max(INFO_W.min, frameW - MIN_CONV - HANDLES - fit.list));
@@ -405,6 +416,15 @@ const ChatMain: React.FC = () => {
     setSelectedId(id);
     setParams({ session: id }, { replace: true });
   };
+  // 휴대폰에서 대화 → 목록으로 (고른 채팅을 비움 — 그 뒤 온 메시지는 안 읽은 수로 셈)
+  const backToList = () => {
+    setSelectedId(null);
+    setSession(null);
+    setMessages([]);
+    setParams({}, { replace: true });
+  };
+  const showList = !narrow || !selectedId;
+  const showConv = !narrow || !!selectedId;
 
   const claim = () => {
     if (!socket || !session) return;
@@ -510,9 +530,13 @@ const ChatMain: React.FC = () => {
   const totalUnread = useMemo(() => Object.values(unread).reduce((a, b) => a + b, 0), [unread]);
 
   return (
-    <div className="py-6">
+    // 휴대폰: 화면 높이(dvh)에 맞춘 세로 배치 — 입력칸이 항상 화면 아래에 (md 이상은 예전 그대로)
+    <div
+      className="py-6 max-md:flex max-md:h-[calc(100vh-4.5rem)] max-md:flex-col max-md:py-3"
+      style={narrow && DVH ? { height: 'calc(100dvh - 4.5rem)' } : undefined}
+    >
       {/* 상단: 연결 상태 · (근로장학생) 채팅 가능 · (행정실) 설정 */}
-      <div className="mb-4 flex flex-wrap items-center gap-3">
+      <div className="mb-3 flex flex-wrap items-center gap-2 sm:gap-3 md:mb-4">
         <h1 className="text-2xl sm:text-[1.9rem] font-bold text-ink">채팅</h1>
         <span className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-sm ${chat.connected ? 'bg-success-soft text-success' : 'bg-card text-ink-3'}`}>
           <i className={`h-2 w-2 rounded-full ${chat.connected ? 'bg-success' : 'bg-ink-3'}`} />
@@ -551,9 +575,10 @@ const ChatMain: React.FC = () => {
         </div>
       </div>
 
-      <div ref={frameRef} className="relative flex h-[calc(100vh-11.5rem)] min-h-[520px] overflow-hidden rounded-2xl border border-line bg-surface">
+      <div ref={frameRef} className="relative flex h-[calc(100vh-11.5rem)] min-h-[520px] overflow-hidden rounded-2xl border border-line bg-surface max-md:h-auto max-md:min-h-0 max-md:flex-1">
         {/* 목록 */}
-        <aside className="flex min-h-0 shrink-0 flex-col" style={{ width: fit.list }}>
+        {showList && (
+        <aside className="flex min-h-0 shrink-0 flex-col" style={{ width: narrow ? '100%' : fit.list }}>
           {/* 학부 / 대학원 — 대기 수를 함께 */}
           {/* 높이를 오른쪽 대화 머리(학생 메일·상태)와 같게 — 아래 선이 한 줄로 이어짐 */}
           <div className="flex h-[62px] shrink-0 items-center border-b border-line px-3">
@@ -623,8 +648,10 @@ const ChatMain: React.FC = () => {
             ))}
           </ul>
         </aside>
+        )}
 
         {/* 대화 */}
+        {!narrow && (
         <ResizeHandle
           label="목록 너비 조절"
           onDrag={(dx, start) => {
@@ -634,7 +661,9 @@ const ChatMain: React.FC = () => {
           onReset={() => saveLayout({ ...layout, list: LIST_W.def })}
           onKey={(dir) => saveLayout({ ...layout, list: clampW(fit.list + dir * 24, { min: LIST_W.min, max: listMax }) })}
         />
+        )}
 
+        {showConv && (
         <section className="flex min-h-0 min-w-0 flex-1 flex-col">
           {!session ? (
             <div className="flex flex-1 flex-col items-center justify-center gap-2 text-ink-3">
@@ -643,7 +672,17 @@ const ChatMain: React.FC = () => {
             </div>
           ) : (
             <>
-              <div className="flex h-[62px] shrink-0 items-center gap-3 border-b border-line px-5">
+              <div className="flex h-[62px] shrink-0 items-center gap-2 border-b border-line px-2 sm:gap-3 sm:px-5">
+                {narrow && (
+                  <button
+                    type="button"
+                    onClick={backToList}
+                    aria-label="채팅 목록으로"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink-2 hover:bg-card hover:text-ink"
+                  >
+                    <Icon name="chevronLeft" className="h-6 w-6" />
+                  </button>
+                )}
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-semibold text-ink">{session.studentEmail}</p>
                   <p className="mt-0.5 flex min-w-0 items-center gap-2 overflow-hidden text-[13px] text-ink-3">
@@ -685,13 +724,13 @@ const ChatMain: React.FC = () => {
                     <rect x="3" y="4" width="18" height="16" rx="3" />
                     <path d="M15 4v16" />
                   </svg>
-                  학생 정보
+                  <span className="hidden sm:inline">학생 정보</span>
                   {!layout.infoOpen && (session.botContext?.length ?? 0) > 0 && (
                     <span className="rounded-full bg-accent px-1.5 text-xs text-white">{session.botContext!.length}</span>
                   )}
                 </button>
               </div>
-              <div ref={listRef} className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
+              <div ref={listRef} className="min-h-0 flex-1 overflow-y-auto px-3 py-4 sm:px-5">
                 {messages.map((m) => (
                   <Bubble key={m.id} m={m} canModify={canModify(m)} onEdit={() => startEdit(m)} onRemove={() => removeMsg(m)} />
                 ))}
@@ -719,7 +758,7 @@ const ChatMain: React.FC = () => {
                     </button>
                   </div>
                 )}
-                <div className="flex items-end gap-2 px-4 py-3">
+                <div className="flex items-end gap-1.5 px-2 py-2.5 sm:gap-2 sm:px-4 sm:py-3">
                   <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif,application/pdf" className="hidden" onChange={(e) => upload(e.target.files?.[0])} />
                   <button
                     type="button"
@@ -751,7 +790,7 @@ const ChatMain: React.FC = () => {
                     placeholder={session.studentLang === 'en' || session.language === 'EN' ? '한국어로 쓰면 영어로 번역돼 전달돼요 · Shift+Enter 줄바꿈' : '답변을 입력하세요 · Shift+Enter 줄바꿈'}
                     className="flex-1 resize-none overflow-y-auto rounded-2xl border border-line px-4 py-2.5"
                   />
-                  <button type="button" onClick={send} disabled={!text.trim()} className="h-11 shrink-0 rounded-full bg-accent px-5 font-semibold text-white disabled:opacity-40">
+                  <button type="button" onClick={send} disabled={!text.trim()} className="h-11 shrink-0 rounded-full bg-accent px-4 font-semibold text-white disabled:opacity-40 sm:px-5">
                     {editing ? '수정' : '보내기'}
                   </button>
                 </div>
@@ -762,6 +801,7 @@ const ChatMain: React.FC = () => {
             </>
           )}
         </section>
+        )}
 
         {/* 학생 정보 */}
         {fit.infoShown && (
@@ -775,7 +815,7 @@ const ChatMain: React.FC = () => {
             onKey={(dir) => saveLayout({ ...layout, info: clampW(fit.info - dir * 24, { min: INFO_W.min, max: infoMax }) })}
           />
         )}
-        {layout.infoOpen && !fit.infoShown && (
+        {layout.infoOpen && !fit.infoShown && !narrow && (
           // 겹쳐 뜬 칸 바깥(대화)을 누르면 닫힘
           <div
             aria-hidden="true"
@@ -784,7 +824,7 @@ const ChatMain: React.FC = () => {
             onMouseDown={() => saveLayout({ ...layout, infoOpen: false })}
           />
         )}
-        {layout.infoOpen && !fit.infoShown && (
+        {layout.infoOpen && !fit.infoShown && !narrow && (
           <div className="absolute inset-y-0 z-30 flex" style={{ right: overlayW - 4 }}>
             <ResizeHandle
               label="학생 정보 너비 조절"
@@ -797,15 +837,26 @@ const ChatMain: React.FC = () => {
             />
           </div>
         )}
-        {layout.infoOpen && (
+        {layout.infoOpen && showConv && (
         <aside
           className={
             fit.infoShown
               ? 'min-h-0 shrink-0 overflow-y-auto p-5'
               : 'absolute inset-y-0 right-0 z-20 overflow-y-auto border-l border-line bg-surface p-5 shadow-2xl'
           }
-          style={{ width: fit.infoShown ? fit.info : overlayW }}
+          // 휴대폰: 대화 위에 꽉 차게 덮고, 맨 위 닫기 버튼으로 돌아감
+          style={{ width: narrow ? '100%' : fit.infoShown ? fit.info : overlayW }}
         >
+          {narrow && (
+            <button
+              type="button"
+              onClick={() => saveLayout({ ...layout, infoOpen: false })}
+              className="-ml-2 -mt-2 mb-3 flex h-10 items-center gap-1 rounded-full px-2 text-sm font-semibold text-ink-2 hover:bg-card"
+            >
+              <Icon name="chevronLeft" className="h-5 w-5" />
+              대화로 돌아가기
+            </button>
+          )}
           {session ? (
             <div className="flex flex-col gap-5">
               <div>

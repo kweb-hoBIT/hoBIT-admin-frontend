@@ -6,8 +6,8 @@ import BackFab from '../ui/BackFab';
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="min-h-screen bg-page text-ink">
     <Header />
-    {/* 휴대폰: 옆 여백 좁게 + 아래 여백 (떠 있는 "목록으로" 버튼이 마지막 내용을 가리지 않게) */}
-    <div className="mx-auto max-w-[1680px] px-4 pb-20 sm:px-6 sm:pb-0 2xl:px-10">{children}</div>
+    {/* 휴대폰: 옆 여백 좁게 */}
+    <div className="mx-auto max-w-[1680px] px-4 sm:px-6 2xl:px-10">{children}</div>
     <BackFab />
   </div>
 );
