@@ -189,11 +189,12 @@ const ProfileOptionMain: React.FC = () => {
   };
 
   return (
-    <div className="py-8">
-      <div className="mb-6">
-        <h1 className="text-2xl sm:text-[1.9rem] font-bold text-ink">프로필 항목</h1>
-        <p className="text-ink-2">
-          학생이 고르는 <b className="text-ink">학과·전공 유형·학적 상태</b> 목록이에요. 학과가 새로 생기거나 이름이 바뀌면 여기서 고쳐 주세요.
+    <div className="pb-8 pt-6">
+      {/* 제목은 다른 탭 화면(카테고리 등)의 패널 제목과 같은 크기 — 헤더 아래 탭이 이미 화면 이름을 보여 줌 */}
+      <div className="mb-4">
+        <h1 className="text-xl font-bold text-ink">프로필 항목</h1>
+        <p className="mt-1 text-sm text-ink-3">
+          학생이 고르는 학과·전공 유형·학적 상태, 대학원 학과 목록이에요. 학과가 새로 생기거나 이름이 바뀌면 여기서 고쳐 주세요.
         </p>
       </div>
 

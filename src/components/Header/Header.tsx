@@ -453,7 +453,10 @@ const Header: React.FC = () => {
         {!isAuthPage && (
           <button
             type="button"
-            onClick={() => setDrawer((v) => !v)}
+            onClick={() => {
+              setShowPopup(false);
+              setDrawer((v) => !v);
+            }}
             aria-expanded={drawer}
             aria-controls="mobile-nav"
             aria-label={`메뉴 ${drawer ? "닫기" : "열기"} (지금: ${currentLabel})`}
@@ -512,7 +515,10 @@ const Header: React.FC = () => {
             <div className="relative" ref={popupRef}>
               <button
                 type="button"
-                onClick={() => setShowPopup((v) => !v)}
+                onClick={() => {
+                  setDrawer(false); // 펼친 메뉴가 사용자 메뉴를 가리지 않게
+                  setShowPopup((v) => !v);
+                }}
                 aria-expanded={showPopup}
                 className="wiggle flex h-11 items-center gap-3 rounded-full px-1 text-ink-2 hover:bg-card hover:text-ink transition-colors sm:h-12 sm:pl-1.5 sm:pr-4"
               >
