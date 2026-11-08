@@ -15,7 +15,7 @@ import SeniorFAQSort, { sortSeniorFAQs } from './SeniorFAQSort';
 import FAQExcelButtons from '../../FAQ/FAQExcel/FAQExcelButtons';
 import { useChat } from '../../Chat/ChatProvider';
 import { useIncremental } from '../../../hooks/useIncremental';
-import { ListEnd, ListHeader, CardFooter, CardMore } from '../../ui/ListKit';
+import { ListEnd, ListHeader, CardMore } from '../../ui/ListKit';
 import { revealRef } from '../../ui/motion';
 import Icon from '../../ui/Icon';
 
@@ -100,14 +100,23 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
                     <div className="mb-0.5 text-sm text-ink-2"><strong>관리자:</strong> {faq.manager}</div>
                   </div>
                 </div>
-                <CardMore />
+                {/* 오른쪽: 위는 수정·삭제 아이콘, 아래는 › (예전엔 버튼 줄이 카드 아래 한 줄을 더 차지했음) */}
+                <div className="-mr-1.5 -mt-1.5 flex shrink-0 flex-col items-end justify-between self-stretch">
+                  <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
+                    <button
+                      type="button"
+                      onClick={() => navigate(`/seniorfaqs/update/${faq.senior_faq_id}`)}
+                      aria-label="수정"
+                      title="수정"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors text-ink-2 hover:bg-card hover:text-accent-ink"
+                    >
+                      <Icon name="pencil" className="h-[18px] w-[18px]" />
+                    </button>
+                    <SeniorFAQDelete senior_faq_id={String(faq.senior_faq_id)} detailcategory_ko={faq.detailcategory_ko} onSuccess={() => window.location.reload()} compact />
+                  </div>
+                  <span className="pr-1.5"><CardMore /></span>
                 </div>
-                <CardFooter>
-                  <button onClick={() => navigate(`/seniorfaqs/update/${faq.senior_faq_id}`)} className="bg-accent text-white px-4 py-2 rounded-xl hover:bg-accent/90">
-                    수정
-                  </button>
-                  <SeniorFAQDelete senior_faq_id={String(faq.senior_faq_id)} detailcategory_ko={faq.detailcategory_ko} onSuccess={() => window.location.reload()} />
-                </CardFooter>
+                </div>
               </div>
             ))}
           </div>

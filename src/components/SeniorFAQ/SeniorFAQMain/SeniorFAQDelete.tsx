@@ -6,13 +6,15 @@ import { useHobitMutateDeleteApi } from '../../../hooks/hobitAdmin';
 import { DeleteSeniorFAQRequest, DeleteSeniorFAQResponse } from '../../../types/seniorfaq';
 
 import { appAlert } from '../../ui/Dialog';
+import Icon from '../../ui/Icon';
 interface SeniorFAQDeleteProps {
+  compact?: boolean; // 카드 안 작은 아이콘 버튼
   senior_faq_id: string;
   detailcategory_ko: string;
   onSuccess?: () => void;
 }
 
-const SeniorFAQDelete: React.FC<SeniorFAQDeleteProps> = ({ senior_faq_id, detailcategory_ko, onSuccess }) => {
+const SeniorFAQDelete: React.FC<SeniorFAQDeleteProps> = ({ senior_faq_id, detailcategory_ko, onSuccess , compact}) => {
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
   const [error, setError] = useState<string | null>(null);
   const [showPopup, setShowPopup] = useState(false);
@@ -53,13 +55,25 @@ const SeniorFAQDelete: React.FC<SeniorFAQDeleteProps> = ({ senior_faq_id, detail
 
   return (
     <div>
-      <button
-        type="button"
-        onClick={togglePopup}
-        className="bg-danger text-white px-4 py-2 rounded-xl hover:bg-danger/90"
-      >
-        삭제
-      </button>
+      {compact ? (
+        <button
+          type="button"
+          onClick={togglePopup}
+          aria-label="삭제"
+          title="삭제"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors text-danger hover:bg-danger-soft"
+        >
+          <Icon name="trash" className="h-[18px] w-[18px]" />
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={togglePopup}
+          className="bg-danger text-white px-4 py-2 rounded-xl hover:bg-danger/90"
+        >
+          삭제
+        </button>
+      )}
 
       {showPopup && (
         <div className="modal-overlay">
