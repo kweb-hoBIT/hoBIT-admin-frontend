@@ -190,6 +190,11 @@ input::placeholder, textarea::placeholder { color: rgb(var(--c-ink-3)); }
 
 /* 스크롤 위치에 따라 나타나기 (ui/motion revealRef) — 나타나기 전엔 투명, 나타날 때 살짝 떠오름 */
 [data-sr]:not([data-shown]) { opacity: 0; }
+/* 카드가 화면에 들어오기 전에는 안쪽 그래프·순위 막대·목록 움직임을 멈춰 둠 → 보일 때 그 자리에서 자라남
+   (예전엔 처음 열 때 다 끝나 버려, 휴대폰에서 아래 카드로 내려가면 이미 다 그려져 있었음) */
+[data-sr]:not([data-shown]) .grow-y,
+[data-sr]:not([data-shown]) .grow-x,
+[data-sr]:not([data-shown]) .reveal { animation-play-state: paused; }
 [data-sr][data-shown="in"] { animation: reveal-up .5s cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--sr-delay, 0ms); }
 @media (prefers-reduced-motion: reduce) {
   [data-sr]:not([data-shown]) { opacity: 1; }
