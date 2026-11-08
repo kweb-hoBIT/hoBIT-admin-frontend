@@ -7,17 +7,19 @@ import { prefetchRoute } from '../../routes';
  *  - 목록 화면으로 감 (뒤로가기 기록이 아니라 그 화면의 목록 — 새 탭으로 열었어도 같은 곳으로)
  *  - 목록 화면·홈·로그인 화면에서는 안 보임
  */
+const LIST_PAGES = /^\/(faqs\/graduate|categories\/(profile-options|bulk)|logs\/(admin|analytics))\/?$/; // 헤더 탭으로 여는 목록 화면
 const PARENTS: { match: RegExp; to: string; label: string }[] = [
   { match: /^\/faqs\/.+/, to: '/faqs', label: 'FAQ 목록' },
   { match: /^\/seniorfaqs\/.+/, to: '/seniorfaqs', label: '선배 FAQ 목록' },
-  { match: /^\/categories\/.+/, to: '/categories', label: '관리' },
-  { match: /^\/adminlogs\/.+/, to: '/logs', label: '로그 목록' },
+  { match: /^\/categories\/(email|admin)\/.+/, to: '/categories/bulk', label: '담당자·이메일' },
+  { match: /^\/categories\/.+/, to: '/categories', label: '카테고리' },
+  { match: /^\/adminlogs\/.+/, to: '/logs/admin', label: '관리자 로그' },
 ];
 
 const BackFab: React.FC = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const parent = PARENTS.find((p) => p.match.test(pathname));
+  const parent = LIST_PAGES.test(pathname) ? undefined : PARENTS.find((p) => p.match.test(pathname));
   if (!parent) return null;
   return (
     <button

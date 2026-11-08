@@ -1,5 +1,5 @@
 import React from 'react';
-import Tabs from '../../ui/Tabs';
+import Segmented from '../../ui/Segmented';
 
 interface SelectUserFeedbackProps {
   filter: 'unresolved' | 'resolved';
@@ -7,15 +7,19 @@ interface SelectUserFeedbackProps {
   unresolvedCount?: number;
 }
 
+/** 해결 여부 거르기 — 화면을 바꾸는 탭(헤더 아래 줄)과 겹쳐 보이지 않게 알약 모양으로 */
 const SelectUserFeedback: React.FC<SelectUserFeedbackProps> = ({ filter, onFilterChange, unresolvedCount }) => (
-  <Tabs
-    tabs={[
-      { value: 'unresolved', label: '해결되지 않은 피드백', badge: unresolvedCount },
-      { value: 'resolved', label: '해결된 피드백' },
-    ]}
-    value={filter}
-    onChange={onFilterChange}
-  />
+  <div className="px-6 pt-6">
+    <Segmented
+      options={[
+        ['unresolved', `해결 안 된 피드백${unresolvedCount ? ` ${unresolvedCount}` : ''}`],
+        ['resolved', '해결된 피드백'],
+      ] as const}
+      value={filter}
+      onChange={onFilterChange}
+      itemClassName="px-4 py-1.5 text-sm font-semibold"
+    />
+  </div>
 );
 
 export default SelectUserFeedback;

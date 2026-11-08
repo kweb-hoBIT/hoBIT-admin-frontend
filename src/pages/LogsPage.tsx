@@ -9,7 +9,7 @@ const LogsPage: React.FC = () => {
     <ProtectedPage>
     <div>
       <main>
-        <LogMain />
+        <LogMain view="question" />
       </main>
     </div>
     </ProtectedPage>

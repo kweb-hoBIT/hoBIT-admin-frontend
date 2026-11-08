@@ -42,14 +42,19 @@ const NAV: NavGroup[] = [
   ] },
   { key: "keywords", label: "키워드", children: [{ path: "/keywords", label: "키워드" }] },
   { key: "logs", label: "로그", children: [
-    { path: "/logs", label: "로그" },
+    { path: "/logs", label: "유저 로그" },
+    { path: "/logs/admin", label: "관리자 로그" },
     { path: "/logs/analytics", label: "로그 분석" },
   ] },
   { key: "feedback", label: "피드백", children: [
     { path: "/userfeedbacks", label: "피드백" },
     { path: "/answer-reviews", label: "답변 확인" },
   ] },
-  { key: "categories", label: "관리", children: [{ path: "/categories", label: "관리" }] },
+  { key: "categories", label: "관리", children: [
+    { path: "/categories", label: "카테고리" },
+    { path: "/categories/profile-options", label: "프로필 항목" },
+    { path: "/categories/bulk", label: "담당자·이메일" },
+  ] },
   // 맨 뒤 — 대기·안 읽은 메시지가 있으면 배지, 좁아도 "더보기"로 접지 않음
   { key: "chats", label: "채팅", pin: true, children: [{ path: "/chats", label: "채팅" }] },
 ];
@@ -62,7 +67,11 @@ function activeNav(pathname: string): { group?: string; child?: string } {
   else if (at("/faqs")) child = "/faqs";
   else if (at("/seniorfaqs") || pathname.startsWith("/adminlogs/seniorfaqlogs")) child = "/seniorfaqs";
   else if (at("/logs/analytics")) child = "/logs/analytics";
-  else if (at("/logs") || pathname.startsWith("/adminlogs")) child = "/logs";
+  else if (at("/logs/admin") || pathname.startsWith("/adminlogs")) child = "/logs/admin";
+  else if (at("/logs")) child = "/logs";
+  else if (at("/categories/profile-options")) child = "/categories/profile-options";
+  else if (at("/categories/bulk") || at("/categories/email") || at("/categories/admin")) child = "/categories/bulk";
+  else if (at("/categories")) child = "/categories";
   else child = NAV.flatMap((g) => g.children).find((c) => at(c.path))?.path;
   const group = NAV.find((g) => g.children.some((c) => c.path === child))?.key;
   return { group, child };
