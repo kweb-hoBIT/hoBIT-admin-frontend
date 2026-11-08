@@ -72,7 +72,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
     currentPage > 1 && setCurrentPage(Math.max(currentPageGroup * pagesPerGroup, 1));
 
   return (
-    <div className="my-6 p-6 bg-surface rounded-2xl border border-line">
+    <div className="my-6 p-3 sm:p-6 bg-surface rounded-2xl border border-line">
       <SeniorFAQFilter
         seniorFaqs={seniorFaqs}
         filter={filter}
@@ -81,9 +81,9 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
         onSelectedFilterChange={setSelectedFilter}
         setFilteredseniorFaqs={setFilteredSeniorFaqs}
       />
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center space-x-4">
+      <div className="p-3 sm:p-6">
+        <div className="flex flex-wrap justify-between items-center gap-3 mb-6">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4">
           <h4 className="text-xl font-bold text-ink flex-grow">선배 FAQ 리스트</h4>
           <SeniorFAQSort
             filteredSeniorFaqs={filteredSeniorFaqs}
@@ -117,7 +117,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
           </div>
         </div>
         <div style={{ minHeight: '320px' }}>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             {currentItems.map(faq => (
               <div
                 key={faq.senior_faq_id}
@@ -157,7 +157,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
             ))}
           </div>
         </div>
-        <div className="flex justify-center mt-4 items-center space-x-4">
+        <div className="flex flex-wrap justify-center mt-4 items-center gap-2 sm:gap-4">
           <button
             onClick={handlePrevPage}
             className="px-4 py-2 bg-card-2 rounded-xl text-sm font-semibold text-ink hover:bg-card-3"
@@ -165,12 +165,12 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
           >
             이전
           </button>
-          <div className="flex space-x-2">
+          <div className="flex gap-2">
             {pageNumbers.map(page => (
               <button
                 key={page}
                 onClick={() => handlePageChange(page)}
-                className={`px-3 py-2 text-sm font-semibold rounded-xl ${currentPage === page ? 'bg-accent text-white' : 'bg-card-2 text-ink'}`}
+                className={`px-3 py-2 text-sm font-semibold rounded-xl ${Math.abs(page - currentPage) > 2 ? 'hidden sm:block' : ''} ${currentPage === page ? 'bg-accent text-white' : 'bg-card-2 text-ink'}`}
                 style={{ width: '40px', textAlign: 'center' }}
               >
                 {page}

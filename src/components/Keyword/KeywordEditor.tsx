@@ -256,7 +256,7 @@ const KeywordEditor: React.FC<Props> = ({ rule, rules, faqs, onClose, onSaved })
           </div>
         )}
 
-        <div className="mt-6 flex justify-end gap-2">
+        <div className="mt-6 flex justify-end gap-2 [&>button]:flex-1 sm:[&>button]:flex-none">
           <button type="button" onClick={onClose} className="bg-card px-5 py-2.5 font-semibold text-ink-2 hover:bg-card-2">
             취소
           </button>

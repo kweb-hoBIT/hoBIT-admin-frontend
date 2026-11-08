@@ -353,7 +353,7 @@ const FAQExcelUpload: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               <p className="text-sm text-ink-3">비어 있는 영어 칸 {preview.translate_count}개는 적용할 때 자동으로 번역해요.</p>
             )}
 
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-2 [&>button]:flex-1 sm:[&>button]:flex-none">
               <button type="button" onClick={close} className="bg-card px-5 py-2.5 text-sm font-semibold text-ink-2 hover:bg-card-2">
                 취소
               </button>

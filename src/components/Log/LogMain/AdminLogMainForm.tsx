@@ -58,11 +58,11 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
   };
 
   return (
-    <div className="p-6">
-      <div className="p-6">
-        <div className="flex justify-center items-center mb-6">
+    <div className="p-3 sm:p-6">
+      <div className="p-3 sm:p-6">
+        <div className="flex flex-wrap justify-center items-center gap-3 mb-6">
           <h4 className="text-xl font-bold text-ink flex-grow">관리자 로그 리스트</h4>
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
               <Select
                 value={itemsPerPage}
                 onChange={(e) => {
@@ -85,7 +85,7 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
             </div>
           </div>
         <div style={{ minHeight: '320px' }}>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             {currentItems.map(log => (
               <div
                 key={`${log.log_id}-${log.log_type}`}
@@ -132,18 +132,18 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
           </div>
         </div>
 
-        <div className="flex justify-center mt-4 items-center space-x-4">
+        <div className="flex flex-wrap justify-center mt-4 items-center gap-2 sm:gap-4">
           <button
             onClick={handlePrevPage}
             className="px-4 py-2 bg-card-2 rounded-xl text-sm font-semibold text-ink hover:bg-card-3"
             disabled={currentPage === 1}
           >이전</button>
-          <div className="flex space-x-2">
+          <div className="flex gap-2">
             {pageNumbers.map(page => (
               <button
                 key={page}
                 onClick={() => handlePageChange(page)}
-                className={`px-3 py-2 text-sm font-semibold rounded-xl ${
+                className={`px-3 py-2 text-sm font-semibold rounded-xl ${Math.abs(page - currentPage) > 2 ? 'hidden sm:block' : ''} ${
                   currentPage === page ? 'bg-accent text-white' : 'bg-card-2 text-ink'
                 }`}
                 style={{ width: '40px', textAlign: 'center' }}

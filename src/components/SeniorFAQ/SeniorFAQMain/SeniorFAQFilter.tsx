@@ -41,9 +41,10 @@ const SeniorFAQFilter: React.FC<SeniorFAQFilterProps> = ({
   const handleBlur = useCallback(() => setSuggestedFiltersInputFocused(false), []);
 
   return (
-    <div className="p-6">
+    <div className="p-3 sm:p-6">
       <h4 className="text-xl font-bold mb-4 text-ink">선배 FAQ 검색</h4>
-      <div className="mb-4 flex space-x-4">
+      {/* 휴대폰: 고르는 칸과 검색칸을 위아래로, 둘 다 전체 너비 */}
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:gap-4">
         <Select
           value={selectedFilter}
           onChange={(e) => onSelectedFilterChange(e.target.value as SeniorFAQFilterProps['selectedFilter'])}

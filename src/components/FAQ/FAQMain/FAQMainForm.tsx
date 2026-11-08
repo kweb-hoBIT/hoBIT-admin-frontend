@@ -86,7 +86,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' 
     setCurrentPage(Math.max(currentPageGroup * pagesPerGroup, 1));
 
   return (
-    <div className="my-6 p-6 bg-surface rounded-2xl border border-line">
+    <div className="my-6 p-3 sm:p-6 bg-surface rounded-2xl border border-line">
       <FAQFilter
         faqs={faqs}
         filter={filter}
@@ -96,9 +96,9 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' 
         setFilteredFaqs={setFilteredFaqs}
       />
 
-      <div className="p-6">
+      <div className="p-3 sm:p-6">
         <div className="flex flex-wrap justify-between items-center gap-3 mb-6">
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4">
           <div className="flex-grow">
             <h4 className="text-xl font-bold text-ink">{grad ? '대학원 FAQ' : '학부 FAQ'}</h4>
             <p className="text-xs text-ink-3">대상이 {grad ? '대학원' : '학부'}·공통인 FAQ — 학생 화면 {grad ? '대학원' : '학부'} 모드에 보여요</p>
@@ -134,7 +134,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' 
           </div>
         </div>
         <div style={{ minHeight: '320px' }}>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             {currentItems.map(faq => (
               <div
                 key={faq.faq_id}
@@ -186,7 +186,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' 
             ))}
           </div>
         </div>
-        <div className="flex justify-center mt-4 items-center space-x-4">
+        <div className="flex flex-wrap justify-center mt-4 items-center gap-2 sm:gap-4">
           <button
             onClick={handlePrevPage}
             className="px-4 py-2 bg-card-2 rounded-xl text-sm font-semibold text-ink hover:bg-card-3"
@@ -194,12 +194,12 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' 
           >
             이전
           </button>
-          <div className="flex space-x-2">
+          <div className="flex gap-2">
             {pageNumbers.map(page => (
               <button
                 key={page}
                 onClick={() => handlePageChange(page)}
-                className={`px-3 py-2 text-sm font-semibold rounded-xl ${
+                className={`px-3 py-2 text-sm font-semibold rounded-xl ${Math.abs(page - currentPage) > 2 ? 'hidden sm:block' : ''} ${
                   currentPage === page ? 'bg-accent text-white' : 'bg-card-2 text-ink'
                 }`}
                 style={{ width: '40px', textAlign: 'center' }}

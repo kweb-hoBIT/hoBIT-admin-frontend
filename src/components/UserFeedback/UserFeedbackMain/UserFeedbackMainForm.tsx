@@ -148,10 +148,10 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
     <section className="panel">
       <SelectUserFeedback filter={filter} onFilterChange={handleFilterChange} unresolvedCount={unresolvedCount} />
       <div>
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-6">
+        <div className="p-3 sm:p-6">
+          <div className="flex flex-wrap justify-between items-center gap-3 mb-6">
             <h4 className="text-xl font-bold text-ink flex-grow">유저 피드백 리스트</h4>
-              <div className="flex items-center space-x-4">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4">
                 <div className="flex rounded-full bg-card p-1" role="group" aria-label="언어로 거르기">
                   {([
                     ['all', '전체'],
@@ -194,7 +194,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
               </div>
             </div>
         <div style={{ minHeight: '320px' }}>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             {(filter === 'unresolved' ? unresolvedCurrentItems : resolvedCurrentItems).map((feedback) => (
               <div key={feedback.user_feedback_id} className="relative bg-card-2 p-4 rounded-xl">
                 {/* 수정 버튼 */}
@@ -257,7 +257,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
         </div>
 
           {/* 페이지네이션 */}
-          <div className="flex justify-center mt-4 items-center space-x-4">
+          <div className="flex flex-wrap justify-center mt-4 items-center gap-2 sm:gap-4">
             <button
               onClick={handlePrevPage}
               className="px-4 py-2 bg-card-2 rounded-xl text-sm font-semibold text-ink hover:bg-card-3"
@@ -267,12 +267,12 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
             </button>
 
             {/* 페이지 번호 */}
-            <div className="flex space-x-2">
+            <div className="flex gap-2">
               {(filter === 'unresolved' ? unresolvedPageNumbers : resolvedPageNumbers).map((page) => (
                 <button
                   key={page}
                   onClick={() => handlePageChange(page)}
-                  className={`px-3 py-2 text-sm font-semibold rounded-xl ${
+                  className={`px-3 py-2 text-sm font-semibold rounded-xl ${Math.abs(page - (filter === 'unresolved' ? unresolvedCurrentPage : resolvedCurrentPage)) > 2 ? 'hidden sm:block' : ''} ${
                     (filter === 'unresolved' ? unresolvedCurrentPage : resolvedCurrentPage) === page ? 'bg-accent text-white' : 'bg-card-2 text-ink'
                   }`}
                   style={{ width: '40px', textAlign: 'center' }}

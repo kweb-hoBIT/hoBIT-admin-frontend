@@ -99,7 +99,7 @@ const KeywordMain: React.FC = () => {
 
   return (
     <div className="py-8">
-      <div className="mb-6 flex items-end justify-between gap-4">
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-[1.9rem] font-bold text-ink">키워드</h1>
           <p className="text-ink-2">
@@ -115,14 +115,15 @@ const KeywordMain: React.FC = () => {
         </button>
       </div>
 
-      <div className="grid grid-cols-[minmax(0,1fr)_380px] items-start gap-4">
+      {/* lg 미만: 목록 아래에 미리 해보기 */}
+      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
         <section className="panel !my-0">
-          <div className="flex items-center gap-3 border-b border-line px-5 py-3">
+          <div className="flex items-center gap-3 border-b border-line px-4 py-3 sm:px-5">
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="키워드·연관 단어·질문으로 찾기"
-              className="w-72 rounded-xl border border-line px-3 py-2 text-sm"
+              className="w-full min-w-0 rounded-xl border border-line px-3 py-2 text-sm sm:w-72"
             />
             <span className="ml-auto text-sm text-ink-3">{rules.length}개</span>
           </div>
@@ -145,10 +146,10 @@ const KeywordMain: React.FC = () => {
               {shown.map((rule, i) => (
                 <li
                   key={rule.id}
-                  className="reveal group flex gap-4 px-5 py-4 hover:bg-card/50"
+                  className="reveal group flex flex-col gap-2 px-4 py-4 hover:bg-card/50 sm:flex-row sm:gap-4 sm:px-5"
                   style={{ animationDelay: `${i * 35}ms` }}
                 >
-                    <div className="w-36 shrink-0">
+                    <div className="shrink-0 sm:w-36">
                       <p className="text-lg font-bold text-ink">{rule.keyword}</p>
                       <p className="text-xs text-ink-3">연관 단어 {rule.synonyms.length}개</p>
                     </div>
@@ -177,18 +178,19 @@ const KeywordMain: React.FC = () => {
                         <p className="text-sm text-ink-3">고정 질문 없음 (연관 단어로만 찾음)</p>
                       )}
                     </div>
-                    <div className="flex shrink-0 items-start gap-1 opacity-60 transition-opacity group-hover:opacity-100">
+                    {/* 마우스가 있는 기기에서만 흐리게 두고 올리면 진하게 — 휴대폰은 항상 진하게 */}
+                    <div className="flex shrink-0 items-start gap-1 transition-opacity group-hover:opacity-100 [@media(hover:hover)]:opacity-60">
                       <button
                         type="button"
                         onClick={() => setEditing(rule)}
-                        className="rounded-full px-3 py-1.5 text-sm font-semibold text-ink hover:bg-card-2"
+                        className="min-h-[40px] rounded-full px-3 py-1.5 text-sm font-semibold text-ink hover:bg-card-2 sm:min-h-0"
                       >
                         수정
                       </button>
                       <button
                         type="button"
                         onClick={() => remove(rule)}
-                        className="rounded-full px-3 py-1.5 text-sm font-semibold text-danger hover:bg-danger-soft"
+                        className="min-h-[40px] rounded-full px-3 py-1.5 text-sm font-semibold text-danger hover:bg-danger-soft sm:min-h-0"
                       >
                         삭제
                       </button>
@@ -199,7 +201,7 @@ const KeywordMain: React.FC = () => {
           )}
         </section>
 
-        <div className="sticky top-20 flex flex-col gap-4">
+        <div className="flex flex-col gap-4 lg:sticky lg:top-20">
           <Tester rules={rules} faqs={faqs} />
           <section className="rounded-2xl border border-line bg-surface p-5 text-sm text-ink-2">
             <h2 className="mb-2 font-bold text-ink">어떻게 동작하나요?</h2>

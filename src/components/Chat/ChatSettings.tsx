@@ -79,7 +79,7 @@ const HolidayImport: React.FC<{ current: string[]; onAdd: (dates: string[]) => v
       </div>
       {list && (
         <div className="mt-3">
-          <ul className="grid max-h-56 grid-cols-2 gap-x-4 gap-y-1 overflow-y-auto text-sm">
+          <ul className="grid max-h-56 grid-cols-1 gap-x-4 sm:grid-cols-2 gap-y-1 overflow-y-auto text-sm">
             {list.map((h) => {
               const already = have.has(h.date);
               const day = WEEK[new Date(`${h.date}T00:00:00`).getDay()];
