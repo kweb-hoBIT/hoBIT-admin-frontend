@@ -71,6 +71,16 @@ const PATHS = {
   menu: <path d="M4 6h16M4 12h16M4 18h16" />,
   chevronLeft: <path d="m15 18-6-6 6-6" />,
   external: <path d="M7 17 17 7M9 7h8v8" />,
+  arrowUp: <path d="m5 12 7-7 7 7M12 19V5" />,
+  plus: <path d="M5 12h14M12 5v14" />,
+  refresh: (
+    <>
+      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+      <path d="M21 3v5h-5" />
+      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+      <path d="M8 16H3v5" />
+    </>
+  ),
 };
 
 export type IconName = keyof typeof PATHS;
