@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { GetDashboardResponse, QualityWeek } from '../../types/dashboard';
+import { GetDashboardResponse, QualityDaily, QualityStat } from '../../types/dashboard';
+import { useCountUp } from '../ui/motion';
 
 type Tests = NonNullable<GetDashboardResponse['data']['tests']>;
 
@@ -28,83 +29,106 @@ export const TestsStatus: React.FC<{ t: Tests }> = ({ t }) =>
   );
 
 type Metric = {
+  key: keyof QualityStat;
   label: string;
   hint: string;
-  value: (w: QualityWeek) => number | null;
-  fmt: (v: number) => string;
-  good: 'up' | 'down' | null;          // 어느 쪽이 좋은지 (null = 방향 없음, 질문 수)
-  worse: (cur: number, prev: number) => boolean; // 지난주보다 눈에 띄게 나빠졌으면 빨간색
-  delta: (cur: number, prev: number) => string;
+  unit: '%' | '초' | '';
+  good: 'up' | 'down' | null;                    // 어느 쪽이 좋은지 (null = 방향 없음, 질문 수)
+  worse: (cur: number, prev: number) => boolean; // 지난 7일보다 눈에 띄게 나빠졌으면 빨간색
 };
 
-const pct = (v: number) => `${v}%`;
-const sec = (v: number) => `${(v / 1000).toFixed(1)}초`;
-const pp = (c: number, p: number) => `${c - p >= 0 ? '+' : ''}${Math.round(c - p)}%p`;
-const ds = (c: number, p: number) => `${c - p >= 0 ? '+' : ''}${((c - p) / 1000).toFixed(1)}초`;
 const METRICS: Metric[] = [
-  { label: '질문 수', hint: 'AI가 답한 직접 입력 질문', value: (w) => w.total, fmt: String, good: null,
-    worse: () => false, delta: (c, p) => `${c - p >= 0 ? '+' : ''}${c - p}` },
-  { label: '답을 못 찾음', hint: '자료에서 답을 찾지 못한 비율', value: (w) => w.not_found_rate, fmt: pct, good: 'down',
-    worse: (c, p) => c - p >= 5, delta: pp },
-  { label: '도움 안 됨', hint: '학생이 "도움 안 됨"을 누른 비율', value: (w) => w.down_rate, fmt: pct, good: 'down',
-    worse: (c, p) => c - p >= 2, delta: pp },
-  { label: '근거 없는 숫자 삭제', hint: 'AI 답변에 자료에 없는 날짜·금액·연락처가 있어 그 줄을 빼고 보낸 비율 (AI가 지어낼 뻔한 경우)', value: (w) => w.grounding_rate,
-    fmt: pct, good: 'down', worse: (c, p) => c - p >= 2, delta: pp },
-  { label: '규칙으로 분류', hint: 'AI 분류 없이 바로 답한 비율 (높을수록 빠름)', value: (w) => w.rule_rate, fmt: pct, good: 'up',
-    worse: (c, p) => p - c >= 10, delta: pp },
-  { label: '응답 시간', hint: '질문을 받고 답을 다 보낼 때까지 (중간값, 아래는 느린 10%)', value: (w) => w.latency_p50, fmt: sec,
-    good: 'down', worse: (c, p) => c - p >= 1000, delta: ds },
+  { key: 'total', label: '질문 수', hint: 'AI가 답한 직접 입력 질문', unit: '', good: null, worse: () => false },
+  { key: 'not_found_rate', label: '답을 못 찾음', hint: '자료에서 답을 찾지 못한 비율', unit: '%', good: 'down', worse: (c, p) => c - p >= 5 },
+  { key: 'down_rate', label: '도움 안 됨', hint: '학생이 "도움 안 됨"을 누른 비율', unit: '%', good: 'down', worse: (c, p) => c - p >= 2 },
+  { key: 'grounding_rate', label: '근거 없는 숫자 삭제', hint: 'AI 답변에 자료에 없는 날짜·금액·연락처가 있어 그 줄을 빼고 보낸 비율 (AI가 지어낼 뻔한 경우)', unit: '%', good: 'down', worse: (c, p) => c - p >= 2 },
+  { key: 'rule_rate', label: '규칙으로 분류', hint: 'AI 분류 없이 바로 답한 비율 (높을수록 빠름)', unit: '%', good: 'up', worse: (c, p) => p - c >= 10 },
+  { key: 'latency_p50', label: '응답 시간', hint: '질문을 받고 답을 다 보낼 때까지 (중간값)', unit: '초', good: 'down', worse: (c, p) => c - p >= 1000 },
 ];
 
-/** 주별 추이 작은 선 그래프 — 마지막 점(이번 주) 강조 */
-const Spark: React.FC<{ values: (number | null)[]; bad: boolean }> = ({ values, bad }) => {
-  const pts = values.map((v, i) => ({ v, i })).filter((p): p is { v: number; i: number } => p.v != null);
-  if (pts.length < 2) return <div className="h-6" />;
-  const W = 80, H = 24, pad = 3;
-  const min = Math.min(...pts.map((p) => p.v)), max = Math.max(...pts.map((p) => p.v));
-  const x = (i: number) => pad + (i / Math.max(1, values.length - 1)) * (W - pad * 2);
-  const y = (v: number) => (max === min ? H / 2 : H - pad - ((v - min) / (max - min)) * (H - pad * 2));
-  const d = pts.map((p, k) => `${k ? 'L' : 'M'}${x(p.i).toFixed(1)},${y(p.v).toFixed(1)}`).join(' ');
-  const last = pts[pts.length - 1];
+const shown = (m: Metric, v: number) => (m.unit === '초' ? v / 1000 : v); // 응답 시간은 ms → 초
+const fmt = (m: Metric, v: number) => (m.unit === '' ? String(Math.round(v)) : `${shown(m, v).toFixed(1).replace(/\.0$/, '')}${m.unit}`);
+const shortDate = (iso: string) => `${Number(iso.slice(5, 7))}/${Number(iso.slice(8, 10))}`;
+
+/** 숫자가 차르륵 올라감 (소수 한 자리까지) — 홈 숫자 카드와 같은 움직임 */
+const AnimatedValue: React.FC<{ m: Metric; v: number; delay: number; className: string }> = ({ m, v, delay, className }) => {
+  const x = useCountUp(Math.round(shown(m, v) * 10), 900, delay) / 10;
+  return <span className={className}>{m.unit === '' ? Math.round(x) : `${x.toFixed(1).replace(/\.0$/, '')}${m.unit}`}</span>;
+};
+
+/** 최근 14일 작은 막대 — 질문 수 그래프처럼 왼쪽부터 차례로 자람. 마지막 7일은 진하게, 마우스를 올리면 그날 값 */
+const MiniBars: React.FC<{ m: Metric; days: QualityDaily['daily']; bad: boolean; delay: number }> = ({ m, days, bad, delay }) => {
+  const [hover, setHover] = useState<number | null>(null);
+  const vals = days.map((d) => d[m.key] as number | null);
+  const max = Math.max(1, ...vals.map((v) => v ?? 0));
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className={`h-6 w-20 ${bad ? 'text-danger' : 'text-accent-ink'}`} aria-hidden>
-      <path d={d} fill="none" stroke="currentColor" strokeOpacity={0.55} strokeWidth={1.5} strokeLinejoin="round" strokeLinecap="round" />
-      <circle cx={x(last.i)} cy={y(last.v)} r={2.5} fill="currentColor" />
-    </svg>
+    <div className="relative flex h-[34px] items-end gap-[2px]" onMouseLeave={() => setHover(null)}>
+      {days.map((d, i) => {
+        const v = vals[i];
+        const recent = i >= days.length - 7;
+        return (
+          <div key={d.date} className="relative flex h-full flex-1 items-end" onMouseEnter={() => setHover(i)}>
+            {v != null && (
+              <div
+                className={`grow-y w-full rounded-t-[2px] ${
+                  hover === i ? 'bg-accent-ink' : bad && recent ? 'bg-danger/70' : recent ? 'bg-accent-ink/70' : 'bg-accent-ink/25'
+                }`}
+                style={{ height: `${Math.max(6, (v / max) * 100)}%`, animationDelay: `${delay + i * 35}ms` }}
+              />
+            )}
+            {v == null && <div className="h-[2px] w-full rounded bg-line" />}
+          </div>
+        );
+      })}
+      {hover != null && (
+        <div className="pointer-events-none absolute bottom-full right-0 z-10 mb-1 whitespace-nowrap rounded-lg border border-line bg-surface px-2 py-1 text-[11px] text-ink shadow-lg">
+          {shortDate(days[hover].date)} · {vals[hover] == null ? '질문 없음' : fmt(m, vals[hover] as number)}
+          {days[hover].total ? ` (질문 ${days[hover].total})` : ''}
+        </div>
+      )}
+    </div>
   );
 };
 
-/** 답변 품질 — 실시간 채팅 옆 작은 카드. 항목마다 이번 주 값 + 지난주 대비 + 8주 추이 */
-const QualityCard: React.FC<{ weeks: QualityWeek[]; footer?: React.ReactNode; className?: string }> = ({ weeks, footer, className = '' }) => {
-  if (!weeks.length) return null;
-  const cur = weeks[weeks.length - 1];
-  const prev = weeks.length > 1 ? weeks[weeks.length - 2] : null;
+/** 답변 품질 — 실시간 채팅 옆 카드. 항목마다 최근 7일 값 + 그 전 7일 대비 + 14일 막대 그래프 */
+const QualityCard: React.FC<{ q: QualityDaily; footer?: React.ReactNode; className?: string }> = ({ q, footer, className = '' }) => {
+  const { current: cur, previous: prev, daily } = q;
   return (
     <section className={`flex flex-col rounded-2xl border border-line bg-surface p-5 ${className}`}>
       <div className="mb-3 flex items-baseline gap-2">
         <h2 className="font-bold text-ink">답변 품질</h2>
-        <span className="text-xs text-ink-3">이번 주 · 지난 {weeks.length}주 추이</span>
+        <span className="text-xs text-ink-3">최근 7일 · 14일 그래프</span>
         <Link to="/answer-reviews" className="ml-auto text-sm font-semibold text-accent-ink hover:underline">확인할 답변 →</Link>
       </div>
-      <div className="grid flex-1 grid-cols-2 gap-x-4 gap-y-3">
-        {METRICS.map((m) => {
-          const v = m.value(cur);
-          const p = prev ? m.value(prev) : null;
+      <div className="grid flex-1 grid-cols-2 gap-x-5 gap-y-3">
+        {METRICS.map((m, i) => {
+          const v = cur[m.key] as number | null;
+          const p = prev[m.key] as number | null;
           const bad = v != null && p != null && m.worse(v, p);
           const better = v != null && p != null && m.good != null && v !== p && (m.good === 'up' ? v > p : v < p);
+          const diff = v != null && p != null ? shown(m, v) - shown(m, p) : null;
+          const delay = 150 + i * 70;
           return (
-            <div key={m.label} className="flex items-end justify-between gap-2 border-b border-line pb-2" title={m.hint}>
-              <div className="min-w-0">
-                <p className="truncate text-xs font-semibold text-ink-2">{m.label}</p>
-                <p className={`mt-0.5 text-xl font-bold leading-tight tabular-nums ${bad ? 'text-danger' : 'text-ink'}`}>
-                  {v == null ? '–' : m.fmt(v)}
-                </p>
-                <p className={`truncate text-[11px] tabular-nums ${bad ? 'text-danger' : better ? 'text-success' : 'text-ink-3'}`}>
-                  {m.label === '응답 시간' && cur.latency_p90 != null ? `느린 10% ${sec(cur.latency_p90)} · ` : ''}
-                  {v != null && p != null ? `지난주 ${m.delta(v, p)}` : '지난주 기록 없음'}
-                </p>
+            <div key={m.key} className="reveal min-w-0" style={{ animationDelay: `${delay}ms` }} title={m.hint}>
+              <div className="flex items-end justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate text-xs font-semibold text-ink-2">{m.label}</p>
+                  {v == null ? (
+                    <p className="text-xl font-bold leading-tight text-ink-3">–</p>
+                  ) : (
+                    <AnimatedValue m={m} v={v} delay={delay} className={`text-xl font-bold leading-tight tabular-nums ${bad ? 'text-danger' : 'text-ink'}`} />
+                  )}
+                </div>
+                <div className="w-[52%] shrink-0">
+                  <MiniBars m={m} days={daily} bad={bad} delay={delay + 100} />
+                </div>
               </div>
-              <Spark values={weeks.map(m.value)} bad={bad} />
+              <p className={`mt-1 truncate text-[11px] tabular-nums ${bad ? 'text-danger' : better ? 'text-success' : 'text-ink-3'}`}>
+                {m.key === 'latency_p50' && cur.latency_p90 != null ? `느린 10% ${(cur.latency_p90 / 1000).toFixed(1)}초 · ` : ''}
+                {diff == null
+                  ? '지난 7일 기록 없음'
+                  : `그 전 7일보다 ${diff >= 0 ? '+' : ''}${m.unit === '' ? Math.round(diff) : diff.toFixed(1).replace(/\.0$/, '')}${m.unit === '%' ? '%p' : m.unit}`}
+              </p>
             </div>
           );
         })}

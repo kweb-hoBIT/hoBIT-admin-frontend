@@ -346,10 +346,10 @@ const Home: React.FC = () => {
             {dash?.tests && !testsOk && <TestsStatus t={dash.tests} />}
             <div className="mb-4 flex items-stretch gap-4">
               <LiveChatCard className="min-w-0 flex-1" />
-              {dash?.quality && dash.quality.length > 0 && (
+              {dash?.quality_daily && (
                 <Reveal index={1} className="min-w-[380px] flex-1">
                   <QualityCard
-                    weeks={dash.quality}
+                    q={dash.quality_daily}
                     className="h-full"
                     footer={
                       <>
@@ -362,7 +362,7 @@ const Home: React.FC = () => {
               )}
             </div>
             {/* 품질 기록이 아직 없으면 정상 상태 줄은 여기에 */}
-            {!dash?.quality?.length && (dash?.pipeline || dash?.tests) && (
+            {!dash?.quality_daily && (dash?.pipeline || dash?.tests) && (
               <div className="-mt-1 mb-4 space-y-1">
                 {dash?.pipeline && pipeOk && <PipelineStatus p={dash.pipeline} />}
                 {dash?.tests && testsOk && <TestsStatus t={dash.tests} />}

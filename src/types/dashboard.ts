@@ -19,6 +19,7 @@ export type GetDashboardResponse = {
     // 홈페이지·FAQ 정기 수집의 마지막 결과 (RAG를 못 부르면 null)
     pipeline: { finished_at: string; scope: string; ok: boolean; problems: string[]; last_ok_at: string | null } | null;
     quality?: QualityWeek[];
+    quality_daily?: QualityDaily | null;
     tests?: { finished_at: string; total: number; passed: number; flaky: string[]; failed: string[] } | null;
     recent_feedbacks: {
       user_feedback_id: number;
@@ -44,4 +45,20 @@ export type QualityWeek = {
   rule_rate: number | null;
   latency_p50: number | null;
   latency_p90: number | null;
+};
+
+// 일별 답변 품질 (최근 14일) + 최근 7일·그 전 7일 합계 — 홈 '답변 품질' 그래프
+export type QualityStat = {
+  total: number;
+  not_found_rate: number | null;
+  down_rate: number | null;
+  grounding_rate: number | null;
+  rule_rate: number | null;
+  latency_p50: number | null;
+  latency_p90: number | null;
+};
+export type QualityDaily = {
+  daily: (QualityStat & { date: string })[];
+  current: QualityStat;
+  previous: QualityStat;
 };
