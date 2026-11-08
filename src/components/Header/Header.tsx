@@ -394,6 +394,10 @@ const Header: React.FC = () => {
     [groups, currentChild]
   );
   const subItems = groups.find((g) => g.key === current)?.children ?? [];
+  // 휴대폰 알약에 보일 이름 — 묶음 이름 (홈·마이페이지 등 묶음 밖이면 그 화면 이름)
+  const currentLabel =
+    groups.find((g) => g.key === current)?.label ??
+    (location.pathname.startsWith("/mypage") ? "마이페이지" : location.pathname.startsWith("/home") ? "홈" : "메뉴");
   const subRef = useRef<HTMLDivElement>(null);
 
   // 좁은 화면에서 하위 탭 줄이 넘치면 지금 탭이 보이도록 가로로 스크롤
@@ -444,6 +448,30 @@ const Header: React.FC = () => {
             )}
           </span>
         </button>
+
+        {/* 휴대폰: 로고 옆 알약 — 지금 메뉴 이름을 보여 주고, 누르면 아래로 메뉴가 펼쳐짐 (채팅 대기·안 읽은 메시지는 숫자) */}
+        {!isAuthPage && (
+          <button
+            type="button"
+            onClick={() => setDrawer((v) => !v)}
+            aria-expanded={drawer}
+            aria-controls="mobile-nav"
+            aria-label={`메뉴 ${drawer ? "닫기" : "열기"} (지금: ${currentLabel})`}
+            className={`relative flex h-10 min-w-0 items-center gap-1.5 rounded-full px-3.5 text-[15px] font-semibold transition-colors md:hidden ${
+              drawer ? "bg-accent/15 text-accent-ink dark:bg-accent-ink/20" : "bg-card text-accent-ink hover:bg-card-2"
+            }`}
+          >
+            <span className="truncate">{currentLabel}</span>
+            <svg viewBox="0 0 20 20" className={`h-4 w-4 shrink-0 transition-transform ${drawer ? "rotate-180" : ""}`} aria-hidden="true">
+              <path d="M5.5 7.5 10 12l4.5-4.5" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            {chatBadge > 0 && (
+              <span className="absolute -right-1 -top-1 inline-flex min-w-[1.1rem] items-center justify-center rounded-full bg-accent px-1 text-[11px] font-bold leading-[1.1rem] text-white">
+                {chatBadge}
+              </span>
+            )}
+          </button>
+        )}
 
         {!isAuthPage && (
           <NavBar
@@ -521,24 +549,6 @@ const Header: React.FC = () => {
                 </div>
               )}
             </div>
-          )}
-          {/* 휴대폰 메뉴 버튼 — 채팅 대기·안 읽은 메시지가 있으면 점 */}
-          {!isAuthPage && (
-            <button
-              type="button"
-              onClick={() => setDrawer((v) => !v)}
-              aria-expanded={drawer}
-              aria-controls="mobile-nav"
-              aria-label={drawer ? "메뉴 닫기" : "메뉴 열기"}
-              className="relative flex h-11 w-11 items-center justify-center rounded-full text-ink-2 transition-colors hover:bg-card hover:text-ink md:hidden"
-            >
-              <Icon name={drawer ? "close" : "menu"} className="h-6 w-6" />
-              {chatBadge > 0 && (
-                <span className="absolute right-0.5 top-0.5 inline-flex min-w-[1.1rem] items-center justify-center rounded-full bg-accent px-1 text-[11px] font-bold leading-[1.1rem] text-white">
-                  {chatBadge}
-                </span>
-              )}
-            </button>
           )}
         </div>
       </div>

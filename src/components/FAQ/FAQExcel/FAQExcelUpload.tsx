@@ -113,7 +113,7 @@ const SheetBlock: React.FC<{ title: string; sheet: SheetPreview; noun: string }>
               </div>
               <div className="mt-2 space-y-2">
                 {u.changes.map((c) => (
-                  <div key={c.field} className="grid gap-1 sm:grid-cols-[96px_1fr]">
+                  <div key={c.field} className="grid grid-cols-1 gap-1 sm:grid-cols-[96px_minmax(0,1fr)]">
                     <div className="text-xs font-semibold text-ink-3 sm:pt-1">{c.label}</div>
                     <div className="flex flex-wrap items-start gap-1.5">
                       <span className="whitespace-pre-line rounded-lg bg-danger-soft px-2 py-1 text-ink line-through decoration-danger/60">

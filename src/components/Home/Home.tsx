@@ -417,7 +417,7 @@ const Home: React.FC = () => {
       )}
 
       {/* 그래프 + 최근 피드백 */}
-      <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <Reveal index={4}>
           <Card title="최근 14일 질문 수">
             {dash ? <DailyChart daily={dash.daily} /> : <Placeholder failed={failed} className="h-[180px]" />}
@@ -457,7 +457,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* 많이 쓰인 FAQ · 답을 못 찾은 질문 */}
-      <div className="mt-4 grid gap-4 lg:grid-cols-2">
+      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Reveal index={6}>
           <Card title="이번 주 많이 쓰인 FAQ" action={<span className="text-xs text-ink-3">직접 열람 + 답변 근거로 인용</span>}>
             {dash ? (

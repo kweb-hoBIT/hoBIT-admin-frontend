@@ -198,7 +198,7 @@ const ProfileOptionMain: React.FC = () => {
       </div>
 
       {/* lg 미만: 안내 상자를 목록 아래로 */}
-      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="flex flex-col gap-4">
           {SECTIONS.map((section) => {
             const list = options.filter((o) => o.field === section.field);

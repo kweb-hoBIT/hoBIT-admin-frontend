@@ -95,7 +95,7 @@ const ChatFeatures: React.FC = () => {
         {!canEdit && ' (바꾸기는 행정실·개발자 계정만 할 수 있어요)'}
       </p>
       {failed && <p className="mt-4 rounded-xl bg-danger-soft px-4 py-3 text-sm text-danger">채팅 서버에서 설정을 불러오지 못했어요. 잠시 후 새로고침해 주세요.</p>}
-      <div className="mt-5 grid gap-4 md:grid-cols-2">
+      <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
         {cards.map((c) => {
           const on = f ? f[c.mode] : false;
           return (
