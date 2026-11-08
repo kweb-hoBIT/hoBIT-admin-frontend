@@ -13,7 +13,7 @@ import { appAlert } from '../ui/Dialog';
 import type { FaqOption } from './KeywordMain';
 import Icon from '../ui/Icon';
 
-const MAX_PINNED = 5;
+const MAX_PINNED = 3; // 학생 화면이 실제로 쓰는 개수와 같게 (엑셀도 3개)
 const MAX_SOURCES = 6;
 
 /** 연관 단어 입력 — Enter·쉼표로 추가, 빈 칸에서 Backspace로 마지막 단어 삭제, "a, b, c" 붙여넣기 */

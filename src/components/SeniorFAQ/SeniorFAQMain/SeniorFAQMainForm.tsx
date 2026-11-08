@@ -92,7 +92,8 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
           }
           left={<SeniorFAQSort sort={seniorFaqSortValue} onSortChange={setseniorFAQSortValue} />}
           // 엑셀 파일 하나에 행정실 FAQ·선배 FAQ·담당자·이메일 — 근로장학생 계정은 선배 FAQ만 다뤄서 숨김
-          right={role !== 'senior' ? <FAQExcelButtons /> : undefined}
+          // 근로장학생 계정은 선배 FAQ만 담긴 엑셀, 행정실·개발자는 전체 (같은 hoBIT 데이터 파일)
+          right={<FAQExcelButtons scope={role === 'senior' ? 'senior' : 'all'} />}
         />
         <div>
           <div ref={listRef} className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
