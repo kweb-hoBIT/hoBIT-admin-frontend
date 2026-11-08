@@ -3,12 +3,14 @@ import { useHobitMutateDeleteApi } from '../../../hooks/hobitAdmin';
 import { DeleteUserFeedbackRequest, DeleteUserFeedbackResponse } from '../../../types/feedback';
 
 import { appAlert } from '../../ui/Dialog';
+import Icon from '../../ui/Icon';
 interface FAQDeleteProps {
   user_feedback_id: string;
   onSuccess?: () => void;
+  compact?: boolean; // 카드 안 작은 아이콘 버튼
 }
 
-const UserFeedbackDelete: React.FC<FAQDeleteProps> = ({ user_feedback_id, onSuccess }) => {
+const UserFeedbackDelete: React.FC<FAQDeleteProps> = ({ user_feedback_id, onSuccess, compact }) => {
   const [error, setError] = useState<string | null>(null);
   const [showPopup, setShowPopup] = useState(false);
 
@@ -39,13 +41,25 @@ const UserFeedbackDelete: React.FC<FAQDeleteProps> = ({ user_feedback_id, onSucc
 
   return (
     <div>
-      <button
-        type="button"
-        onClick={togglePopup}
-        className="bg-danger text-white px-4 py-2 rounded-xl hover:bg-danger/90"
-      >
-        삭제
-      </button>
+      {compact ? (
+        <button
+          type="button"
+          onClick={togglePopup}
+          aria-label="삭제"
+          title="삭제"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors text-danger hover:bg-danger-soft"
+        >
+          <Icon name="trash" className="h-[18px] w-[18px]" />
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={togglePopup}
+          className="bg-danger text-white px-4 py-2 rounded-xl hover:bg-danger/90"
+        >
+          삭제
+        </button>
+      )}
       {showPopup && (
         <div className="modal-overlay">
           <div className="modal-panel max-w-[440px]">

@@ -16,7 +16,7 @@ const FAQAudienceField: React.FC<{ value: FAQAudience; onChange: (v: FAQAudience
 export const FAQAudienceBadge: React.FC<{ audience?: FAQAudience }> = ({ audience }) => {
   if (audience === 'graduate') return <Badge tone="accent">대학원</Badge>;
   if (audience === 'all') return <Badge tone="link">공통</Badge>;
-  return null;
+  return <Badge>학부</Badge>; // 대상이 비어 있는 예전 FAQ도 학부
 };
 
 export default FAQAudienceField;

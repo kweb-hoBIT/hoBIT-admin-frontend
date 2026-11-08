@@ -5,7 +5,7 @@ import React from 'react';
  *   <Badge tone="link">EN</Badge>
  */
 const TONES = {
-  neutral: 'bg-card-2 text-ink-2',
+  neutral: 'bg-ink/[0.07] text-ink-2 dark:bg-ink/10', // 회색 카드(card-2) 위에서도 알약 모양이 보이게
   link: 'bg-link/15 text-link',
   senior: 'bg-senior text-accent-ink',
   accent: 'bg-accent/10 text-accent-ink dark:bg-accent-ink/15',

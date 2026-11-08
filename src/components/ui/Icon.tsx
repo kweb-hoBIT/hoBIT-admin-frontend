@@ -73,6 +73,7 @@ const PATHS = {
   external: <path d="M7 17 17 7M9 7h8v8" />,
   arrowUp: <path d="m5 12 7-7 7 7M12 19V5" />,
   plus: <path d="M5 12h14M12 5v14" />,
+  check: <path d="M20 6 9 17l-5-5" />,
   pencil: (
     <>
       <path d="M21.17 6.81a1 1 0 0 0-3.99-3.99L3.84 16.17a2 2 0 0 0-.5.83l-1.32 4.35a.5.5 0 0 0 .62.62l4.35-1.32a2 2 0 0 0 .83-.5z" />

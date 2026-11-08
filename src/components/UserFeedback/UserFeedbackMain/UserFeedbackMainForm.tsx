@@ -10,7 +10,7 @@ import UserFeedbackDelete from './UserFeedbackDelete';
 import BulkDeleteFeedbackModal from './BulkDeleteFeedbackModal';
 import { useIncremental } from '../../../hooks/useIncremental';
 import { useListCache } from '../../../hooks/listCache';
-import { ListEnd, ListHeader, CardFooter } from '../../ui/ListKit';
+import { ListEnd, ListHeader } from '../../ui/ListKit';
 import { revealRef } from '../../ui/motion';
 
 
@@ -137,40 +137,44 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
           <div ref={listRef} className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             {shown.map((feedback) => (
               <div key={feedback.user_feedback_id} ref={revealRef} className="relative bg-card-2 p-3.5 sm:p-4 rounded-xl">
-                <div className="break-words">
-                  <div className="mb-2 flex items-start gap-2">
-                      <LanguageBadge language={feedback.language} className="mt-0.5" />
-                      <strong> {feedback.question_ko ? (
-                      `피드백 질문: ${feedback.question_ko}`
-                      ) : (
-                        'FAQ 생성'
-                      )}</strong>
-                  </div>
-                  <div className="flex flex-col">
-                    {feedback.question_ko && (
-                      <div className="mb-0.5 text-sm text-ink-2">
-                        <strong>유저 질문:</strong> {feedback.user_question ? feedback.user_question : 'X'}
+                <div className="flex items-start gap-3">
+                  <div className="min-w-0 flex-1 break-words">
+                    <div className="mb-1.5 flex items-start gap-2">
+                      <LanguageBadge language={feedback.language} />
+                      <strong className="min-w-0 pt-0.5 leading-snug">
+                        {feedback.question_ko ? `피드백 질문: ${feedback.question_ko}` : 'FAQ 생성'}
+                      </strong>
+                    </div>
+                    <div className="flex flex-col gap-0.5 text-sm text-ink-2">
+                      {feedback.question_ko && (
+                        <div>
+                          <strong>유저 질문:</strong> {feedback.user_question ? feedback.user_question : 'X'}
+                        </div>
+                      )}
+                      <div>
+                        <strong>피드백 사유:</strong> {feedback.feedback_reason ? feedback.feedback_reason : 'X'}
                       </div>
-                    )}
-                    <div className="mb-0.5 text-sm text-ink-2">
-                      <strong>피드백 사유:</strong> {feedback.feedback_reason ? feedback.feedback_reason : 'X'}
+                      <div>
+                        <strong>피드백 상세:</strong> {feedback.feedback_detail && !feedback.feedback_detail.startsWith('Unresolved') ? feedback.feedback_detail : 'X'}
+                      </div>
+                      <div className="text-ink-3">{formatDateToKST(feedback.created_at)}</div>
                     </div>
-                    <div className="mb-0.5 text-sm text-ink-2">
-                      <strong>피드백 상세:</strong> {feedback.feedback_detail && !feedback.feedback_detail.startsWith('Unresolved') ? feedback.feedback_detail : 'X'}
-                    </div>
-                    <div className="mb-0.5 text-sm text-ink-2">
-                      <strong>피드백 시각:</strong> {formatDateToKST(feedback.created_at)}
-                    </div>
+                  </div>
+                  {/* 오른쪽 위: 완료(보류)·삭제 아이콘 — FAQ 카드와 같은 모양 (예전엔 큰 버튼 줄이 카드 아래 한 줄을 더 차지했음) */}
+                  <div className="-mr-1.5 -mt-1.5 flex shrink-0 items-center">
+                    <UserFeedbackResolvedUpdate
+                      user_feedback_id={feedback.user_feedback_id}
+                      initialResolved={feedback.resolved ? 1 : 0}
+                      onResolvedChange={handleResolvedChange}
+                      compact
+                    />
+                    <UserFeedbackDelete
+                      user_feedback_id={String(feedback.user_feedback_id)}
+                      onSuccess={() => handleDeleted(feedback.user_feedback_id)}
+                      compact
+                    />
                   </div>
                 </div>
-                <CardFooter>
-                  <UserFeedbackResolvedUpdate
-                    user_feedback_id={feedback.user_feedback_id}
-                    initialResolved={feedback.resolved ? 1 : 0}
-                    onResolvedChange={handleResolvedChange}
-                  />
-                  <UserFeedbackDelete user_feedback_id={String(feedback.user_feedback_id)} onSuccess={() => handleDeleted(feedback.user_feedback_id)} />
-                </CardFooter>
               </div>
             ))}
           </div>
