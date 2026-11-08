@@ -20,9 +20,11 @@ import FAQExcelButtons from '../FAQExcel/FAQExcelButtons';
 
 interface FAQMainFormProps {
   faqs: GetAllFAQResponse['data']['faqs'];
+  view?: 'undergraduate' | 'graduate';
 }
 
-const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
+const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' }) => {
+  const grad = view === 'graduate';
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isFirstRender = useRef(true);
@@ -97,7 +99,10 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
       <div className="p-6">
         <div className="flex flex-wrap justify-between items-center gap-3 mb-6">
           <div className="flex items-center space-x-4">
-          <h4 className="text-xl font-bold text-ink flex-grow">FAQ 리스트</h4>
+          <div className="flex-grow">
+            <h4 className="text-xl font-bold text-ink">{grad ? '대학원 FAQ' : '학부 FAQ'}</h4>
+            <p className="text-xs text-ink-3">대상이 {grad ? '대학원' : '학부'}·공통인 FAQ — 학생 화면 {grad ? '대학원' : '학부'} 모드에 보여요</p>
+          </div>
           <FAQSort 
             filteredFaqs={filteredFaqs}
             sort={faqSortValue} 
@@ -121,7 +126,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs }) => {
               <option value={10}>10개씩 보기</option>
             </Select>
             <button
-              onClick={() => window.location.assign('/faqs/create')}
+              onClick={() => window.location.assign(grad ? '/faqs/create?audience=graduate' : '/faqs/create')}
               className="bg-success text-white px-4 py-2 rounded-xl hover:bg-success/90"
             >
               추가

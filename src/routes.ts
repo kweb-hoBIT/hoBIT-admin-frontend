@@ -18,6 +18,7 @@ export const ROUTES: RouteDef[] = [
   def('/home', () => import('./pages/HomePage')),
 
   def('/faqs', () => import('./pages/FAQMainPage')),
+  def('/faqs/graduate', () => import('./pages/FAQGradPage')),
   def('/faqs/create', () => import('./pages/FAQCreatePage')),
   def('/faqs/update/:id', () => import('./pages/FAQUpdatePage')),
   def('/faqs/:id', () => import('./pages/FAQDetailPage')),
@@ -66,7 +67,7 @@ export function prefetchRoute(to: string) {
 }
 
 /** 자주 쓰는 화면은 브라우저가 한가할 때 미리 받음 (Swagger·로그 분석처럼 무거운 화면은 마우스를 올렸을 때만) */
-const WARM_PATHS = ['/chats', '/home', '/faqs', '/seniorfaqs', '/faqs/1', '/seniorfaqs/1', '/keywords', '/logs', '/userfeedbacks', '/categories'];
+const WARM_PATHS = ['/chats', '/home', '/faqs', '/faqs/graduate', '/seniorfaqs', '/faqs/1', '/seniorfaqs/1', '/keywords', '/logs', '/userfeedbacks', '/categories'];
 
 export function warmRoutes() {
   const idle: (cb: () => void) => void =

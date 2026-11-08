@@ -3,7 +3,10 @@ import { useHobitQueryGetApi } from '../../../hooks/hobitAdmin';
 import { GetAllFAQRequest, GetAllFAQResponse } from '../../../types/faq';
 import FAQMainForm from './FAQMainForm';
 
-const FAQMain: React.FC = () => {
+// 학부 FAQ = 대상이 학부·공통, 대학원 FAQ = 대학원·공통 (학생 화면 학부/대학원 모드에 보이는 FAQ와 같음)
+export type FAQView = 'undergraduate' | 'graduate';
+
+const FAQMain: React.FC<{ view?: FAQView }> = ({ view = 'undergraduate' }) => {
   const [faqData, setFaqData] = useState<GetAllFAQResponse['data']['faqs']>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,7 +39,14 @@ const FAQMain: React.FC = () => {
 
   return (
     <div>
-      <FAQMainForm faqs={faqData} />
+      <FAQMainForm
+        key={view}
+        view={view}
+        faqs={faqData.filter((f) => {
+          const a = f.audience ?? 'undergraduate';
+          return a === 'all' || a === view;
+        })}
+      />
     </div>
   );
 };

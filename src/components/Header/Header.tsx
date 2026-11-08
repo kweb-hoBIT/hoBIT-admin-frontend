@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
+import React, { useState, useRef, useEffect, useLayoutEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
@@ -27,26 +27,52 @@ import DeleteAccount from "./DeleteAccount";
 const THEME_KEY = "hobit-theme"; // 호빗 사용자 화면과 같은 키
 const HOBIT_URL = process.env.REACT_APP_HOBIT_URL || "https://www.hobit.kr";
 
-const NAV: { path: string; label: string; pin?: boolean }[] = [
-  { path: "/faqs", label: "FAQ" },
-  { path: "/seniorfaqs", label: "선배 FAQ" },
-  { path: "/keywords", label: "키워드" },
-  { path: "/logs", label: "로그" },
-  { path: "/logs/analytics", label: "로그 분석" },
-  { path: "/userfeedbacks", label: "피드백" },
-  { path: "/answer-reviews", label: "답변 확인" },
-  { path: "/categories", label: "관리" },
-  { path: "/chats", label: "채팅", pin: true }, // 맨 뒤 — 대기·안 읽은 메시지가 있으면 배지, 좁아도 "더보기"로 접지 않음
+type SubItem = { path: string; label: string };
+type NavGroup = { key: string; label: string; pin?: boolean; children: SubItem[] };
+
+/**
+ * 메뉴 — 비슷한 화면은 한 메뉴로 묶고, 묶음 안 화면은 헤더 아래 줄의 탭으로 고름
+ *   FAQ: 학부 FAQ · 대학원 FAQ · 선배 FAQ / 로그: 로그 · 로그 분석 / 피드백: 피드백 · 답변 확인
+ */
+const NAV: NavGroup[] = [
+  { key: "faq", label: "FAQ", children: [
+    { path: "/faqs", label: "학부 FAQ" },
+    { path: "/faqs/graduate", label: "대학원 FAQ" },
+    { path: "/seniorfaqs", label: "선배 FAQ" },
+  ] },
+  { key: "keywords", label: "키워드", children: [{ path: "/keywords", label: "키워드" }] },
+  { key: "logs", label: "로그", children: [
+    { path: "/logs", label: "로그" },
+    { path: "/logs/analytics", label: "로그 분석" },
+  ] },
+  { key: "feedback", label: "피드백", children: [
+    { path: "/userfeedbacks", label: "피드백" },
+    { path: "/answer-reviews", label: "답변 확인" },
+  ] },
+  { key: "categories", label: "관리", children: [{ path: "/categories", label: "관리" }] },
+  // 맨 뒤 — 대기·안 읽은 메시지가 있으면 배지, 좁아도 "더보기"로 접지 않음
+  { key: "chats", label: "채팅", pin: true, children: [{ path: "/chats", label: "채팅" }] },
 ];
 
-/** 지금 화면이 속한 메뉴 — 상세·수정 화면도 해당 목록 메뉴로 표시 */
-function activeNav(pathname: string): string | undefined {
-  if (pathname.startsWith("/logs/analytics")) return "/logs/analytics";
-  if (pathname.startsWith("/adminlogs") || pathname.startsWith("/logs")) return "/logs";
-  return NAV.find((n) => pathname === n.path || pathname.startsWith(n.path + "/"))?.path;
+/** 지금 화면 → (메뉴 묶음, 하위 화면). 상세·수정 화면도 해당 목록으로 표시 */
+function activeNav(pathname: string): { group?: string; child?: string } {
+  const at = (p: string) => pathname === p || pathname.startsWith(p + "/");
+  let child: string | undefined;
+  if (at("/faqs/graduate")) child = "/faqs/graduate";
+  else if (at("/faqs")) child = "/faqs";
+  else if (at("/seniorfaqs") || pathname.startsWith("/adminlogs/seniorfaqlogs")) child = "/seniorfaqs";
+  else if (at("/logs/analytics")) child = "/logs/analytics";
+  else if (at("/logs") || pathname.startsWith("/adminlogs")) child = "/logs";
+  else child = NAV.flatMap((g) => g.children).find((c) => at(c.path))?.path;
+  const group = NAV.find((g) => g.children.some((c) => c.path === child))?.key;
+  return { group, child };
 }
 
-type NavItem = (typeof NAV)[number];
+// 묶음마다 마지막으로 본 화면 — 위 메뉴를 다시 누르면 그 화면으로 (이 탭 안에서만)
+const lastChild: Record<string, string> = {};
+const SENIOR_OK = ["/seniorfaqs", "/categories", "/chats"];
+
+type NavItem = { key: string; path: string; label: string; pin?: boolean };
 const NAV_GAP = 4;
 const NAV_ITEM = "relative z-[1] shrink-0 rounded-full px-[1.1rem] py-2.5 text-[17px] font-semibold transition-colors";
 
@@ -107,14 +133,14 @@ const NavBar: React.FC<{
   const shown = free.slice(0, count);
   const hidden = free.slice(count);
   const pinned = items.filter((i) => i.pin);
-  const hiddenActive = hidden.some((i) => i.path === current);
+  const hiddenActive = hidden.some((i) => i.key === current);
   const hiddenBadge = hidden.map(badge).filter(Boolean);
 
   const renderItem = (item: NavItem, measuring = false) => {
-    const active = current === item.path;
+    const active = current === item.key;
     return (
       <button
-        key={item.path}
+        key={item.key}
         type="button"
         tabIndex={measuring ? -1 : undefined}
         data-active={!measuring && active ? "true" : undefined}
@@ -165,13 +191,13 @@ const NavBar: React.FC<{
               <div role="menu" className="pop-menu absolute left-0 top-[3.25rem] z-50 min-w-[11rem] rounded-2xl border border-line bg-surface p-1.5 shadow-xl">
                 {hidden.map((item) => (
                   <button
-                    key={item.path}
+                    key={item.key}
                     type="button"
                     role="menuitem"
                     onClick={() => onGo(item.path)}
                     onMouseEnter={() => prefetchRoute(item.path)}
                     className={`flex w-full items-center rounded-xl px-3.5 py-2.5 text-left text-[16px] font-semibold ${
-                      current === item.path ? "bg-accent/10 text-accent-ink dark:bg-accent-ink/15" : "text-ink-2 hover:bg-card hover:text-ink"
+                      current === item.key ? "bg-accent/10 text-accent-ink dark:bg-accent-ink/15" : "text-ink-2 hover:bg-card hover:text-ink"
                     }`}
                   >
                     {item.label}
@@ -246,11 +272,31 @@ const Header: React.FC = () => {
   useEffect(() => setShowPopup(false), [location.pathname]);
 
   const isAuthPage = location.pathname === "/login" || location.pathname === "/signup";
-  const current = activeNav(location.pathname);
+  const { group: current, child: currentChild } = activeNav(location.pathname);
+  if (current && currentChild) lastChild[current] = currentChild;
   const { role, accountRole, waiting, summary } = useChat();
   const chatBadge = waiting.length + (summary?.unread ?? 0);
   // 근로장학생 계정은 선배 FAQ · 관리(선배 FAQ 카테고리) · 채팅(선배 채팅)만
-  const nav = role === "senior" ? NAV.filter((n) => ["/seniorfaqs", "/categories", "/chats"].includes(n.path)) : NAV;
+  // 메뉴 배열은 바뀔 때만 새로 만듦 — 메뉴 줄이 배열이 바뀔 때마다 너비를 다시 재서, 매번 새로 만들면 계속 다시 그림
+  const groups: NavGroup[] = useMemo(
+    () =>
+      role === "senior"
+        ? NAV.map((g) => ({ ...g, children: g.children.filter((c) => SENIOR_OK.includes(c.path)) })).filter((g) => g.children.length)
+        : NAV,
+    [role]
+  );
+  const nav: NavItem[] = useMemo(
+    () =>
+      groups.map((g) => ({
+        key: g.key,
+        label: g.label,
+        pin: g.pin,
+        path: g.children.find((c) => c.path === lastChild[g.key])?.path ?? g.children[0].path,
+      })),
+    [groups, currentChild]
+  );
+  const subItems = groups.find((g) => g.key === current)?.children ?? [];
+  const subRef = useRef<HTMLDivElement>(null);
 
   const handleNavigation = (path: string) => {
     dispatch(clearFAQFilterState());
@@ -298,7 +344,7 @@ const Header: React.FC = () => {
             current={current}
             onGo={handleNavigation}
             badge={(item) =>
-              item.path === "/chats" && chatBadge > 0 ? (
+              item.key === "chats" && chatBadge > 0 ? (
                 <span
                   title={`대기 ${waiting.length} · 안 읽은 메시지 ${summary?.unread ?? 0}`}
                   className="ml-1.5 inline-flex min-w-[1.25rem] animate-pulse items-center justify-center rounded-full bg-accent px-1.5 text-xs font-bold text-white"
@@ -370,6 +416,32 @@ const Header: React.FC = () => {
           )}
         </div>
       </div>
+      {/* 하위 화면 탭 — 묶음 안에 화면이 둘 이상일 때만 (FAQ·로그·피드백) */}
+      {!isAuthPage && subItems.length > 1 && (
+        <div className="border-t border-line/70">
+          <div ref={subRef} className="relative mx-auto flex h-12 max-w-[1680px] items-center gap-1 overflow-x-auto px-6 2xl:px-10">
+            <SlidingIndicator containerRef={subRef} activeKey={currentChild} variant="underline" className="bg-accent-ink" />
+            {subItems.map((s) => {
+              const on = s.path === currentChild;
+              return (
+                <button
+                  key={s.path}
+                  type="button"
+                  data-active={on ? "true" : undefined}
+                  aria-current={on ? "page" : undefined}
+                  onClick={() => handleNavigation(s.path)}
+                  onMouseEnter={() => prefetchRoute(s.path)}
+                  className={`relative z-[1] shrink-0 h-full px-4 text-[15px] font-semibold transition-colors ${
+                    on ? "text-accent-ink" : "text-ink-3 hover:text-ink"
+                  }`}
+                >
+                  {s.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </header>
   );
 };

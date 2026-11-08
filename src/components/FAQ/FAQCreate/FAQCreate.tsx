@@ -40,7 +40,7 @@ const FAQCreate: React.FC = () => {
     answer_ko: [{ answer: '', url: '', email: '', phone: '' }],
     answer_en: [{ answer: '', url: '', email: '', phone: '' }],
     manager: '',
-    audience: 'undergraduate',
+    audience: searchParams.get('audience') === 'graduate' ? 'graduate' : 'undergraduate', // 대학원 FAQ 화면에서 추가하면 대학원
   });
 
 
