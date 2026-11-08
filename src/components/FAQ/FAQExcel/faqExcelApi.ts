@@ -9,9 +9,9 @@ export type ExcelChange = { field: string; label: string; before: string; after:
 export type SheetSummary = { created: number; updated: number; deleted: number; unchanged: number; missing_from_file: number };
 export type SheetPreview = {
   summary: SheetSummary;
-  created: { row: number; question: string; maincategory: string; subcategory: string; audience?: string; answers: string[] }[];
-  updated: { id: number; row: number; question: string; changes: ExcelChange[] }[];
-  deleted: { id: number; row: number; question: string }[];
+  created: { row: number; sheet?: string; question: string; maincategory: string; subcategory: string; audience?: string; answers: string[] }[];
+  updated: { id: number; row: number; sheet?: string; question: string; changes: ExcelChange[] }[];
+  deleted: { id: number; row: number; sheet?: string; question: string }[];
 };
 
 /** 미리보기 — 시트마다 (FAQ / 선배 FAQ / 담당자 / 이메일). 파일에 없는 시트는 null·빈 목록 */

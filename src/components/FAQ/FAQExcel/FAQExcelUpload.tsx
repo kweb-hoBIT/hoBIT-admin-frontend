@@ -21,7 +21,7 @@ import {
  */
 type Step = 'pick' | 'reading' | 'preview' | 'applying' | 'done';
 
-const rowLabel = (row: number | null) => (row ? `${row}번째 줄` : '파일');
+const rowLabel = (row: number | null, sheet?: string) => (row ? `${sheet ? `${sheet} ` : ''}${row}번째 줄` : '파일');
 const issueLabel = (p: ExcelIssue) => (p.sheet ? `${p.sheet} · ${rowLabel(p.row)}` : rowLabel(p.row));
 
 const formatTime = (iso: string) => {
@@ -84,11 +84,11 @@ const SheetBlock: React.FC<{ title: string; sheet: SheetPreview; noun: string }>
       {sheet.created.length > 0 && (
         <Section title="새로 생김" count={sheet.created.length}>
           {sheet.created.map((c) => (
-            <div key={c.row} className="rounded-xl bg-card p-3 text-sm">
+            <div key={`${c.sheet ?? ''}-${c.row}`} className="rounded-xl bg-card p-3 text-sm">
               <div className="font-semibold text-ink">{c.question}</div>
               <div className="mt-0.5 text-xs text-ink-3">
                 {c.audience ? `${c.audience} · ` : ''}
-                {c.maincategory} › {c.subcategory} · {rowLabel(c.row)}
+                {c.maincategory} › {c.subcategory} · {rowLabel(c.row, c.sheet)}
               </div>
               <ul className="mt-2 space-y-1 text-ink-2">
                 {c.answers.map((a, i) => (
