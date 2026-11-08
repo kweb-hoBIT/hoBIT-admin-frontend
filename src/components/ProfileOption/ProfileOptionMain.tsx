@@ -28,6 +28,7 @@ const SECTIONS: { field: ProfileField; title: string; desc: string; example: str
   { field: 'department', title: '학과', desc: '학과마다 다른 교육과정·졸업요건·장학 공지를 가려내는 데 써요.', example: '예: 인공지능학과' },
   { field: 'major_type', title: '전공 유형', desc: '이중전공·부전공 등 이수 기준이 다른 안내를 가려내요.', example: '예: 이중전공' },
   { field: 'student_status', title: '학적 상태', desc: '휴학·편입생 전용 안내를 가려내요.', example: '예: 휴학' },
+  { field: 'grad_department', title: '대학원 학과', desc: '학생 화면을 대학원으로 바꿨을 때 고르는 학과예요. 그 학과 대학원 안내를 먼저 찾아요.', example: '예: 뇌공학과' },
 ];
 
 type Editing = { field: ProfileField; option: ProfileOption | null };

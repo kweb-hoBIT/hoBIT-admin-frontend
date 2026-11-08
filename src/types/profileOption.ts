@@ -1,5 +1,5 @@
 // 프로필 항목 — 학생이 고르는 학과·전공 유형·학적 상태 (관리자 백엔드 routes/api/profileOptions)
-export type ProfileField = 'department' | 'major_type' | 'student_status';
+export type ProfileField = 'department' | 'major_type' | 'student_status' | 'grad_department';
 
 export type ProfileOption = {
   id: number;
