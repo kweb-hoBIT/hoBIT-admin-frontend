@@ -66,14 +66,14 @@ const EntireAnalyzeForm: React.FC<EntireAnalyzeFormProps> = ({ analyzeData, sear
               <button
                 onClick={goToPreviousPage}
                 disabled={currentPage === 0}
-                className="px-6 py-3 bg-card-2 text-ink rounded-xl hover:bg-card-3 transition-all duration-300 ease-in-out disabled:opacity-50"
+                className="px-6 py-3 bg-card-2 text-ink rounded-xl hover:bg-card-3 transition-colors duration-300 ease-in-out disabled:opacity-50"
               >
                 이전
               </button>
               <button
                 onClick={goToNextPage}
                 disabled={currentPage >= Math.ceil(data.length / itemsPerPage) - 1}
-                className="px-6 py-3 bg-card-2 text-ink rounded-xl hover:bg-card-3 transition-all duration-300 ease-in-out disabled:opacity-50"
+                className="px-6 py-3 bg-card-2 text-ink rounded-xl hover:bg-card-3 transition-colors duration-300 ease-in-out disabled:opacity-50"
               >
                 다음
               </button>

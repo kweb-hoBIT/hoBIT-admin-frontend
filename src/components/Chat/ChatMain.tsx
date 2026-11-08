@@ -552,7 +552,7 @@ const ChatMain: React.FC = () => {
             }`}
           >
             <span className={`relative h-5 w-9 rounded-full ${chat.available ? 'bg-white/30' : 'bg-card-3'}`}>
-              <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white transition-all ${chat.available ? 'left-[18px]' : 'left-0.5'}`} />
+              <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white transition-[left] ${chat.available ? 'left-[18px]' : 'left-0.5'}`} />
             </span>
             {chat.available ? '채팅 가능' : '자리비움'}
           </button>

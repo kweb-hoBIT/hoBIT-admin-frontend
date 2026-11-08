@@ -56,12 +56,14 @@ const SeniorFAQPreview: React.FC<SeniorFAQPreviewProps> = ({
       }
     };
 
-    koreanContainerRef.current?.addEventListener('scroll', handleScroll);
-    englishContainerRef.current?.addEventListener('scroll', handleScroll);
+    const ko = koreanContainerRef.current;
+    const en = englishContainerRef.current;
+    ko?.addEventListener('scroll', handleScroll, { passive: true });
+    en?.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
-      koreanContainerRef.current?.removeEventListener('scroll', handleScroll);
-      englishContainerRef.current?.removeEventListener('scroll', handleScroll);
+      ko?.removeEventListener('scroll', handleScroll);
+      en?.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -95,6 +97,8 @@ const SeniorFAQPreview: React.FC<SeniorFAQPreviewProps> = ({
         <img
           src={item.image}
           alt="related"
+          loading="lazy"
+          decoding="async"
           className="w-full h-auto rounded-[10px] object-cover mt-[15px]"
         />
       )}

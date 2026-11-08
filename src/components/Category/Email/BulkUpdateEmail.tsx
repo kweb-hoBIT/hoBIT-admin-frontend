@@ -149,7 +149,7 @@ const BulkUpdateEmail: React.FC = () => {
           <button
             type="submit"
             disabled={isUpdating}
-            className={`w-full py-3 px-4 rounded-xl font-semibold text-white transition-all duration-300 ${
+            className={`w-full py-3 px-4 rounded-xl font-semibold text-white transition-[background-color,transform] duration-300 ${
               isUpdating
                 ? 'bg-card-3 cursor-not-allowed'
                 : 'bg-accent hover:bg-accent/90 transform hover:scale-105'

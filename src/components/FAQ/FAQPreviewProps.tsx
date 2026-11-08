@@ -32,20 +32,19 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
   useEffect(() => {
     const handleScroll = (e: Event) => {
       const target = e.target as HTMLDivElement;
-      if (target === koreanContainerRef.current && englishContainerRef.current) {
-        englishContainerRef.current.scrollLeft = target.scrollLeft;
-      }
-      if (target === englishContainerRef.current && koreanContainerRef.current) {
-        koreanContainerRef.current.scrollLeft = target.scrollLeft;
-      }
+      // 값이 다를 때만 맞춤 — 맞춘 쪽에서 다시 scroll이 와도 주고받기를 반복하지 않게
+      const other = target === koreanContainerRef.current ? englishContainerRef.current : koreanContainerRef.current;
+      if (other && other.scrollLeft !== target.scrollLeft) other.scrollLeft = target.scrollLeft;
     };
 
-    koreanContainerRef.current?.addEventListener('scroll', handleScroll);
-    englishContainerRef.current?.addEventListener('scroll', handleScroll);
+    const ko = koreanContainerRef.current;
+    const en = englishContainerRef.current;
+    ko?.addEventListener('scroll', handleScroll, { passive: true });
+    en?.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
-      koreanContainerRef.current?.removeEventListener('scroll', handleScroll);
-      englishContainerRef.current?.removeEventListener('scroll', handleScroll);
+      ko?.removeEventListener('scroll', handleScroll);
+      en?.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
