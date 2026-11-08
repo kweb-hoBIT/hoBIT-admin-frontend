@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { GetDashboardResponse, QualityDaily, QualityStat } from '../../types/dashboard';
-import { useCountUp } from '../ui/motion';
+import { inViewRef, useCountUp, useSeenOnce } from '../ui/motion';
 
 type Tests = NonNullable<GetDashboardResponse['data']['tests']>;
 
@@ -52,8 +52,9 @@ const shortDate = (iso: string) => `${Number(iso.slice(5, 7))}/${Number(iso.slic
 
 /** 숫자가 차르륵 올라감 (소수 한 자리까지) — 홈 숫자 카드와 같은 움직임 */
 const AnimatedValue: React.FC<{ m: Metric; v: number; delay: number; className: string }> = ({ m, v, delay, className }) => {
-  const x = useCountUp(Math.round(shown(m, v) * 10), 900, delay) / 10;
-  return <span className={className}>{m.unit === '' ? Math.round(x) : `${x.toFixed(1).replace(/\.0$/, '')}${m.unit}`}</span>;
+  const [ref, seen] = useSeenOnce<HTMLSpanElement>();
+  const x = useCountUp(seen ? Math.round(shown(m, v) * 10) : 0, 900, delay) / 10; // 보일 때 올라감
+  return <span ref={ref} className={className}>{m.unit === '' ? Math.round(x) : `${x.toFixed(1).replace(/\.0$/, '')}${m.unit}`}</span>;
 };
 
 /** 최근 14일 작은 막대 — 질문 수 그래프처럼 왼쪽부터 차례로 자람. 마지막 7일은 진하게, 마우스를 올리면 그날 값 */
@@ -62,7 +63,7 @@ const MiniBars: React.FC<{ m: Metric; days: QualityDaily['daily']; bad: boolean;
   const vals = days.map((d) => d[m.key] as number | null);
   const max = Math.max(1, ...vals.map((v) => v ?? 0));
   return (
-    <div className="relative flex h-[34px] items-end gap-[2px]" onMouseLeave={() => setHover(null)}>
+    <div ref={inViewRef} className="relative flex h-[34px] items-end gap-[2px]" onMouseLeave={() => setHover(null)}>
       {days.map((d, i) => {
         const v = vals[i];
         const recent = i >= days.length - 7;

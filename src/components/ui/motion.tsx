@@ -28,9 +28,68 @@ export function useCountUp(target: number, duration = 900, delay = 0): number {
   return value;
 }
 
+/* ── 화면에 보일 때 시작 (숫자·그래프) ─────────────────────────────────────
+ * 숫자 올라가기·막대 자라기는 그 요소가 화면에 들어왔을 때 시작 — 아래쪽 카드는 스크롤해서 볼 때 움직임
+ * (예전엔 화면을 열 때 다 끝나, 휴대폰에서 내려가 보면 이미 멈춰 있었음). 감시자 하나를 같이 씀
+ */
+const inViewCallbacks = new Map<Element, () => void>();
+let inViewObserver: IntersectionObserver | null = null;
+function watchInView(el: Element, cb: () => void): () => void {
+  if (reducedMotion() || typeof window === 'undefined' || !('IntersectionObserver' in window)) {
+    cb();
+    return () => {};
+  }
+  if (!inViewObserver) {
+    inViewObserver = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          const fn = inViewCallbacks.get(e.target);
+          inViewObserver?.unobserve(e.target);
+          inViewCallbacks.delete(e.target);
+          fn?.();
+        }),
+      { rootMargin: '0px 0px -40px 0px' }
+    );
+  }
+  inViewCallbacks.set(el, cb);
+  inViewObserver.observe(el);
+  return () => {
+    inViewObserver?.unobserve(el);
+    inViewCallbacks.delete(el);
+  };
+}
+
+/** 이 요소가 한 번이라도 화면에 보였는지 */
+export function useSeenOnce<T extends Element>(): [React.RefObject<T>, boolean] {
+  const ref = useRef<T>(null);
+  const [seen, setSeen] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || seen) return;
+    return watchInView(el, () => setSeen(true));
+  }, [seen]);
+  return [ref, seen];
+}
+
+/**
+ * 그래프 상자에 붙이면 보일 때까지 안쪽 막대(grow-x/grow-y)·목록(reveal) 움직임을 멈춰 둠 (index.css [data-inview])
+ *   <div ref={inViewRef}> … <div className="grow-y" /> … </div>
+ */
+export const inViewRef = (el: HTMLElement | null) => {
+  if (!el || el.hasAttribute('data-inview')) return;
+  el.setAttribute('data-inview', 'wait');
+  watchInView(el, () => el.setAttribute('data-inview', 'go'));
+};
+
 export const CountUp: React.FC<{ value: number; delay?: number; className?: string }> = ({ value, delay, className }) => {
-  const v = useCountUp(value, 900, delay);
-  return <span className={className}>{v.toLocaleString()}</span>;
+  const [ref, seen] = useSeenOnce<HTMLSpanElement>();
+  const v = useCountUp(seen ? value : 0, 900, delay); // 보이기 전엔 0, 보이면 그때 올라감
+  return (
+    <span ref={ref} className={className}>
+      {v.toLocaleString()}
+    </span>
+  );
 };
 
 /* ── 스크롤 위치에 따라 나타나기 ─────────────────────────────────────────────

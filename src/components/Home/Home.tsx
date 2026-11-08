@@ -4,7 +4,7 @@ import { useChat } from '../Chat/ChatProvider';
 import { useHobitQueryGetApi } from '../../hooks/hobitAdmin';
 import { GetDashboardRequest, GetDashboardResponse } from '../../types/dashboard';
 import { prefetchRoute } from '../../routes';
-import { CountUp, Reveal, revealRef } from '../ui/motion';
+import { CountUp, inViewRef, Reveal, revealRef } from '../ui/motion';
 import LanguageBadge from '../ui/LanguageBadge';
 import LiveChatCard from './LiveChatCard';
 import NoticeChangesCard from './NoticeChangesCard';
@@ -109,7 +109,7 @@ const DailyChart: React.FC<{ daily: Dashboard['daily'] }> = ({ daily }) => {
   const max = Math.max(1, ...daily.map((d) => d.ko + d.en));
   // 옆 카드(최근 피드백) 높이에 맞춰 막대 영역이 남는 높이를 채움 (고정 높이면 아래가 비었음)
   return (
-    <div className="flex flex-1 flex-col">
+    <div ref={inViewRef} className="flex flex-1 flex-col">
       <div className="flex min-h-[150px] flex-1 items-end gap-[6px]">
         {daily.map((d, i) => {
           const total = d.ko + d.en;
@@ -167,7 +167,7 @@ const RankBars: React.FC<{ items: { label: string; count: number; to?: string }[
     );
   const max = Math.max(...items.map((i) => i.count));
   return (
-    <ol className="flex flex-col gap-3">
+    <ol ref={inViewRef} className="flex flex-col gap-3">
       {items.map((item, i) => {
         const label = (
           <span className="truncate text-sm text-ink" title={item.label}>
