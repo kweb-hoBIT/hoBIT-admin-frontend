@@ -30,6 +30,7 @@ export const EDIT_WINDOW_MS = 5 * 60 * 1000;
 export type ChatSession = {
   id: string;
   mode: 'staff' | 'senior';
+  program?: 'undergraduate' | 'graduate'; // 학부/대학원 (학생 화면 스위치) — 예전 서버는 없음
   status: 'waiting' | 'active' | 'closed';
   studentEmail: string;
   language: string;

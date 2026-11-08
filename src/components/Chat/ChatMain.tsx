@@ -28,8 +28,15 @@ const PROFILE_LABEL: Record<string, string> = {
 const PROFILE_ORDER = Object.keys(PROFILE_LABEL);
 const PROGRAM_LABEL: Record<string, string> = { undergrad: '학부', grad: '대학원' };
 type ProgramFilter = 'all' | 'undergrad' | 'grad';
+/** 채팅의 과정 — 서버의 program(학생 화면 스위치)이 대학원이거나 학생 정보의 과정이 대학원이면 대학원. 둘 다 없으면 모름 */
+const programOf = (s: { program?: string; profile?: Record<string, string> | null }): 'undergrad' | 'grad' | null =>
+  s.program === 'graduate' || s.profile?.program === 'grad'
+    ? 'grad'
+    : s.program === 'undergraduate' || s.profile?.program === 'undergrad'
+      ? 'undergrad'
+      : null;
 /** 과정으로 거르기 — 과정 정보가 없는 예전 채팅은 '전체'에서만 보임 */
-const byProgram = (f: ProgramFilter) => (s: { profile?: Record<string, string> | null }) => f === 'all' || s.profile?.program === f;
+const byProgram = (f: ProgramFilter) => (s: { program?: string; profile?: Record<string, string> | null }) => f === 'all' || programOf(s) === f;
 
 const ago = (iso: string) => {
   const min = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
@@ -629,7 +636,7 @@ const ChatMain: React.FC = () => {
                 >
                   <span className="flex items-center gap-2">
                     {s.mode === 'senior' && role !== 'senior' && <Badge tone="senior">근로장학생</Badge>}
-                    {s.profile?.program && <Badge tone="accent">{PROGRAM_LABEL[s.profile.program] ?? s.profile.program}</Badge>}
+                    {programOf(s) && <Badge tone="accent">{PROGRAM_LABEL[programOf(s)!]}</Badge>}
                     <LanguageBadge language={s.language} />
                     <span className="min-w-0 flex-1 truncate text-sm font-semibold text-ink">
                       {s.profile?.name ? `${s.profile.name}${s.profile.student_id ? ` · ${s.profile.student_id}` : ''}` : s.studentEmail}
@@ -684,7 +691,10 @@ const ChatMain: React.FC = () => {
                   </button>
                 )}
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-semibold text-ink">{session.studentEmail}</p>
+                  <p className="flex min-w-0 items-center gap-2">
+                    {programOf(session) === 'grad' && <Badge tone="accent">대학원</Badge>}
+                    <span className="truncate font-semibold text-ink">{session.studentEmail}</span>
+                  </p>
                   <p className="mt-0.5 flex min-w-0 items-center gap-2 overflow-hidden text-[13px] text-ink-3">
                     <span className="truncate">
                       {session.status === 'waiting' ? '대기 중' : session.status === 'active' ? `${session.assignedName} 채팅 중` : '종료됨'}
@@ -865,6 +875,7 @@ const ChatMain: React.FC = () => {
                 <div className="mt-1 flex items-center gap-2">
                   <LanguageBadge language={session.language} />
                   {session.mode === 'senior' && role !== 'senior' && <Badge tone="senior">근로장학생 채팅</Badge>}
+                  {programOf(session) === 'grad' && <Badge tone="accent">대학원</Badge>}
                 </div>
               </div>
               {session.profile && (

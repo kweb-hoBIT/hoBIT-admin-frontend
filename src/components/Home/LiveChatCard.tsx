@@ -49,6 +49,7 @@ const Row: React.FC<{ s: ListedSession; kind: 'waiting' | 'mine'; now: number }>
         <span className="min-w-0 flex-1">
           <span className="flex items-center gap-2">
             {s.mode === 'senior' && role !== 'senior' && <Badge tone="senior">근로장학생</Badge>}
+            {(s.program === 'graduate' || s.profile?.program === 'grad') && <Badge tone="accent">대학원</Badge>}
             <LanguageBadge language={s.language} />
             <span className="truncate text-sm font-semibold text-ink">{s.studentEmail}</span>
           </span>
