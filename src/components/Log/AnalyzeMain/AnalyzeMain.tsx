@@ -4,6 +4,8 @@ import EntireAnalyzeFilter from './EntireAnalyzeFilter';
 import EntireAnalyze from './EntireAnalyze';
 import SpecificAnalyzeFilter from './SpecificAnalyzeFilter';
 import SpecificAnalyze from './SpecificAnalyze';
+import ScopeSummary from './ScopeSummary';
+import { AnalyzeKind } from './SelectAnalyze';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { selectLogAnalysisFilter, setLogAnalyzeFilter } from '../../../redux/filterSlice';
@@ -12,7 +14,7 @@ const AnalyzeMain: React.FC = () => {
   const dispatch = useDispatch();
   const { storedLogAnalyzeFilter } = useSelector((state: RootState) => selectLogAnalysisFilter(state));
 
-  const [selectedAnalyze, setSelectedAnalyze] = useState<'Entire' | 'Specific'>(storedLogAnalyzeFilter);
+  const [selectedAnalyze, setSelectedAnalyze] = useState<AnalyzeKind>(storedLogAnalyzeFilter);
 
   useEffect(() => {
     dispatch(setLogAnalyzeFilter(selectedAnalyze));
@@ -29,7 +31,7 @@ const AnalyzeMain: React.FC = () => {
 
   const [showEntireAnalyze, setShowEntireAnalyze] = useState(false);
 
-  const handleFilterChange = (filterValue: 'Entire' | 'Specific') => {
+  const handleFilterChange = (filterValue: AnalyzeKind) => {
     setSelectedAnalyze(filterValue);
   };
 
@@ -63,14 +65,20 @@ const AnalyzeMain: React.FC = () => {
   return (
     <section className="panel p-4 sm:p-6">
       {/* 제목·알약은 한 줄 고정, 설명은 아래 — 알약을 바꿔도 위치가 움직이지 않게 (설명 길이에 따라 줄바꿈이 바뀌던 문제) */}
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
         <h4 className="text-xl font-bold text-ink">로그 분석</h4>
         <SelectAnalyze selectedAnalyze={selectedAnalyze} onFilterChange={handleFilterChange} />
       </div>
       <p className="mb-4 mt-1 text-sm text-ink-3">
-        {selectedAnalyze === 'Entire' ? '기간 안에서 많이 쓰이거나 평가가 높은·낮은 FAQ 10개를 보여 줘요.' : '고른 FAQ 하나가 기간별로 얼마나 쓰였는지 보여 줘요.'}
+        {selectedAnalyze === 'Entire'
+          ? '기간 안에서 많이 쓰이거나 평가가 높은·낮은 FAQ 10개를 보여 줘요.'
+          : selectedAnalyze === 'Specific'
+            ? '고른 FAQ 하나가 기간별로 얼마나 쓰였는지 보여 줘요.'
+            : '주제별로 AI 답변이 자료를 어디까지 찾아봤는지 보여 줘요.'}
       </p>
-      {selectedAnalyze === 'Entire' ? (
+      {selectedAnalyze === 'Scope' ? (
+        <ScopeSummary />
+      ) : selectedAnalyze === 'Entire' ? (
         <div className="flex flex-col gap-4">
           <EntireAnalyzeFilter onApplyFilter={handleApplyEntireFilter} />
           <div className="min-w-0 rounded-2xl border border-line p-3 sm:p-5">

@@ -45,7 +45,7 @@ interface QuestionLogFilterState {
 
 // Log Analysis 필터 상태 정의
 interface LogAnalysisFilterState {
-  storedLogAnalyzeFilter: 'Entire' | 'Specific';
+  storedLogAnalyzeFilter: 'Entire' | 'Specific' | 'Scope';
 }
 
 // User Feedback 필터 상태 정의
@@ -88,7 +88,7 @@ const initialQuestionLogFilterState: QuestionLogFilterState = {
 };
 
 const initialLogAnalysisFilterState: LogAnalysisFilterState = {
-  storedLogAnalyzeFilter: localStorage.getItem('logAnalyzeFilter') as 'Entire' | 'Specific' || 'Entire',
+  storedLogAnalyzeFilter: localStorage.getItem('logAnalyzeFilter') as 'Entire' | 'Specific' | 'Scope' || 'Entire',
 };
 
 const initialUserFeedbackFilterState: UserFeedbackFilterState = {
@@ -230,7 +230,7 @@ const logAnalysisFilterSlice = createSlice({
   name: 'logAnalysisFilter',
   initialState: initialLogAnalysisFilterState,
   reducers: {
-    setLogAnalyzeFilter: (state, action: PayloadAction<'Entire' | 'Specific'>) => {
+    setLogAnalyzeFilter: (state, action: PayloadAction<'Entire' | 'Specific' | 'Scope'>) => {
       state.storedLogAnalyzeFilter = action.payload;
       localStorage.setItem('logAnalyzeFilter', action.payload);
     },
