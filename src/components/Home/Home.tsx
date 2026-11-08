@@ -263,8 +263,8 @@ const PipelineStatus: React.FC<{ p: NonNullable<GetDashboardResponse['data']['pi
   const stale = Date.now() - new Date(p.finished_at).getTime() > PIPELINE_STALE_MS;
   if (p.ok && !stale) {
     return (
-      <p className="mb-4 flex items-center gap-2 text-sm text-ink-3">
-        <span className="h-2 w-2 rounded-full bg-success" />
+      <p className="flex items-center gap-2 text-xs text-ink-3">
+        <span className="h-2 w-2 shrink-0 rounded-full bg-success" />
         홈페이지·FAQ 데이터 수집 정상 · 마지막 {timeAgo(p.finished_at)} ({SCOPE_LABEL[p.scope] ?? p.scope})
       </p>
     );
@@ -319,8 +319,6 @@ const Home: React.FC = () => {
       </div>
 
       <div key={replay}>
-      {/* 실시간 채팅 — 가장 급한 일이라 맨 위 */}
-      <LiveChatCard />
 
       {failed && (
         <div className="mb-4 rounded-2xl border border-danger/30 bg-danger-soft px-5 py-4">
@@ -331,13 +329,44 @@ const Home: React.FC = () => {
         </div>
       )}
 
-      {dash?.pipeline && <PipelineStatus p={dash.pipeline} />}
-      {dash?.tests && <TestsStatus t={dash.tests} />}
+      {/* 실시간 채팅(가장 급한 일) + 답변 품질을 맨 위에 나란히. 수집·테스트가 정상이면 품질 카드 아래에 작게 */}
+      {(() => {
+        const pipeOk = !dash?.pipeline || (dash.pipeline.ok && Date.now() - new Date(dash.pipeline.finished_at).getTime() <= PIPELINE_STALE_MS);
+        const testsOk = !dash?.tests || dash.tests.failed.length === 0;
+        return (
+          <>
+            {dash?.pipeline && !pipeOk && <PipelineStatus p={dash.pipeline} />}
+            {dash?.tests && !testsOk && <TestsStatus t={dash.tests} />}
+            <div className="mb-4 flex items-stretch gap-4">
+              <LiveChatCard className="min-w-0 flex-[1.6]" />
+              {dash?.quality && dash.quality.length > 0 && (
+                <Reveal index={1} className="min-w-[380px] flex-1">
+                  <QualityCard
+                    weeks={dash.quality}
+                    className="h-full"
+                    footer={
+                      <>
+                        {dash.pipeline && pipeOk && <PipelineStatus p={dash.pipeline} />}
+                        {dash.tests && testsOk && <TestsStatus t={dash.tests} />}
+                      </>
+                    }
+                  />
+                </Reveal>
+              )}
+            </div>
+            {/* 품질 기록이 아직 없으면 정상 상태 줄은 여기에 */}
+            {!dash?.quality?.length && (dash?.pipeline || dash?.tests) && (
+              <div className="-mt-1 mb-4 space-y-1">
+                {dash?.pipeline && pipeOk && <PipelineStatus p={dash.pipeline} />}
+                {dash?.tests && testsOk && <TestsStatus t={dash.tests} />}
+              </div>
+            )}
+          </>
+        );
+      })()}
 
       {/* 공지로 바뀐 FAQ·안내 — 있을 때만 */}
       <NoticeChangesCard />
-
-      {dash?.quality && <QualityCard weeks={dash.quality} />}
 
       {/* 숫자 카드 */}
       {!t ? (

@@ -66,7 +66,7 @@ const Row: React.FC<{ s: ListedSession; kind: 'waiting' | 'mine'; now: number; i
   );
 };
 
-const LiveChatCard: React.FC = () => {
+const LiveChatCard: React.FC<{ className?: string }> = ({ className = '' }) => {
   const { summary, connected, role, ready } = useChat();
   const [now, setNow] = useState(Date.now());
 
@@ -85,8 +85,8 @@ const LiveChatCard: React.FC = () => {
   const busy = waiting.length > 0 || (summary?.unread ?? 0) > 0;
 
   return (
-    <Reveal index={0}>
-      <section className={`mb-4 rounded-2xl border bg-surface p-5 ${busy ? 'border-accent-ink/40' : 'border-line'}`}>
+    <Reveal index={0} className={className}>
+      <section className={`h-full rounded-2xl border bg-surface p-5 ${busy ? 'border-accent-ink/40' : 'border-line'}`}>
         <div className="mb-4 flex items-center gap-3">
           <h2 className="font-bold text-ink">실시간 채팅</h2>
           <span className={`flex items-center gap-1.5 text-xs ${connected ? 'text-success' : 'text-ink-3'}`}>
@@ -99,7 +99,7 @@ const LiveChatCard: React.FC = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-4">
+        <div className="grid grid-cols-1 items-center gap-4 2xl:grid-cols-[auto_minmax(0,1fr)]">
           {/* 네 칸을 같은 너비·같은 높이로 (가장 긴 이름에 맞춤) → 세로선 간격이 고름 */}
           <div className="grid auto-cols-fr grid-flow-col divide-x divide-line">
             <Stat label="대기" value={waiting.length} sub={waiting.length ? `가장 오래 ${waitLabel(oldest)}` : '없음'} tone="warn" delay={0} />
