@@ -220,7 +220,7 @@ const SeniorFAQCategoryReorderForm: React.FC<SeniorFAQCategoryReorderFormProps> 
     <div className={emb ? '' : 'flex items-center justify-center py-6 sm:min-h-[calc(100vh-4.5rem)] sm:py-10'}>
       <div className={emb ? 'w-full' : 'p-4 sm:p-6 bg-surface rounded-xl shadow-md w-full max-w-2xl'}>
         {!emb && (<h2 className="text-xl sm:text-2xl font-bold text-ink text-center mb-6">선배 FAQ 카테고리 순서 변경</h2>)}
-        <p className={emb ? 'mb-4 text-sm text-ink-3' : 'text-center mb-4'}>주요 카테고리, 하위 카테고리, 세부 카테고리 순서를 자유롭게 조정할 수 있습니다.</p>
+        {!emb && <p className="text-center mb-4">주요 카테고리, 하위 카테고리, 세부 카테고리 순서를 자유롭게 조정할 수 있습니다.</p>}
         {onReset && (
           <div className="flex justify-end mb-4">
             <button

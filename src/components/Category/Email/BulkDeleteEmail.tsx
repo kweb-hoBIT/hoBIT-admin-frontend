@@ -94,9 +94,9 @@ const BulkDeleteEmail: React.FC = () => {
         {!emb && (<h2 className="text-xl sm:text-2xl font-bold mb-6 text-center text-ink">
           이메일 전체 삭제
         </h2>)}
-        <p className={emb ? 'mb-4 text-sm text-ink-3' : 'text-sm text-ink-2 mb-6 text-center'}>
+        {!emb && <p className="text-sm text-ink-2 mb-6 text-center">
           모든 FAQ의 답변에서 특정 이메일을 일괄 삭제합니다.
-        </p>
+        </p>}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="relative">
