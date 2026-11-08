@@ -30,7 +30,7 @@ const SeniorFAQLogDetailForm: React.FC<SeniorFAQLogDetailFormProps> = ({
 
   return (
     <form onSubmit={(e) => e.preventDefault()} className="max-w-8xl mx-auto p-8 bg-surface rounded-xl shadow-lg space-y-8">
-      <h2 className="text-2xl font-bold text-ink text-center">선배 FAQ 로그 상세</h2>
+      <h2 className="text-xl sm:text-2xl font-bold text-ink text-center">선배 FAQ 로그 상세</h2>
 
       <div className="grid grid-cols-2 gap-8">
         {/* Left Side: prev_senior_faq */}

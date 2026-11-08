@@ -191,7 +191,7 @@ const ProfileOptionMain: React.FC = () => {
   return (
     <div className="py-8">
       <div className="mb-6">
-        <h1 className="text-[1.9rem] font-bold text-ink">프로필 항목</h1>
+        <h1 className="text-xl sm:text-2xl sm:text-[1.9rem] font-bold text-ink">프로필 항목</h1>
         <p className="text-ink-2">
           학생이 고르는 <b className="text-ink">학과·전공 유형·학적 상태</b> 목록이에요. 학과가 새로 생기거나 이름이 바뀌면 여기서 고쳐 주세요.
         </p>

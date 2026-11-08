@@ -68,7 +68,7 @@ const SeniorFAQCreateForm: React.FC<SeniorFAQCreateFormProps> = ({
       onSubmit={(e) => e.preventDefault()}
       className="max-w-4xl mx-auto p-8 bg-surface rounded-xl shadow-lg space-y-8"
     >
-      <h2 className="text-2xl font-bold text-ink text-center">선배 FAQ 생성</h2>
+      <h2 className="text-xl sm:text-2xl font-bold text-ink text-center">선배 FAQ 생성</h2>
 
       {/*메인 카테고리 필드 */}
       <div className="p-6 border border-line rounded-xl bg-card space-y-4">

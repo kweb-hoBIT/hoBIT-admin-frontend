@@ -36,7 +36,7 @@ const MyPage: React.FC = () => {
 
   return (
     <div className="mx-auto max-w-[640px] py-10">
-      <h1 className="mb-1 text-[28px] font-bold text-ink">마이페이지</h1>
+      <h1 className="mb-1 text-[22px] sm:text-[28px] font-bold text-ink">마이페이지</h1>
       <p className="mb-6 text-ink-2">내 계정 정보와 권한이에요.</p>
       {isLoading ? (
         <div className="h-64 animate-pulse rounded-2xl bg-card" />

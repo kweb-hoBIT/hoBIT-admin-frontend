@@ -101,7 +101,7 @@ const KeywordMain: React.FC = () => {
     <div className="py-8">
       <div className="mb-6 flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-[1.9rem] font-bold text-ink">키워드</h1>
+          <h1 className="text-xl sm:text-2xl sm:text-[1.9rem] font-bold text-ink">키워드</h1>
           <p className="text-ink-2">
             호빗 입력창 추천에서 <b className="text-ink">맨 위에 고정할 질문</b>과, 같은 뜻으로 묶을 <b className="text-ink">연관 단어</b>를 정해요.
           </p>

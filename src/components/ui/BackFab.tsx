@@ -28,7 +28,7 @@ const BackFab: React.FC = () => {
       onClick={() => navigate(parent.to)}
       onMouseEnter={() => prefetchRoute(parent.to)}
       aria-label={`${parent.label} 화면으로 돌아가기`}
-      className="back-fab fixed bottom-6 left-6 z-30 flex h-12 items-center gap-2 rounded-full border border-line bg-surface/95 pl-3.5 pr-5 text-[15px] font-semibold text-ink-2 shadow-lg backdrop-blur transition-colors hover:border-accent-ink/40 hover:text-accent-ink 2xl:left-10"
+      className="back-fab fixed bottom-4 left-4 z-30 flex h-11 items-center gap-2 rounded-full border border-line bg-surface/95 pl-3 pr-4 text-[15px] sm:bottom-6 sm:left-6 sm:h-12 sm:pl-3.5 sm:pr-5 font-semibold text-ink-2 shadow-lg backdrop-blur transition-colors hover:border-accent-ink/40 hover:text-accent-ink 2xl:left-10"
     >
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="back-fab-icon h-5 w-5" aria-hidden="true">
         <path d="M15 18l-6-6 6-6" />

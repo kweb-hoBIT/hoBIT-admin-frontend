@@ -51,7 +51,7 @@ const SpecificAnalyzeForm: React.FC<SpecificAnalyzeFormProps> = ({ analyzeData, 
     <div className="flex flex-col space-y-6 max-h-[1000px] p-8">
     {/* 분석 결과 */}
     <div className="min-h-[400px] max-h-[800px] h-auto overflow-y-auto rounded-xl border border-line p-4 flex-1 bg-surface shadow-[0_2px_6px_rgba(0,0,0,0.1)]">
-      <h2 className="text-2xl font-semibold mb-6 text-center text-ink">
+      <h2 className="text-xl sm:text-2xl font-semibold mb-6 text-center text-ink">
           {searchSubject === 'frequency' && 'FAQ 검색 빈도 분석 결과'}
           {searchSubject === 'feedback' && 'FAQ 피드백 점수 분석 결과'}
           {searchSubject === 'language' && '사용 언어 빈도 분석 결과'}

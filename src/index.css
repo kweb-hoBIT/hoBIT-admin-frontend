@@ -58,7 +58,7 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  min-width: 800px; /* 표가 많은 관리자 화면 — 좁은 화면에서는 가로 스크롤 */
+  /* 예전엔 min-width: 800px로 좁은 화면에서 가로 스크롤 — 이제 휴대폰·태블릿 폭에 맞춰 줄어들고, 넓은 표만 표 안에서 가로 스크롤 */
   -webkit-font-smoothing: antialiased;
 }
 
@@ -160,6 +160,11 @@ input::placeholder, textarea::placeholder { color: rgb(var(--c-ink-3)); }
     animation: modal-pop .22s cubic-bezier(.2,.8,.2,1) both;
   }
   .modal-panel h2, .modal-panel h3 { @apply text-[19px] font-bold text-ink; }
+  /* 휴대폰(sm 미만): 아래에서 올라오는 거의 전체 화면 시트 — 안쪽만 스크롤 */
+  @media (max-width: 639.98px) {
+    .modal-overlay { @apply items-end px-0; }
+    .modal-panel { @apply rounded-b-none p-5; max-width: none !important; max-height: 90vh !important; max-height: 90dvh !important; overflow-y: auto; }
+  }
   .modal-panel button { border-radius: 9999px; }
   .modal-panel input, .modal-panel textarea, .modal-panel select { border-radius: 12px; }
 }
@@ -233,6 +238,10 @@ input[type="password"]::placeholder {
   font-family: 'Freesentation', -apple-system, sans-serif;
   letter-spacing: normal;
 }
+
+/* 가로 스크롤 줄의 스크롤 막대 숨김 (헤더 하위 탭 등) — 손가락·트랙패드로는 그대로 스크롤 */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
 
 /* 탭 선택 표시 미끄러짐 (ui/SlidingIndicator) · 메뉴 "더보기" 펼침 */
 .pop-menu { animation: select-pop .14s ease-out both; }

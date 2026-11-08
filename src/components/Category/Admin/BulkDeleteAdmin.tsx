@@ -87,7 +87,7 @@ const BulkDeleteAdmin: React.FC = () => {
   return (
     <div className="flex justify-center items-center min-h-[calc(100vh-4.5rem)] py-10">
       <div className="bg-surface p-8 rounded-xl shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-ink">
+        <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center text-ink">
           관리자 전체 삭제
         </h2>
         <p className="text-sm text-ink-2 mb-6 text-center">

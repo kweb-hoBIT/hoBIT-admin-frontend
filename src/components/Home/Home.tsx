@@ -319,7 +319,7 @@ const Home: React.FC = () => {
     <div className="py-8">
       <div className="mb-6 flex items-end justify-between">
         <div>
-          <h1 className="text-[1.9rem] font-bold text-ink">관리자 홈</h1>
+          <h1 className="text-xl sm:text-2xl sm:text-[1.9rem] font-bold text-ink">관리자 홈</h1>
           <p className="text-ink-2">
             {new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' })}
           </p>

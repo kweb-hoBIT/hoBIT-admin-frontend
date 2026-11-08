@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useLayoutEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
@@ -21,6 +21,7 @@ import { THEME_EVENT } from "../../theme";
 import { ROLE_LABEL } from "../../api/chat";
 import Badge from "../ui/Badge";
 import MenuItem from "../ui/MenuItem";
+import Icon from "../ui/Icon";
 import Logout from "./Logout";
 import DeleteAccount from "./DeleteAccount";
 
@@ -174,7 +175,8 @@ const NavBar: React.FC<{
   );
 
   return (
-    <nav ref={outerRef} className="relative min-w-0 flex-1">
+    // 휴대폰(md 미만)에서는 숨기고 햄버거 메뉴(MobileDrawer)로
+    <nav ref={outerRef} className="relative hidden min-w-0 flex-1 md:block">
       {/* 너비 재기용 (안 보임) */}
       <div ref={measureRef} aria-hidden="true" className="pointer-events-none invisible fixed left-0 top-0 flex" style={{ gap: NAV_GAP }}>
         {items.map((i) => renderItem(i, true))}
@@ -241,7 +243,7 @@ const ThemeToggle: React.FC = () => {
       onClick={toggle}
       aria-label={dark ? "라이트 모드" : "나이트 모드"}
       title={dark ? "라이트 모드" : "나이트 모드"}
-      className="wiggle flex h-12 items-center gap-2 rounded-full px-3.5 text-ink-2 hover:bg-card hover:text-ink transition-colors"
+      className="wiggle flex h-11 items-center gap-2 rounded-full px-2.5 text-ink-2 hover:bg-card hover:text-ink transition-colors sm:h-12 sm:px-3.5"
     >
       {dark ? (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="wiggle-icon h-7 w-7" aria-hidden="true">
@@ -256,6 +258,86 @@ const ThemeToggle: React.FC = () => {
       {/* 누르면 바뀔 모드 — 호빗 사용자 화면과 같이 항상 영어 */}
       <span className="hidden text-[17px] font-semibold xl:inline">{dark ? "Light" : "Night"}</span>
     </button>
+  );
+};
+
+/**
+ * 휴대폰 메뉴 (md 미만) — 햄버거를 누르면 헤더 아래로 펼쳐짐. 묶음마다 하위 화면을 모두 나열하고 지금 화면을 표시
+ * 화면을 옮기거나, 바깥을 누르거나, Esc를 누르면 닫힘. 열려 있는 동안 뒤 화면은 스크롤되지 않음
+ */
+const MobileDrawer: React.FC<{
+  open: boolean;
+  onClose: () => void;
+  groups: NavGroup[];
+  currentChild?: string;
+  onGo: (path: string) => void;
+  chatBadge: number;
+}> = ({ open, onClose, groups, currentChild, onGo, chatBadge }) => {
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    // 화면을 넓혀 데스크톱 메뉴가 보이면 닫음 (스크롤 잠금이 남지 않게)
+    const mq = window.matchMedia("(min-width: 768px)");
+    const onWide = (e: MediaQueryListEvent) => e.matches && onClose();
+    mq.addEventListener?.("change", onWide);
+    return () => {
+      mq.removeEventListener?.("change", onWide);
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [open, onClose]);
+  if (!open) return null;
+  return (
+    <div className="fixed inset-x-0 bottom-0 top-[4.5rem] z-40 md:hidden">
+      <div className="absolute inset-0 bg-black/30" onClick={onClose} aria-hidden="true" />
+      <nav
+        id="mobile-nav"
+        aria-label="메뉴"
+        className="pop-menu relative max-h-full overflow-y-auto overscroll-contain border-b border-line bg-surface px-4 pb-5 pt-2 shadow-xl"
+      >
+        {groups.map((g) => {
+          const single = g.children.length === 1;
+          return (
+            <div key={g.key} className="border-b border-line/70 py-2 last:border-b-0">
+              {!single && <p className="px-3 pb-1 pt-1.5 text-[13px] font-bold tracking-wide text-ink-3">{g.label}</p>}
+              {g.children.map((c) => {
+                const on = c.path === currentChild;
+                return (
+                  <button
+                    key={c.path}
+                    type="button"
+                    aria-current={on ? "page" : undefined}
+                    onClick={() => onGo(c.path)}
+                    className={`flex min-h-[44px] w-full items-center rounded-xl px-3 text-left text-[16px] font-semibold ${
+                      on ? "bg-accent/10 text-accent-ink dark:bg-accent-ink/15" : "text-ink-2 active:bg-card"
+                    }`}
+                  >
+                    {c.label}
+                    {g.key === "chats" && chatBadge > 0 && (
+                      <span className="ml-2 inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-accent px-1.5 text-xs font-bold text-white">
+                        {chatBadge}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          );
+        })}
+        <a
+          href={HOBIT_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 flex min-h-[44px] items-center gap-2 rounded-xl px-3 text-[16px] font-semibold text-ink-2 active:bg-card"
+        >
+          <Icon name="external" className="h-5 w-5" />
+          챗봇 보기
+        </a>
+      </nav>
+    </div>
   );
 };
 
@@ -277,8 +359,13 @@ const Header: React.FC = () => {
     return () => document.removeEventListener("mousedown", onDown);
   }, [showPopup]);
 
-  // 화면을 옮기면 사용자 메뉴는 닫음
-  useEffect(() => setShowPopup(false), [location.pathname]);
+  // 화면을 옮기면 사용자 메뉴·휴대폰 메뉴는 닫음
+  const [drawer, setDrawer] = useState(false);
+  const closeDrawer = useCallback(() => setDrawer(false), []);
+  useEffect(() => {
+    setShowPopup(false);
+    setDrawer(false);
+  }, [location.pathname]);
 
   const isAuthPage = location.pathname === "/login" || location.pathname === "/signup";
   const { group: current, child: currentChild } = activeNav(location.pathname);
@@ -307,6 +394,14 @@ const Header: React.FC = () => {
   const subItems = groups.find((g) => g.key === current)?.children ?? [];
   const subRef = useRef<HTMLDivElement>(null);
 
+  // 좁은 화면에서 하위 탭 줄이 넘치면 지금 탭이 보이도록 가로로 스크롤
+  useEffect(() => {
+    const row = subRef.current;
+    const el = row?.querySelector<HTMLElement>('[data-active="true"]');
+    if (!row || !el || row.scrollWidth <= row.clientWidth) return;
+    row.scrollLeft = el.offsetLeft - (row.clientWidth - el.offsetWidth) / 2;
+  }, [currentChild]);
+
   const handleNavigation = (path: string) => {
     dispatch(clearFAQFilterState());
     dispatch(clearFAQSortState());
@@ -317,6 +412,7 @@ const Header: React.FC = () => {
     dispatch(clearQuestionLogFilterState());
     dispatch(clearLogAnalysisFilterState());
     dispatch(clearFeedbackFilterState());
+    setDrawer(false);
     navigate(path);
     if (location.pathname === path) {
       navigate(0);
@@ -326,7 +422,7 @@ const Header: React.FC = () => {
   // 불투명 배경 — backdrop-filter·transform이 있으면 메뉴 안 회원탈퇴 확인창(fixed)이 헤더 안에 갇힘
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-surface">
-      <div className="mx-auto flex h-[4.5rem] max-w-[1680px] items-center gap-4 px-6 xl:gap-8 2xl:px-10">
+      <div className="mx-auto flex h-[4.5rem] max-w-[1680px] items-center gap-2 px-4 sm:gap-4 sm:px-6 xl:gap-8 2xl:px-10">
         <button
           type="button"
           disabled={isAuthPage}
@@ -334,10 +430,10 @@ const Header: React.FC = () => {
           onMouseEnter={() => prefetchRoute("/home")}
           className="-mx-2 flex shrink-0 items-center gap-3 rounded-xl px-2 py-1 disabled:cursor-default"
         >
-          <img src="/hoBIT64.ico" alt="" className="h-10 w-10 rounded-full" />
+          <img src="/hoBIT64.ico" alt="" className="h-9 w-9 rounded-full sm:h-10 sm:w-10" />
           {/* 로고 글자 바로 아래에 작게: 행정실·개발자 = 관리자, 근로장학생 = 선배 (옆에 알약으로 두면 메뉴 탭처럼 보였음) */}
           <span className="flex flex-col items-start leading-none">
-            <span className="text-[26px] font-bold tracking-tight text-accent-ink">hoBIT</span>
+            <span className="text-[22px] font-bold tracking-tight text-accent-ink sm:text-[26px]">hoBIT</span>
             {role === "senior" ? (
               // 호빗 화면의 선배모드 표시(Senior)와 같은 모양
               <span className="mt-1 w-fit rounded-full bg-senior px-2 py-0.5 text-[12px] font-semibold text-red-600">senior</span>
@@ -365,14 +461,15 @@ const Header: React.FC = () => {
           />
         )}
 
-        <div className="ml-auto flex shrink-0 items-center gap-1">
+        <div className="ml-auto flex shrink-0 items-center gap-0.5 sm:gap-1">
           {/* 학생이 보는 호빗 챗봇을 새 탭으로 */}
           <a
             href={HOBIT_URL}
             title="챗봇 보기"
             target="_blank"
             rel="noopener noreferrer"
-            className="wiggle flex h-12 items-center gap-2 rounded-full px-3.5 text-[17px] font-semibold text-ink-2 transition-colors hover:bg-card hover:text-ink"
+            // 휴대폰에서는 메뉴(햄버거) 안으로
+            className="wiggle hidden h-12 items-center gap-2 rounded-full px-3.5 text-[17px] font-semibold text-ink-2 transition-colors hover:bg-card hover:text-ink sm:flex"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="wiggle-icon h-6 w-6" aria-hidden="true">
               <path d="M7 17 17 7M9 7h8v8" />
@@ -387,7 +484,7 @@ const Header: React.FC = () => {
                 type="button"
                 onClick={() => setShowPopup((v) => !v)}
                 aria-expanded={showPopup}
-                className="wiggle flex h-12 items-center gap-3 rounded-full pl-1.5 pr-4 text-ink-2 hover:bg-card hover:text-ink transition-colors"
+                className="wiggle flex h-11 items-center gap-3 rounded-full px-1 text-ink-2 hover:bg-card hover:text-ink transition-colors sm:h-12 sm:pl-1.5 sm:pr-4"
               >
                 <span className="wiggle-icon flex h-9 w-9 items-center justify-center rounded-full bg-accent text-[17px] font-bold text-white">
                   {(username || "?").slice(0, 1)}
@@ -395,7 +492,7 @@ const Header: React.FC = () => {
                 <span className="hidden max-w-[160px] truncate text-[17px] font-semibold lg:inline">{username}</span>
               </button>
               {showPopup && (
-                <div role="menu" className="pop-menu absolute right-0 top-[3.5rem] w-64 rounded-2xl border border-line bg-surface p-2 shadow-xl">
+                <div role="menu" className="pop-menu absolute right-0 top-[3.5rem] w-64 max-w-[calc(100vw-2rem)] rounded-2xl border border-line bg-surface p-2 shadow-xl">
                   {/* 나 — 동그라미 + 이름 + 권한 */}
                   <div className="flex items-center gap-3 px-3 pb-3 pt-2">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-[17px] font-bold text-white">
@@ -423,12 +520,33 @@ const Header: React.FC = () => {
               )}
             </div>
           )}
+          {/* 휴대폰 메뉴 버튼 — 채팅 대기·안 읽은 메시지가 있으면 점 */}
+          {!isAuthPage && (
+            <button
+              type="button"
+              onClick={() => setDrawer((v) => !v)}
+              aria-expanded={drawer}
+              aria-controls="mobile-nav"
+              aria-label={drawer ? "메뉴 닫기" : "메뉴 열기"}
+              className="relative flex h-11 w-11 items-center justify-center rounded-full text-ink-2 transition-colors hover:bg-card hover:text-ink md:hidden"
+            >
+              <Icon name={drawer ? "close" : "menu"} className="h-6 w-6" />
+              {chatBadge > 0 && (
+                <span className="absolute right-0.5 top-0.5 inline-flex min-w-[1.1rem] items-center justify-center rounded-full bg-accent px-1 text-[11px] font-bold leading-[1.1rem] text-white">
+                  {chatBadge}
+                </span>
+              )}
+            </button>
+          )}
         </div>
       </div>
+      {!isAuthPage && (
+        <MobileDrawer open={drawer} onClose={closeDrawer} groups={groups} currentChild={currentChild} onGo={handleNavigation} chatBadge={chatBadge} />
+      )}
       {/* 하위 화면 탭 — 묶음 안에 화면이 둘 이상일 때만 (FAQ·로그·피드백) */}
       {!isAuthPage && subItems.length > 1 && (
         <div className="border-t border-line/70">
-          <div ref={subRef} className="relative mx-auto flex h-12 max-w-[1680px] items-center gap-1 overflow-x-auto px-6 2xl:px-10">
+          <div ref={subRef} className="no-scrollbar relative mx-auto flex h-12 max-w-[1680px] items-center gap-1 overflow-x-auto px-4 sm:px-6 2xl:px-10">
             <SlidingIndicator containerRef={subRef} activeKey={currentChild} variant="underline" className="bg-accent-ink" />
             {subItems.map((s) => {
               const on = s.path === currentChild;

@@ -122,7 +122,7 @@ const BulkDeleteFeedbackModal: React.FC<BulkDeleteFeedbackModalProps> = ({ onClo
   return (
     <div className="modal-overlay">
       <div className="modal-panel max-w-[520px] max-h-[90vh] overflow-y-auto">
-        <h2 className="text-2xl font-bold mb-4">피드백 전체 삭제</h2>
+        <h2 className="text-xl sm:text-2xl font-bold mb-4">피드백 전체 삭제</h2>
 
         {/* 기간 선택 */}
         <div className="mb-4">
