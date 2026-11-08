@@ -1,12 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../redux/store';
-import { selectAdminLogFilter, setAdminLogCurrentPage } from '../../../redux/filterSlice';
+import React, { useState } from 'react';
 import { GetAllAdminLogResponse } from '../../../types/adminLog';
 import { useNavigate } from 'react-router-dom';
-import { selectLogItemsPerPage, setLogItemsPerPage } from '../../../redux/itemSlice';
 import BulkDeleteAdminLogModal from './BulkDeleteAdminLogModal';
-import Select from '../../ui/Select';
+import { useIncremental } from '../../../hooks/useIncremental';
+import { ListEnd, ListHeader } from '../../ui/ListKit';
+import { revealRef } from '../../ui/motion';
+
+
+// 한국 시간 — 형식기를 한 번만 만들어 씀 (toLocaleString에 시간대를 주면 부를 때마다 새로 만들어 느림)
+const KST = new Intl.DateTimeFormat('ko-KR', {
+  timeZone: 'Asia/Seoul',
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+  second: 'numeric',
+});
+const formatDateToKST = (dateStr: string) => {
+  const d = new Date(dateStr);
+  return Number.isNaN(d.getTime()) ? dateStr : KST.format(d);
+};
 
 interface AdminLogMainFormProps {
   adminLogs: GetAllAdminLogResponse['data']['adminLogs'];
@@ -14,43 +28,9 @@ interface AdminLogMainFormProps {
 
 const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  
-  const { storedCurrentPage } = useSelector((state: RootState) => selectAdminLogFilter(state));
-  const [currentPage, setCurrentPage] = useState<number>(storedCurrentPage || 1);
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
-
-  useEffect(() => {
-    dispatch(setAdminLogCurrentPage(currentPage));
-  }, [currentPage]);
-
-  const itemsPerPage = useSelector(selectLogItemsPerPage);
-  const pagesPerGroup = 10;
-  const totalPages = Math.ceil(adminLogs.length / itemsPerPage);
-  const currentPageGroup = Math.floor((currentPage - 1) / pagesPerGroup);
-  const startPage = currentPageGroup * pagesPerGroup + 1;
-  const endPage = Math.min((currentPageGroup + 1) * pagesPerGroup, totalPages);
-  const pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index);
-
-  const currentItems = adminLogs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(Math.min((currentPageGroup + 1) * pagesPerGroup + 1, totalPages));
-    }
-  };
-  
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(Math.max(currentPageGroup * pagesPerGroup, 1));
-    }
-  };
-
-  const handlePageChange = (page: number) => setCurrentPage(page);
-
-  const formatDateToKST = (dateStr: string) => {
-    return new Date(dateStr).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
-  };
+  // 처음 20개, 내려가면 20개씩 더
+  const { shown, total, hasMore, sentinelRef } = useIncremental(adminLogs);
 
   const handleLogClick = (log: any) => {
     const path = log.log_type === 'faq_log' ? `/adminlogs/faqlogs/${log.log_id}` : `/adminlogs/seniorfaqlogs/${log.log_id}`;
@@ -60,36 +40,27 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
   return (
     <div className="p-3 sm:p-6">
       <div className="p-3 sm:p-6">
-        <div className="flex flex-wrap justify-center items-center gap-3 mb-6">
-          <h4 className="text-xl font-bold text-ink flex-grow">관리자 로그 리스트</h4>
-            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-              <Select
-                value={itemsPerPage}
-                onChange={(e) => {
-                  dispatch(setLogItemsPerPage(Number(e.target.value)))
-                  setCurrentPage(1);
-                }}
-                className="p-2 rounded-xl border-2 border-line focus:outline-none focus:ring-2 focus:ring-accent-ink/40"
-              >
-                <option value={4}>4개씩 보기</option>
-                <option value={6}>6개씩 보기</option>
-                <option value={8}>8개씩 보기</option>
-                <option value={10}>10개씩 보기</option>
-              </Select>
-              <button
-                onClick={() => setShowBulkDeleteModal(true)}
-                className="px-4 py-2 bg-danger text-white rounded-xl hover:bg-danger/90 font-semibold"
-              >
-                전체 삭제
-              </button>
-            </div>
-          </div>
-        <div style={{ minHeight: '320px' }}>
+        <ListHeader
+          title="관리자 로그"
+          count={total}
+          description="FAQ·선배 FAQ를 누가 언제 바꿨는지 보여요"
+          action={
+            <button
+              type="button"
+              onClick={() => setShowBulkDeleteModal(true)}
+              className="h-10 rounded-xl bg-danger px-4 font-semibold text-white hover:bg-danger/90"
+            >
+              전체 삭제
+            </button>
+          }
+        />
+        <div>
           <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
-            {currentItems.map(log => (
+            {shown.map(log => (
               <div
                 key={`${log.log_id}-${log.log_type}`}
-                className="relative bg-card-2 p-4 rounded-xl cursor-pointer"
+                ref={revealRef}
+                className="list-item-cv relative bg-card-2 p-4 rounded-xl cursor-pointer"
                 onClick={() => handleLogClick(log)}
               >
                 <div className="pr-24">
@@ -132,34 +103,10 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-center mt-4 items-center gap-2 sm:gap-4">
-          <button
-            onClick={handlePrevPage}
-            className="px-4 py-2 bg-card-2 rounded-xl text-sm font-semibold text-ink hover:bg-card-3"
-            disabled={currentPage === 1}
-          >이전</button>
-          <div className="flex gap-2">
-            {pageNumbers.map(page => (
-              <button
-                key={page}
-                onClick={() => handlePageChange(page)}
-                className={`px-3 py-2 text-sm font-semibold rounded-xl ${Math.abs(page - currentPage) > 2 ? 'hidden sm:block' : ''} ${
-                  currentPage === page ? 'bg-accent text-white' : 'bg-card-2 text-ink'
-                }`}
-                style={{ width: '40px', textAlign: 'center' }}
-              >
-                {page}
-              </button>
-            ))}
-          </div>
-          <button
-            onClick={handleNextPage}
-            className="px-4 py-2 bg-card-2 rounded-xl text-sm font-semibold text-ink hover:bg-card-3"
-            disabled={currentPage === totalPages}
-          >다음</button>
-        </div>
+        {total === 0 && <p className="py-16 text-center text-sm text-ink-3">아직 관리자 로그가 없어요</p>}
+        <ListEnd hasMore={hasMore} total={total} sentinelRef={sentinelRef} />
       </div>
-      
+
       {/* 전체 삭제 모달 */}
       {showBulkDeleteModal && (
         <BulkDeleteAdminLogModal

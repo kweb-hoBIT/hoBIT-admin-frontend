@@ -1,44 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useHobitQueryGetApi } from '../../../hooks/hobitAdmin';
 import { GetAllQuestionLogRequest, GetAllQuestionLogResponse } from '../../../types/questionLog';
 import QuestionLogMainForm from './QuestionLogMainForm';
+import { ListSkeleton, LoadError } from '../../ui/ListKit';
 
 const QuestionLogMain: React.FC = () => {
-  const [questionLogData, setQuestionLogData] = useState<GetAllQuestionLogResponse['data']['questionLogs']>([]);
-  const [error, setError] = useState<string | null>(null);
+  const api = useHobitQueryGetApi<GetAllQuestionLogRequest, GetAllQuestionLogResponse>('questionlogs');
+  const payload = api.data?.payload;
+  // 받아 둔 데이터를 바로 씀 — 다시 받는 동안에도 이전 목록을 그대로 보여줌
+  const list = payload?.statusCode === 200 ? payload.data.questionLogs : null;
 
-  const GetQuestionLogsApi = useHobitQueryGetApi<GetAllQuestionLogRequest, GetAllQuestionLogResponse>('questionlogs');
-
-  // Question 로그 데이터 가져오기
-  useEffect(() => {
-    const fetchQuestionLogData = async () => {
-      if (GetQuestionLogsApi.data?.payload?.statusCode === 200) {
-        const data = GetQuestionLogsApi.data.payload.data.questionLogs;
-        setQuestionLogData(data);
-      } else {
-        setError('Question 로그 데이터를 가져오는 중 오류 발생');
-        console.log('Question 로그 데이터를 가져오는 중 오류 발생:', GetQuestionLogsApi.error);
-      }
-    };
-
-    if (GetQuestionLogsApi.isSuccess && GetQuestionLogsApi.data) {
-      fetchQuestionLogData();
-    }
-  }, [GetQuestionLogsApi.isSuccess, GetQuestionLogsApi.data]);
-
-  if (error) {
-    return <div className="error-message">{error}</div>;
+  if (!list) {
+    return (
+      <div className="p-3 sm:p-6">
+        {api.isPending || api.isFetching ? (
+          <ListSkeleton />
+        ) : (
+          <LoadError message="유저 로그를 불러오지 못했어요." onRetry={() => api.refetch()} />
+        )}
+      </div>
+    );
   }
 
-  if (GetQuestionLogsApi.isLoading) {
-    return <div></div>;
-  }
-
-  return (
-    <div>
-      <QuestionLogMainForm questionLogs={questionLogData} />
-    </div>
-  );
+  return <QuestionLogMainForm questionLogs={list} />;
 };
 
 export default QuestionLogMain;

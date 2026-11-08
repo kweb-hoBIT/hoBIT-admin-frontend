@@ -1,44 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useHobitQueryGetApi } from '../../../hooks/hobitAdmin';
 import { GetAllAdminLogRequest, GetAllAdminLogResponse } from '../../../types/adminLog';
 import AdminLogMainForm from './AdminLogMainForm';
+import { ListSkeleton, LoadError } from '../../ui/ListKit';
 
 const AdminLogMain: React.FC = () => {
-  const [adminLogData, setAdminLogData] = useState<GetAllAdminLogResponse['data']['adminLogs']>([]);
-  const [error, setError] = useState<string | null>(null);
+  const api = useHobitQueryGetApi<GetAllAdminLogRequest, GetAllAdminLogResponse>('adminlogs');
+  const payload = api.data?.payload;
+  // 받아 둔 데이터를 바로 씀 — 다시 받는 동안에도 이전 목록을 그대로 보여줌
+  const list = payload?.statusCode === 200 ? payload.data.adminLogs : null;
 
-  const GetAdminLogsApi = useHobitQueryGetApi<GetAllAdminLogRequest, GetAllAdminLogResponse>('adminlogs');
-
-  // FAQ 로그 데이터 가져오기
-  useEffect(() => {
-    const fetchFAQLogData = async () => {
-      if (GetAdminLogsApi.data?.payload?.statusCode === 200) {
-        const data = GetAdminLogsApi.data.payload.data.adminLogs;
-        setAdminLogData(data);
-      } else {
-        setError('FAQ 로그 데이터를 가져오는 중 오류 발생');
-        console.log('FAQ 로그 데이터를 가져오는 중 오류 발생:', GetAdminLogsApi.error);
-      }
-    };
-
-    if (GetAdminLogsApi.isSuccess && GetAdminLogsApi.data) {
-      fetchFAQLogData();
-    }
-  }, [GetAdminLogsApi.isSuccess, GetAdminLogsApi.data]);
-
-  if (error) {
-    return <div className="error-message">{error}</div>;
+  if (!list) {
+    return (
+      <div className="p-3 sm:p-6">
+        {api.isPending || api.isFetching ? (
+          <ListSkeleton />
+        ) : (
+          <LoadError message="관리자 로그를 불러오지 못했어요." onRetry={() => api.refetch()} />
+        )}
+      </div>
+    );
   }
 
-  if (GetAdminLogsApi.isLoading) {
-    return <div></div>;
-  }
-
-  return (
-    <div>
-      <AdminLogMainForm adminLogs={adminLogData} />
-    </div>
-  );
+  return <AdminLogMainForm adminLogs={list} />;
 };
 
 export default AdminLogMain;
