@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { GetAllQuestionLogResponse } from '../../../types/questionLog';
 import BulkDeleteQuestionLogModal from './BulkDeleteQuestionLogModal';
 import { useIncremental } from '../../../hooks/useIncremental';
-import { ListEnd, ListHeader, CardFooter, useExpanded } from '../../ui/ListKit';
+import { ListEnd, ListHeader } from '../../ui/ListKit';
 import { revealRef } from '../../ui/motion';
 
 
@@ -26,7 +26,6 @@ interface QuestionLogMainFormProps {
 }
 
 const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs }) => {
-  const expand = useExpanded<number>(); // 긴 질문은 두 줄까지, 더보기로 펼침
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
   // 처음 20개, 내려가면 20개씩 더
   const { shown, total, hasMore, sentinelRef } = useIncremental(questionLogs);
@@ -52,11 +51,11 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
           <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             {shown.map((log) => (
               <div ref={revealRef} className="list-item-cv relative bg-card-2 p-4 rounded-xl" key={log.question_log_id}>
-                <div className={`mb-2 ${expand.isOpen(log.question_log_id) ? '' : 'line-clamp-2'}`}>
+                <div className="mb-2 break-words">
                   <strong>유저 질문: {log.user_question}</strong>
                 </div>
                 <div className="flex flex-col">
-                  <div className={`mb-1 text-sm text-ink-2 ${expand.isOpen(log.question_log_id) ? '' : 'line-clamp-1'}`}>
+                  <div className="mb-1 break-words text-sm text-ink-2">
                     <strong>매칭된 질문:</strong> {log.faq_question ? log.faq_question : '매칭된 질문이 삭제됨'}
                   </div>
                   <div className="mb-1 text-sm text-ink-2">
@@ -66,7 +65,6 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
                     <strong>질문 시각:</strong> {formatDateToKST(log.created_at)}
                   </div>
                 </div>
-                <CardFooter onMore={() => expand.toggle(log.question_log_id)} expanded={expand.isOpen(log.question_log_id)} />
               </div>
             ))}
           </div>

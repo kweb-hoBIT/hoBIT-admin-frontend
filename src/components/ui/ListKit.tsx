@@ -166,7 +166,7 @@ export const CardFooter: React.FC<{
   expanded?: boolean; // 펼치기 카드면 true/false, 상세 화면으로 가는 카드면 undefined
   children?: React.ReactNode;
 }> = ({ onMore, expanded, children }) => (
-  <div className="mt-3 flex items-center justify-between gap-2 border-t border-line/70 pt-3">
+  <div className={`mt-3 flex items-center gap-2 border-t border-line/70 pt-3 ${onMore ? 'justify-between' : 'justify-end'}`}>
     {onMore ? (
       <button
         type="button"
@@ -182,9 +182,7 @@ export const CardFooter: React.FC<{
           <path d="M5.5 7.5 10 12l4.5-4.5" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
-    ) : (
-      <span />
-    )}
+    ) : null}
     {children && (
       <div className="flex shrink-0 items-center gap-2" onClick={(e) => e.stopPropagation()}>
         {children}
