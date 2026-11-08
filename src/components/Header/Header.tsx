@@ -55,7 +55,7 @@ const NAV: NavGroup[] = [
     { path: "/categories", label: "카테고리" },
     { path: "/categories/profile-options", label: "프로필 항목" },
     { path: "/categories/bulk", label: "담당자·이메일" },
-    { path: "/categories/chat", label: "채팅" },
+    { path: "/categories/chat", label: "채팅 운영" }, // 채팅 켜고 끄기·메일 인증 — 위 메뉴 '채팅'(대화 화면)과 헷갈리지 않게
   ] },
   // 맨 뒤 — 대기·안 읽은 메시지가 있으면 배지, 좁아도 "더보기"로 접지 않음
   { key: "chats", label: "채팅", pin: true, children: [{ path: "/chats", label: "채팅" }] },
@@ -300,7 +300,8 @@ const MobileDrawer: React.FC<{
         aria-label="메뉴"
         className="pop-menu relative max-h-full overflow-y-auto overscroll-contain border-b border-line bg-surface px-4 pb-5 pt-2 shadow-xl"
       >
-        {groups.map((g) => {
+        {/* 채팅(대화 화면)은 가장 급한 일이라 맨 위에 따로 — 관리 > 채팅 운영(설정)과 붙어 있으면 헷갈렸음 */}
+        {[...groups.filter((g) => g.pin), ...groups.filter((g) => !g.pin)].map((g) => {
           const single = g.children.length === 1;
           return (
             <div key={g.key} className="border-b border-line/70 py-2 last:border-b-0">
@@ -317,7 +318,7 @@ const MobileDrawer: React.FC<{
                       on ? "bg-accent/10 text-accent-ink dark:bg-accent-ink/15" : "text-ink-2 active:bg-card"
                     }`}
                   >
-                    {c.label}
+                    {g.key === "chats" ? "실시간 채팅" : c.label}
                     {g.key === "chats" && chatBadge > 0 && (
                       <span className="ml-2 inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-accent px-1.5 text-xs font-bold text-white">
                         {chatBadge}
