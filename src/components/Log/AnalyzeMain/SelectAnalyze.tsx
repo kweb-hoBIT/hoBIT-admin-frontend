@@ -10,12 +10,12 @@ interface AnalyzeSelectProps {
 const SelectAnalyze: React.FC<AnalyzeSelectProps> = ({ selectedAnalyze, onFilterChange }) => (
   <Segmented
     options={[
-      ['Entire', 'FAQ 순위'],
-      ['Specific', 'FAQ 하나 자세히'],
+      ['Entire', '전체 FAQ'],
+      ['Specific', 'FAQ별 추이'],
     ] as const}
     value={selectedAnalyze}
     onChange={onFilterChange}
-    itemClassName="px-4 py-1.5 text-sm font-semibold"
+    itemClassName="min-w-[6.5rem] px-4 py-1.5 text-sm font-semibold" // 두 칸 같은 폭 — 바꿔도 알약 크기 그대로
     className="w-fit max-w-full"
   />
 );

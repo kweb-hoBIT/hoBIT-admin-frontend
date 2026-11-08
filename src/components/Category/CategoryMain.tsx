@@ -35,23 +35,22 @@ const CategoryMain: React.FC<{ section?: 'category' | 'bulk' }> = ({ section = '
   if (section === 'bulk') {
     return (
       <section className="panel p-4 sm:p-6">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <h4 className="text-xl font-bold text-ink">담당자·이메일</h4>
-            <p className="mt-1 text-sm text-ink-3">모든 FAQ 답변에 적힌 담당자 이름·이메일을 한 번에 바꾸거나 지워요. 엑셀의 담당자·이메일 시트로도 바꿀 수 있어요.</p>
-          </div>
-          <div className="flex flex-wrap gap-2">
+        {/* 제목과 엑셀 받기·올리기를 한 줄에 (휴대폰에서 버튼이 따로 한 줄을 차지하던 여백) */}
+        <div className="flex items-center justify-between gap-2">
+          <h4 className="text-xl font-bold text-ink">담당자·이메일</h4>
+          <div className="flex shrink-0 gap-2">
             <FAQExcelButtons />
           </div>
         </div>
+        <p className="mt-1 text-sm text-ink-3">모든 답변의 담당자 이름·이메일을 한 번에 바꾸거나 지워요.</p>
         <Segmented
-          className="mt-4 w-fit max-w-full"
+          className="mt-3 w-fit max-w-full"
           itemClassName="px-4 py-1.5 text-sm font-semibold"
           options={[['admin', '담당자'], ['email', '이메일']] as const}
           value={bulkKind}
           onChange={setBulkKind}
         />
-        <div key={bulkKind} className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div key={bulkKind} className="mt-4 grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
           {bulkKind === 'admin' ? (
             <>
               <Block title="담당자 변경" desc="한 담당자의 이름을 모든 FAQ에서 바꿔요."><BulkUpdateAdmin /></Block>
@@ -70,20 +69,18 @@ const CategoryMain: React.FC<{ section?: 'category' | 'bulk' }> = ({ section = '
 
   return (
     <section className="panel p-4 sm:p-6">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h4 className="text-xl font-bold text-ink">카테고리</h4>
-          <p className="mt-1 text-sm text-ink-3">학생 화면 메뉴에 보이는 FAQ 분류의 이름과 순서를 바꿔요.{!senior && ' 엑셀의 대분류·소분류 칸으로도 바꿀 수 있어요.'}</p>
-        </div>
+      <div className="flex items-center justify-between gap-2">
+        <h4 className="text-xl font-bold text-ink">카테고리</h4>
         {!senior && (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex shrink-0 gap-2">
             <FAQExcelButtons />
           </div>
         )}
       </div>
+      <p className="mt-1 text-sm text-ink-3">학생 메뉴에 보이는 FAQ 분류의 이름·순서를 바꿔요.</p>
       {!senior && (
         <Segmented
-          className="mt-4 w-fit max-w-full"
+          className="mt-3 w-fit max-w-full"
           itemClassName="px-4 py-1.5 text-sm font-semibold"
           options={[['faq', '행정실 FAQ'], ['senior', '선배 FAQ']] as const}
           value={faqKind}

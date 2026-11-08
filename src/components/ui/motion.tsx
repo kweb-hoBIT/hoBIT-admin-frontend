@@ -40,8 +40,8 @@ export const CountUp: React.FC<{ value: number; delay?: number; className?: stri
  * 무한 스크롤로 새로 붙은 항목도 같은 방식으로 나타나고, 이미 보인 항목은 다시 움직이지 않아요.
  * 움직임 줄이기 설정이면 바로 보여요.
  */
-const STAGGER_MS = 50;
-const STAGGER_MAX_MS = 400;
+const STAGGER_MS = 70;
+const STAGGER_MAX_MS = 560;
 let sharedObserver: IntersectionObserver | null = null;
 const watching = new Set<Element>();
 let sweepQueued = false;

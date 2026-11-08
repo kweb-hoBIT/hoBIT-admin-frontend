@@ -173,7 +173,7 @@ input::placeholder, textarea::placeholder { color: rgb(var(--c-ink-3)); }
 }
 
 /* 대시보드 모션 — 카드가 차례로 떠오르고, 막대가 차라락 자람 */
-@keyframes reveal-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes reveal-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 @keyframes grow-y { from { transform: scaleY(0); } to { transform: scaleY(1); } }
 @keyframes grow-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .reveal { animation: reveal-up .45s cubic-bezier(.2,.8,.2,1) both; }
@@ -185,7 +185,7 @@ input::placeholder, textarea::placeholder { color: rgb(var(--c-ink-3)); }
 
 /* 스크롤 위치에 따라 나타나기 (ui/motion revealRef) — 나타나기 전엔 투명, 나타날 때 살짝 떠오름 */
 [data-sr]:not([data-shown]) { opacity: 0; }
-[data-sr][data-shown="in"] { animation: reveal-up .35s cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--sr-delay, 0ms); }
+[data-sr][data-shown="in"] { animation: reveal-up .5s cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--sr-delay, 0ms); }
 @media (prefers-reduced-motion: reduce) {
   [data-sr]:not([data-shown]) { opacity: 1; }
   [data-sr][data-shown="in"] { animation: none; }

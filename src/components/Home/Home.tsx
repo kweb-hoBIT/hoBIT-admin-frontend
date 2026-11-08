@@ -43,16 +43,27 @@ const timeAgo = (iso: string) => {
   return `${Math.floor(h / 24)}일 전`;
 };
 
-const Card: React.FC<{ title: string; action?: React.ReactNode; className?: string; children: React.ReactNode }> = ({
+/** 홈 카드 — 오른쪽 위 '더보기 →'(more)로 자세한 화면, hint는 제목 아래 작은 설명 */
+const Card: React.FC<{ title: string; more?: string; hint?: string; action?: React.ReactNode; className?: string; children: React.ReactNode }> = ({
   title,
+  more,
+  hint,
   action,
   className = '',
   children,
 }) => (
   <section className={`flex h-full flex-col rounded-2xl border border-line bg-surface p-4 sm:p-5 ${className}`}>
-    <div className="mb-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-      <h2 className="font-bold text-ink">{title}</h2>
+    <div className="mb-4 flex items-start justify-between gap-3">
+      <div className="min-w-0">
+        <h2 className="font-bold text-ink">{title}</h2>
+        {hint && <p className="mt-0.5 text-xs text-ink-3">{hint}</p>}
+      </div>
       {action}
+      {more && (
+        <Link to={more} onMouseEnter={() => prefetchRoute(more)} className="shrink-0 whitespace-nowrap text-sm font-semibold text-accent-ink hover:underline">
+          더보기 →
+        </Link>
+      )}
     </div>
     {children}
   </section>
@@ -419,18 +430,14 @@ const Home: React.FC = () => {
       {/* 그래프 + 최근 피드백 */}
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <Reveal index={4}>
-          <Card title="최근 14일 질문 수">
+          <Card title="최근 14일 질문 수" more="/logs">
             {dash ? <DailyChart daily={dash.daily} /> : <Placeholder failed={failed} className="h-[180px]" />}
           </Card>
         </Reveal>
         <Reveal index={5}>
           <Card
             title="해결 안 된 최근 피드백"
-            action={
-              <Link to="/userfeedbacks" className="text-sm font-semibold text-accent-ink hover:underline">
-                전체 보기 →
-              </Link>
-            }
+            more="/userfeedbacks"
           >
             {!dash ? (
               <Placeholder failed={failed} className="h-[180px]" />
@@ -459,7 +466,7 @@ const Home: React.FC = () => {
       {/* 많이 쓰인 FAQ · 답을 못 찾은 질문 */}
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Reveal index={6}>
-          <Card title="이번 주 많이 쓰인 FAQ" action={<span className="text-xs text-ink-3">직접 열람 + 답변 근거로 인용</span>}>
+          <Card title="이번 주 많이 쓰인 FAQ" hint="직접 열람 + 답변 근거로 인용" more="/logs/analytics">
             {dash ? (
               <RankBars
                 items={dash.top_faqs.map((f) => ({ label: f.question_ko, count: f.count, to: `/faqs/${f.faq_id}` }))}
@@ -471,7 +478,7 @@ const Home: React.FC = () => {
           </Card>
         </Reveal>
         <Reveal index={7}>
-          <Card title="이번 주 답을 못 찾은 질문" action={<span className="text-xs text-ink-3">누르면 FAQ로 만들기</span>}>
+          <Card title="이번 주 답을 못 찾은 질문" hint="누르면 FAQ로 만들기" more="/answer-reviews">
             {dash ? (
               <RankBars
                 items={dash.top_questions.map((q) => ({ label: q.question, count: q.count, to: `/faqs/create?question=${encodeURIComponent(q.question)}` }))}
