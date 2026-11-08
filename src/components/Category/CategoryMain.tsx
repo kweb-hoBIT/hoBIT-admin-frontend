@@ -15,9 +15,9 @@ import BulkDeleteEmail from './Email/BulkDeleteEmail';
 
 /** 편집 칸 하나 — 제목·설명 + 끼워 넣은 화면 */
 const Block: React.FC<{ title: string; desc: string; danger?: boolean; children: React.ReactNode }> = ({ title, desc, danger, children }) => (
-  <div ref={revealRef} className={`min-w-0 rounded-2xl border p-4 sm:p-5 ${danger ? 'border-danger/30' : 'border-line'}`}>
-    <h5 className={`font-semibold ${danger ? 'text-danger' : 'text-ink'}`}>{title}</h5>
-    <p className="mb-4 mt-0.5 text-sm text-ink-3">{desc}</p>
+  <div ref={revealRef} className={`relative min-w-0 rounded-2xl border p-4 sm:p-5 ${danger ? 'border-danger/30' : 'border-line'}`}>
+    <h5 className={`pr-20 font-semibold ${danger ? 'text-danger' : 'text-ink'}`}>{title}</h5>
+    <p className="mb-3 mt-0.5 pr-20 text-sm text-ink-3">{desc}</p>
     <EmbeddedProvider>{children}</EmbeddedProvider>
   </div>
 );

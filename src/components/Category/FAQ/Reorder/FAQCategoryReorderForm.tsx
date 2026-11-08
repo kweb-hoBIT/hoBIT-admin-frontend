@@ -141,10 +141,14 @@ const FAQCategoryReorderForm: React.FC<FAQCategoryReorderFormProps> = ({
         {!emb && (<h2 className="text-xl sm:text-2xl font-bold text-ink text-center mb-6">FAQ 카테고리 순서 변경</h2>)}
         {!emb && <p className="text-center mb-4">주요 카테고리와 하위 카테고리 순서를 자유롭게 조정할 수 있습니다.</p>}
         {onReset && (
-          <div className="flex justify-end mb-4">
+          // 관리 탭 안에서는 칸 제목 줄 오른쪽 위에 작게 (버튼 하나 때문에 줄이 비던 문제)
+          <div className={emb ? 'absolute right-4 top-4 sm:right-5 sm:top-5' : 'flex justify-end mb-4'}>
             <button
               onClick={onReset}
-              className="bg-accent text-white px-4 py-2 rounded-xl hover:bg-accent/90 transition"
+              title="저장하기 전 순서로 되돌려요"
+              className={emb
+                ? 'rounded-full border border-line px-3 py-1.5 text-sm font-semibold text-ink-2 transition-colors hover:bg-card hover:text-ink'
+                : 'bg-accent text-white px-4 py-2 rounded-xl hover:bg-accent/90 transition'}
             >
               초기화
             </button>
