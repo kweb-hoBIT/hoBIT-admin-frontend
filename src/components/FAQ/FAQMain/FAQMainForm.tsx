@@ -1,22 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import {
   selectFAQFilter,
-  setFAQCurrentPage,
   setFAQFilterContent,
   setFAQFilterName,
   setSortValue
 } from '../../../redux/filterSlice';
-import { selectFAQItemsPerPage, setFAQItemsPerPage } from '../../../redux/itemSlice';
 import FAQDelete from './FAQDelete';
 import FAQFilter from './FAQFilter';
-import FAQSort from './FAQSort';
+import FAQSort, { sortFAQs } from './FAQSort';
 import { GetAllFAQResponse } from '../../../types/faq';
-import Select from '../../ui/Select';
 import { FAQAudienceBadge } from '../FAQAudienceField';
 import FAQExcelButtons from '../FAQExcel/FAQExcelButtons';
+import { useIncremental } from '../../../hooks/useIncremental';
+import { ListEnd, ListHeader } from '../../ui/ListKit';
+import { revealRef } from '../../ui/motion';
+import Icon from '../../ui/Icon';
 
 interface FAQMainFormProps {
   faqs: GetAllFAQResponse['data']['faqs'];
@@ -27,63 +28,32 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' 
   const grad = view === 'graduate';
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isFirstRender = useRef(true);
 
-  const {
-    storedCurrentPage,
-    storedFilterContent,
-    storedFilterName,
-  } = useSelector((state: RootState) => selectFAQFilter(state));
-
+  const { storedFilterContent, storedFilterName } = useSelector((state: RootState) => selectFAQFilter(state));
   const { storedSortValue } = useSelector((state: RootState) => state.faqSort);
 
-  const [currentPage, setCurrentPage] = useState<number>(storedCurrentPage);
   const [filter, setFilter] = useState<string>(storedFilterContent);
   const [selectedFilter, setSelectedFilter] = useState<
     'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager'
   >(storedFilterName);
-  const [filteredFaqs, setFilteredFaqs] = useState(faqs);
   const [faqSortValue, setFAQSortValue] = useState<number>(storedSortValue);
 
+  // 검색어·정렬은 다른 화면에 다녀와도 그대로 (redux + localStorage)
   useEffect(() => {
-    dispatch(setFAQCurrentPage(currentPage));
     dispatch(setFAQFilterContent(filter));
     dispatch(setFAQFilterName(selectedFilter));
     dispatch(setSortValue(faqSortValue));
-  }, [currentPage, filter, selectedFilter, faqSortValue]);
+  }, [dispatch, filter, selectedFilter, faqSortValue]);
 
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    setCurrentPage(1);
-  }, [filter, selectedFilter]);
-  
-  const itemsPerPage = useSelector((state: RootState) => state.faqItem.itemsPerPage);
-  const pagesPerGroup = 10;
-  const totalPages = Math.ceil(filteredFaqs.length / itemsPerPage);
-  const currentPageGroup = Math.floor((currentPage - 1) / pagesPerGroup);
-  const startPage = currentPageGroup * pagesPerGroup + 1;
-  const endPage = Math.min((currentPageGroup + 1) * pagesPerGroup, totalPages);
-  const pageNumbers = Array.from(
-    { length: endPage - startPage + 1 },
-    (_, index) => startPage + index
-  );
-  
-  const currentItems = filteredFaqs.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  // 거르기·정렬은 바뀔 때만 다시 계산
+  const filteredFaqs = useMemo(() => {
+    const q = filter.toLowerCase();
+    const matched = q ? faqs.filter((faq) => String(faq[selectedFilter] ?? '').toLowerCase().includes(q)) : faqs;
+    return sortFAQs(matched, faqSortValue);
+  }, [faqs, filter, selectedFilter, faqSortValue]);
 
-  const handlePageChange = (page: number) => setCurrentPage(page);
-  const handleNextPage = () =>
-    currentPage < totalPages &&
-    setCurrentPage(Math.min((currentPageGroup + 1) * pagesPerGroup + 1, totalPages));
-  
-  const handlePrevPage = () =>
-    currentPage > 1 &&
-    setCurrentPage(Math.max(currentPageGroup * pagesPerGroup, 1));
+  // 처음 20개, 내려가면 20개씩 더 — 검색어·정렬이 바뀌면 처음부터
+  const { shown, total, hasMore, sentinelRef } = useIncremental(filteredFaqs, `${selectedFilter}|${filter}|${faqSortValue}`);
 
   return (
     <div className="my-6 p-3 sm:p-6 bg-surface rounded-2xl border border-line">
@@ -93,51 +63,32 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' 
         selectedFilter={selectedFilter}
         onFilterChange={setFilter}
         onSelectedFilterChange={setSelectedFilter}
-        setFilteredFaqs={setFilteredFaqs}
       />
 
       <div className="p-3 sm:p-6">
-        <div className="flex flex-wrap justify-between items-center gap-3 mb-6">
-          <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-          <div className="flex-grow">
-            <h4 className="text-xl font-bold text-ink">{grad ? '대학원 FAQ' : '학부 FAQ'}</h4>
-            <p className="text-xs text-ink-3">대상이 {grad ? '대학원' : '학부'}·공통인 FAQ — 학생 화면 {grad ? '대학원' : '학부'} 모드에 보여요</p>
-          </div>
-          <FAQSort 
-            filteredFaqs={filteredFaqs}
-            sort={faqSortValue} 
-            onSortChange={setFAQSortValue}
-            setFilteredFaqs={setFilteredFaqs}
-          />
-          </div>
-          <div className="flex flex-wrap items-center justify-end gap-2">
-            <FAQExcelButtons />
-            <Select
-              value={itemsPerPage}
-              onChange={(e) => {
-                dispatch(setFAQItemsPerPage(Number(e.target.value)))
-                setCurrentPage(1);
-              }}
-              className="p-2 rounded-xl border-2 border-line focus:outline-none focus:ring-2 focus:ring-accent-ink/40"
-            >
-              <option value={4}>4개씩 보기</option>
-              <option value={6}>6개씩 보기</option>
-              <option value={8}>8개씩 보기</option>
-              <option value={10}>10개씩 보기</option>
-            </Select>
+        <ListHeader
+          title={grad ? '대학원 FAQ' : '학부 FAQ'}
+          count={total}
+          description={`대상이 ${grad ? '대학원' : '학부'}·공통인 FAQ — 학생 화면 ${grad ? '대학원' : '학부'} 모드에 보여요`}
+          action={
             <button
+              type="button"
               onClick={() => window.location.assign(grad ? '/faqs/create?audience=graduate' : '/faqs/create')}
-              className="bg-success text-white px-4 py-2 rounded-xl hover:bg-success/90"
+              className="inline-flex h-10 items-center gap-1 rounded-xl bg-success px-4 font-semibold text-white hover:bg-success/90"
             >
+              <Icon name="plus" />
               추가
             </button>
-          </div>
-        </div>
-        <div style={{ minHeight: '320px' }}>
+          }
+          left={<FAQSort sort={faqSortValue} onSortChange={setFAQSortValue} />}
+          right={<FAQExcelButtons />}
+        />
+        <div>
           <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
-            {currentItems.map(faq => (
+            {shown.map(faq => (
               <div
                 key={faq.faq_id}
+                ref={revealRef}
                 className="relative bg-card-2 p-4 rounded-xl cursor-pointer"
                 onClick={() => navigate(`/faqs/${faq.faq_id}`)}
               >
@@ -157,12 +108,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' 
                   <FAQDelete
                     faq_id={String(faq.faq_id)}
                     question_ko={faq.question_ko}
-                    onSuccess={() => {
-                      if (currentItems.length === 1 && currentPage > 1) {
-                        dispatch(setFAQCurrentPage(currentPage - 1));
-                      }
-                      window.location.reload();
-                    }}
+                    onSuccess={() => window.location.reload()}
                   />
                 </div>
                 <div className="pr-24">
@@ -186,36 +132,8 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' 
             ))}
           </div>
         </div>
-        <div className="flex flex-wrap justify-center mt-4 items-center gap-2 sm:gap-4">
-          <button
-            onClick={handlePrevPage}
-            className="px-4 py-2 bg-card-2 rounded-xl text-sm font-semibold text-ink hover:bg-card-3"
-            disabled={currentPage === 1}
-          >
-            이전
-          </button>
-          <div className="flex gap-2">
-            {pageNumbers.map(page => (
-              <button
-                key={page}
-                onClick={() => handlePageChange(page)}
-                className={`px-3 py-2 text-sm font-semibold rounded-xl ${Math.abs(page - currentPage) > 2 ? 'hidden sm:block' : ''} ${
-                  currentPage === page ? 'bg-accent text-white' : 'bg-card-2 text-ink'
-                }`}
-                style={{ width: '40px', textAlign: 'center' }}
-              >
-                {page}
-              </button>
-            ))}
-          </div>
-          <button
-            onClick={handleNextPage}
-            className="px-4 py-2 bg-card-2 rounded-xl text-sm font-semibold text-ink hover:bg-card-3"
-            disabled={currentPage === totalPages}
-          >
-            다음
-          </button>
-        </div>
+          {total === 0 && <p className="py-16 text-center text-sm text-ink-3">{filter ? '검색어에 맞는 FAQ가 없어요' : '아직 FAQ가 없어요'}</p>}
+          <ListEnd hasMore={hasMore} total={total} sentinelRef={sentinelRef} />
       </div>
     </div>
   );

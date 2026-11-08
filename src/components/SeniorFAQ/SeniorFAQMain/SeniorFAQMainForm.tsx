@@ -1,21 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { GetAllSeniorFAQResponse } from '../../../types/seniorfaq';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
-import { selectSeniorFAQFilter, 
-  setSeniorFAQCurrentPage, 
+import {
+  selectSeniorFAQFilter,
   setSeniorFAQFilterContent,
-  setSeniorFAQFilterName, 
-  setSeniorSortValue 
+  setSeniorFAQFilterName,
+  setSeniorSortValue,
 } from '../../../redux/filterSlice';
 import SeniorFAQDelete from './SeniorFAQDelete';
 import SeniorFAQFilter from './SeniorFAQFilter';
-import SeniorFAQSort from './SeniorFAQSort';
-import { selectSeniorFAQItemsPerPage, setSeniorFAQItemsPerPage } from '../../../redux/itemSlice';
-import Select from '../../ui/Select';
+import SeniorFAQSort, { sortSeniorFAQs } from './SeniorFAQSort';
 import FAQExcelButtons from '../../FAQ/FAQExcel/FAQExcelButtons';
 import { useChat } from '../../Chat/ChatProvider';
+import { useIncremental } from '../../../hooks/useIncremental';
+import { ListEnd, ListHeader } from '../../ui/ListKit';
+import { revealRef } from '../../ui/motion';
+import Icon from '../../ui/Icon';
 
 interface SeniorFAQMainFormProps {
   seniorFaqs: GetAllSeniorFAQResponse['data']['seniorFaqs'];
@@ -25,51 +27,32 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
   const { role } = useChat();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isFirstRender = useRef(true);
 
-  const { storedCurrentPage, storedFilterContent, storedFilterName } = useSelector(
-    (state: RootState) => selectSeniorFAQFilter(state)
-  );
-
+  const { storedFilterContent, storedFilterName } = useSelector((state: RootState) => selectSeniorFAQFilter(state));
   const { storedSortValue } = useSelector((state: RootState) => state.seniorFaqSort);
-  
-  const [currentPage, setCurrentPage] = useState<number>(storedCurrentPage);
+
   const [filter, setFilter] = useState<string>(storedFilterContent);
   const [selectedFilter, setSelectedFilter] = useState<'maincategory_ko' | 'subcategory_ko' | 'detailcategory_ko' | 'manager'>(
     storedFilterName
   );
-  const [filteredSeniorFaqs, setFilteredSeniorFaqs] = useState(seniorFaqs);
   const [seniorFaqSortValue, setseniorFAQSortValue] = useState<number>(storedSortValue);
 
+  // 검색어·정렬은 다른 화면에 다녀와도 그대로 (redux + localStorage)
   useEffect(() => {
-    dispatch(setSeniorFAQCurrentPage(currentPage));
     dispatch(setSeniorFAQFilterContent(filter));
     dispatch(setSeniorFAQFilterName(selectedFilter));
     dispatch(setSeniorSortValue(seniorFaqSortValue));
-  }, [currentPage, filter, selectedFilter, seniorFaqSortValue]);
+  }, [dispatch, filter, selectedFilter, seniorFaqSortValue]);
 
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    setCurrentPage(1);
-  }, [filter, selectedFilter]);
+  // 거르기·정렬은 바뀔 때만 다시 계산
+  const filteredSeniorFaqs = useMemo(() => {
+    const q = filter.toLowerCase();
+    const matched = q ? seniorFaqs.filter((faq) => String(faq[selectedFilter] ?? '').toLowerCase().includes(q)) : seniorFaqs;
+    return sortSeniorFAQs(matched, seniorFaqSortValue);
+  }, [seniorFaqs, filter, selectedFilter, seniorFaqSortValue]);
 
-  const itemsPerPage = useSelector(selectSeniorFAQItemsPerPage);
-  const pagesPerGroup = 10;
-  const totalPages = Math.ceil(filteredSeniorFaqs.length / itemsPerPage);
-  const currentPageGroup = Math.floor((currentPage - 1) / pagesPerGroup);
-  const startPage = currentPageGroup * pagesPerGroup + 1;
-  const endPage = Math.min((currentPageGroup + 1) * pagesPerGroup, totalPages);
-  const pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index);
-  const currentItems = filteredSeniorFaqs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
-  const handlePageChange = (page: number) => setCurrentPage(page);
-  const handleNextPage = () =>
-    currentPage < totalPages && setCurrentPage(Math.min((currentPageGroup + 1) * pagesPerGroup + 1, totalPages));
-  const handlePrevPage = () =>
-    currentPage > 1 && setCurrentPage(Math.max(currentPageGroup * pagesPerGroup, 1));
+  // 처음 20개, 내려가면 20개씩 더 — 검색어·정렬이 바뀌면 처음부터
+  const { shown, total, hasMore, sentinelRef } = useIncremental(filteredSeniorFaqs, `${selectedFilter}|${filter}|${seniorFaqSortValue}`);
 
   return (
     <div className="my-6 p-3 sm:p-6 bg-surface rounded-2xl border border-line">
@@ -79,48 +62,32 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
         selectedFilter={selectedFilter}
         onFilterChange={setFilter}
         onSelectedFilterChange={setSelectedFilter}
-        setFilteredseniorFaqs={setFilteredSeniorFaqs}
       />
       <div className="p-3 sm:p-6">
-        <div className="flex flex-wrap justify-between items-center gap-3 mb-6">
-          <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-          <h4 className="text-xl font-bold text-ink flex-grow">선배 FAQ 리스트</h4>
-          <SeniorFAQSort
-            filteredSeniorFaqs={filteredSeniorFaqs}
-            sort={seniorFaqSortValue}
-            onSortChange={setseniorFAQSortValue}
-            setFilteredseniorFaqs={setFilteredSeniorFaqs}
-          />
-          </div>
-            <div className="flex flex-wrap items-center justify-end gap-2">
-              {/* 엑셀 파일 하나에 행정실 FAQ·선배 FAQ·담당자·이메일 — 근로장학생 계정은 선배 FAQ만 다뤄서 숨김 */}
-              {role !== 'senior' && <FAQExcelButtons />}
-              <Select
-                value={itemsPerPage}
-                onChange={(e) => {
-                  dispatch(setSeniorFAQItemsPerPage(Number(e.target.value)))
-                  setCurrentPage(1);
-                }}
-                className="p-2 rounded-xl border-2 border-line focus:outline-none focus:ring-2 focus:ring-accent-ink/40"
-              >
-                <option value={4}>4개씩 보기</option>
-                <option value={6}>6개씩 보기</option>
-                <option value={8}>8개씩 보기</option>
-                <option value={10}>10개씩 보기</option>
-              </Select>
-          <button
-            onClick={() => window.location.assign('/seniorfaqs/create')}
-            className="bg-success text-white px-4 py-2 rounded-xl hover:bg-success/90"
-          >
-            추가
-          </button>
-          </div>
-        </div>
-        <div style={{ minHeight: '320px' }}>
+        <ListHeader
+          title="선배 FAQ"
+          count={total}
+          description="학생 화면 선배 모드에 보이는 FAQ예요"
+          action={
+            <button
+              type="button"
+              onClick={() => window.location.assign('/seniorfaqs/create')}
+              className="inline-flex h-10 items-center gap-1 rounded-xl bg-success px-4 font-semibold text-white hover:bg-success/90"
+            >
+              <Icon name="plus" />
+              추가
+            </button>
+          }
+          left={<SeniorFAQSort sort={seniorFaqSortValue} onSortChange={setseniorFAQSortValue} />}
+          // 엑셀 파일 하나에 행정실 FAQ·선배 FAQ·담당자·이메일 — 근로장학생 계정은 선배 FAQ만 다뤄서 숨김
+          right={role !== 'senior' ? <FAQExcelButtons /> : undefined}
+        />
+        <div>
           <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
-            {currentItems.map(faq => (
+            {shown.map(faq => (
               <div
                 key={faq.senior_faq_id}
+                ref={revealRef}
                 className="relative bg-card-2 p-4 rounded-xl cursor-pointer"
                 onClick={() => navigate(`/seniorfaqs/${faq.senior_faq_id}`)}
               >
@@ -137,12 +104,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
                   <SeniorFAQDelete
                     senior_faq_id={String(faq.senior_faq_id)}
                     detailcategory_ko={faq.detailcategory_ko}
-                    onSuccess={() => {
-                      if (currentItems.length === 1 && currentPage > 1) {
-                        setCurrentPage(prev => prev - 1);
-                      }
-                      window.location.reload();
-                    }}
+                    onSuccess={() => window.location.reload()}
                   />
                 </div>
                 <div className="pr-24">
@@ -157,34 +119,8 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
             ))}
           </div>
         </div>
-        <div className="flex flex-wrap justify-center mt-4 items-center gap-2 sm:gap-4">
-          <button
-            onClick={handlePrevPage}
-            className="px-4 py-2 bg-card-2 rounded-xl text-sm font-semibold text-ink hover:bg-card-3"
-            disabled={currentPage === 1}
-          >
-            이전
-          </button>
-          <div className="flex gap-2">
-            {pageNumbers.map(page => (
-              <button
-                key={page}
-                onClick={() => handlePageChange(page)}
-                className={`px-3 py-2 text-sm font-semibold rounded-xl ${Math.abs(page - currentPage) > 2 ? 'hidden sm:block' : ''} ${currentPage === page ? 'bg-accent text-white' : 'bg-card-2 text-ink'}`}
-                style={{ width: '40px', textAlign: 'center' }}
-              >
-                {page}
-              </button>
-            ))}
-          </div>
-          <button
-            onClick={handleNextPage}
-            className="px-4 py-2 bg-card-2 rounded-xl text-sm font-semibold text-ink hover:bg-card-3"
-            disabled={currentPage === totalPages}
-          >
-            다음
-          </button>
-        </div>
+        {total === 0 && <p className="py-16 text-center text-sm text-ink-3">{filter ? '검색어에 맞는 선배 FAQ가 없어요' : '아직 선배 FAQ가 없어요'}</p>}
+        <ListEnd hasMore={hasMore} total={total} sentinelRef={sentinelRef} />
       </div>
     </div>
   );

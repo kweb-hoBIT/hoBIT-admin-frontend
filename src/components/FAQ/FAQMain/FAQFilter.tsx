@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
 import { GetAllFAQResponse } from '../../../types/faq';
 import Select from '../../ui/Select';
 
@@ -8,7 +8,6 @@ type FAQFilterProps = {
   selectedFilter: 'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager';
   onFilterChange: (value: string) => void;
   onSelectedFilterChange: (value: FAQFilterProps['selectedFilter']) => void;
-  setFilteredFaqs: (value: GetAllFAQResponse['data']['faqs']) => void;
 };
 
 const FAQFilter: React.FC<FAQFilterProps> = ({
@@ -17,23 +16,15 @@ const FAQFilter: React.FC<FAQFilterProps> = ({
   selectedFilter,
   onFilterChange,
   onSelectedFilterChange,
-  setFilteredFaqs
 }) => {
-  const [suggestedFilters, setSuggestedFilters] = useState<string[]>([]);
   const [isSuggestedFiltersInputFocused, setSuggestedFiltersInputFocused] = useState(false);
 
-  useEffect(() => {
-    const filteredValues = faqs
-      .map((faq) => faq[selectedFilter])
-      .filter((value) => value.toLowerCase().includes(filter.toLowerCase()));
-    setSuggestedFilters(Array.from(new Set(filteredValues)));
-
-    const filteredFaqs = faqs.filter(faq =>
-      String(faq[selectedFilter]).toLowerCase().includes(filter.toLowerCase())
-    );
-    setFilteredFaqs(filteredFaqs);
-
-  }, [faqs, filter, selectedFilter]);
+  // 추천 검색어 — 입력칸을 눌렀을 때만 계산 (목록 거르기는 FAQMainForm에서)
+  const suggestedFilters = useMemo(() => {
+    if (!isSuggestedFiltersInputFocused) return [];
+    const q = filter.toLowerCase();
+    return Array.from(new Set(faqs.map((faq) => String(faq[selectedFilter] ?? '')).filter((v) => v.toLowerCase().includes(q))));
+  }, [faqs, filter, selectedFilter, isSuggestedFiltersInputFocused]);
 
   const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     if (!e.currentTarget.contains(e.relatedTarget as Node)) {

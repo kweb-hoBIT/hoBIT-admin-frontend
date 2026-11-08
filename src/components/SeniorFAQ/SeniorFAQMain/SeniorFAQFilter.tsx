@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { GetAllSeniorFAQResponse } from '../../../types/seniorfaq';
 import Select from '../../ui/Select';
 
@@ -8,7 +8,6 @@ interface SeniorFAQFilterProps {
   selectedFilter: 'maincategory_ko' | 'subcategory_ko' | 'detailcategory_ko' | 'manager';
   onFilterChange: (newFilter: string) => void;
   onSelectedFilterChange: (newSelectedFilter: SeniorFAQFilterProps['selectedFilter']) => void;
-  setFilteredseniorFaqs: (value: GetAllSeniorFAQResponse['data']['seniorFaqs']) => void;
 }
 
 const SeniorFAQFilter: React.FC<SeniorFAQFilterProps> = ({
@@ -17,25 +16,15 @@ const SeniorFAQFilter: React.FC<SeniorFAQFilterProps> = ({
   selectedFilter,
   onFilterChange,
   onSelectedFilterChange,
-  setFilteredseniorFaqs
 }) => {
-  const [suggestedFilters, setSuggestedFilters] = useState<string[]>([]);
   const [isSuggestedFiltersInputFocused, setSuggestedFiltersInputFocused] = useState(false);
 
-  useEffect(() => {
-    const uniqueSuggestions = Array.from(
-      new Set(
-        seniorFaqs
-          .map((faq) => faq[selectedFilter])
-          .filter((value) => value.toLowerCase().includes(filter.toLowerCase()))
-      )
-    );
-    setSuggestedFilters(uniqueSuggestions);
-    const filteredseniorFaqs = seniorFaqs.filter(seniorFaq =>
-      String(seniorFaq[selectedFilter]).toLowerCase().includes(filter.toLowerCase())
-    );
-    setFilteredseniorFaqs(filteredseniorFaqs);
-  }, [seniorFaqs, filter, selectedFilter]);
+  // 추천 검색어 — 입력칸을 눌렀을 때만 계산 (목록 거르기는 SeniorFAQMainForm에서)
+  const suggestedFilters = useMemo(() => {
+    if (!isSuggestedFiltersInputFocused) return [];
+    const q = filter.toLowerCase();
+    return Array.from(new Set(seniorFaqs.map((faq) => String(faq[selectedFilter] ?? '')).filter((v) => v.toLowerCase().includes(q))));
+  }, [seniorFaqs, filter, selectedFilter, isSuggestedFiltersInputFocused]);
 
   const handleFocus = useCallback(() => setSuggestedFiltersInputFocused(true), []);
   const handleBlur = useCallback(() => setSuggestedFiltersInputFocused(false), []);

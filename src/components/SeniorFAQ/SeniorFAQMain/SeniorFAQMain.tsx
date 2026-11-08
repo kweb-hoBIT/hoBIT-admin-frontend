@@ -1,44 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useHobitQueryGetApi } from '../../../hooks/hobitAdmin';
 import { GetAllSeniorFAQRequest, GetAllSeniorFAQResponse } from '../../../types/seniorfaq';
 import SeniorFAQMainForm from './SeniorFAQMainForm';
+import { ListSkeleton, LoadError } from '../../ui/ListKit';
+
+const frame = 'my-6 p-3 sm:p-6 bg-surface rounded-2xl border border-line';
 
 const SeniorFAQMain: React.FC = () => {
-  const [seniorFaqData, setSeniorFaqData] = useState<GetAllSeniorFAQResponse['data']['seniorFaqs']>([]);
-  const [error, setError] = useState<string | null>(null);
-
   const GetSeniorFAQsApi = useHobitQueryGetApi<GetAllSeniorFAQRequest, GetAllSeniorFAQResponse>('seniorfaqs');
-  
-  // Senior FAQ 데이터 가져오기
-  useEffect(() => {
-    const fetchSeniorFAQData = async () => {
-      if (GetSeniorFAQsApi.data?.payload?.statusCode === 200) {
-        const data = GetSeniorFAQsApi.data.payload.data.seniorFaqs;
-        setSeniorFaqData(data);
-      } else {
-        setError('Senior FAQ 데이터를 가져오는 중 오류 발생');
-        console.error('Senior FAQ 데이터를 가져오는 중 오류 발생:', GetSeniorFAQsApi.error);
-      }
-    };
+  const payload = GetSeniorFAQsApi.data?.payload;
+  // 받아 둔 데이터를 바로 씀 — 다시 받는 동안에도 이전 목록을 그대로 보여줌
+  const seniorFaqs = payload?.statusCode === 200 ? payload.data.seniorFaqs : null;
 
-    if (GetSeniorFAQsApi.isSuccess && GetSeniorFAQsApi.data) {
-      fetchSeniorFAQData();
+  if (!seniorFaqs) {
+    if (GetSeniorFAQsApi.isPending || GetSeniorFAQsApi.isFetching) {
+      return (
+        <div className={frame}>
+          <ListSkeleton withSearch />
+        </div>
+      );
     }
-  }, [GetSeniorFAQsApi.isSuccess, GetSeniorFAQsApi.data]);
-
-  if (error) {
-    return <div className="error-message">{error}</div>;
+    return (
+      <div className={frame}>
+        <LoadError message="선배 FAQ 목록을 불러오지 못했어요." onRetry={() => GetSeniorFAQsApi.refetch()} />
+      </div>
+    );
   }
 
-  if (GetSeniorFAQsApi.isLoading) {
-    return <div></div>;
-  }
-
-  return (
-    <div>
-      <SeniorFAQMainForm seniorFaqs={seniorFaqData} />
-    </div>
-  );
+  return <SeniorFAQMainForm seniorFaqs={seniorFaqs} />;
 };
 
 export default SeniorFAQMain;
