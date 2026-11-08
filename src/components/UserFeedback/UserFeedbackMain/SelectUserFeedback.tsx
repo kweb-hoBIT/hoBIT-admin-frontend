@@ -18,6 +18,7 @@ const SelectUserFeedback: React.FC<SelectUserFeedbackProps> = ({ filter, onFilte
       value={filter}
       onChange={onFilterChange}
       itemClassName="px-4 py-1.5 text-sm font-semibold"
+      className="w-fit max-w-full" // 글자 길이만큼만 (가로를 꽉 채우던 회색 바탕)
     />
   </div>
 );

@@ -16,6 +16,7 @@ const SelectAnalyze: React.FC<AnalyzeSelectProps> = ({ selectedAnalyze, onFilter
     value={selectedAnalyze}
     onChange={onFilterChange}
     itemClassName="px-4 py-1.5 text-sm font-semibold"
+    className="w-fit max-w-full"
   />
 );
 
