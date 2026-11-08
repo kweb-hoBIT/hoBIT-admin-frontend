@@ -23,12 +23,26 @@ const queryClient: QueryClient = new QueryClient({
   },
 });
 
-/** 화면 코드를 받는 동안 — 헤더는 그대로 두고 본문 자리만 */
-const PageFallback: React.FC = () => (
-  <div className="flex justify-center py-24" aria-busy="true">
-    <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-card-2 border-t-accent-ink" />
-  </div>
-);
+/**
+ * 화면 코드를 받는 동안 — 헤더는 그대로 두고 본문 자리만.
+ * 빨리 받아지면(150ms 안) 아무것도 안 보여서 번쩍이지 않고, 오래 걸릴 때만 조용히 나타나요.
+ */
+const PageFallback: React.FC = () => {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const t = window.setTimeout(() => setShow(true), 150);
+    return () => window.clearTimeout(t);
+  }, []);
+  return (
+    <div className="flex justify-center py-24" aria-busy="true" aria-label="화면을 불러오는 중">
+      {show && (
+        <div className="animate-appear">
+          <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-card-2 border-t-accent-ink" />
+        </div>
+      )}
+    </div>
+  );
+};
 
 /** 근로장학생 계정은 허용된 화면만 — 다른 주소로 들어오면 선배 FAQ로 (서버도 막지만 빈 화면·오류 대신) */
 const RoleGate: React.FC<{ children: React.ReactNode }> = ({ children }) => {
