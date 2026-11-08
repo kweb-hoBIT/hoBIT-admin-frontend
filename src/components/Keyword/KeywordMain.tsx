@@ -12,6 +12,7 @@ import { appAlert, appConfirm } from '../ui/Dialog';
 import KeywordEditor from './KeywordEditor';
 import { matchRules, tokenSuggestions } from './keywordMatch';
 import Icon from '../ui/Icon';
+import { revealRef } from '../ui/motion';
 
 export type FaqOption = { faq_id: number; question_ko: string; maincategory_ko: string };
 
@@ -51,8 +52,8 @@ const Tester: React.FC<{ rules: KeywordRule[]; faqs: FaqOption[] }> = ({ rules, 
           )}
           {list.length ? (
             <ol className="flex flex-col divide-y divide-line rounded-xl border border-line">
-              {list.map((q, i) => (
-                <li key={q} className="reveal flex items-center gap-2 px-3 py-2.5 text-sm" style={{ animationDelay: `${i * 40}ms` }}>
+              {list.map((q) => (
+                <li key={q} ref={revealRef} className="flex items-center gap-2 px-3 py-2.5 text-sm">
                   {pinnedSet.has(q) && <Icon name="pin" className="h-3.5 w-3.5 text-accent-ink" title="고정된 추천 질문" />}
                   <span className={pinnedSet.has(q) ? 'font-semibold text-ink' : 'text-ink-2'}>{q}</span>
                 </li>
@@ -74,7 +75,7 @@ const KeywordMain: React.FC = () => {
   const [editing, setEditing] = useState<KeywordRule | 'new' | null>(null);
   const [query, setQuery] = useState('');
 
-  const rules = rulesApi.data?.payload?.data?.rules ?? [];
+  const rules = useMemo(() => rulesApi.data?.payload?.data?.rules ?? [], [rulesApi.data]);
   const faqs: FaqOption[] = useMemo(
     () =>
       (faqsApi.data?.payload?.data?.faqs ?? []).map((f) => ({
@@ -85,10 +86,12 @@ const KeywordMain: React.FC = () => {
     [faqsApi.data]
   );
 
-  const shown = rules.filter((r) => {
+  // 검색어나 규칙이 바뀔 때만 다시 거름
+  const shown = useMemo(() => {
     const q = query.trim();
-    return !q || [r.keyword, ...r.synonyms, ...r.pinned_faqs.map((p) => p.question_ko || '')].some((w) => w.includes(q));
-  });
+    if (!q) return rules;
+    return rules.filter((r) => [r.keyword, ...r.synonyms, ...r.pinned_faqs.map((p) => p.question_ko || '')].some((w) => w.includes(q)));
+  }, [rules, query]);
 
   const remove = async (rule: KeywordRule) => {
     if (!(await appConfirm(`"${rule.keyword}" 키워드 규칙을 삭제할까요?`, { danger: true }))) return;
@@ -99,8 +102,9 @@ const KeywordMain: React.FC = () => {
 
   return (
     <div className="pb-8 pt-6">
-      <div className="mb-4 flex flex-wrap items-end justify-between gap-4">
-        <div>
+      {/* 제목 왼쪽, [새 키워드] 오른쪽 — 휴대폰에서도 버튼이 혼자 다음 줄로 내려가지 않게 */}
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div className="min-w-0">
           <h1 className="text-xl font-bold text-ink">키워드</h1>
           <p className="mt-1 text-sm text-ink-3">
             호빗 입력창 추천에서 <b className="text-ink">맨 위에 고정할 질문</b>과, 같은 뜻으로 묶을 <b className="text-ink">연관 단어</b>를 정해요.
@@ -109,9 +113,10 @@ const KeywordMain: React.FC = () => {
         <button
           type="button"
           onClick={() => setEditing('new')}
-          className="shrink-0 rounded-full bg-accent px-5 py-2.5 font-semibold text-white hover:bg-accent/90"
+          className="inline-flex shrink-0 items-center gap-1 rounded-full bg-accent px-4 py-2.5 font-semibold text-white hover:bg-accent/90 sm:px-5"
         >
-          + 새 키워드
+          <Icon name="plus" />
+          새 키워드
         </button>
       </div>
 
@@ -143,11 +148,11 @@ const KeywordMain: React.FC = () => {
             </div>
           ) : (
             <ul className="divide-y divide-line">
-              {shown.map((rule, i) => (
+              {shown.map((rule) => (
                 <li
                   key={rule.id}
-                  className="reveal group flex flex-col gap-2 px-4 py-4 hover:bg-card/50 sm:flex-row sm:gap-4 sm:px-5"
-                  style={{ animationDelay: `${i * 35}ms` }}
+                  ref={revealRef}
+                  className="group flex flex-col gap-2 px-4 py-4 hover:bg-card/50 sm:flex-row sm:gap-4 sm:px-5"
                 >
                     <div className="shrink-0 sm:w-36">
                       <p className="text-lg font-bold text-ink">{rule.keyword}</p>

@@ -16,6 +16,8 @@ import {
 } from '../../types/answerReview';
 import { appAlert } from '../ui/Dialog';
 import Icon from '../ui/Icon';
+import { revealRef } from '../ui/motion';
+import { LoadError } from '../ui/ListKit';
 
 const TABS: { type: ReviewType; label: string; icon?: 'thumbsDown'; hint: string }[] = [
   { type: 'down', label: '받은 답변', icon: 'thumbsDown', hint: '학생이 도움이 안 됐다고 한 답변이에요. 남긴 이유와 근거를 보고 원인을 골라 주세요.' },
@@ -97,7 +99,7 @@ const ReviewCard: React.FC<{ item: AnswerReview; done: boolean; onChanged: () =>
   };
 
   return (
-    <li className="rounded-2xl border border-line bg-surface p-4 sm:p-5">
+    <li ref={revealRef} className="rounded-2xl border border-line bg-surface p-4 sm:p-5">
       <div className="flex flex-wrap items-center gap-1.5 text-xs text-ink-3">
         <span>{when(item.created_at)}</span>
         {item.feedback_score === -1 && <span className="inline-flex items-center rounded-full bg-danger-soft px-2 py-0.5 font-semibold text-danger"><Icon name="thumbsDown" className="h-3.5 w-3.5" title="도움 안 됨" /></span>}
@@ -205,7 +207,18 @@ const AnswerReviewMain: React.FC = () => {
       <p className="mt-3 text-sm text-ink-3">{tab.hint}</p>
 
       {api.isLoading ? (
-        <p className="mt-6 text-ink-3">불러오는 중…</p>
+        // 답변 카드 모양 자리
+        <ul className="mt-4 flex flex-col gap-4" aria-busy="true" aria-label="불러오는 중">
+          {[0, 1, 2].map((i) => (
+            <li key={i} className="animate-pulse rounded-2xl border border-line bg-surface p-4 sm:p-5">
+              <div className="h-3 w-40 rounded bg-card" />
+              <div className="mt-3 h-6 w-2/3 rounded bg-card" />
+              <div className="mt-3 h-20 rounded-xl bg-card" />
+            </li>
+          ))}
+        </ul>
+      ) : !data ? (
+        <LoadError message="답변 목록을 불러오지 못했어요." onRetry={() => api.refetch()} />
       ) : items.length === 0 ? (
         <p className="mt-6 rounded-2xl border border-dashed border-line p-8 text-center text-ink-3">
           {status === 'open' ? '확인할 답변이 없어요' : '처리한 답변이 없어요'}

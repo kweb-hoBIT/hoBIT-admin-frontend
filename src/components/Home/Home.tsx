@@ -4,7 +4,7 @@ import { useChat } from '../Chat/ChatProvider';
 import { useHobitQueryGetApi } from '../../hooks/hobitAdmin';
 import { GetDashboardRequest, GetDashboardResponse } from '../../types/dashboard';
 import { prefetchRoute } from '../../routes';
-import { CountUp, Reveal } from '../ui/motion';
+import { CountUp, Reveal, revealRef } from '../ui/motion';
 import LanguageBadge from '../ui/LanguageBadge';
 import LiveChatCard from './LiveChatCard';
 import NoticeChangesCard from './NoticeChangesCard';
@@ -68,7 +68,7 @@ const StatCard: React.FC<{ label: string; value: number; sub?: React.ReactNode; 
 }) => {
   const body = (
     <div
-      className={`h-full rounded-2xl border p-4 transition-all sm:p-5 ${
+      className={`h-full rounded-2xl border p-4 transition-transform sm:p-5 ${
         tone === 'accent' && value > 0 ? 'border-accent-ink/40 bg-accent/5 dark:bg-accent-ink/10' : 'border-line bg-surface'
       } ${to ? 'hover:-translate-y-0.5 hover:shadow-lg' : ''}`}
     >
@@ -438,8 +438,8 @@ const Home: React.FC = () => {
               <p className="flex items-center justify-center gap-1.5 py-10 text-center text-sm text-ink-3">해결 안 된 피드백이 없어요 <Icon name="party" className="h-4 w-4 text-accent-ink" /></p>
             ) : (
               <ul className="flex flex-col divide-y divide-line">
-                {dash.recent_feedbacks.slice(0, 4).map((f, i) => (
-                  <li key={f.user_feedback_id} className="reveal py-2 first:pt-0 last:pb-0" style={{ animationDelay: `${300 + i * 70}ms` }}>
+                {dash.recent_feedbacks.slice(0, 4).map((f) => (
+                  <li key={f.user_feedback_id} ref={revealRef} className="py-2 first:pt-0 last:pb-0">
                     <div className="mb-0.5 flex items-center gap-2">
                       <LanguageBadge language={f.language} />
                       {f.feedback_reason && <span className="truncate text-sm font-semibold text-ink">{f.feedback_reason}</span>}

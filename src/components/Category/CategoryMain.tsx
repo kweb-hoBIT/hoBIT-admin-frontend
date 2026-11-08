@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { prefetchRoute } from '../../routes';
 import { useChat } from '../Chat/ChatProvider';
+import { revealRef } from '../ui/motion';
 
 type Item = { path: string; label: string; desc: string; danger?: boolean };
 type Group = { title: string; items: Item[] };
@@ -60,8 +61,8 @@ const CategoryMain: React.FC<{ section?: 'category' | 'bulk' }> = ({ section = '
       <h4 className="text-xl font-bold text-ink">{sec.title}</h4>
       <p className="mt-1 text-sm text-ink-3">{sec.desc}</p>
       <div className={`mt-5 grid gap-4 ${groups.length > 1 ? 'md:grid-cols-2' : 'grid-cols-1'}`}>
-        {groups.map((group, gi) => (
-          <div key={group.title} className="reveal rounded-2xl border border-line p-4" style={{ animationDelay: `${gi * 60}ms` }}>
+        {groups.map((group) => (
+          <div key={group.title} ref={revealRef} className="rounded-2xl border border-line p-4">
             <h5 className="mb-2 px-2 text-sm font-semibold text-ink-3">{group.title}</h5>
             <ul className="flex flex-col gap-1">
               {group.items.map((item) => (

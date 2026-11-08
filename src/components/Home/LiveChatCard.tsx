@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useChat } from '../Chat/ChatProvider';
 import { prefetchRoute } from '../../routes';
-import { CountUp, Reveal } from '../ui/motion';
+import { CountUp, Reveal, revealRef } from '../ui/motion';
 import LanguageBadge from '../ui/LanguageBadge';
 import Badge from '../ui/Badge';
 import type { ListedSession } from '../../api/chat';
@@ -29,7 +29,7 @@ const Stat: React.FC<{ label: string; value: number; sub?: string; tone?: 'accen
   </div>
 );
 
-const Row: React.FC<{ s: ListedSession; kind: 'waiting' | 'mine'; now: number; index: number }> = ({ s, kind, now, index }) => {
+const Row: React.FC<{ s: ListedSession; kind: 'waiting' | 'mine'; now: number }> = ({ s, kind, now }) => {
   const { role } = useChat(); // 근로장학생 계정은 전부 근로장학생 채팅이라 배지 생략
   const last = s.lastMessage;
   const preview = last
@@ -39,7 +39,7 @@ const Row: React.FC<{ s: ListedSession; kind: 'waiting' | 'mine'; now: number; i
       : '최근 호빗 대화 없음';
   const waited = minutesSince(s.createdAt, now);
   return (
-    <li className="reveal" style={{ animationDelay: `${200 + index * 60}ms` }}>
+    <li ref={revealRef}>
       <Link
         to={`/chats?session=${s.id}`}
         onMouseEnter={() => prefetchRoute('/chats')}
@@ -122,8 +122,8 @@ const LiveChatCard: React.FC<{ className?: string }> = ({ className = '' }) => {
           </div>
           {list.length ? (
             <ul className="flex flex-1 flex-col">
-              {list.map(({ s, kind }, i) => (
-                <Row key={s.id} s={s} kind={kind} now={now} index={i} />
+              {list.map(({ s, kind }) => (
+                <Row key={s.id} s={s} kind={kind} now={now} />
               ))}
             </ul>
           ) : (

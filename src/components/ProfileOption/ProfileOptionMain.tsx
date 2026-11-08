@@ -19,6 +19,7 @@ import {
 } from '../../types/profileOption';
 import { appAlert, appConfirm } from '../ui/Dialog';
 import { ChipInput } from '../Keyword/KeywordEditor';
+import { revealRef } from '../ui/motion';
 
 /**
  * 프로필 항목 — 학생이 고르는 학과·전공 유형·학적 상태.
@@ -225,7 +226,7 @@ const ProfileOptionMain: React.FC = () => {
                 ) : (
                   <ul className="divide-y divide-line">
                     {list.map((o, i) => (
-                      <li key={o.id} className="group flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 hover:bg-card/50 sm:flex-nowrap sm:px-5">
+                      <li key={o.id} ref={revealRef} className="group flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 hover:bg-card/50 sm:flex-nowrap sm:px-5">
                         <div className="flex shrink-0 flex-col">
                           <button
                             type="button"
