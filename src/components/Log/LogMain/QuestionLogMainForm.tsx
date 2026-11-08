@@ -50,18 +50,18 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
         <div>
           <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             {shown.map((log) => (
-              <div ref={revealRef} className="list-item-cv relative bg-card-2 p-4 rounded-xl" key={log.question_log_id}>
+              <div ref={revealRef} className="list-item-cv relative bg-card-2 p-3.5 sm:p-4 rounded-xl" key={log.question_log_id}>
                 <div className="mb-2 break-words">
                   <strong>유저 질문: {log.user_question}</strong>
                 </div>
                 <div className="flex flex-col">
-                  <div className="mb-1 break-words text-sm text-ink-2">
+                  <div className="mb-0.5 break-words text-sm text-ink-2">
                     <strong>매칭된 질문:</strong> {log.faq_question ? log.faq_question : '매칭된 질문이 삭제됨'}
                   </div>
-                  <div className="mb-1 text-sm text-ink-2">
+                  <div className="mb-0.5 text-sm text-ink-2">
                     <strong>피드백 점수:</strong> {log.feedback_score ? log.feedback_score : '피드백 점수 없음'}
                   </div>
-                  <div className="mb-1 text-sm text-ink-2">
+                  <div className="mb-0.5 text-sm text-ink-2">
                     <strong>질문 시각:</strong> {formatDateToKST(log.created_at)}
                   </div>
                 </div>

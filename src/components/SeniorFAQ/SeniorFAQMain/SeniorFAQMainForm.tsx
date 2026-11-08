@@ -15,7 +15,7 @@ import SeniorFAQSort, { sortSeniorFAQs } from './SeniorFAQSort';
 import FAQExcelButtons from '../../FAQ/FAQExcel/FAQExcelButtons';
 import { useChat } from '../../Chat/ChatProvider';
 import { useIncremental } from '../../../hooks/useIncremental';
-import { ListEnd, ListHeader, CardFooter } from '../../ui/ListKit';
+import { ListEnd, ListHeader, CardFooter, CardMore } from '../../ui/ListKit';
 import { revealRef } from '../../ui/motion';
 import Icon from '../../ui/Icon';
 
@@ -88,18 +88,21 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
               <div
                 key={faq.senior_faq_id}
                 ref={revealRef}
-                className="relative bg-card-2 p-4 rounded-xl cursor-pointer"
+                className="relative bg-card-2 p-3.5 sm:p-4 rounded-xl cursor-pointer"
                 onClick={() => navigate(`/seniorfaqs/${faq.senior_faq_id}`)}
               >
-                <div>
+                <div className="flex items-start gap-3">
+                <div className="min-w-0 flex-1">
                   <div className="mb-2"><strong>세부 카테고리: {faq.detailcategory_ko}</strong></div>
                   <div className="flex flex-col">
-                    <div className="mb-1 text-sm text-ink-2"><strong>주요 카테고리:</strong> {faq.maincategory_ko}</div>
-                    <div className="mb-1 text-sm text-ink-2"><strong>하위 카테고리:</strong> {faq.subcategory_ko}</div>
-                    <div className="mb-1 text-sm text-ink-2"><strong>관리자:</strong> {faq.manager}</div>
+                    <div className="mb-0.5 text-sm text-ink-2"><strong>주요 카테고리:</strong> {faq.maincategory_ko}</div>
+                    <div className="mb-0.5 text-sm text-ink-2"><strong>하위 카테고리:</strong> {faq.subcategory_ko}</div>
+                    <div className="mb-0.5 text-sm text-ink-2"><strong>관리자:</strong> {faq.manager}</div>
                   </div>
                 </div>
-                <CardFooter onMore={() => navigate(`/seniorfaqs/${faq.senior_faq_id}`)}>
+                <CardMore />
+                </div>
+                <CardFooter>
                   <button onClick={() => navigate(`/seniorfaqs/update/${faq.senior_faq_id}`)} className="bg-accent text-white px-4 py-2 rounded-xl hover:bg-accent/90">
                     수정
                   </button>

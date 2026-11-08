@@ -3,7 +3,7 @@ import { GetAllAdminLogResponse } from '../../../types/adminLog';
 import { useNavigate } from 'react-router-dom';
 import BulkDeleteAdminLogModal from './BulkDeleteAdminLogModal';
 import { useIncremental } from '../../../hooks/useIncremental';
-import { ListEnd, ListHeader, CardFooter } from '../../ui/ListKit';
+import { ListEnd, ListHeader, CardMore } from '../../ui/ListKit';
 import { revealRef } from '../../ui/motion';
 
 
@@ -60,29 +60,30 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
               <div
                 key={`${log.log_id}-${log.log_type}`}
                 ref={revealRef}
-                className="list-item-cv relative bg-card-2 p-4 rounded-xl cursor-pointer"
+                className="list-item-cv relative bg-card-2 p-3.5 sm:p-4 rounded-xl cursor-pointer"
                 onClick={() => handleLogClick(log)}
               >
-                <div>
+                <div className="flex items-start gap-3">
+                <div className="min-w-0 flex-1">
                   <div className="mb-2">
                     <strong>수정 유저: {log.username}</strong>
                   </div>
                   <div className="flex flex-col">
-                    <div className="mb-1 text-sm text-ink-2">
+                    <div className="mb-0.5 text-sm text-ink-2">
                       <strong>주요 카테고리:</strong> {log.maincategory}
                     </div>
-                    <div className="mb-1 text-sm text-ink-2">
+                    <div className="mb-0.5 text-sm text-ink-2">
                       <strong>하위 카테고리:</strong> {log.subcategory}
                     </div>
                     {log.log_type === 'faq_log' ? (
-                      <div className="mb-1 text-sm text-ink-2">
+                      <div className="mb-0.5 text-sm text-ink-2">
                         <strong>질문:</strong> {log.question}
                       </div>) : (
-                      <div className="mb-1 text-sm text-ink-2">
+                      <div className="mb-0.5 text-sm text-ink-2">
                         <strong>세부 카테고리 :</strong> {log.detailcategory}
                       </div>
                     )}
-                    <div className="mb-1 text-sm text-ink-2">
+                    <div className="mb-0.5 text-sm text-ink-2">
                       <strong>변경 목적:</strong>
                       <span className={`ml-1 ${
                         log.action_type === '수정' ? 'text-link' :
@@ -93,12 +94,13 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
                         {log.action_type}
                       </span>
                     </div>
-                    <div className="mb-1 text-sm text-ink-2">
+                    <div className="mb-0.5 text-sm text-ink-2">
                       <strong>변경 시각:</strong> {formatDateToKST(log.created_at)}
                     </div>
                   </div>
                 </div>
-                <CardFooter onMore={() => handleLogClick(log)} />
+                <CardMore />
+                </div>
               </div>
             ))}
           </div>

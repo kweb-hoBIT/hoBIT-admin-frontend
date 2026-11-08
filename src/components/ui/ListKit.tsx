@@ -166,7 +166,7 @@ export const CardFooter: React.FC<{
   expanded?: boolean; // 펼치기 카드면 true/false, 상세 화면으로 가는 카드면 undefined
   children?: React.ReactNode;
 }> = ({ onMore, expanded, children }) => (
-  <div className={`mt-3 flex items-center gap-2 border-t border-line/70 pt-3 ${onMore ? 'justify-between' : 'justify-end'}`}>
+  <div className={`mt-2.5 flex items-center gap-2 border-t border-line/70 pt-2.5 ${onMore ? 'justify-between' : 'justify-end'}`}>
     {onMore ? (
       <button
         type="button"
@@ -203,3 +203,16 @@ export function useExpanded<K>() {
     });
   return { isOpen: (k: K) => open.has(k), toggle };
 }
+
+/**
+ * 상세 화면으로 가는 카드의 오른쪽 표시 — 데스크톱은 '더보기 ›', 휴대폰은 '›'만 (카드 아래 한 줄을 따로 쓰지 않게)
+ * 쓰는 법: <div className="flex items-start gap-3"><div className="min-w-0 flex-1">내용</div><CardMore /></div>
+ */
+export const CardMore: React.FC = () => (
+  <span aria-hidden="true" className="flex shrink-0 items-center gap-0.5 self-center text-sm font-semibold text-accent-ink">
+    <span className="hidden sm:inline">더보기</span>
+    <svg viewBox="0 0 20 20" className="h-5 w-5 sm:h-4 sm:w-4">
+      <path d="M7.5 5.5 12 10l-4.5 4.5" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  </span>
+);

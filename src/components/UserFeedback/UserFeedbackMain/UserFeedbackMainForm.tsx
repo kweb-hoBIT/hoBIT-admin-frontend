@@ -132,7 +132,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
         <div>
           <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             {shown.map((feedback) => (
-              <div key={feedback.user_feedback_id} ref={revealRef} className="relative bg-card-2 p-4 rounded-xl">
+              <div key={feedback.user_feedback_id} ref={revealRef} className="relative bg-card-2 p-3.5 sm:p-4 rounded-xl">
                 <div className="break-words">
                   <div className="mb-2 flex items-start gap-2">
                       <LanguageBadge language={feedback.language} className="mt-0.5" />
@@ -144,17 +144,17 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                   </div>
                   <div className="flex flex-col">
                     {feedback.question_ko && (
-                      <div className="mb-1 text-sm text-ink-2">
+                      <div className="mb-0.5 text-sm text-ink-2">
                         <strong>유저 질문:</strong> {feedback.user_question ? feedback.user_question : 'X'}
                       </div>
                     )}
-                    <div className="mb-1 text-sm text-ink-2">
+                    <div className="mb-0.5 text-sm text-ink-2">
                       <strong>피드백 사유:</strong> {feedback.feedback_reason ? feedback.feedback_reason : 'X'}
                     </div>
-                    <div className="mb-1 text-sm text-ink-2">
+                    <div className="mb-0.5 text-sm text-ink-2">
                       <strong>피드백 상세:</strong> {feedback.feedback_detail && !feedback.feedback_detail.startsWith('Unresolved') ? feedback.feedback_detail : 'X'}
                     </div>
-                    <div className="mb-1 text-sm text-ink-2">
+                    <div className="mb-0.5 text-sm text-ink-2">
                       <strong>피드백 시각:</strong> {formatDateToKST(feedback.created_at)}
                     </div>
                   </div>
