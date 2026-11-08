@@ -160,8 +160,9 @@ const BulkUpdateAdmin: React.FC = () => {
         </form>
 
         <div className="mt-6 p-4 bg-warn-soft border border-warn/40 rounded-xl">
-          <p className="text-xs text-warn">
-            <strong className="inline-flex items-center gap-1"><Icon name="alert" className="h-4 w-4" />주의:</strong> 이 작업은 되돌릴 수 없습니다.
+          <p className="flex items-start gap-2 text-sm leading-relaxed text-warn">
+            <Icon name="alert" className="mt-[3px] h-4 w-4 shrink-0" />
+            <span><strong>주의:</strong> 이 작업은 되돌릴 수 없습니다.</span>
           </p>
         </div>
       </div>
@@ -184,9 +185,9 @@ const BulkUpdateAdmin: React.FC = () => {
                 <span className="text-success">{newAdmin}</span>
               </p>
             </div>
-            <p className="text-sm text-danger mb-4">
-              <Icon name="alert" className="mr-1 h-4 w-4" />
-              이 작업은 되돌릴 수 없습니다.
+            <p className="flex items-start gap-2 text-sm text-danger mb-4">
+              <Icon name="alert" className="mt-[3px] h-4 w-4 shrink-0" />
+              <span>이 작업은 되돌릴 수 없습니다.</span>
             </p>
             <div className="flex space-x-3">
               <button
