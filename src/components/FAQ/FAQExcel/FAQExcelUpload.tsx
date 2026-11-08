@@ -4,18 +4,23 @@ import { appAlert, appChoice } from '../../ui/Dialog';
 import {
   applyFaqExcel,
   ExcelApplyResult,
+  ExcelChange,
   ExcelIssue,
   ExcelPreview,
+  ExcelScope,
   FaqBackup,
   listFaqBackups,
   previewFaqExcel,
   restoreFaqBackup,
   SheetPreview,
+  SheetSummary,
+  SimpleSheetPreview,
 } from './faqExcelApi';
 
 /**
  * 엑셀로 올리기 — 파일 고르기 → 바뀔 내용 미리보기(시트마다) → 적용하기
- *   시트: FAQ(행정실 FAQ) · 선배 FAQ · 담당자 · 이메일 — 파일에 없는 시트는 바뀐 것 없음
+ *   시트: FAQ(행정실 FAQ) · 선배 FAQ · 담당자 · 이메일 · 키워드 규칙 · 프로필 항목 — 파일에 없는 시트는 바뀐 것 없음
+ *   scope 'senior'(근로장학생 계정): 선배 FAQ 시트만 읽고, 되돌리기도 선배 FAQ만 저장한 상태만
  *   고쳐야 할 부분(problems)이 있으면 적용 버튼을 막고 그 목록을 맨 위에 보여 줌
  *   아래에는 '이전 상태로 되돌리기' (적용할 때마다 자동으로 저장해 둔 상태)
  */
@@ -42,7 +47,11 @@ const Chip: React.FC<{ label: string; n: number; tone: string }> = ({ label, n, 
   </span>
 );
 
-const Section: React.FC<{ title: string; count: number; children: React.ReactNode }> = ({ title, count, children }) => (
+const Section: React.FC<{
+  title: string;
+  count: number;
+  children: React.ReactNode;
+}> = ({ title, count, children }) => (
   <section className="rounded-2xl border border-line p-4">
     <h3 className="mb-3 !text-base">
       {title} <span className="text-ink-3 tabular-nums">{count}</span>
@@ -62,24 +71,54 @@ const IssueList: React.FC<{ items: ExcelIssue[]; tone: 'danger' | 'warn' }> = ({
   </ul>
 );
 
+/** 시트 요약 칩 + 파일에 없는 줄 안내 */
+const SummaryChips: React.FC<{ s: SheetSummary; noun: string }> = ({ s, noun }) => (
+  <>
+    <div className="flex flex-wrap gap-2">
+      <Chip label="새로 생김" n={s.created} tone="bg-success-soft text-success" />
+      <Chip label="바뀜" n={s.updated} tone="bg-accent/10 text-accent-ink dark:bg-accent-ink/15" />
+      <Chip label="삭제" n={s.deleted} tone="bg-danger-soft text-danger" />
+      <Chip label="그대로" n={s.unchanged} tone="bg-card-2 text-ink-2" />
+      <Chip label="파일에 없음(그대로 둠)" n={s.missing_from_file} tone="bg-card-2 text-ink-2" />
+    </div>
+    {s.missing_from_file > 0 && (
+      <p className="text-sm text-ink-3">
+        파일에 없는 {noun} {s.missing_from_file}개는 지우지 않고 그대로 둬요. 지우려면 그 줄의 '삭제' 칸에서 '삭제'를 골라 주세요.
+      </p>
+    )}
+  </>
+);
+
+/** 바뀌는 칸 목록 (전 → 후) */
+const ChangeList: React.FC<{ changes: ExcelChange[] }> = ({ changes }) => (
+  <div className="mt-2 space-y-2">
+    {changes.map((c) => (
+      <div key={c.field} className="grid grid-cols-1 gap-1 sm:grid-cols-[96px_minmax(0,1fr)]">
+        <div className="text-xs font-semibold text-ink-3 sm:pt-1">{c.label}</div>
+        <div className="flex flex-wrap items-start gap-1.5">
+          <span className="whitespace-pre-line rounded-lg bg-danger-soft px-2 py-1 text-ink line-through decoration-danger/60">
+            {c.before || '(비어 있음)'}
+          </span>
+          <Icon name="arrowRight" className="mt-1.5 h-3.5 w-3.5 text-ink-3" />
+          <span className="whitespace-pre-line rounded-lg bg-success-soft px-2 py-1 font-medium text-ink">
+            {c.auto_translate ? '(적용할 때 자동 번역)' : c.after || '(비어 있음)'}
+          </span>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
 /** FAQ / 선배 FAQ 시트 하나의 바뀔 내용 */
-const SheetBlock: React.FC<{ title: string; sheet: SheetPreview; noun: string }> = ({ title, sheet, noun }) => {
-  const s = sheet.summary;
+const SheetBlock: React.FC<{
+  title: string;
+  sheet: SheetPreview;
+  noun: string;
+}> = ({ title, sheet, noun }) => {
   return (
     <section className="space-y-3 rounded-2xl border border-line p-4">
       <h3 className="!text-base">{title}</h3>
-      <div className="flex flex-wrap gap-2">
-        <Chip label="새로 생김" n={s.created} tone="bg-success-soft text-success" />
-        <Chip label="바뀜" n={s.updated} tone="bg-accent/10 text-accent-ink dark:bg-accent-ink/15" />
-        <Chip label="삭제" n={s.deleted} tone="bg-danger-soft text-danger" />
-        <Chip label="그대로" n={s.unchanged} tone="bg-card-2 text-ink-2" />
-        <Chip label="파일에 없음(그대로 둠)" n={s.missing_from_file} tone="bg-card-2 text-ink-2" />
-      </div>
-      {s.missing_from_file > 0 && (
-        <p className="text-sm text-ink-3">
-          파일에 없는 {noun} {s.missing_from_file}개는 지우지 않고 그대로 둬요. 지우려면 그 줄의 '삭제' 칸에서 '삭제'를 골라 주세요.
-        </p>
-      )}
+      <SummaryChips s={sheet.summary} noun={noun} />
 
       {sheet.created.length > 0 && (
         <Section title="새로 생김" count={sheet.created.length}>
@@ -111,22 +150,7 @@ const SheetBlock: React.FC<{ title: string; sheet: SheetPreview; noun: string }>
                 <span className="mr-1.5 text-ink-3 tabular-nums">#{u.id}</span>
                 {u.question}
               </div>
-              <div className="mt-2 space-y-2">
-                {u.changes.map((c) => (
-                  <div key={c.field} className="grid grid-cols-1 gap-1 sm:grid-cols-[96px_minmax(0,1fr)]">
-                    <div className="text-xs font-semibold text-ink-3 sm:pt-1">{c.label}</div>
-                    <div className="flex flex-wrap items-start gap-1.5">
-                      <span className="whitespace-pre-line rounded-lg bg-danger-soft px-2 py-1 text-ink line-through decoration-danger/60">
-                        {c.before || '(비어 있음)'}
-                      </span>
-                      <Icon name="arrowRight" className="mt-1.5 h-3.5 w-3.5 text-ink-3" />
-                      <span className="whitespace-pre-line rounded-lg bg-success-soft px-2 py-1 font-medium text-ink">
-                        {c.auto_translate ? '(적용할 때 자동 번역)' : c.after || '(비어 있음)'}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <ChangeList changes={u.changes} />
             </div>
           ))}
         </Section>
@@ -146,8 +170,70 @@ const SheetBlock: React.FC<{ title: string; sheet: SheetPreview; noun: string }>
   );
 };
 
+/** 키워드 규칙 / 프로필 항목 시트 하나의 바뀔 내용 */
+const SimpleSheetBlock: React.FC<{
+  title: string;
+  sheet: SimpleSheetPreview;
+  noun: string;
+  note?: string;
+}> = ({ title, sheet, noun, note }) => (
+  <section className="space-y-3 rounded-2xl border border-line p-4">
+    <h3 className="!text-base">{title}</h3>
+    <SummaryChips s={sheet.summary} noun={noun} />
+    {note && <p className="text-sm text-ink-3">{note}</p>}
+
+    {sheet.created.length > 0 && (
+      <Section title="새로 생김" count={sheet.created.length}>
+        {sheet.created.map((c) => (
+          <div key={c.row} className="rounded-xl bg-card p-3 text-sm">
+            <div className="font-semibold text-ink">{c.title}</div>
+            <div className="mt-0.5 text-xs text-ink-3">{rowLabel(c.row)}</div>
+            {c.details.length > 0 && (
+              <ul className="mt-2 space-y-1 text-ink-2">
+                {c.details.map((d, i) => (
+                  <li key={i}>{d}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </Section>
+    )}
+
+    {sheet.updated.length > 0 && (
+      <Section title="바뀜" count={sheet.updated.length}>
+        {sheet.updated.map((u) => (
+          <div key={u.id} className="rounded-xl bg-card p-3 text-sm">
+            <div className="font-semibold text-ink">
+              <span className="mr-1.5 text-ink-3 tabular-nums">#{u.id}</span>
+              {u.title}
+            </div>
+            <ChangeList changes={u.changes} />
+          </div>
+        ))}
+      </Section>
+    )}
+
+    {sheet.deleted.length > 0 && (
+      <Section title="삭제" count={sheet.deleted.length}>
+        {sheet.deleted.map((d) => (
+          <div key={d.id} className="rounded-xl bg-danger-soft p-3 text-sm text-ink">
+            <span className="mr-1.5 text-ink-3 tabular-nums">#{d.id}</span>
+            {d.title}
+          </div>
+        ))}
+      </Section>
+    )}
+  </section>
+);
+
+const sheetCount = (x?: { summary: SheetSummary } | null) => (x ? x.summary.created + x.summary.updated + x.summary.deleted : 0);
+
 /** 담당자·이메일 바꾸기 목록 */
-const RenameBlock: React.FC<{ title: string; items: { row: number; from: string; to: string; note: string }[] }> = ({ title, items }) => (
+const RenameBlock: React.FC<{
+  title: string;
+  items: { row: number; from: string; to: string; note: string }[];
+}> = ({ title, items }) => (
   <section className="rounded-2xl border border-line p-4">
     <h3 className="mb-3 !text-base">
       {title} <span className="text-ink-3 tabular-nums">{items.length}</span>
@@ -165,7 +251,8 @@ const RenameBlock: React.FC<{ title: string; items: { row: number; from: string;
   </section>
 );
 
-const FAQExcelUpload: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+const FAQExcelUpload: React.FC<{ onClose: () => void; scope?: ExcelScope }> = ({ onClose, scope = 'all' }) => {
+  const senior = scope === 'senior';
   const fileRef = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState<Step>('pick');
   const [fileName, setFileName] = useState('');
@@ -176,7 +263,7 @@ const FAQExcelUpload: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const changedSomething = useRef(false);
 
   const loadBackups = async () => {
-    const r = await listFaqBackups();
+    const r = await listFaqBackups(scope);
     setBackups(r.ok ? r.data.backups : []);
   };
   useEffect(() => {
@@ -197,7 +284,7 @@ const FAQExcelUpload: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     }
     setFileName(file.name);
     setStep('reading');
-    const r = await previewFaqExcel(file);
+    const r = await previewFaqExcel(file, scope);
     if (fileRef.current) fileRef.current.value = '';
     if (!r.ok) {
       setStep('pick');
@@ -217,7 +304,7 @@ const FAQExcelUpload: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     );
     if (pick !== 'apply') return;
     setStep('applying');
-    const r = await applyFaqExcel(preview.plan_id);
+    const r = await applyFaqExcel(preview.plan_id, scope);
     if (!r.ok) {
       setStep('preview');
       appAlert(r.message);
@@ -230,27 +317,36 @@ const FAQExcelUpload: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   };
 
   const restore = async (b: FaqBackup) => {
+    const seniorBackup = b.scope === 'senior';
     const pick = await appChoice(
-      `${formatTime(b.created_at)} 상태(FAQ ${b.row_count}개 · 선배 FAQ ${b.senior_row_count}개)로 되돌릴까요?\n그 뒤에 고치거나 새로 만든 FAQ·선배 FAQ도 그때 상태로 돌아가요. 지금 상태는 자동으로 저장해 둬요.`,
+      seniorBackup
+        ? `${formatTime(b.created_at)} 상태(선배 FAQ ${b.senior_row_count}개)로 되돌릴까요?\n그 뒤에 고치거나 새로 만든 선배 FAQ도 그때 상태로 돌아가요. 다른 데이터는 그대로예요. 지금 상태는 자동으로 저장해 둬요.`
+        : `${formatTime(b.created_at)} 상태(FAQ ${b.row_count}개 · 선배 FAQ ${b.senior_row_count}개)로 되돌릴까요?\n그 뒤에 고치거나 새로 만든 FAQ·선배 FAQ·키워드 규칙·프로필 항목도 그때 상태로 돌아가요. 지금 상태는 자동으로 저장해 둬요.`,
       [{ label: '되돌리기', value: 'restore', primary: true }],
       '취소'
     );
     if (pick !== 'restore') return;
     setRestoring(true);
-    const r = await restoreFaqBackup(b.id);
+    const r = await restoreFaqBackup(b.id, scope);
     setRestoring(false);
     if (!r.ok) {
       appAlert(r.message);
       return;
     }
     changedSomething.current = true;
-    const { faq, senior } = r.data;
+    const zero = { created: 0, updated: 0, deleted: 0 };
+    const { faq, senior: s, keywords = zero, profileOptions = zero } = r.data;
     const n = (c: { created: number; updated: number; deleted: number }) => c.created + c.updated + c.deleted;
-    await appAlert(
-      n(faq) + n(senior) === 0
-        ? '이미 그때와 같은 상태라 바뀐 게 없어요.'
-        : `되돌렸어요.\nFAQ: 다시 생김 ${faq.created}개 · 바뀜 ${faq.updated}개 · 지움 ${faq.deleted}개\n선배 FAQ: 다시 생김 ${senior.created}개 · 바뀜 ${senior.updated}개 · 지움 ${senior.deleted}개`
-    );
+    const lines = ['되돌렸어요.'];
+    const line = (name: string, c: { created: number; updated: number; deleted: number }) => {
+      if (n(c) > 0) lines.push(`${name}: 다시 생김 ${c.created}개 · 바뀜 ${c.updated}개 · 지움 ${c.deleted}개`);
+    };
+    line('FAQ', faq);
+    line('선배 FAQ', s);
+    line('키워드 규칙', keywords);
+    line('프로필 항목', profileOptions);
+    if (n(profileOptions) > 0) lines.push('프로필 항목은 1분쯤 뒤에 학생 화면에 반영돼요.');
+    await appAlert(n(faq) + n(s) + n(keywords) + n(profileOptions) === 0 ? '이미 그때와 같은 상태라 바뀐 게 없어요.' : lines.join('\n'));
     loadBackups();
   };
 
@@ -263,12 +359,12 @@ const FAQExcelUpload: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="엑셀로 올리기"
+        aria-label={senior ? '선배 FAQ 엑셀로 올리기' : '엑셀로 올리기'}
         onClick={(e) => e.stopPropagation()}
         className="modal-panel max-w-[760px] max-h-[90vh] overflow-y-auto space-y-5"
       >
         <div className="flex items-center justify-between">
-          <h2>엑셀로 올리기</h2>
+          <h2>{senior ? '선배 FAQ 엑셀로 올리기' : '엑셀로 올리기'}</h2>
           <button type="button" onClick={close} aria-label="닫기" className="p-2 text-ink-3 hover:bg-card hover:text-ink">
             <Icon name="close" className="h-5 w-5" />
           </button>
@@ -285,7 +381,9 @@ const FAQExcelUpload: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               onChange={(e) => pickFile(e.target.files?.[0])}
             />
             <p className="mb-3 text-sm text-ink-2">
-              [엑셀로 받기]로 받은 파일(FAQ·선배 FAQ·담당자·이메일 시트)을 고쳐서 올려 주세요. 올리기만 하면 아직 아무것도 바뀌지 않아요.
+              {senior
+                ? '[엑셀로 받기]로 받은 선배 FAQ 파일을 고쳐서 올려 주세요. 선배 FAQ 시트만 반영해요. 올리기만 하면 아직 아무것도 바뀌지 않아요.'
+                : '[엑셀로 받기]로 받은 파일(FAQ·선배 FAQ·담당자·이메일·키워드 규칙·프로필 항목 시트)을 고쳐서 올려 주세요. 올리기만 하면 아직 아무것도 바뀌지 않아요.'}
             </p>
             <button
               type="button"
@@ -330,22 +428,42 @@ const FAQExcelUpload: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               </section>
             )}
 
-            {total === 0 && problems.length === 0 && (
-              <p className="rounded-2xl bg-card p-4 text-sm text-ink-2">바뀐 내용이 없어요.</p>
-            )}
+            {total === 0 && problems.length === 0 && <p className="rounded-2xl bg-card p-4 text-sm text-ink-2">바뀐 내용이 없어요.</p>}
 
-            {preview.faq && <SheetBlock title="FAQ (행정실 FAQ)" sheet={preview.faq} noun="FAQ" />}
+            {!senior && preview.faq && <SheetBlock title="FAQ (행정실 FAQ)" sheet={preview.faq} noun="FAQ" />}
             {preview.senior && <SheetBlock title="선배 FAQ" sheet={preview.senior} noun="선배 FAQ" />}
-            {preview.managers.length > 0 && (
+            {!senior && preview.managers.length > 0 && (
               <RenameBlock
                 title="담당자 바꿈"
-                items={preview.managers.map((m) => ({ ...m, note: `행정실 FAQ ${m.faq_count}개 · 선배 FAQ ${m.senior_count}개` }))}
+                items={preview.managers.map((m) => ({
+                  ...m,
+                  note: `행정실 FAQ ${m.faq_count}개 · 선배 FAQ ${m.senior_count}개`,
+                }))}
               />
             )}
-            {preview.emails.length > 0 && (
-              <RenameBlock title="이메일 바꿈" items={preview.emails.map((e) => ({ ...e, note: `답변 ${e.count}개` }))} />
+            {!senior && preview.emails.length > 0 && (
+              <RenameBlock
+                title="이메일 바꿈"
+                items={preview.emails.map((e) => ({
+                  ...e,
+                  note: `답변 ${e.count}개`,
+                }))}
+              />
             )}
-            {preview.missing_sheets.length > 0 && (
+            {!senior && preview.keywords && <SimpleSheetBlock title="키워드 규칙" sheet={preview.keywords} noun="규칙" />}
+            {!senior && preview.profileOptions && (
+              <SimpleSheetBlock
+                title="프로필 항목"
+                sheet={preview.profileOptions}
+                noun="항목"
+                note={
+                  sheetCount(preview.profileOptions) > 0
+                    ? '적용하면 1분쯤 뒤에 학생 화면의 선택지에 반영돼요. (호빗이 프로필 항목을 1분마다 새로 읽어요)'
+                    : undefined
+                }
+              />
+            )}
+            {!senior && preview.missing_sheets.length > 0 && (
               <p className="text-sm text-ink-3">파일에 {preview.missing_sheets.join(', ')} 시트가 없어서 그 내용은 그대로 둬요.</p>
             )}
 
@@ -374,7 +492,11 @@ const FAQExcelUpload: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <h3 className="mb-1 flex items-center gap-1.5 !text-base">
             <Icon name="undo" /> 이전 상태로 되돌리기
           </h3>
-          <p className="mb-3 text-sm text-ink-3">엑셀을 적용하거나 되돌리기 전에 자동으로 저장해 둔 FAQ·선배 FAQ 상태예요. 최근 20개까지 남아요.</p>
+          <p className="mb-3 text-sm text-ink-3">
+            {senior
+              ? '엑셀을 적용하거나 되돌리기 전에 자동으로 저장해 둔 선배 FAQ 상태예요. 최근 20개까지 남아요.'
+              : '엑셀을 적용하거나 되돌리기 전에 자동으로 저장해 둔 상태예요 (FAQ·선배 FAQ·키워드 규칙·프로필 항목, 선배 FAQ만 저장한 것도 있어요). 최근 20개까지 남아요.'}
+          </p>
           {backups === null ? (
             <p className="text-sm text-ink-3">불러오는 중…</p>
           ) : backups.length === 0 ? (
@@ -386,7 +508,10 @@ const FAQExcelUpload: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   <div className="min-w-0">
                     <div className="truncate text-ink">{b.note || '저장해 둔 상태'}</div>
                     <div className="text-xs text-ink-3">
-                      {formatTime(b.created_at)} · {b.username ?? '알 수 없음'} · FAQ {b.row_count}개 · 선배 FAQ {b.senior_row_count}개
+                      {formatTime(b.created_at)} · {b.username ?? '알 수 없음'} ·{' '}
+                      {b.scope === 'senior'
+                        ? `선배 FAQ만 · ${b.senior_row_count}개`
+                        : `FAQ ${b.row_count}개 · 선배 FAQ ${b.senior_row_count}개`}
                     </div>
                   </div>
                   <button
@@ -408,14 +533,15 @@ const FAQExcelUpload: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 };
 
 function changeCount(p: ExcelPreview): number {
-  const n = (x: ExcelPreview['faq']) => (x ? x.summary.created + x.summary.updated + x.summary.deleted : 0);
-  return n(p.faq) + n(p.senior) + p.managers.length + p.emails.length;
+  return (
+    sheetCount(p.faq) + sheetCount(p.senior) + p.managers.length + p.emails.length + sheetCount(p.keywords) + sheetCount(p.profileOptions)
+  );
 }
 
 function changeSummary(p: ExcelPreview): string {
   const lines: string[] = [];
-  const sheet = (name: string, x: ExcelPreview['faq']) => {
-    if (x && x.summary.created + x.summary.updated + x.summary.deleted > 0) {
+  const sheet = (name: string, x?: { summary: SheetSummary } | null) => {
+    if (x && sheetCount(x) > 0) {
       lines.push(`${name}: 새로 생김 ${x.summary.created}개 · 바뀜 ${x.summary.updated}개 · 삭제 ${x.summary.deleted}개`);
     }
   };
@@ -423,6 +549,8 @@ function changeSummary(p: ExcelPreview): string {
   sheet('선배 FAQ', p.senior);
   if (p.managers.length) lines.push(`담당자 바꿈 ${p.managers.length}개`);
   if (p.emails.length) lines.push(`이메일 바꿈 ${p.emails.length}개`);
+  sheet('키워드 규칙', p.keywords);
+  sheet('프로필 항목', p.profileOptions);
   return lines.join('\n');
 }
 
@@ -435,6 +563,13 @@ function resultMessage(r: ExcelApplyResult): string {
   sheet('선배 FAQ', r.senior);
   if (r.managers) lines.push(`담당자 바꿈 ${r.managers}개`);
   if (r.emails) lines.push(`이메일 바꿈 ${r.emails}개`);
+  if (r.keywords) sheet('키워드 규칙', r.keywords);
+  if (r.profileOptions) {
+    sheet('프로필 항목', r.profileOptions);
+    if (r.profileOptions.created + r.profileOptions.updated + r.profileOptions.deleted > 0) {
+      lines.push('프로필 항목은 1분쯤 뒤에 학생 화면에 반영돼요.');
+    }
+  }
   if (r.untranslated > 0) {
     lines.push(`영어 칸 ${r.untranslated}개는 번역하지 못해 비어 있어요. FAQ 화면에서 영어를 채워 주세요.`);
   }
