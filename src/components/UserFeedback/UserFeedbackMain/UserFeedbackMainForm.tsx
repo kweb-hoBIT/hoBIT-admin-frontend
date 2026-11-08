@@ -1,15 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
-import { selectUserFeedbackFilter, setUnresolvedFeedbackCurrentPage, setResolvedFeedbackCurrentPage, setUserFeedbackFilterName } from '../../../redux/filterSlice';
+import { selectUserFeedbackFilter, setUserFeedbackFilterName } from '../../../redux/filterSlice';
 import { GetAllUserFeedbackResponse } from '../../../types/feedback';
 import UserFeedbackResolvedUpdate from './UserFeedbackResolvedUpdate';
 import LanguageBadge from '../../ui/LanguageBadge';
 import SelectUserFeedback from './SelectUserFeedback';
 import UserFeedbackDelete from './UserFeedbackDelete';
-import { selectUserFeedbackItemsPerPage, setUserFeedbackItemsPerPage } from '../../../redux/itemSlice';
 import BulkDeleteFeedbackModal from './BulkDeleteFeedbackModal';
-import Select from '../../ui/Select';
+import { useIncremental } from '../../../hooks/useIncremental';
+import { ListEnd, ListHeader } from '../../ui/ListKit';
+import { revealRef } from '../../ui/motion';
+
+
+// 한국 시간 — 형식기를 한 번만 만들어 씀 (toLocaleString에 시간대를 주면 부를 때마다 새로 만들어 느림)
+const KST = new Intl.DateTimeFormat('ko-KR', {
+  timeZone: 'Asia/Seoul',
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+  second: 'numeric',
+});
+const formatDateToKST = (dateStr: string) => {
+  const d = new Date(dateStr);
+  return Number.isNaN(d.getTime()) ? dateStr : KST.format(d);
+};
 
 interface UserFeedbackMainFormProps {
   userFeedbacks: GetAllUserFeedbackResponse['data']['userFeedbacks'];
@@ -18,12 +35,12 @@ interface UserFeedbackMainFormProps {
 type LangFilter = 'all' | 'KO' | 'EN';
 const LANG_FILTER_KEY = 'hobit-admin-feedback-lang';
 
+const langOf = (feedback: { language?: string }) => ((feedback.language || '').toUpperCase() === 'EN' ? 'EN' : 'KO');
+
 const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbacks }) => {
   const dispatch = useDispatch();
-  const { storedUnresolvedCurrentPage, storedResolvedCurrentPage, storedFilterName } = useSelector((state: RootState) => selectUserFeedbackFilter(state));
+  const { storedFilterName } = useSelector((state: RootState) => selectUserFeedbackFilter(state));
 
-  const [unresolvedCurrentPage, setUnresolvedCurrentPage] = useState<number>(storedUnresolvedCurrentPage ? Number(storedUnresolvedCurrentPage) : 1);
-  const [resolvedCurrentPage, setResolvedCurrentPage] = useState<number>(storedResolvedCurrentPage ? Number(storedResolvedCurrentPage) : 1);
   const [filter, setFilter] = useState<'unresolved' | 'resolved'>(
     storedFilterName as 'unresolved' | 'resolved' || 'unresolved'
   );
@@ -39,8 +56,6 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
   });
   const changeLangFilter = (next: LangFilter) => {
     setLangFilter(next);
-    setUnresolvedCurrentPage(1);
-    setResolvedCurrentPage(1);
     try {
       sessionStorage.setItem(LANG_FILTER_KEY, next);
     } catch {}
@@ -51,107 +66,47 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
   }, [userFeedbacks]);
 
   useEffect(() => {
-    dispatch(setUnresolvedFeedbackCurrentPage(unresolvedCurrentPage));
-    dispatch(setResolvedFeedbackCurrentPage(resolvedCurrentPage));
     dispatch(setUserFeedbackFilterName(filter));
-  }, [unresolvedCurrentPage, resolvedCurrentPage, filter]);
+  }, [dispatch, filter]);
 
-  // 필터링된 피드백
-  const unresolvedCount = feedbacks.filter((feedback) => feedback.resolved === 0).length;
-  const inTab = feedbacks.filter((feedback) => feedback.resolved === (filter === 'unresolved' ? 0 : 1));
-  const langOf = (feedback: { language?: string }) => ((feedback.language || '').toUpperCase() === 'EN' ? 'EN' : 'KO');
-  const langCounts = {
-    all: inTab.length,
-    KO: inTab.filter((f) => langOf(f) === 'KO').length,
-    EN: inTab.filter((f) => langOf(f) === 'EN').length,
-  };
-  const filteredFeedbacks = inTab.filter((feedback) => langFilter === 'all' || langOf(feedback) === langFilter);
+  // 거른 목록·개수는 목록이나 거르기가 바뀔 때만 다시 계산
+  const { unresolvedCount, langCounts, filteredFeedbacks } = useMemo(() => {
+    const inTab = feedbacks.filter((feedback) => feedback.resolved === (filter === 'unresolved' ? 0 : 1));
+    const ko = inTab.filter((f) => langOf(f) === 'KO').length;
+    return {
+      unresolvedCount: feedbacks.filter((feedback) => feedback.resolved === 0).length,
+      langCounts: { all: inTab.length, KO: ko, EN: inTab.length - ko } as Record<LangFilter, number>,
+      filteredFeedbacks: langFilter === 'all' ? inTab : inTab.filter((feedback) => langOf(feedback) === langFilter),
+    };
+  }, [feedbacks, filter, langFilter]);
 
-  const itemsPerPage = useSelector(selectUserFeedbackItemsPerPage);
-  const pagesPerGroup = 10;
-
-  // 해결되지 않은 피드백의 페이지네이션
-  const unresolvedTotalPages = Math.ceil(filteredFeedbacks.filter(feedback => feedback.resolved === 0).length / itemsPerPage);
-  const unresolvedCurrentPageGroup = Math.floor((unresolvedCurrentPage - 1) / pagesPerGroup);
-  const unresolvedStartPage = unresolvedCurrentPageGroup * pagesPerGroup + 1;
-  const unresolvedEndPage = Math.min((unresolvedCurrentPageGroup + 1) * pagesPerGroup, unresolvedTotalPages);
-  const unresolvedPageNumbers = Array.from({ length: unresolvedEndPage - unresolvedStartPage + 1 }, (_, index) => unresolvedStartPage + index);
-  
-  // 해결된 피드백의 페이지네이션
-  const resolvedTotalPages = Math.ceil(filteredFeedbacks.filter(feedback => feedback.resolved === 1).length / itemsPerPage);
-  const resolvedCurrentPageGroup = Math.floor((resolvedCurrentPage - 1) / pagesPerGroup);
-  const resolvedStartPage = resolvedCurrentPageGroup * pagesPerGroup + 1;
-  const resolvedEndPage = Math.min((resolvedCurrentPageGroup + 1) * pagesPerGroup, resolvedTotalPages);
-  const resolvedPageNumbers = Array.from({ length: resolvedEndPage - resolvedStartPage + 1 }, (_, index) => resolvedStartPage + index);
-
-
-  // 현재 페이지에 보여줄 피드백
-  const unresolvedCurrentItems = filteredFeedbacks.filter(feedback => feedback.resolved === 0).slice((unresolvedCurrentPage - 1) * itemsPerPage, unresolvedCurrentPage * itemsPerPage);
-  const resolvedCurrentItems = filteredFeedbacks.filter(feedback => feedback.resolved === 1).slice((resolvedCurrentPage - 1) * itemsPerPage, resolvedCurrentPage * itemsPerPage);
-
-  const handleNextPage = () => {
-    if (filter === 'unresolved' && unresolvedCurrentPage < unresolvedTotalPages) {
-      setUnresolvedCurrentPage(Math.min((unresolvedCurrentPageGroup + 1) * pagesPerGroup + 1, unresolvedTotalPages));
-    } else if (filter === 'resolved' && resolvedCurrentPage < resolvedTotalPages) {
-      setResolvedCurrentPage(Math.min((unresolvedCurrentPageGroup + 1) * pagesPerGroup + 1, resolvedTotalPages));
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (filter === 'unresolved' && unresolvedCurrentPage > 1) {
-      setUnresolvedCurrentPage(Math.max(unresolvedCurrentPageGroup * pagesPerGroup, 1));
-    } else if (filter === 'resolved' && resolvedCurrentPage > 1) {
-      setResolvedCurrentPage(Math.max(resolvedCurrentPageGroup * pagesPerGroup, 1));
-    }
-  };
-
-
-  const handlePageChange = (page: number) => {
-    if (filter === 'unresolved') {
-      setUnresolvedCurrentPage(page);
-    } else {
-      setResolvedCurrentPage(page);
-    }
-  };
-
-  const handleFilterChange = (filterValue: 'unresolved' | 'resolved') => {
-    setFilter(filterValue);
-  };
+  // 처음 20개, 내려가면 20개씩 더 — 해결 여부·언어를 바꾸면 처음부터
+  const { shown, total, hasMore, sentinelRef } = useIncremental(filteredFeedbacks, `${filter}|${langFilter}`);
 
   const handleResolvedChange = (id: number, resolved: number) => {
-    setFeedbacks(prevFeedbacks => {
-      const updatedFeedbacks = prevFeedbacks.map(feedback =>
-        feedback.user_feedback_id === id ? { ...feedback, resolved } : feedback
-      );
-  
-      if (filter === 'unresolved' && resolved === 1) {
-        if (unresolvedCurrentItems.length === 1 && unresolvedCurrentPage > 1) {
-          setUnresolvedCurrentPage(prevPage => prevPage - 1);
-        }
-      } else if (filter === 'resolved' && resolved === 0) {
-        if (resolvedCurrentItems.length === 1 && resolvedCurrentPage > 1) {
-          setResolvedCurrentPage(prevPage => prevPage - 1);
-        }
-      }
-  
-      return updatedFeedbacks;
-    });
-  };
-  
-  // 한국 시간으로 변환하는 함수
-  const formatDateToKST = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
+    setFeedbacks((prev) => prev.map((feedback) => (feedback.user_feedback_id === id ? { ...feedback, resolved } : feedback)));
   };
 
   return (
     <section className="panel">
-      <SelectUserFeedback filter={filter} onFilterChange={handleFilterChange} unresolvedCount={unresolvedCount} />
       <div>
         <div className="p-3 sm:p-6">
-          <div className="flex flex-wrap justify-between items-center gap-3 mb-6">
-            <h4 className="text-xl font-bold text-ink flex-grow">유저 피드백 리스트</h4>
-              <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+          <ListHeader
+            title="피드백"
+            count={total}
+            description="학생이 남긴 피드백이에요"
+            action={
+              <button
+                type="button"
+                onClick={() => setShowBulkDeleteModal(true)}
+                className="h-10 rounded-xl bg-danger px-4 font-semibold text-white hover:bg-danger/90"
+              >
+                전체 삭제
+              </button>
+            }
+            left={
+              <>
+                <SelectUserFeedback filter={filter} onFilterChange={setFilter} unresolvedCount={unresolvedCount} />
                 <div className="flex rounded-full bg-card p-1" role="group" aria-label="언어로 거르기">
                   {([
                     ['all', '전체'],
@@ -163,7 +118,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                       type="button"
                       aria-pressed={langFilter === value}
                       onClick={() => changeLangFilter(value)}
-                      className={`rounded-full px-3.5 py-1.5 text-sm font-semibold transition-colors ${
+                      className={`rounded-full px-3 py-1.5 text-sm font-semibold transition-colors sm:px-3.5 ${
                         langFilter === value ? 'bg-surface text-ink shadow-sm' : 'text-ink-2 hover:text-ink'
                       }`}
                     >
@@ -171,33 +126,14 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                     </button>
                   ))}
                 </div>
-                <Select
-                  value={itemsPerPage}
-                  onChange={(e) => {
-                    dispatch(setUserFeedbackItemsPerPage(Number(e.target.value)))
-                    setUnresolvedCurrentPage(1);
-                    setResolvedCurrentPage(1);
-                  }}
-                  className="p-2 rounded-xl border-2 border-line focus:outline-none focus:ring-2 focus:ring-accent-ink/40"
-                >
-                  <option value={4}>4개씩 보기</option>
-                  <option value={6}>6개씩 보기</option>
-                  <option value={8}>8개씩 보기</option>
-                  <option value={10}>10개씩 보기</option>
-                </Select>
-                <button
-                  onClick={() => setShowBulkDeleteModal(true)}
-                  className="px-4 py-2 bg-danger text-white rounded-xl hover:bg-danger/90 font-semibold"
-                >
-                  전체 삭제
-                </button>
-              </div>
-            </div>
-        <div style={{ minHeight: '320px' }}>
+              </>
+            }
+          />
+        <div>
           <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
-            {(filter === 'unresolved' ? unresolvedCurrentItems : resolvedCurrentItems).map((feedback) => (
-              <div key={feedback.user_feedback_id} className="relative bg-card-2 p-4 rounded-xl">
-                {/* 수정 버튼 */}
+            {shown.map((feedback) => (
+              <div key={feedback.user_feedback_id} ref={revealRef} className="relative bg-card-2 p-4 rounded-xl">
+                {/* 완료·보류 버튼 */}
                 <UserFeedbackResolvedUpdate
                   user_feedback_id={feedback.user_feedback_id}
                   initialResolved={feedback.resolved ? 1 : 0}
@@ -211,18 +147,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                 >
                   <UserFeedbackDelete
                     user_feedback_id={String(feedback.user_feedback_id)}
-                    onSuccess={() => {
-                      if (filter === 'unresolved') {
-                        if (unresolvedCurrentItems.length === 1 && unresolvedCurrentPage > 1) {
-                          dispatch(setUnresolvedFeedbackCurrentPage(unresolvedCurrentPage - 1));
-                        }
-                      } else {
-                        if (resolvedCurrentItems.length === 1 && resolvedCurrentPage > 1) {
-                          dispatch(setResolvedFeedbackCurrentPage(resolvedCurrentPage - 1));
-                        }
-                      }
-                      window.location.reload();
-                    }}
+                    onSuccess={() => window.location.reload()}
                   />
                 </div>
                 <div className="pr-24">
@@ -256,43 +181,11 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
           </div>
         </div>
 
-          {/* 페이지네이션 */}
-          <div className="flex flex-wrap justify-center mt-4 items-center gap-2 sm:gap-4">
-            <button
-              onClick={handlePrevPage}
-              className="px-4 py-2 bg-card-2 rounded-xl text-sm font-semibold text-ink hover:bg-card-3"
-              disabled={(filter === 'unresolved' ? unresolvedCurrentPage : resolvedCurrentPage) === 1}
-            >
-              이전
-            </button>
-
-            {/* 페이지 번호 */}
-            <div className="flex gap-2">
-              {(filter === 'unresolved' ? unresolvedPageNumbers : resolvedPageNumbers).map((page) => (
-                <button
-                  key={page}
-                  onClick={() => handlePageChange(page)}
-                  className={`px-3 py-2 text-sm font-semibold rounded-xl ${Math.abs(page - (filter === 'unresolved' ? unresolvedCurrentPage : resolvedCurrentPage)) > 2 ? 'hidden sm:block' : ''} ${
-                    (filter === 'unresolved' ? unresolvedCurrentPage : resolvedCurrentPage) === page ? 'bg-accent text-white' : 'bg-card-2 text-ink'
-                  }`}
-                  style={{ width: '40px', textAlign: 'center' }}
-                >
-                  {page}
-                </button>
-              ))}
-            </div>
-
-            <button
-              onClick={handleNextPage}
-              className="px-4 py-2 bg-card-2 rounded-xl text-sm font-semibold text-ink hover:bg-card-3"
-              disabled={(filter === 'unresolved' ? unresolvedCurrentPage : resolvedCurrentPage) === (filter === 'unresolved' ? unresolvedTotalPages : resolvedTotalPages)}
-            >
-              다음
-            </button>
-          </div>
+          {total === 0 && <p className="py-16 text-center text-sm text-ink-3">{filter === 'unresolved' ? '해결 안 된 피드백이 없어요' : '해결된 피드백이 없어요'}</p>}
+          <ListEnd hasMore={hasMore} total={total} sentinelRef={sentinelRef} />
         </div>
       </div>
-      
+
       {/* 전체 삭제 모달 */}
       {showBulkDeleteModal && (
         <BulkDeleteFeedbackModal

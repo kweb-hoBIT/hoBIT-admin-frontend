@@ -1,43 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useHobitQueryGetApi } from '../../../hooks/hobitAdmin';
 import { GetAllUserFeedbackRequest, GetAllUserFeedbackResponse } from '../../../types/feedback';
 import UserFeedbackMainForm from './UserFeedbackMainForm';
+import { ListSkeleton, LoadError } from '../../ui/ListKit';
 
 const UserFeedbackMain: React.FC = () => {
-  const [userFeedbackData, setUserFeedbackData] = useState<GetAllUserFeedbackResponse['data']['userFeedbacks']>([]);
-  const [error, setError] = useState<string | null>(null);
+  const api = useHobitQueryGetApi<GetAllUserFeedbackRequest, GetAllUserFeedbackResponse>('feedbacks/user');
+  const payload = api.data?.payload;
+  // 받아 둔 데이터를 바로 씀 — 다시 받는 동안에도 이전 목록을 그대로 보여줌
+  const userFeedbacks = payload?.statusCode === 200 ? payload.data.userFeedbacks : null;
 
-  const GetUserFeedbackApi = useHobitQueryGetApi<GetAllUserFeedbackRequest, GetAllUserFeedbackResponse>('feedbacks/user');
-
-  // User Feedback 데이터 가져오기
-  useEffect(() => {
-    const fetchUserFeedbackData = async () => {
-      if (GetUserFeedbackApi.data?.payload?.statusCode === 200) {
-        const data = GetUserFeedbackApi.data.payload.data.userFeedbacks;
-        setUserFeedbackData(data);
-      } else {
-        setError('User Feedback 데이터를 가져오는 중 오류 발생');
-      }
-    };
-
-    if (!GetUserFeedbackApi.isLoading && GetUserFeedbackApi.isSuccess) {
-      fetchUserFeedbackData();
-    }
-  }, [GetUserFeedbackApi]);
-
-  if (error) {
-    return <div className="error-message">{error}</div>;
+  if (!userFeedbacks) {
+    return (
+      <section className="panel p-3 sm:p-6">
+        {api.isPending || api.isFetching ? (
+          <ListSkeleton lines={4} />
+        ) : (
+          <LoadError message="피드백을 불러오지 못했어요." onRetry={() => api.refetch()} />
+        )}
+      </section>
+    );
   }
 
-  if (GetUserFeedbackApi.isLoading) {
-    return <div></div>;
-  }
-
-  return (
-    <div>
-      <UserFeedbackMainForm userFeedbacks={userFeedbackData} />
-    </div>
-  );
+  return <UserFeedbackMainForm userFeedbacks={userFeedbacks} />;
 };
 
 export default UserFeedbackMain;

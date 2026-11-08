@@ -7,9 +7,8 @@ interface SelectUserFeedbackProps {
   unresolvedCount?: number;
 }
 
-/** 해결 여부 거르기 — 화면을 바꾸는 탭(헤더 아래 줄)과 겹쳐 보이지 않게 알약 모양으로 */
+/** 해결 여부 거르기 — 화면을 바꾸는 탭(헤더 아래 줄)과 겹쳐 보이지 않게 알약 모양으로. 목록 머리줄의 둘째 줄(왼쪽)에 놓여요 */
 const SelectUserFeedback: React.FC<SelectUserFeedbackProps> = ({ filter, onFilterChange, unresolvedCount }) => (
-  <div className="px-3 pt-3 sm:px-6 sm:pt-6">
     <Segmented
       options={[
         ['unresolved', `해결 안 된 피드백${unresolvedCount ? ` ${unresolvedCount}` : ''}`],
@@ -20,7 +19,6 @@ const SelectUserFeedback: React.FC<SelectUserFeedbackProps> = ({ filter, onFilte
       itemClassName="px-4 py-1.5 text-sm font-semibold"
       className="w-fit max-w-full" // 글자 길이만큼만 (가로를 꽉 채우던 회색 바탕)
     />
-  </div>
 );
 
 export default SelectUserFeedback;
