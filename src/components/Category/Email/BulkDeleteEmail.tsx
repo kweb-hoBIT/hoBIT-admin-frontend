@@ -7,7 +7,9 @@ import { BulkDeleteEmailRequest, BulkDeleteEmailResponse, GetAllEmailsRequest, G
 
 import { appAlert } from '../../ui/Dialog';
 import Icon from '../../ui/Icon';
+import { useEmbedded } from '../embedded';
 const BulkDeleteEmail: React.FC = () => {
+  const emb = useEmbedded(); // 관리 탭 안에 끼워 넣었으면 상자·큰 제목 없이
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
   const [email, setEmail] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
@@ -87,12 +89,12 @@ const BulkDeleteEmail: React.FC = () => {
   );
 
   return (
-    <div className="flex justify-center items-center py-6 sm:min-h-[calc(100vh-4.5rem)] sm:py-10">
-      <div className="bg-surface p-5 sm:p-8 rounded-xl shadow-lg w-full max-w-md">
-        <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center text-ink">
+    <div className={emb ? '' : 'flex justify-center items-center py-6 sm:min-h-[calc(100vh-4.5rem)] sm:py-10'}>
+      <div className={emb ? 'w-full' : 'bg-surface p-5 sm:p-8 rounded-xl shadow-lg w-full max-w-md'}>
+        {!emb && (<h2 className="text-xl sm:text-2xl font-bold mb-6 text-center text-ink">
           이메일 전체 삭제
-        </h2>
-        <p className="text-sm text-ink-2 mb-6 text-center">
+        </h2>)}
+        <p className={emb ? 'mb-4 text-sm text-ink-3' : 'text-sm text-ink-2 mb-6 text-center'}>
           모든 FAQ의 답변에서 특정 이메일을 일괄 삭제합니다.
         </p>
 

@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkhobit_admin_frontend=self.webpackChunkhobit_admin_frontend||[]).push([[338],{63338:(n,e,i)=>{i.r(e),i.d(e,{default:()=>c});var s=i(36118),d=i(24313),t=i(70579);const c=()=>(0,t.jsx)(s.A,{children:(0,t.jsx)("div",{children:(0,t.jsx)("main",{children:(0,t.jsx)(d.A,{section:"bulk"})})})})}}]);
+//# sourceMappingURL=338.d5674723.chunk.js.map

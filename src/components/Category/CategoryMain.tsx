@@ -1,89 +1,107 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { prefetchRoute } from '../../routes';
+import React, { useState } from 'react';
 import { useChat } from '../Chat/ChatProvider';
 import { revealRef } from '../ui/motion';
+import Segmented from '../ui/Segmented';
+import FAQExcelButtons from '../FAQ/FAQExcel/FAQExcelButtons';
+import { EmbeddedProvider } from './embedded';
+import FAQCategoryRename from './FAQ/Rename/FAQCategoryRename';
+import FAQCategoryReorder from './FAQ/Reorder/FAQCategoryReorder';
+import SeniorFAQCategoryRename from './SeniorFAQ/Rename/SeniorFAQCategoryRename';
+import SeniorFAQCategoryReorder from './SeniorFAQ/Reorder/SeniorFAQCategoryReorder';
+import BulkUpdateAdmin from './Admin/BulkUpdateAdmin';
+import BulkDeleteAdmin from './Admin/BulkDeleteAdmin';
+import BulkUpdateEmail from './Email/BulkUpdateEmail';
+import BulkDeleteEmail from './Email/BulkDeleteEmail';
 
-type Item = { path: string; label: string; desc: string; danger?: boolean };
-type Group = { title: string; items: Item[] };
+/** 편집 칸 하나 — 제목·설명 + 끼워 넣은 화면 */
+const Block: React.FC<{ title: string; desc: string; danger?: boolean; children: React.ReactNode }> = ({ title, desc, danger, children }) => (
+  <div ref={revealRef} className={`min-w-0 rounded-2xl border p-4 sm:p-5 ${danger ? 'border-danger/30' : 'border-line'}`}>
+    <h5 className={`font-semibold ${danger ? 'text-danger' : 'text-ink'}`}>{title}</h5>
+    <p className="mb-4 mt-0.5 text-sm text-ink-3">{desc}</p>
+    <EmbeddedProvider>{children}</EmbeddedProvider>
+  </div>
+);
 
-// 관리 — 헤더 아래 줄 탭: 카테고리 · 프로필 항목(별도 화면) · 담당자·이메일
-const SECTIONS: Record<'category' | 'bulk', { title: string; desc: string; groups: Group[] }> = {
-  category: {
-    title: '카테고리',
-    desc: '학생 화면 메뉴에 보이는 FAQ 분류의 이름과 순서를 바꿔요.',
-    groups: [
-      {
-        title: '행정실 FAQ',
-        items: [
-          { path: '/categories/faq/rename', label: '카테고리 이름 수정', desc: '대분류·소분류 이름을 한 번에 바꿔요' },
-          { path: '/categories/faq/reorder', label: '카테고리 순서 수정', desc: '메뉴에 보이는 순서를 끌어서 바꿔요' },
-        ],
-      },
-      {
-        title: '선배 FAQ',
-        items: [
-          { path: '/categories/seniorfaq/rename', label: '카테고리 이름 수정', desc: '대분류·소분류 이름을 한 번에 바꿔요' },
-          { path: '/categories/seniorfaq/reorder', label: '카테고리 순서 수정', desc: '메뉴에 보이는 순서를 끌어서 바꿔요' },
-        ],
-      },
-    ],
-  },
-  bulk: {
-    title: '담당자·이메일',
-    desc: 'FAQ 답변에 적힌 담당자 이름과 이메일을 모든 FAQ에서 한 번에 바꾸거나 지워요. 엑셀의 담당자·이메일 시트로도 바꿀 수 있어요.',
-    groups: [
-      {
-        title: '담당자',
-        items: [
-          { path: '/categories/admin/bulk-update', label: '담당자 변경', desc: '한 담당자의 이름을 모든 FAQ에서 바꿔요' },
-          { path: '/categories/admin/bulk-delete', label: '담당자 삭제', desc: '모든 FAQ에서 그 담당자를 지워요', danger: true },
-        ],
-      },
-      {
-        title: '이메일',
-        items: [
-          { path: '/categories/email/bulk-update', label: '이메일 변경', desc: '한 이메일을 모든 답변에서 바꿔요' },
-          { path: '/categories/email/bulk-delete', label: '이메일 삭제', desc: '모든 답변에서 그 이메일을 지워요', danger: true },
-        ],
-      },
-    ],
-  },
-};
-
+/**
+ * 관리 — 헤더 아래 줄 탭: 카테고리 · 프로필 항목(별도 화면) · 담당자·이메일 · 채팅 운영
+ * 예전엔 링크 목록을 한 번 더 눌러 들어갔음 → 탭 안에서 바로 고침. 엑셀에 같은 정보가 있어 엑셀 받기·올리기도 함께
+ */
 const CategoryMain: React.FC<{ section?: 'category' | 'bulk' }> = ({ section = 'category' }) => {
   const { role } = useChat();
-  const sec = SECTIONS[section];
-  // 근로장학생은 선배 FAQ 카테고리만
-  const groups = role === 'senior' ? sec.groups.filter((g) => g.title === '선배 FAQ') : sec.groups;
+  const senior = role === 'senior'; // 근로장학생은 선배 FAQ 카테고리만
+  const [faqKind, setFaqKind] = useState<'faq' | 'senior'>(senior ? 'senior' : 'faq');
+  const [bulkKind, setBulkKind] = useState<'admin' | 'email'>('admin');
+
+  if (section === 'bulk') {
+    return (
+      <section className="panel p-4 sm:p-6">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h4 className="text-xl font-bold text-ink">담당자·이메일</h4>
+            <p className="mt-1 text-sm text-ink-3">모든 FAQ 답변에 적힌 담당자 이름·이메일을 한 번에 바꾸거나 지워요. 엑셀의 담당자·이메일 시트로도 바꿀 수 있어요.</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <FAQExcelButtons />
+          </div>
+        </div>
+        <Segmented
+          className="mt-4 w-fit max-w-full"
+          itemClassName="px-4 py-1.5 text-sm font-semibold"
+          options={[['admin', '담당자'], ['email', '이메일']] as const}
+          value={bulkKind}
+          onChange={setBulkKind}
+        />
+        <div key={bulkKind} className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {bulkKind === 'admin' ? (
+            <>
+              <Block title="담당자 변경" desc="한 담당자의 이름을 모든 FAQ에서 바꿔요."><BulkUpdateAdmin /></Block>
+              <Block title="담당자 삭제" desc="모든 FAQ에서 그 담당자를 지워요. 되돌릴 수 없어요." danger><BulkDeleteAdmin /></Block>
+            </>
+          ) : (
+            <>
+              <Block title="이메일 변경" desc="한 이메일을 모든 답변에서 바꿔요."><BulkUpdateEmail /></Block>
+              <Block title="이메일 삭제" desc="모든 답변에서 그 이메일을 지워요. 되돌릴 수 없어요." danger><BulkDeleteEmail /></Block>
+            </>
+          )}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="panel p-4 sm:p-6">
-      <h4 className="text-xl font-bold text-ink">{sec.title}</h4>
-      <p className="mt-1 text-sm text-ink-3">{sec.desc}</p>
-      <div className={`mt-5 grid gap-4 ${groups.length > 1 ? 'md:grid-cols-2' : 'grid-cols-1'}`}>
-        {groups.map((group) => (
-          <div key={group.title} ref={revealRef} className="rounded-2xl border border-line p-4">
-            <h5 className="mb-2 px-2 text-sm font-semibold text-ink-3">{group.title}</h5>
-            <ul className="flex flex-col gap-1">
-              {group.items.map((item) => (
-                <li key={item.path}>
-                  <Link
-                    to={item.path}
-                    onMouseEnter={() => prefetchRoute(item.path)}
-                    onFocus={() => prefetchRoute(item.path)}
-                    className="group flex items-center justify-between gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-card"
-                  >
-                    <span className="min-w-0">
-                      <span className={`block font-semibold ${item.danger ? 'text-danger' : 'text-ink group-hover:text-accent-ink'}`}>{item.label}</span>
-                      <span className="block truncate text-sm text-ink-3">{item.desc}</span>
-                    </span>
-                    <span aria-hidden="true" className="text-ink-3">›</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h4 className="text-xl font-bold text-ink">카테고리</h4>
+          <p className="mt-1 text-sm text-ink-3">학생 화면 메뉴에 보이는 FAQ 분류의 이름과 순서를 바꿔요.{!senior && ' 엑셀의 대분류·소분류 칸으로도 바꿀 수 있어요.'}</p>
+        </div>
+        {!senior && (
+          <div className="flex flex-wrap gap-2">
+            <FAQExcelButtons />
           </div>
-        ))}
+        )}
+      </div>
+      {!senior && (
+        <Segmented
+          className="mt-4 w-fit max-w-full"
+          itemClassName="px-4 py-1.5 text-sm font-semibold"
+          options={[['faq', '행정실 FAQ'], ['senior', '선배 FAQ']] as const}
+          value={faqKind}
+          onChange={setFaqKind}
+        />
+      )}
+      <div key={faqKind} className="mt-4 grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
+        {faqKind === 'faq' ? (
+          <>
+            <Block title="이름 수정" desc="대분류·소분류 이름을 그 분류의 모든 FAQ에서 한 번에 바꿔요."><FAQCategoryRename /></Block>
+            <Block title="순서 수정" desc="끌어서 학생 메뉴에 보이는 순서를 바꿔요."><FAQCategoryReorder /></Block>
+          </>
+        ) : (
+          <>
+            <Block title="이름 수정" desc="대분류·소분류·세부 항목 이름을 한 번에 바꿔요."><SeniorFAQCategoryRename /></Block>
+            <Block title="순서 수정" desc="끌어서 학생 메뉴에 보이는 순서를 바꿔요."><SeniorFAQCategoryReorder /></Block>
+          </>
+        )}
       </div>
     </section>
   );
