@@ -15,8 +15,8 @@ const minutesSince = (iso: string, now: number) => Math.max(0, Math.floor((now -
 const waitLabel = (m: number) => (m < 1 ? '방금' : m < 60 ? `${m}분` : `${Math.floor(m / 60)}시간 ${m % 60}분`);
 
 const Stat: React.FC<{ label: string; value: number; sub?: string; tone?: 'accent' | 'warn'; delay: number }> = ({ label, value, sub, tone, delay }) => (
-  // 이름은 한 줄로 (줄바꿈되면 숫자 높이가 어긋남) — 넘치면 카드가 옆으로 늘어남
-  <div className="shrink-0 whitespace-nowrap px-5 py-1">
+  // 이름은 한 줄로 (줄바꿈되면 숫자 높이가 어긋남)
+  <div className="min-w-0 whitespace-nowrap px-4 py-1 first:pl-0">
     <p className="text-sm font-semibold text-ink-2">{label}</p>
     <p
       className={`mt-1 text-[1.9rem] font-bold leading-none tracking-tight ${
@@ -86,7 +86,7 @@ const LiveChatCard: React.FC<{ className?: string }> = ({ className = '' }) => {
 
   return (
     <Reveal index={0} className={className}>
-      <section className={`h-full rounded-2xl border bg-surface p-5 ${busy ? 'border-accent-ink/40' : 'border-line'}`}>
+      <section className={`flex h-full flex-col rounded-2xl border bg-surface p-5 ${busy ? 'border-accent-ink/40' : 'border-line'}`}>
         <div className="mb-4 flex items-center gap-3">
           <h2 className="font-bold text-ink">실시간 채팅</h2>
           <span className={`flex items-center gap-1.5 text-xs ${connected ? 'text-success' : 'text-ink-3'}`}>
@@ -99,9 +99,9 @@ const LiveChatCard: React.FC<{ className?: string }> = ({ className = '' }) => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 items-center gap-4 2xl:grid-cols-[auto_minmax(0,1fr)]">
-          {/* 네 칸을 같은 너비·같은 높이로 (가장 긴 이름에 맞춤) → 세로선 간격이 고름 */}
-          <div className="grid auto-cols-fr grid-flow-col divide-x divide-line">
+        <div className="flex flex-1 flex-col gap-4">
+          {/* 위: 숫자 네 칸(같은 너비), 아래: 채팅 목록이 남는 높이를 채움 — 옆 품질 카드와 높이를 맞춰도 빈 곳이 안 생김 */}
+          <div className="grid grid-cols-4 divide-x divide-line">
             <Stat label="대기" value={waiting.length} sub={waiting.length ? `가장 오래 ${waitLabel(oldest)}` : '없음'} tone="warn" delay={0} />
             <Stat label="내 진행 중" value={mine.length} sub={role === 'staff' && summary ? `전체 ${summary.activeCount}건` : undefined} delay={80} />
             <Stat
@@ -120,13 +120,13 @@ const LiveChatCard: React.FC<{ className?: string }> = ({ className = '' }) => {
             />
           </div>
           {list.length ? (
-            <ul className="flex flex-col">
+            <ul className="flex flex-1 flex-col">
               {list.map(({ s, kind }, i) => (
                 <Row key={s.id} s={s} kind={kind} now={now} index={i} />
               ))}
             </ul>
           ) : (
-            <p className="rounded-xl bg-card px-4 py-5 text-center text-sm text-ink-2">
+            <p className="flex flex-1 items-center justify-center rounded-xl bg-card px-4 py-5 text-center text-sm text-ink-2">
               지금 기다리는 채팅이 없어요. 새 채팅이 오면 소리와 알림으로 알려드려요.
             </p>
           )}

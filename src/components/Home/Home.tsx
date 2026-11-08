@@ -338,7 +338,7 @@ const Home: React.FC = () => {
             {dash?.pipeline && !pipeOk && <PipelineStatus p={dash.pipeline} />}
             {dash?.tests && !testsOk && <TestsStatus t={dash.tests} />}
             <div className="mb-4 flex items-stretch gap-4">
-              <LiveChatCard className="min-w-0 flex-[1.6]" />
+              <LiveChatCard className="min-w-0 flex-1" />
               {dash?.quality && dash.quality.length > 0 && (
                 <Reveal index={1} className="min-w-[380px] flex-1">
                   <QualityCard
