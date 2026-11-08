@@ -428,7 +428,8 @@ const Header: React.FC = () => {
   // 불투명 배경 — backdrop-filter·transform이 있으면 메뉴 안 회원탈퇴 확인창(fixed)이 헤더 안에 갇힘
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-surface">
-      <div className="mx-auto flex h-[4.5rem] max-w-[1680px] items-center gap-2 px-4 sm:gap-4 sm:px-6 xl:gap-8 2xl:px-10">
+      {/* 윗줄을 아래 탭 줄보다 위 층에 — 사용자 메뉴·더보기 펼침이 아래 탭 글자에 비쳐 보이던 문제 */}
+      <div className="relative z-30 mx-auto flex h-[4.5rem] max-w-[1680px] items-center gap-2 px-4 sm:gap-4 sm:px-6 xl:gap-8 2xl:px-10">
         <button
           type="button"
           disabled={isAuthPage}
@@ -528,7 +529,7 @@ const Header: React.FC = () => {
                 <span className="hidden max-w-[160px] truncate text-[17px] font-semibold lg:inline">{username}</span>
               </button>
               {showPopup && (
-                <div role="menu" className="pop-menu absolute right-0 top-[3.5rem] w-64 max-w-[calc(100vw-2rem)] rounded-2xl border border-line bg-surface p-2 shadow-xl">
+                <div role="menu" className="pop-menu absolute right-0 top-[3.5rem] z-50 w-64 max-w-[calc(100vw-2rem)] rounded-2xl border border-line bg-surface p-2 shadow-xl">
                   {/* 나 — 동그라미 + 이름 + 권한 */}
                   <div className="flex items-center gap-3 px-3 pb-3 pt-2">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-[17px] font-bold text-white">
