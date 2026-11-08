@@ -8,6 +8,7 @@ import Segmented from '../ui/Segmented';
 import LanguageBadge from '../ui/LanguageBadge';
 import Badge from '../ui/Badge';
 import ChatSettings from './ChatSettings';
+import Icon from '../ui/Icon';
 
 /**
  * 채팅 화면 (담당자) — 왼쪽: 대기·진행·종료 목록 / 가운데: 대화 / 오른쪽: 학생 정보·최근 호빗 대화
@@ -538,7 +539,8 @@ const ChatMain: React.FC = () => {
         <div className="ml-auto flex items-center gap-2">
           {chat.notifyPermission === 'default' && (
             <button type="button" onClick={chat.enableNotifications} className="rounded-full bg-card px-4 py-2 text-sm font-semibold text-ink hover:bg-card-2">
-              🔔 브라우저 알림 켜기
+              <Icon name="bell" className="mr-1.5 h-4 w-4" />
+              브라우저 알림 켜기
             </button>
           )}
           {role === 'staff' && (

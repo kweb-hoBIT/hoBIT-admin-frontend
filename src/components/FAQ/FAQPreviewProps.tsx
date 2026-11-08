@@ -28,7 +28,7 @@ const FAQPreview: React.FC<FAQPreviewProps> = ({
   const koreanContainerRef = useRef<HTMLDivElement>(null);
   const englishContainerRef = useRef<HTMLDivElement>(null);
 
-  // 🔁 좌우 스크롤 동기화
+  // 좌우 스크롤 동기화
   useEffect(() => {
     const handleScroll = (e: Event) => {
       const target = e.target as HTMLDivElement;

@@ -33,7 +33,7 @@ const Row: React.FC<{ s: ListedSession; kind: 'waiting' | 'mine'; now: number; i
   const { role } = useChat(); // 근로장학생은 전부 선배 채팅이라 배지 생략
   const last = s.lastMessage;
   const preview = last
-    ? `${last.sender === 'agent' ? '나: ' : ''}${last.attachment ? '📎 파일' : last.body}`
+    ? `${last.sender === 'agent' ? '나: ' : ''}${last.attachment ? '[파일]' : last.body}`
     : s.botContext?.length
       ? `“${s.botContext[s.botContext.length - 1]?.q}”`
       : '최근 호빗 대화 없음';

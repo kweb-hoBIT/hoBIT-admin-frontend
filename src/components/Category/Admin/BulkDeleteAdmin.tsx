@@ -6,6 +6,7 @@ import { useHobitMutateDeleteApi, useHobitQueryGetApi } from '../../../hooks/hob
 import { BulkDeleteAdminRequest, BulkDeleteAdminResponse, GetAllAdminsRequest, GetAllAdminsResponse } from '../../../types/admin';
 
 import { appAlert } from '../../ui/Dialog';
+import Icon from '../../ui/Icon';
 const BulkDeleteAdmin: React.FC = () => {
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
   const [admin, setAdmin] = useState('');
@@ -145,7 +146,7 @@ const BulkDeleteAdmin: React.FC = () => {
 
         <div className="mt-6 p-4 bg-danger-soft border border-danger/40 rounded-xl">
           <p className="text-xs text-danger">
-            <strong>⚠️ 주의:</strong> 이 작업은 되돌릴 수 없습니다.
+            <strong className="inline-flex items-center gap-1"><Icon name="alert" className="h-4 w-4" />주의:</strong> 이 작업은 되돌릴 수 없습니다.
           </p>
         </div>
       </div>
@@ -165,7 +166,8 @@ const BulkDeleteAdmin: React.FC = () => {
               </p>
             </div>
             <p className="text-sm text-danger mb-4">
-              ⚠️ 이 작업은 되돌릴 수 없습니다.
+              <Icon name="alert" className="mr-1 h-4 w-4" />
+              이 작업은 되돌릴 수 없습니다.
             </p>
             <div className="flex space-x-3">
               <button

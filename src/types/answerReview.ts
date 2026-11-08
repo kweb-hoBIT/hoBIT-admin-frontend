@@ -1,4 +1,4 @@
-// 답변 확인 — 👎 받은 답변·못 찾은 질문·숫자를 뺀 답변 (관리자 백엔드 routes/api/answerReviews)
+// 답변 확인 — 도움 안 됨 받은 답변·못 찾은 질문·근거 없는 숫자를 뺀 답변 (관리자 백엔드 routes/api/answerReviews)
 export type ReviewType = 'down' | 'not_found' | 'grounding';
 export type ReviewCause = 'no_data' | 'outdated' | 'wrong_answer' | 'bad_search' | 'ok';
 

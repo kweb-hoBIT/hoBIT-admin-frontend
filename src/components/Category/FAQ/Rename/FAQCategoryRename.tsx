@@ -31,7 +31,7 @@ const FAQCategoryRename: React.FC = () => {
       if (GetAllFAQCategoryApi.data?.payload?.statusCode === 200) {
         setCategories(GetAllFAQCategoryApi.data.payload.data.categories);
       } else {
-        appAlert('⚠️ FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
+        appAlert('FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
         console.log('FAQ 카테고리 데이터 오류:', GetAllFAQCategoryApi.error);
       }
     };
@@ -70,18 +70,18 @@ const FAQCategoryRename: React.FC = () => {
         window.location.reload();
       } else if (renameResponse.payload?.statusCode === 400) {
         appAlert('기존에 존재하는 카테고리로는 수정할 수 없습니다.');
-        console.log('⚠️ FAQ 카테고리 데이터 오류:', renameResponse.payload?.message);
+        console.log('FAQ 카테고리 데이터 오류:', renameResponse.payload?.message);
         setIsUpdating(false);
         return;
       } else {
         appAlert('카테고리 변경 중 오류가 발생했습니다.');
-        console.log('⚠️ FAQ 카테고리 데이터 오류:', renameResponse.payload?.message);
+        console.log('FAQ 카테고리 데이터 오류:', renameResponse.payload?.message);
         setIsUpdating(false);
         return;
       }
     } catch (error) {
       console.log('카테고리 변경 오류:', error);
-      appAlert('⚠️ 카테고리 변경 중 오류가 발생했습니다.');
+      appAlert('카테고리 변경 중 오류가 발생했습니다.');
       setIsUpdating(false);
       return;
     }

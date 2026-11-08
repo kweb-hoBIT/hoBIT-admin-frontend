@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
 import {CheckFAQCategoryConflictResponse } from "../../types/faq";
+import Icon from '../ui/Icon';
 
 type FAQCategoryConflictProps = {
   conflictedData: CheckFAQCategoryConflictResponse['data']['conflictedData'];
@@ -34,7 +35,7 @@ const FAQCategoryConflict: React.FC<FAQCategoryConflictProps> = ({ conflictedDat
               <div className="mt-2 space-y-2">
                 {item.conflict.map((conflictItem, conflictIndex) => (
                   <div key={conflictIndex} className="p-3 bg-surface border border-success/40 rounded-xl shadow-sm">
-                    <p className="text-xs font-medium text-success">⚠️ 충돌 카테고리</p>
+                    <p className="flex items-center gap-1 text-xs font-medium text-success"><Icon name="alert" className="h-3.5 w-3.5" />충돌 카테고리</p>
                     <p className="text-sm text-ink mt-1">한글: <span className="font-semibold">{conflictItem.ko}</span></p>
                     <p className="text-sm text-ink mt-1">영어: <span className="font-semibold">{conflictItem.en }</span></p>
                   </div>

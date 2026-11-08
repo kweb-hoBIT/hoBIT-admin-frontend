@@ -11,6 +11,7 @@ import {
 } from '../../types/keyword';
 import { appAlert } from '../ui/Dialog';
 import type { FaqOption } from './KeywordMain';
+import Icon from '../ui/Icon';
 
 const MAX_PINNED = 5;
 const MAX_SOURCES = 6;
@@ -96,7 +97,7 @@ const FaqPicker: React.FC<{ faqs: FaqOption[]; value: number[]; onChange: (v: nu
         <ol className="mb-2 flex flex-col gap-1.5">
           {value.map((id, i) => (
             <li key={id} className="flex items-center gap-2 rounded-xl bg-card px-3 py-2 text-sm">
-              <span className="font-bold text-accent-ink">📌 {i + 1}</span>
+              <span className="inline-flex items-center gap-1 font-bold text-accent-ink"><Icon name="pin" className="h-3.5 w-3.5" />{i + 1}</span>
               <span className="min-w-0 flex-1 truncate text-ink">{byId.get(id)?.question_ko ?? `삭제된 FAQ (#${id})`}</span>
               <button type="button" disabled={i === 0} onClick={() => move(i, -1)} className="px-1.5 text-ink-3 hover:text-ink disabled:opacity-30" aria-label="위로">
                 ↑

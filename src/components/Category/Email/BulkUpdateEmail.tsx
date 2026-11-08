@@ -6,6 +6,7 @@ import { useHobitMutatePutApi, useHobitQueryGetApi } from '../../../hooks/hobitA
 import { BulkUpdateEmailRequest, BulkUpdateEmailResponse, GetAllEmailsRequest, GetAllEmailsResponse } from '../../../types/email';
 
 import { appAlert } from '../../ui/Dialog';
+import Icon from '../../ui/Icon';
 const BulkUpdateEmail: React.FC = () => {
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
   const [oldEmail, setOldEmail] = useState('');
@@ -160,7 +161,7 @@ const BulkUpdateEmail: React.FC = () => {
 
         <div className="mt-6 p-4 bg-warn-soft border border-warn/40 rounded-xl">
           <p className="text-sm text-warn">
-            <strong>⚠️ 주의사항:</strong>
+            <strong className="inline-flex items-center gap-1"><Icon name="alert" className="h-4 w-4" />주의사항:</strong>
             <br />
             이 작업은 되돌릴 수 없습니다. 변경하기 전에 이메일 주소를 다시 한번 확인해주세요.
           </p>
@@ -186,7 +187,8 @@ const BulkUpdateEmail: React.FC = () => {
               </p>
             </div>
             <p className="text-sm text-danger mb-4">
-              ⚠️ 이 작업은 되돌릴 수 없습니다.
+              <Icon name="alert" className="mr-1 h-4 w-4" />
+              이 작업은 되돌릴 수 없습니다.
             </p>
             <div className="flex space-x-3">
               <button

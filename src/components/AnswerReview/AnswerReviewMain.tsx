@@ -15,11 +15,12 @@ import {
   UpdateAnswerReviewResponse,
 } from '../../types/answerReview';
 import { appAlert } from '../ui/Dialog';
+import Icon from '../ui/Icon';
 
-const TABS: { type: ReviewType; label: string; hint: string }[] = [
-  { type: 'down', label: '👎 받은 답변', hint: '학생이 도움이 안 됐다고 한 답변이에요. 남긴 이유와 근거를 보고 원인을 골라 주세요.' },
+const TABS: { type: ReviewType; label: string; icon?: 'thumbsDown'; hint: string }[] = [
+  { type: 'down', label: '받은 답변', icon: 'thumbsDown', hint: '학생이 도움이 안 됐다고 한 답변이에요. 남긴 이유와 근거를 보고 원인을 골라 주세요.' },
   { type: 'not_found', label: '답을 못 찾은 질문', hint: '자료에서 답을 찾지 못한 질문이에요. 자료가 없으면 FAQ를 만들어 주세요.' },
-  { type: 'grounding', label: '숫자를 뺀 답변', hint: '근거에 없는 날짜·숫자가 있어 그 줄을 빼고 보낸 답변이에요. AI가 지어냈는지 확인해 주세요.' },
+  { type: 'grounding', label: '근거 없는 숫자 삭제', hint: 'AI 답변에 자료(근거)에 없는 날짜·금액·연락처 등이 있어서 그 줄을 빼고 보낸 답변이에요. AI가 지어냈는지, 자료가 부족했는지 확인해 주세요.' },
 ];
 
 // 원인 — 고친 방법을 정하는 기준 (통계로 무엇을 먼저 고칠지 봄)
@@ -99,9 +100,9 @@ const ReviewCard: React.FC<{ item: AnswerReview; done: boolean; onChanged: () =>
     <li className="rounded-2xl border border-line bg-surface p-5">
       <div className="flex flex-wrap items-center gap-1.5 text-xs text-ink-3">
         <span>{when(item.created_at)}</span>
-        {item.feedback_score === -1 && <span className="rounded-full bg-danger-soft px-2 py-0.5 font-semibold text-danger">👎</span>}
+        {item.feedback_score === -1 && <span className="inline-flex items-center rounded-full bg-danger-soft px-2 py-0.5 font-semibold text-danger"><Icon name="thumbsDown" className="h-3.5 w-3.5" title="도움 안 됨" /></span>}
         {item.answer_status === 'not_found' && <span className="rounded-full bg-card px-2 py-0.5">못 찾음</span>}
-        {item.grounding_issues && <span className="rounded-full bg-warn-soft px-2 py-0.5 text-warn">숫자 뺌</span>}
+        {item.grounding_issues && <span className="rounded-full bg-warn-soft px-2 py-0.5 text-warn">숫자 삭제</span>}
         {item.topic && <span className="rounded-full bg-card px-2 py-0.5">{TOPIC_LABEL[item.topic] ?? item.topic}</span>}
         {item.classified_by && <span className="rounded-full bg-card px-2 py-0.5">{item.classified_by === 'rule' ? '규칙 분류' : 'AI 분류'}</span>}
         {item.latency_ms != null && <span>{(item.latency_ms / 1000).toFixed(1)}초</span>}
@@ -191,6 +192,7 @@ const AnswerReviewMain: React.FC = () => {
             onClick={() => setType(t.type)}
             className={`rounded-full px-4 py-2 text-sm font-semibold ${type === t.type ? 'bg-accent text-white' : 'bg-card text-ink-2 hover:bg-card-2'}`}
           >
+            {t.icon && <Icon name={t.icon} className="mr-1.5 h-[1.05em] w-[1.05em]" />}
             {t.label}
             {data?.counts?.[t.type] ? ` ${data.counts[t.type]}` : ''}
           </button>

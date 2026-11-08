@@ -54,7 +54,7 @@ const FAQCategoryReorder: React.FC = () => {
         setOriginalCategories(JSON.parse(JSON.stringify(structuredCategories)));
         setCategories(structuredCategories);
       } else {
-        appAlert('⚠️ FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
+        appAlert('FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
         console.log('FAQ 카테고리 데이터 오류:', GetFAQCategoriesApi.data?.payload?.message);
       }
     };

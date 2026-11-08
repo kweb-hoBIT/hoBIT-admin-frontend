@@ -201,7 +201,7 @@ const SeniorFAQDetailForm: React.FC<SeniorFAQDetailFormProps> = ({
         })}
       </div>
 
-      {/* ✅ 실제 사용자 기준 미리보기 */}
+      {/* 실제 사용자 기준 미리보기 */}
       <div>
         <SeniorFAQPreview
           maincategory_ko={maincategory_ko}

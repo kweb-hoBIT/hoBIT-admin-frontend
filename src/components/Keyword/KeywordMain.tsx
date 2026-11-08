@@ -11,6 +11,7 @@ import {
 import { appAlert, appConfirm } from '../ui/Dialog';
 import KeywordEditor from './KeywordEditor';
 import { matchRules, tokenSuggestions } from './keywordMatch';
+import Icon from '../ui/Icon';
 
 export type FaqOption = { faq_id: number; question_ko: string; maincategory_ko: string };
 
@@ -52,7 +53,7 @@ const Tester: React.FC<{ rules: KeywordRule[]; faqs: FaqOption[] }> = ({ rules, 
             <ol className="flex flex-col divide-y divide-line rounded-xl border border-line">
               {list.map((q, i) => (
                 <li key={q} className="reveal flex items-center gap-2 px-3 py-2.5 text-sm" style={{ animationDelay: `${i * 40}ms` }}>
-                  {pinnedSet.has(q) && <span title="고정된 추천 질문">📌</span>}
+                  {pinnedSet.has(q) && <Icon name="pin" className="h-3.5 w-3.5 text-accent-ink" title="고정된 추천 질문" />}
                   <span className={pinnedSet.has(q) ? 'font-semibold text-ink' : 'text-ink-2'}>{q}</span>
                 </li>
               ))}
@@ -165,7 +166,7 @@ const KeywordMain: React.FC = () => {
                         <ul className="space-y-1">
                           {rule.pinned_faqs.map((p, order) => (
                             <li key={p.faq_id} className="flex items-center gap-2 text-sm">
-                              <span className="text-xs font-bold text-accent-ink">📌 {order + 1}</span>
+                              <span className="inline-flex items-center gap-1 text-xs font-bold text-accent-ink"><Icon name="pin" className="h-3.5 w-3.5" />{order + 1}</span>
                               <span className={p.question_ko ? 'text-ink' : 'text-danger'}>
                                 {p.question_ko ?? `삭제된 FAQ (#${p.faq_id})`}
                               </span>

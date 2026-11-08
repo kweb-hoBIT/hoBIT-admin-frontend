@@ -10,6 +10,7 @@ import LiveChatCard from './LiveChatCard';
 import NoticeChangesCard from './NoticeChangesCard';
 import QualityCard, { TestsStatus } from './QualityCard';
 import { THEME_EVENT } from '../../theme';
+import Icon from '../ui/Icon';
 
 type Dashboard = GetDashboardResponse['data'];
 
@@ -139,8 +140,14 @@ const DailyChart: React.FC<{ daily: Dashboard['daily'] }> = ({ daily }) => {
 };
 
 /** 순위 막대 목록 — 막대가 차례로 뻗어 나감 */
-const RankBars: React.FC<{ items: { label: string; count: number; to?: string }[]; empty: string }> = ({ items, empty }) => {
-  if (!items.length) return <p className="py-6 text-center text-sm text-ink-3">{empty}</p>;
+const RankBars: React.FC<{ items: { label: string; count: number; to?: string }[]; empty: string; emptyIcon?: boolean }> = ({ items, empty, emptyIcon }) => {
+  if (!items.length)
+    return (
+      <p className="flex items-center justify-center gap-1.5 py-6 text-center text-sm text-ink-3">
+        {empty}
+        {emptyIcon && <Icon name="party" className="h-4 w-4 text-accent-ink" />}
+      </p>
+    );
   const max = Math.max(...items.map((i) => i.count));
   return (
     <ol className="flex flex-col gap-3">
@@ -421,7 +428,7 @@ const Home: React.FC = () => {
             {!dash ? (
               <Placeholder failed={failed} className="h-[180px]" />
             ) : dash.recent_feedbacks.length === 0 ? (
-              <p className="py-10 text-center text-sm text-ink-3">해결 안 된 피드백이 없어요 🎉</p>
+              <p className="flex items-center justify-center gap-1.5 py-10 text-center text-sm text-ink-3">해결 안 된 피드백이 없어요 <Icon name="party" className="h-4 w-4 text-accent-ink" /></p>
             ) : (
               <ul className="flex flex-col divide-y divide-line">
                 {dash.recent_feedbacks.slice(0, 4).map((f, i) => (
@@ -461,7 +468,8 @@ const Home: React.FC = () => {
             {dash ? (
               <RankBars
                 items={dash.top_questions.map((q) => ({ label: q.question, count: q.count, to: `/faqs/create?question=${encodeURIComponent(q.question)}` }))}
-                empty="이번 주에는 답을 못 찾은 질문이 없어요 🎉"
+                empty="이번 주에는 답을 못 찾은 질문이 없어요"
+                emptyIcon
               />
             ) : (
               <Placeholder failed={failed} className="h-[200px]" />

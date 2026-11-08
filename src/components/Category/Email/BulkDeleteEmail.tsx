@@ -6,6 +6,7 @@ import { useHobitMutateDeleteApi, useHobitQueryGetApi } from '../../../hooks/hob
 import { BulkDeleteEmailRequest, BulkDeleteEmailResponse, GetAllEmailsRequest, GetAllEmailsResponse } from '../../../types/email';
 
 import { appAlert } from '../../ui/Dialog';
+import Icon from '../../ui/Icon';
 const BulkDeleteEmail: React.FC = () => {
   const { user_id } = useSelector((state: RootState) => selectAuth(state));
   const [email, setEmail] = useState('');
@@ -145,7 +146,7 @@ const BulkDeleteEmail: React.FC = () => {
 
         <div className="mt-6 p-4 bg-danger-soft border border-danger/40 rounded-xl">
           <p className="text-sm text-danger">
-            <strong>⚠️ 주의사항:</strong>
+            <strong className="inline-flex items-center gap-1"><Icon name="alert" className="h-4 w-4" />주의사항:</strong>
             <br />
             이 작업은 되돌릴 수 없습니다. 해당 이메일이 모든 FAQ에서 삭제됩니다.
           </p>
@@ -167,7 +168,8 @@ const BulkDeleteEmail: React.FC = () => {
               </p>
             </div>
             <p className="text-sm text-danger mb-4">
-              ⚠️ 이 작업은 되돌릴 수 없습니다.
+              <Icon name="alert" className="mr-1 h-4 w-4" />
+              이 작업은 되돌릴 수 없습니다.
             </p>
             <div className="flex space-x-3">
               <button
