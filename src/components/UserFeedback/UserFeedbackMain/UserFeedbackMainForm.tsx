@@ -9,6 +9,7 @@ import SelectUserFeedback from './SelectUserFeedback';
 import UserFeedbackDelete from './UserFeedbackDelete';
 import BulkDeleteFeedbackModal from './BulkDeleteFeedbackModal';
 import { useIncremental } from '../../../hooks/useIncremental';
+import { useListCache } from '../../../hooks/listCache';
 import { ListEnd, ListHeader, CardFooter } from '../../ui/ListKit';
 import { revealRef } from '../../ui/motion';
 
@@ -37,14 +38,15 @@ const LANG_FILTER_KEY = 'hobit-admin-feedback-lang';
 
 const langOf = (feedback: { language?: string }) => ((feedback.language || '').toUpperCase() === 'EN' ? 'EN' : 'KO');
 
-const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbacks }) => {
+type Feedback = GetAllUserFeedbackResponse['data']['userFeedbacks'][number];
+
+const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbacks: feedbacks }) => {
   const dispatch = useDispatch();
   const { storedFilterName } = useSelector((state: RootState) => selectUserFeedbackFilter(state));
 
   const [filter, setFilter] = useState<'unresolved' | 'resolved'>(
     storedFilterName as 'unresolved' | 'resolved' || 'unresolved'
   );
-  const [feedbacks, setFeedbacks] = useState(userFeedbacks);
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
   // 피드백을 남긴 화면 언어로 거르기 — 영어 사용자(대부분 외국인 학생) 피드백만 모아 보기
   const [langFilter, setLangFilter] = useState<LangFilter>(() => {
@@ -62,10 +64,6 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
   };
 
   useEffect(() => {
-    setFeedbacks(userFeedbacks);
-  }, [userFeedbacks]);
-
-  useEffect(() => {
     dispatch(setUserFeedbackFilterName(filter));
   }, [dispatch, filter]);
 
@@ -81,11 +79,17 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
   }, [feedbacks, filter, langFilter]);
 
   // 처음 20개, 내려가면 20개씩 더 — 해결 여부·언어를 바꾸면 처음부터
-  const { shown, total, hasMore, sentinelRef } = useIncremental(filteredFeedbacks, `${filter}|${langFilter}`);
+  const { shown, total, hasMore, sentinelRef, listRef } = useIncremental(filteredFeedbacks, `${filter}|${langFilter}`);
 
+  // 완료·보류·삭제는 받아 둔 목록을 바로 고침 — 새로고침하지 않아 지금 탭의 그리던 개수·스크롤 그대로
+  // (바뀐 카드는 다른 탭으로 옮겨 가고, 아래 카드가 그 자리를 채움)
+  const { patch, refetch } = useListCache();
   const handleResolvedChange = (id: number, resolved: number) => {
-    setFeedbacks((prev) => prev.map((feedback) => (feedback.user_feedback_id === id ? { ...feedback, resolved } : feedback)));
+    const toggle = (list: Feedback[]) => list.map((f) => (f.user_feedback_id === id ? { ...f, resolved } : f));
+    patch<Feedback>('feedbacks/user', 'userFeedbacks', toggle, false); // 서버는 이미 바뀌어 다시 받지 않음
   };
+  const handleDeleted = (id: number) =>
+    patch<Feedback>('feedbacks/user', 'userFeedbacks', (list) => list.filter((feedback) => feedback.user_feedback_id !== id));
 
   return (
     <section className="panel">
@@ -130,7 +134,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
             }
           />
         <div>
-          <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
+          <div ref={listRef} className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             {shown.map((feedback) => (
               <div key={feedback.user_feedback_id} ref={revealRef} className="relative bg-card-2 p-3.5 sm:p-4 rounded-xl">
                 <div className="break-words">
@@ -165,7 +169,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                     initialResolved={feedback.resolved ? 1 : 0}
                     onResolvedChange={handleResolvedChange}
                   />
-                  <UserFeedbackDelete user_feedback_id={String(feedback.user_feedback_id)} onSuccess={() => window.location.reload()} />
+                  <UserFeedbackDelete user_feedback_id={String(feedback.user_feedback_id)} onSuccess={() => handleDeleted(feedback.user_feedback_id)} />
                 </CardFooter>
               </div>
             ))}
@@ -183,7 +187,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
           onClose={() => setShowBulkDeleteModal(false)}
           onSuccess={() => {
             setShowBulkDeleteModal(false);
-            window.location.reload();
+            refetch('feedbacks/user'); // 새로고침 대신 목록만 다시 받음
           }}
         />
       )}

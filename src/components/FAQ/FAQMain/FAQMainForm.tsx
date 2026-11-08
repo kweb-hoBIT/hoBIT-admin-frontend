@@ -15,6 +15,7 @@ import { GetAllFAQResponse } from '../../../types/faq';
 import { FAQAudienceBadge } from '../FAQAudienceField';
 import FAQExcelButtons from '../FAQExcel/FAQExcelButtons';
 import { useIncremental } from '../../../hooks/useIncremental';
+import { useListCache } from '../../../hooks/listCache';
 import { ListEnd, ListHeader, CardMore } from '../../ui/ListKit';
 import { revealRef } from '../../ui/motion';
 import Icon from '../../ui/Icon';
@@ -52,8 +53,14 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' 
     return sortFAQs(matched, faqSortValue);
   }, [faqs, filter, selectedFilter, faqSortValue]);
 
-  // 처음 20개, 내려가면 20개씩 더 — 검색어·정렬이 바뀌면 처음부터
-  const { shown, total, hasMore, sentinelRef } = useIncremental(filteredFaqs, `${selectedFilter}|${filter}|${faqSortValue}`);
+  // 처음 20개, 내려가면 20개씩 더 — 검색어·정렬이 바뀌면 처음부터. 상세·수정 화면에 다녀오면 보던 자리로
+  const { shown, total, hasMore, sentinelRef, listRef } = useIncremental(filteredFaqs, `${selectedFilter}|${filter}|${faqSortValue}`, {
+    restoreFrom: /^\/faqs\/(?!graduate\/?$)./,
+  });
+  // 지우면 목록에서 바로 빼고 뒤에서 다시 받음 (새로고침하지 않아 보던 자리 그대로)
+  const { patch } = useListCache();
+  const removeFaq = (id: number) =>
+    patch<GetAllFAQResponse['data']['faqs'][number]>('faqs', 'faqs', (list) => list.filter((f) => f.faq_id !== id));
 
   return (
     <div className="my-6 p-3 sm:p-6 bg-surface rounded-2xl border border-line">
@@ -84,7 +91,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' 
           right={<FAQExcelButtons />}
         />
         <div>
-          <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
+          <div ref={listRef} className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             {shown.map(faq => (
               <div
                 key={faq.faq_id}
@@ -122,7 +129,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' 
                     >
                       <Icon name="pencil" className="h-[18px] w-[18px]" />
                     </button>
-                    <FAQDelete faq_id={String(faq.faq_id)} question_ko={faq.question_ko} onSuccess={() => window.location.reload()} compact />
+                    <FAQDelete faq_id={String(faq.faq_id)} question_ko={faq.question_ko} onSuccess={() => removeFaq(faq.faq_id)} compact />
                   </div>
                   <span className="pr-1.5"><CardMore /></span>
                 </div>

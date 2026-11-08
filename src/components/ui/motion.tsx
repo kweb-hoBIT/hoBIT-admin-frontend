@@ -130,11 +130,13 @@ function getObserver(): IntersectionObserver | null {
       const hits = entries
         .filter((e) => e.isIntersecting)
         .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top || a.boundingClientRect.left - b.boundingClientRect.left);
-      hits.forEach((e, i) => {
-        sharedObserver?.unobserve(e.target);
-        watching.delete(e.target);
-        show(e.target, Math.min(i * STAGGER_MS, STAGGER_MAX_MS));
-      });
+      hits
+        .filter((e) => !e.target.hasAttribute('data-shown')) // 이미 바로 보이게 한 항목(markShown)은 다시 움직이지 않게
+        .forEach((e, i) => {
+          sharedObserver?.unobserve(e.target);
+          watching.delete(e.target);
+          show(e.target, Math.min(i * STAGGER_MS, STAGGER_MAX_MS));
+        });
     },
     { rootMargin: '0px 0px -24px 0px' }
   );
@@ -166,6 +168,14 @@ export const revealRef = (el: HTMLElement | null) => {
     sweepQueued = true;
     window.setTimeout(sweep, 1000);
   }
+};
+
+/** 나타나기 움직임 없이 바로 보이게 — 상세 화면에 다녀와 목록 위치를 되살릴 때 (이미 본 카드가 다시 떠오르지 않게) */
+export const markShown = (el: Element) => {
+  if (!el.hasAttribute('data-sr') || el.getAttribute('data-shown') === 'done') return;
+  sharedObserver?.unobserve(el);
+  watching.delete(el);
+  el.setAttribute('data-shown', 'done');
 };
 
 /** 스크롤해서 보일 때 나타나는 묶음 상자 (index·step은 예전 호출과 맞추려고 남겨 둔 것 — 순서는 화면 위치로 정해요) */

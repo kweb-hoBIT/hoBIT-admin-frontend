@@ -15,6 +15,7 @@ import SeniorFAQSort, { sortSeniorFAQs } from './SeniorFAQSort';
 import FAQExcelButtons from '../../FAQ/FAQExcel/FAQExcelButtons';
 import { useChat } from '../../Chat/ChatProvider';
 import { useIncremental } from '../../../hooks/useIncremental';
+import { useListCache } from '../../../hooks/listCache';
 import { ListEnd, ListHeader, CardMore } from '../../ui/ListKit';
 import { revealRef } from '../../ui/motion';
 import Icon from '../../ui/Icon';
@@ -52,7 +53,18 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
   }, [seniorFaqs, filter, selectedFilter, seniorFaqSortValue]);
 
   // 처음 20개, 내려가면 20개씩 더 — 검색어·정렬이 바뀌면 처음부터
-  const { shown, total, hasMore, sentinelRef } = useIncremental(filteredSeniorFaqs, `${selectedFilter}|${filter}|${seniorFaqSortValue}`);
+  // 상세·수정 화면에 다녀오면 보던 자리로
+  const { shown, total, hasMore, sentinelRef, listRef } = useIncremental(
+    filteredSeniorFaqs,
+    `${selectedFilter}|${filter}|${seniorFaqSortValue}`,
+    { restoreFrom: /^\/seniorfaqs\/./ }
+  );
+  // 지우면 목록에서 바로 빼고 뒤에서 다시 받음 (새로고침하지 않아 보던 자리 그대로)
+  const { patch } = useListCache();
+  const removeSeniorFaq = (id: number) =>
+    patch<GetAllSeniorFAQResponse['data']['seniorFaqs'][number]>('seniorfaqs', 'seniorFaqs', (list) =>
+      list.filter((f) => f.senior_faq_id !== id)
+    );
 
   return (
     <div className="my-6 p-3 sm:p-6 bg-surface rounded-2xl border border-line">
@@ -83,7 +95,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
           right={role !== 'senior' ? <FAQExcelButtons /> : undefined}
         />
         <div>
-          <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
+          <div ref={listRef} className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             {shown.map(faq => (
               <div
                 key={faq.senior_faq_id}
@@ -112,7 +124,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
                     >
                       <Icon name="pencil" className="h-[18px] w-[18px]" />
                     </button>
-                    <SeniorFAQDelete senior_faq_id={String(faq.senior_faq_id)} detailcategory_ko={faq.detailcategory_ko} onSuccess={() => window.location.reload()} compact />
+                    <SeniorFAQDelete senior_faq_id={String(faq.senior_faq_id)} detailcategory_ko={faq.detailcategory_ko} onSuccess={() => removeSeniorFaq(faq.senior_faq_id)} compact />
                   </div>
                   <span className="pr-1.5"><CardMore /></span>
                 </div>

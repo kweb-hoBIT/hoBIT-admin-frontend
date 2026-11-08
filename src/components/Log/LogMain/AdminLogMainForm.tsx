@@ -3,6 +3,7 @@ import { GetAllAdminLogResponse } from '../../../types/adminLog';
 import { useNavigate } from 'react-router-dom';
 import BulkDeleteAdminLogModal from './BulkDeleteAdminLogModal';
 import { useIncremental } from '../../../hooks/useIncremental';
+import { useListCache } from '../../../hooks/listCache';
 import { ListEnd, ListHeader, CardMore } from '../../ui/ListKit';
 import { revealRef } from '../../ui/motion';
 
@@ -29,8 +30,9 @@ interface AdminLogMainFormProps {
 const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
   const navigate = useNavigate();
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
-  // 처음 20개, 내려가면 20개씩 더
-  const { shown, total, hasMore, sentinelRef } = useIncremental(adminLogs);
+  // 처음 20개, 내려가면 20개씩 더 — 로그 상세에 다녀오면 보던 자리로
+  const { shown, total, hasMore, sentinelRef, listRef } = useIncremental(adminLogs, null, { restoreFrom: /^\/adminlogs\// });
+  const { refetch } = useListCache();
 
   const handleLogClick = (log: any) => {
     const path = log.log_type === 'faq_log' ? `/adminlogs/faqlogs/${log.log_id}` : `/adminlogs/seniorfaqlogs/${log.log_id}`;
@@ -55,7 +57,7 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
           }
         />
         <div>
-          <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
+          <div ref={listRef} className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             {shown.map(log => (
               <div
                 key={`${log.log_id}-${log.log_type}`}
@@ -119,7 +121,7 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
           onClose={() => setShowBulkDeleteModal(false)}
           onSuccess={() => {
             setShowBulkDeleteModal(false);
-            window.location.reload();
+            refetch('adminlogs'); // 새로고침 대신 목록만 다시 받음
           }}
         />
       )}

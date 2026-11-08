@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { GetAllQuestionLogResponse } from '../../../types/questionLog';
 import BulkDeleteQuestionLogModal from './BulkDeleteQuestionLogModal';
 import { useIncremental } from '../../../hooks/useIncremental';
+import { useListCache } from '../../../hooks/listCache';
 import { ListEnd, ListHeader } from '../../ui/ListKit';
 import { revealRef } from '../../ui/motion';
 
@@ -28,7 +29,8 @@ interface QuestionLogMainFormProps {
 const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs }) => {
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
   // 처음 20개, 내려가면 20개씩 더
-  const { shown, total, hasMore, sentinelRef } = useIncremental(questionLogs);
+  const { shown, total, hasMore, sentinelRef, listRef } = useIncremental(questionLogs);
+  const { refetch } = useListCache();
 
   return (
     <div className="p-3 sm:p-6">
@@ -48,7 +50,7 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
           }
         />
         <div>
-          <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
+          <div ref={listRef} className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             {shown.map((log) => (
               <div ref={revealRef} className="list-item-cv relative bg-card-2 p-3.5 sm:p-4 rounded-xl" key={log.question_log_id}>
                 <div className="mb-2 break-words">
@@ -80,7 +82,7 @@ const QuestionLogMainForm: React.FC<QuestionLogMainFormProps> = ({ questionLogs 
           onClose={() => setShowBulkDeleteModal(false)}
           onSuccess={() => {
             setShowBulkDeleteModal(false);
-            window.location.reload();
+            refetch('questionlogs'); // 새로고침 대신 목록만 다시 받음
           }}
         />
       )}
