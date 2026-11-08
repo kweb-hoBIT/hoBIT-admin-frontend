@@ -3,7 +3,7 @@ import { GetAllAdminLogResponse } from '../../../types/adminLog';
 import { useNavigate } from 'react-router-dom';
 import BulkDeleteAdminLogModal from './BulkDeleteAdminLogModal';
 import { useIncremental } from '../../../hooks/useIncremental';
-import { ListEnd, ListHeader } from '../../ui/ListKit';
+import { ListEnd, ListHeader, CardFooter } from '../../ui/ListKit';
 import { revealRef } from '../../ui/motion';
 
 
@@ -63,7 +63,7 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
                 className="list-item-cv relative bg-card-2 p-4 rounded-xl cursor-pointer"
                 onClick={() => handleLogClick(log)}
               >
-                <div className="pr-24">
+                <div>
                   <div className="mb-2">
                     <strong>수정 유저: {log.username}</strong>
                   </div>
@@ -98,6 +98,7 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
                     </div>
                   </div>
                 </div>
+                <CardFooter onMore={() => handleLogClick(log)} />
               </div>
             ))}
           </div>

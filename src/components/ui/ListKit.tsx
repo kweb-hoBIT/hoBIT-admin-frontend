@@ -156,3 +156,52 @@ export const ScrollTopFab: React.FC = () => {
     </button>
   );
 };
+
+/**
+ * 카드 아래 줄 — 왼쪽 '더보기'(상세 화면으로 가거나 카드 안에서 펼치기), 오른쪽 버튼들(수정·삭제·완료 등)을 한 줄에
+ * (예전엔 버튼이 카드 위·아래 끝에 떨어져 있어 가운데가 비고, 글이 버튼 자리만큼 좁았음)
+ */
+export const CardFooter: React.FC<{
+  onMore?: () => void;
+  expanded?: boolean; // 펼치기 카드면 true/false, 상세 화면으로 가는 카드면 undefined
+  children?: React.ReactNode;
+}> = ({ onMore, expanded, children }) => (
+  <div className="mt-3 flex items-center justify-between gap-2 border-t border-line/70 pt-3">
+    {onMore ? (
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onMore();
+        }}
+        aria-expanded={expanded}
+        className="-ml-1 inline-flex min-h-[36px] items-center gap-0.5 rounded-lg px-1 text-sm font-semibold text-accent-ink hover:underline"
+      >
+        {expanded === undefined ? '더보기' : expanded ? '접기' : '더보기'}
+        <svg viewBox="0 0 20 20" className={`h-4 w-4 transition-transform ${expanded === undefined ? '-rotate-90' : expanded ? 'rotate-180' : ''}`} aria-hidden="true">
+          <path d="M5.5 7.5 10 12l4.5-4.5" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+    ) : (
+      <span />
+    )}
+    {children && (
+      <div className="flex shrink-0 items-center gap-2" onClick={(e) => e.stopPropagation()}>
+        {children}
+      </div>
+    )}
+  </div>
+);
+
+/** 카드 안 펼치기 상태 (id별) */
+export function useExpanded<K>() {
+  const [open, setOpen] = useState<Set<K>>(() => new Set());
+  const toggle = (k: K) =>
+    setOpen((prev) => {
+      const next = new Set(prev);
+      if (next.has(k)) next.delete(k);
+      else next.add(k);
+      return next;
+    });
+  return { isOpen: (k: K) => open.has(k), toggle };
+}

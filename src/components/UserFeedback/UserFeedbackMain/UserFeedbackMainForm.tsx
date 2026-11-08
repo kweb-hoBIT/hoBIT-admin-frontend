@@ -9,7 +9,7 @@ import SelectUserFeedback from './SelectUserFeedback';
 import UserFeedbackDelete from './UserFeedbackDelete';
 import BulkDeleteFeedbackModal from './BulkDeleteFeedbackModal';
 import { useIncremental } from '../../../hooks/useIncremental';
-import { ListEnd, ListHeader } from '../../ui/ListKit';
+import { ListEnd, ListHeader, CardFooter, useExpanded } from '../../ui/ListKit';
 import { revealRef } from '../../ui/motion';
 
 
@@ -38,6 +38,7 @@ const LANG_FILTER_KEY = 'hobit-admin-feedback-lang';
 const langOf = (feedback: { language?: string }) => ((feedback.language || '').toUpperCase() === 'EN' ? 'EN' : 'KO');
 
 const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbacks }) => {
+  const expand = useExpanded<number>(); // 긴 피드백은 두 줄까지, 더보기로 펼침
   const dispatch = useDispatch();
   const { storedFilterName } = useSelector((state: RootState) => selectUserFeedbackFilter(state));
 
@@ -133,24 +134,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
           <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             {shown.map((feedback) => (
               <div key={feedback.user_feedback_id} ref={revealRef} className="relative bg-card-2 p-4 rounded-xl">
-                {/* 완료·보류 버튼 */}
-                <UserFeedbackResolvedUpdate
-                  user_feedback_id={feedback.user_feedback_id}
-                  initialResolved={feedback.resolved ? 1 : 0}
-                  onResolvedChange={handleResolvedChange}
-                />
-              
-                {/* 삭제 버튼 */}
-                <div
-                  className="absolute bottom-5 right-5"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <UserFeedbackDelete
-                    user_feedback_id={String(feedback.user_feedback_id)}
-                    onSuccess={() => window.location.reload()}
-                  />
-                </div>
-                <div className="pr-24">
+                <div className={expand.isOpen(feedback.user_feedback_id) ? '' : '[&>div:last-child>div]:line-clamp-2'}>
                   <div className="mb-2 flex items-start gap-2">
                       <LanguageBadge language={feedback.language} className="mt-0.5" />
                       <strong> {feedback.question_ko ? (
@@ -176,6 +160,14 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                     </div>
                   </div>
                 </div>
+                <CardFooter onMore={() => expand.toggle(feedback.user_feedback_id)} expanded={expand.isOpen(feedback.user_feedback_id)}>
+                  <UserFeedbackResolvedUpdate
+                    user_feedback_id={feedback.user_feedback_id}
+                    initialResolved={feedback.resolved ? 1 : 0}
+                    onResolvedChange={handleResolvedChange}
+                  />
+                  <UserFeedbackDelete user_feedback_id={String(feedback.user_feedback_id)} onSuccess={() => window.location.reload()} />
+                </CardFooter>
               </div>
             ))}
           </div>

@@ -15,7 +15,7 @@ import { GetAllFAQResponse } from '../../../types/faq';
 import { FAQAudienceBadge } from '../FAQAudienceField';
 import FAQExcelButtons from '../FAQExcel/FAQExcelButtons';
 import { useIncremental } from '../../../hooks/useIncremental';
-import { ListEnd, ListHeader } from '../../ui/ListKit';
+import { ListEnd, ListHeader, CardFooter } from '../../ui/ListKit';
 import { revealRef } from '../../ui/motion';
 import Icon from '../../ui/Icon';
 
@@ -92,26 +92,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' 
                 className="relative bg-card-2 p-4 rounded-xl cursor-pointer"
                 onClick={() => navigate(`/faqs/${faq.faq_id}`)}
               >
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate(`/faqs/update/${faq.faq_id}`);
-                  }}
-                  className="absolute top-5 right-5 bg-accent text-white px-4 py-2 rounded-xl hover:bg-accent/90"
-                >
-                  수정
-                </button>
-                <div
-                  className="absolute bottom-5 right-5"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <FAQDelete
-                    faq_id={String(faq.faq_id)}
-                    question_ko={faq.question_ko}
-                    onSuccess={() => window.location.reload()}
-                  />
-                </div>
-                <div className="pr-24">
+                <div>
                   <div className="mb-2 flex items-start gap-2">
                     <strong>질문: {faq.question_ko}</strong>
                     <FAQAudienceBadge audience={faq.audience} />
@@ -128,6 +109,12 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' 
                     </div>
                   </div>
                 </div>
+                <CardFooter onMore={() => navigate(`/faqs/${faq.faq_id}`)}>
+                  <button onClick={() => navigate(`/faqs/update/${faq.faq_id}`)} className="bg-accent text-white px-4 py-2 rounded-xl hover:bg-accent/90">
+                    수정
+                  </button>
+                  <FAQDelete faq_id={String(faq.faq_id)} question_ko={faq.question_ko} onSuccess={() => window.location.reload()} />
+                </CardFooter>
               </div>
             ))}
           </div>

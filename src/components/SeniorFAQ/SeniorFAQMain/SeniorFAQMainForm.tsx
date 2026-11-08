@@ -15,7 +15,7 @@ import SeniorFAQSort, { sortSeniorFAQs } from './SeniorFAQSort';
 import FAQExcelButtons from '../../FAQ/FAQExcel/FAQExcelButtons';
 import { useChat } from '../../Chat/ChatProvider';
 import { useIncremental } from '../../../hooks/useIncremental';
-import { ListEnd, ListHeader } from '../../ui/ListKit';
+import { ListEnd, ListHeader, CardFooter } from '../../ui/ListKit';
 import { revealRef } from '../../ui/motion';
 import Icon from '../../ui/Icon';
 
@@ -91,23 +91,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
                 className="relative bg-card-2 p-4 rounded-xl cursor-pointer"
                 onClick={() => navigate(`/seniorfaqs/${faq.senior_faq_id}`)}
               >
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate(`/seniorfaqs/update/${faq.senior_faq_id}`);
-                  }}
-                  className="absolute top-5 right-5 bg-accent text-white px-4 py-2 rounded-xl hover:bg-accent/90"
-                >
-                  수정
-                </button>
-                <div className="absolute bottom-5 right-5" onClick={(e) => e.stopPropagation()}>
-                  <SeniorFAQDelete
-                    senior_faq_id={String(faq.senior_faq_id)}
-                    detailcategory_ko={faq.detailcategory_ko}
-                    onSuccess={() => window.location.reload()}
-                  />
-                </div>
-                <div className="pr-24">
+                <div>
                   <div className="mb-2"><strong>세부 카테고리: {faq.detailcategory_ko}</strong></div>
                   <div className="flex flex-col">
                     <div className="mb-1 text-sm text-ink-2"><strong>주요 카테고리:</strong> {faq.maincategory_ko}</div>
@@ -115,6 +99,12 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
                     <div className="mb-1 text-sm text-ink-2"><strong>관리자:</strong> {faq.manager}</div>
                   </div>
                 </div>
+                <CardFooter onMore={() => navigate(`/seniorfaqs/${faq.senior_faq_id}`)}>
+                  <button onClick={() => navigate(`/seniorfaqs/update/${faq.senior_faq_id}`)} className="bg-accent text-white px-4 py-2 rounded-xl hover:bg-accent/90">
+                    수정
+                  </button>
+                  <SeniorFAQDelete senior_faq_id={String(faq.senior_faq_id)} detailcategory_ko={faq.detailcategory_ko} onSuccess={() => window.location.reload()} />
+                </CardFooter>
               </div>
             ))}
           </div>
