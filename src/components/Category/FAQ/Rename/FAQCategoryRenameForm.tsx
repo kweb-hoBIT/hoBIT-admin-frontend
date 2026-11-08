@@ -54,8 +54,8 @@ const FAQCategoryRenameForm: React.FC<FAQCategoryRenameFormProps> = ({
   }, [selectedMainCategory, renameData.category_field, categories]);
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-4.5rem)] py-10"> {/* 화면 가운데에 고정 */}
-      <div className="p-6 bg-surface rounded-xl shadow-md w-full max-w-lg">
+    <div className="flex items-center justify-center py-6 sm:min-h-[calc(100vh-4.5rem)] sm:py-10"> {/* 화면 가운데에 고정 */}
+      <div className="p-4 sm:p-6 bg-surface rounded-xl shadow-md w-full max-w-lg">
       <h1 className="text-xl sm:text-2xl font-bold text-ink text-center mb-6">FAQ 카테고리 이름 변경</h1>
       <p className="text-center mb-4">해당되는 카테고리를 한번에 바꿀 수 있습니다.</p>
     

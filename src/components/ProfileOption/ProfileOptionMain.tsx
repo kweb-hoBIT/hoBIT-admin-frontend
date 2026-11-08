@@ -197,13 +197,14 @@ const ProfileOptionMain: React.FC = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-[minmax(0,1fr)_340px] items-start gap-4">
+      {/* lg 미만: 안내 상자를 목록 아래로 */}
+      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="flex flex-col gap-4">
           {SECTIONS.map((section) => {
             const list = options.filter((o) => o.field === section.field);
             return (
               <section key={section.field} className="panel !my-0">
-                <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-4">
+                <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-4 sm:px-5">
                   <div>
                     <h2 className="text-lg font-bold text-ink">{section.title}</h2>
                     <p className="text-sm text-ink-3">{section.desc}</p>
@@ -223,14 +224,14 @@ const ProfileOptionMain: React.FC = () => {
                 ) : (
                   <ul className="divide-y divide-line">
                     {list.map((o, i) => (
-                      <li key={o.id} className="group flex items-center gap-4 px-5 py-3 hover:bg-card/50">
+                      <li key={o.id} className="group flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 hover:bg-card/50 sm:flex-nowrap sm:px-5">
                         <div className="flex shrink-0 flex-col">
                           <button
                             type="button"
                             aria-label="위로"
                             disabled={busy || i === 0}
                             onClick={() => move(list, i, -1)}
-                            className="px-1 text-xs text-ink-3 hover:text-ink disabled:opacity-30"
+                            className="px-2 py-1 text-xs text-ink-3 hover:text-ink disabled:opacity-30 sm:px-1 sm:py-0"
                           >
                             ▲
                           </button>
@@ -239,16 +240,16 @@ const ProfileOptionMain: React.FC = () => {
                             aria-label="아래로"
                             disabled={busy || i === list.length - 1}
                             onClick={() => move(list, i, 1)}
-                            className="px-1 text-xs text-ink-3 hover:text-ink disabled:opacity-30"
+                            className="px-2 py-1 text-xs text-ink-3 hover:text-ink disabled:opacity-30 sm:px-1 sm:py-0"
                           >
                             ▼
                           </button>
                         </div>
-                        <div className="w-44 shrink-0">
+                        <div className="min-w-0 flex-1 sm:w-44 sm:flex-none sm:shrink-0">
                           <p className={`font-bold ${o.active ? 'text-ink' : 'text-ink-3 line-through'}`}>{o.value}</p>
                           <p className="text-xs text-ink-3">{o.label_en}</p>
                         </div>
-                        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
+                        <div className="flex min-w-0 basis-full flex-wrap items-center gap-1.5 sm:basis-auto sm:flex-1">
                           {o.aliases.map((a) => (
                             <span key={a} className="rounded-full bg-card px-2.5 py-1 text-xs font-medium text-ink-2">{a}</span>
                           ))}
@@ -259,11 +260,11 @@ const ProfileOptionMain: React.FC = () => {
                           )}
                           {!o.active && <span className="rounded-full bg-card-2 px-2.5 py-1 text-xs font-semibold text-ink-3">숨김</span>}
                         </div>
-                        <div className="flex shrink-0 gap-1 opacity-60 transition-opacity group-hover:opacity-100">
+                        <div className="-ml-3 flex shrink-0 gap-1 transition-opacity group-hover:opacity-100 sm:ml-0 [@media(hover:hover)]:opacity-60">
                           <button
                             type="button"
                             onClick={() => setEditing({ field: section.field, option: o })}
-                            className="rounded-full px-3 py-1.5 text-sm font-semibold text-ink hover:bg-card-2"
+                            className="min-h-[40px] rounded-full px-3 py-1.5 text-sm font-semibold sm:min-h-0 text-ink hover:bg-card-2"
                           >
                             수정
                           </button>
@@ -271,7 +272,7 @@ const ProfileOptionMain: React.FC = () => {
                             type="button"
                             disabled={busy}
                             onClick={() => toggle(o)}
-                            className="rounded-full px-3 py-1.5 text-sm font-semibold text-ink-2 hover:bg-card-2"
+                            className="min-h-[40px] rounded-full px-3 py-1.5 text-sm font-semibold sm:min-h-0 text-ink-2 hover:bg-card-2"
                           >
                             {o.active ? '숨기기' : '보이기'}
                           </button>
@@ -279,7 +280,7 @@ const ProfileOptionMain: React.FC = () => {
                             type="button"
                             disabled={busy}
                             onClick={() => remove(o)}
-                            className="rounded-full px-3 py-1.5 text-sm font-semibold text-danger hover:bg-danger-soft"
+                            className="min-h-[40px] rounded-full px-3 py-1.5 text-sm font-semibold sm:min-h-0 text-danger hover:bg-danger-soft"
                           >
                             삭제
                           </button>
@@ -293,7 +294,7 @@ const ProfileOptionMain: React.FC = () => {
           })}
         </div>
 
-        <section className="sticky top-20 rounded-2xl border border-line bg-surface p-5 text-sm text-ink-2">
+        <section className="rounded-2xl lg:sticky lg:top-20 border border-line bg-surface p-5 text-sm text-ink-2">
           <h2 className="mb-2 font-bold text-ink">어떻게 반영되나요?</h2>
           <ul className="list-disc space-y-1.5 pl-4">
             <li>저장하면 <b className="text-ink">1분 안에</b> 학생 화면 선택지와 질문 인식에 반영돼요.</li>

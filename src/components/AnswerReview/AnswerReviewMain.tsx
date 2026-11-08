@@ -97,7 +97,7 @@ const ReviewCard: React.FC<{ item: AnswerReview; done: boolean; onChanged: () =>
   };
 
   return (
-    <li className="rounded-2xl border border-line bg-surface p-5">
+    <li className="rounded-2xl border border-line bg-surface p-4 sm:p-5">
       <div className="flex flex-wrap items-center gap-1.5 text-xs text-ink-3">
         <span>{when(item.created_at)}</span>
         {item.feedback_score === -1 && <span className="inline-flex items-center rounded-full bg-danger-soft px-2 py-0.5 font-semibold text-danger"><Icon name="thumbsDown" className="h-3.5 w-3.5" title="도움 안 됨" /></span>}
@@ -146,21 +146,21 @@ const ReviewCard: React.FC<{ item: AnswerReview; done: boolean; onChanged: () =>
             title={c.tip}
             onClick={() => setCause(c.value)}
             disabled={done}
-            className={`rounded-full border px-3 py-1 text-sm ${cause === c.value ? 'border-accent bg-accent text-white' : 'border-line text-ink-2 hover:bg-card'}`}
+            className={`min-h-[40px] rounded-full border px-3 py-1 text-sm sm:min-h-0 ${cause === c.value ? 'border-accent bg-accent text-white' : 'border-line text-ink-2 hover:bg-card'}`}
           >
             {c.label}
           </button>
         ))}
         <span className="flex-1" />
-        <Link to={`/faqs/create?question=${encodeURIComponent(item.user_question)}`} className="rounded-lg border border-line px-3 py-1.5 text-sm text-ink-2 hover:bg-card">
+        <Link to={`/faqs/create?question=${encodeURIComponent(item.user_question)}`} className="inline-flex min-h-[40px] items-center rounded-lg border border-line px-3 py-1.5 text-sm text-ink-2 hover:bg-card sm:min-h-0">
           FAQ 만들기
         </Link>
         {done ? (
-          <button type="button" onClick={() => save('open')} className="rounded-lg border border-line px-3 py-1.5 text-sm text-ink-2">
+          <button type="button" onClick={() => save('open')} className="min-h-[40px] rounded-lg border border-line px-3 py-1.5 text-sm text-ink-2 sm:min-h-0">
             다시 확인할 목록으로
           </button>
         ) : (
-          <button type="button" onClick={() => save(cause === 'ok' ? 'ignored' : 'done')} className="rounded-lg bg-accent px-4 py-1.5 text-sm font-semibold text-white">
+          <button type="button" onClick={() => save(cause === 'ok' ? 'ignored' : 'done')} className="min-h-[40px] rounded-lg bg-accent px-4 py-1.5 text-sm font-semibold text-white sm:min-h-0">
             처리 완료
           </button>
         )}

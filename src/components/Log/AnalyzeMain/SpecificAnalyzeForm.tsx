@@ -48,7 +48,7 @@ const SpecificAnalyzeForm: React.FC<SpecificAnalyzeFormProps> = ({ analyzeData, 
   const renderField = (fieldName: string) => fieldTranslations[fieldName] || fieldName;
 
   return (
-    <div className="flex flex-col space-y-6 max-h-[1000px] p-8">
+    <div className="flex flex-col space-y-6 max-h-[1000px] p-0 sm:p-8">
     {/* 분석 결과 */}
     <div className="min-h-[400px] max-h-[800px] h-auto overflow-y-auto rounded-xl border border-line p-4 flex-1 bg-surface shadow-[0_2px_6px_rgba(0,0,0,0.1)]">
       <h2 className="text-xl sm:text-2xl font-semibold mb-6 text-center text-ink">
@@ -59,7 +59,7 @@ const SpecificAnalyzeForm: React.FC<SpecificAnalyzeFormProps> = ({ analyzeData, 
 
         {currentPageData.length > 0 ? (
           <div className="space-y-6">
-            <div className="flex justify-between mb-4">
+            <div className="flex flex-wrap justify-between gap-2 mb-4">
               <button
                 onClick={goToPreviousPage}
                 disabled={currentPage === 0}
@@ -79,7 +79,7 @@ const SpecificAnalyzeForm: React.FC<SpecificAnalyzeFormProps> = ({ analyzeData, 
             {currentPageData.map((groupData: any, index: number) => (
               <div key={index} className="mb-6">
                 <div className="flex justify-center mb-4">
-                  <h3 className="text-xl font-semibold text-ink">{`날짜: ${groupData.startDate} ~ ${groupData.endDate}`}</h3>
+                  <h3 className="text-base sm:text-xl font-semibold text-ink text-center">{`날짜: ${groupData.startDate} ~ ${groupData.endDate}`}</h3>
                 </div>
                 <div className="overflow-x-auto rounded-xl border border-line">
                   <table className="min-w-full table-auto">

@@ -96,8 +96,8 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
   );
 
   return (
-    <div className="flex-[0.25] w-full h-[500px] p-4 bg-card border border-line rounded-xl shadow-[0_2px_6px_rgba(0,0,0,0.1)] overflow-y-auto">
-      <div className="p-4 rounded-3xl max-w-sm mx-auto space-y-4">
+    <div className="w-full p-2 sm:p-4 lg:flex-[0.25] lg:h-[500px] bg-card border border-line rounded-xl shadow-[0_2px_6px_rgba(0,0,0,0.1)] overflow-y-auto">
+      <div className="p-2 sm:p-4 rounded-3xl max-w-sm mx-auto space-y-4">
         <h4 className="text-xl font-semibold text-ink">분석 필터 설정</h4>
         <div className="space-y-3">
           {/* FAQ 질문 검색 */}
@@ -114,7 +114,7 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
                 }, 100);
               }}
               placeholder="FAQ 질문을 입력하세요"
-              className="w-full p-1 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
+              className="w-full p-1 min-h-[40px] sm:min-h-0 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
             />
             {isFaqInputFocused && filteredFAQ.length > 0 && (
               <ul className="mt-2 bg-surface border border-line rounded-xl shadow-md max-h-[120px] overflow-y-auto">
@@ -137,7 +137,7 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
             <Select
               value={searchSubject}
               onChange={(e) => setSearchSubject(e.target.value)}
-              className="w-full p-1 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
+              className="w-full p-1 min-h-[40px] sm:min-h-0 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
             >
               <option value="frequency">FAQ 검색 빈도</option>
               <option value="feedback">FAQ 피드백 점수</option>
@@ -155,7 +155,7 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
                 setStartDate(null);
                 setEndDate(null);
               }}
-              className="w-full p-1 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
+              className="w-full p-1 min-h-[40px] sm:min-h-0 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
             >
               <option value="day">일</option>
               <option value="week">주</option>
@@ -170,7 +170,7 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
               selected={startDate}
               onChange={(date: Date | null) => setStartDate(date)}
               dateFormat="yyyy-MM-dd"
-              className="w-full p-1 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
+              className="w-full p-1 min-h-[40px] sm:min-h-0 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
               filterDate={(date) => !disableDates(date, "start")}
               placeholderText="시작 일자 선택"
               maxDate={endDate || undefined}
@@ -184,7 +184,7 @@ const SpecificAnalyzeFilter: React.FC<SpecificAnalyzeFilterProps> = ({ onApplyFi
               selected={endDate}
               onChange={(date: Date | null) => setEndDate(date)}
               dateFormat="yyyy-MM-dd"
-              className="w-full p-1 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
+              className="w-full p-1 min-h-[40px] sm:min-h-0 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
               filterDate={(date) => !disableDates(date, "end")}
               placeholderText="종료 일자 선택"
               minDate={startDate || undefined}

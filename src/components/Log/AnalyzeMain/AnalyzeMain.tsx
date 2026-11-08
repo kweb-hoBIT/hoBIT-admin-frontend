@@ -56,9 +56,10 @@ const AnalyzeMain: React.FC = () => {
   return (
     <section className="panel">
       <SelectAnalyze selectedAnalyze={selectedAnalyze} onFilterChange={handleFilterChange}/>
+      {/* lg 미만: 필터를 위에, 결과를 아래에 (flex-col-reverse) */}
       {selectedAnalyze === 'Entire' ? (
-        <div className="p-6 flex justify-between items-start gap-6">
-          <div className="flex-[0.75] flex flex-col gap-6 min-h-[500px] min-w-[300px] border border-line rounded-xl p-5 bg-page">
+        <div className="flex flex-col-reverse gap-4 p-3 sm:p-6 lg:flex-row lg:items-start lg:justify-between lg:gap-6">
+          <div className="flex min-w-0 flex-col gap-6 min-h-[300px] border border-line rounded-xl p-3 bg-page sm:p-5 lg:flex-[0.75] lg:min-h-[500px] lg:min-w-[300px]">
             {/* Analysis Results and Graph Section */}
             {showEntireAnalyze ? (
               <EntireAnalyze
@@ -81,8 +82,8 @@ const AnalyzeMain: React.FC = () => {
           <EntireAnalyzeFilter onApplyFilter={handleApplyEntireFilter} />
         </div>
       ) : (
-        <div className="p-6 flex justify-between items-start gap-6">
-          <div className="flex-[0.75] flex flex-col gap-6 min-h-[500px] min-w-[300px] border border-line rounded-xl p-5 bg-page">
+        <div className="flex flex-col-reverse gap-4 p-3 sm:p-6 lg:flex-row lg:items-start lg:justify-between lg:gap-6">
+          <div className="flex min-w-0 flex-col gap-6 min-h-[300px] border border-line rounded-xl p-3 bg-page sm:p-5 lg:flex-[0.75] lg:min-h-[500px] lg:min-w-[300px]">
             {/* Analysis Results and Graph Section */}
             {showSpecificAnalyze ? (
               <SpecificAnalyze

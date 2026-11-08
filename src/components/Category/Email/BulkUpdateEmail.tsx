@@ -88,8 +88,8 @@ const BulkUpdateEmail: React.FC = () => {
   );
 
   return (
-    <div className="flex justify-center items-center min-h-[calc(100vh-4.5rem)] py-10">
-      <div className="bg-surface p-8 rounded-xl shadow-lg w-full max-w-md">
+    <div className="flex justify-center items-center py-6 sm:min-h-[calc(100vh-4.5rem)] sm:py-10">
+      <div className="bg-surface p-5 sm:p-8 rounded-xl shadow-lg w-full max-w-md">
         <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center text-ink">
           이메일 전체 변경
         </h2>

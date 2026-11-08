@@ -56,7 +56,7 @@ const CategoryMain: React.FC<{ section?: 'category' | 'bulk' }> = ({ section = '
   // 근로장학생은 선배 FAQ 카테고리만
   const groups = role === 'senior' ? sec.groups.filter((g) => g.title === '선배 FAQ') : sec.groups;
   return (
-    <section className="panel p-6">
+    <section className="panel p-4 sm:p-6">
       <h4 className="text-xl font-bold text-ink">{sec.title}</h4>
       <p className="mt-1 text-sm text-ink-3">{sec.desc}</p>
       <div className={`mt-5 grid gap-4 ${groups.length > 1 ? 'md:grid-cols-2' : 'grid-cols-1'}`}>
