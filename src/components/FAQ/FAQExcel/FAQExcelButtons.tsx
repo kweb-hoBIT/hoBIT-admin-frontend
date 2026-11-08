@@ -22,9 +22,9 @@ const FAQExcelButtons: React.FC = () => {
 
   return (
     <>
-      <button type="button" onClick={download} disabled={downloading} className={btn}>
+      <button type="button" onClick={download} disabled={downloading} className={btn} title="학부·대학원·공통 FAQ, 선배 FAQ, 담당자, 이메일이 시트별로 들어 있어요">
         <Icon name="download" />
-        {downloading ? '만드는 중…' : '엑셀로 받기 (FAQ·선배 FAQ·담당자·이메일)'}
+        {downloading ? '만드는 중…' : '엑셀로 받기'}
       </button>
       <button type="button" onClick={() => setUploadOpen(true)} className={btn}>
         <Icon name="upload" />

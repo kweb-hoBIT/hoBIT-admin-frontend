@@ -14,12 +14,15 @@ import SeniorFAQFilter from './SeniorFAQFilter';
 import SeniorFAQSort from './SeniorFAQSort';
 import { selectSeniorFAQItemsPerPage, setSeniorFAQItemsPerPage } from '../../../redux/itemSlice';
 import Select from '../../ui/Select';
+import FAQExcelButtons from '../../FAQ/FAQExcel/FAQExcelButtons';
+import { useChat } from '../../Chat/ChatProvider';
 
 interface SeniorFAQMainFormProps {
   seniorFaqs: GetAllSeniorFAQResponse['data']['seniorFaqs'];
 }
 
 const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => {
+  const { role } = useChat();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isFirstRender = useRef(true);
@@ -89,7 +92,9 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
             setFilteredseniorFaqs={setFilteredSeniorFaqs}
           />
           </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              {/* 엑셀 파일 하나에 행정실 FAQ·선배 FAQ·담당자·이메일 — 근로장학생 계정은 선배 FAQ만 다뤄서 숨김 */}
+              {role !== 'senior' && <FAQExcelButtons />}
               <Select
                 value={itemsPerPage}
                 onChange={(e) => {
