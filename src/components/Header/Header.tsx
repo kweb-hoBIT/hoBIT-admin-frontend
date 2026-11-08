@@ -55,6 +55,7 @@ const NAV: NavGroup[] = [
     { path: "/categories", label: "카테고리" },
     { path: "/categories/profile-options", label: "프로필 항목" },
     { path: "/categories/bulk", label: "담당자·이메일" },
+    { path: "/categories/chat", label: "채팅" },
   ] },
   // 맨 뒤 — 대기·안 읽은 메시지가 있으면 배지, 좁아도 "더보기"로 접지 않음
   { key: "chats", label: "채팅", pin: true, children: [{ path: "/chats", label: "채팅" }] },
@@ -71,6 +72,7 @@ function activeNav(pathname: string): { group?: string; child?: string } {
   else if (at("/logs/admin") || pathname.startsWith("/adminlogs")) child = "/logs/admin";
   else if (at("/logs")) child = "/logs";
   else if (at("/categories/profile-options")) child = "/categories/profile-options";
+  else if (at("/categories/chat")) child = "/categories/chat";
   else if (at("/categories/bulk") || at("/categories/email") || at("/categories/admin")) child = "/categories/bulk";
   else if (at("/categories")) child = "/categories";
   else child = NAV.flatMap((g) => g.children).find((c) => at(c.path))?.path;

@@ -30,7 +30,7 @@ const Stat: React.FC<{ label: string; value: number; sub?: string; tone?: 'accen
 );
 
 const Row: React.FC<{ s: ListedSession; kind: 'waiting' | 'mine'; now: number; index: number }> = ({ s, kind, now, index }) => {
-  const { role } = useChat(); // 근로장학생은 전부 선배 채팅이라 배지 생략
+  const { role } = useChat(); // 근로장학생 계정은 전부 근로장학생 채팅이라 배지 생략
   const last = s.lastMessage;
   const preview = last
     ? `${last.sender === 'agent' ? '나: ' : ''}${last.attachment ? '[파일]' : last.body}`
@@ -48,7 +48,7 @@ const Row: React.FC<{ s: ListedSession; kind: 'waiting' | 'mine'; now: number; i
         <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${kind === 'waiting' ? 'animate-pulse bg-warn' : 'bg-success'}`} />
         <span className="min-w-0 flex-1">
           <span className="flex items-center gap-2">
-            {s.mode === 'senior' && role !== 'senior' && <Badge tone="senior">선배</Badge>}
+            {s.mode === 'senior' && role !== 'senior' && <Badge tone="senior">근로장학생</Badge>}
             <LanguageBadge language={s.language} />
             <span className="truncate text-sm font-semibold text-ink">{s.studentEmail}</span>
           </span>
@@ -93,7 +93,7 @@ const LiveChatCard: React.FC<{ className?: string }> = ({ className = '' }) => {
             <i className={`h-2 w-2 rounded-full ${connected ? 'bg-success' : 'bg-ink-3'}`} />
             {connected ? '연결됨' : '연결 중…'}
           </span>
-          {role === 'staff' && summary && <span className="text-xs text-ink-3">선배 {summary.seniorsAvailable}명 채팅 가능</span>}
+          {role === 'staff' && summary && <span className="text-xs text-ink-3">근로장학생 {summary.seniorsAvailable}명 채팅 가능</span>}
           <Link to="/chats" onMouseEnter={() => prefetchRoute('/chats')} className="ml-auto text-sm font-semibold text-accent-ink hover:underline">
             채팅 화면 →
           </Link>
@@ -109,7 +109,7 @@ const LiveChatCard: React.FC<{ className?: string }> = ({ className = '' }) => {
               label="안 읽은 메시지"
               value={summary?.unread ?? 0}
               // 행정실·개발자는 두 종류 채팅을 다 받으므로 나눠서 (근로장학생은 선배 채팅뿐)
-              sub={role !== 'senior' && summary?.unreadByMode ? `행정실 ${summary.unreadByMode.staff} · 선배 ${summary.unreadByMode.senior}` : undefined}
+              sub={role !== 'senior' && summary?.unreadByMode ? `행정실 ${summary.unreadByMode.staff} · 근로장학생 ${summary.unreadByMode.senior}` : undefined}
               tone="accent"
               delay={160}
             />

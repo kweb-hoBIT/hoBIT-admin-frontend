@@ -338,22 +338,30 @@ const ChatSettings: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   }, []);
   return (
     <div className="modal-overlay" onMouseDown={(e) => e.target === e.currentTarget && requestClose()}>
-      <div className="modal-panel max-w-[600px] max-h-[90vh] overflow-y-auto" role="dialog" aria-modal="true">
-        <div className="mb-4 flex items-center justify-between">
+      {/* 탭(운영 시간·담당자 역할)을 바꿔도 창 크기가 그대로 — 높이·너비 고정, 내용만 안에서 스크롤 */}
+      <div
+        className="modal-panel flex w-full max-w-[600px] flex-col !overflow-hidden"
+        style={{ height: 'min(760px, 90dvh)' }}
+        role="dialog"
+        aria-modal="true"
+      >
+        <div className="mb-4 flex shrink-0 items-center justify-between">
           <h2>채팅 설정</h2>
           <button type="button" onClick={requestClose} aria-label="닫기" className="h-9 w-9 text-ink-2 hover:bg-card">
             ✕
           </button>
         </div>
         <Segmented
-          className="mb-5"
+          className="mb-5 shrink-0"
           stretch
           itemClassName="py-2"
           options={[['hours', '운영 시간'], ['agents', '담당자 역할']] as const}
           value={tab}
           onChange={(t) => t !== tab && leave(() => setTab(t))}
         />
-        {tab === 'hours' ? <HoursTab guardRef={guardRef} /> : <AgentsTab />}
+        <div className="-mr-2 min-h-0 flex-1 overflow-y-auto pr-2">
+          {tab === 'hours' ? <HoursTab guardRef={guardRef} /> : <AgentsTab />}
+        </div>
       </div>
     </div>
   );

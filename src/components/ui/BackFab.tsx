@@ -7,7 +7,7 @@ import { prefetchRoute } from '../../routes';
  *  - 목록 화면으로 감 (뒤로가기 기록이 아니라 그 화면의 목록 — 새 탭으로 열었어도 같은 곳으로)
  *  - 목록 화면·홈·로그인 화면에서는 안 보임
  */
-const LIST_PAGES = /^\/(faqs\/graduate|categories\/(profile-options|bulk)|logs\/(admin|analytics))\/?$/; // 헤더 탭으로 여는 목록 화면
+const LIST_PAGES = /^\/(faqs\/graduate|categories\/(profile-options|bulk|chat)|logs\/(admin|analytics))\/?$/; // 헤더 탭으로 여는 목록 화면
 const PARENTS: { match: RegExp; to: string; label: string }[] = [
   { match: /^\/faqs\/.+/, to: '/faqs', label: 'FAQ 목록' },
   { match: /^\/seniorfaqs\/.+/, to: '/seniorfaqs', label: '선배 FAQ 목록' },

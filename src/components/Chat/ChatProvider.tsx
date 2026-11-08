@@ -131,7 +131,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         s.on('session:new', (session: ChatSession) => {
           chime();
           if (typeof Notification !== 'undefined' && Notification.permission === 'granted' && document.hidden) {
-            const n = new Notification(session.mode === 'senior' ? '새 선배 채팅 요청' : '새 채팅 요청', {
+            const n = new Notification(session.mode === 'senior' ? '새 근로장학생 채팅 요청' : '새 행정실 채팅 요청', {
               body: `${session.studentEmail}${session.botContext?.length ? ` · "${session.botContext[session.botContext.length - 1]?.q}"` : ''}`,
               tag: session.id,
             });

@@ -56,7 +56,7 @@ export type ChatSummary = {
   mine: ListedSession[];
   activeCount: number;
   unread: number;
-  unreadByMode?: { staff: number; senior: number }; // 행정실 채팅 / 선배 채팅
+  unreadByMode?: { staff: number; senior: number }; // 행정실 채팅 / 근로장학생 채팅
   closedToday: number;
   avgRatingToday: number | null;
   seniorsAvailable: number;
@@ -113,6 +113,8 @@ async function call<T>(method: string, path: string, body?: unknown): Promise<T>
   return json as T;
 }
 
+export type ChatFeatures = { staff: boolean; senior: boolean; emailVerification: boolean };
+
 export const chatApi = {
   sessions: (status: 'waiting' | 'active' | 'closed') => call<{ sessions: ListedSession[] }>('GET', `/agent/sessions?status=${status}`),
   summary: () => call<ChatSummary>('GET', '/agent/summary'),
@@ -124,6 +126,12 @@ export const chatApi = {
   fileLink: (attachmentId: string) => call<{ url: string }>('GET', `/attachments/${attachmentId}/link`),
   block: (sessionId: string, reason: string) => call('POST', '/agent/blocks', { sessionId, reason }),
   getHours: () => call<{ hours: HoursSettings }>('GET', '/agent/settings'),
+  /** 채팅 켜고 끄기 — 행정실 채팅·근로장학생 채팅·학교 메일 인증 (끈 채팅은 호빗 화면에 안 보임) */
+  getFeatures: () => call<{ features: ChatFeatures }>('GET', '/agent/features'),
+  setFeatures: (features: Partial<ChatFeatures>) => call<{ features: ChatFeatures }>('PUT', '/agent/features', { features }),
+  /** 학생 화면과 같은 상태 (운영 중·운영 시간 아님·자리 비움·꺼짐) */
+  status: (mode: 'staff' | 'senior') =>
+    call<{ open: boolean; reason: string; hours: { today: { start: string; end: string } | null } | null }>('GET', `/status?mode=${mode}`),
   setHours: (hours: HoursSettings) => call<{ hours: HoursSettings }>('PUT', '/agent/settings', { hours }),
   /** 그 해 공휴일 (Google 대한민국 휴일 캘린더) — 골라서 휴무일에 추가 */
   getHolidays: (year: number) => call<{ year: number; holidays: { date: string; name: string }[] }>('GET', `/agent/holidays?year=${year}`),

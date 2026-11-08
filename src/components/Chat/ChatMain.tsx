@@ -558,7 +558,7 @@ const ChatMain: React.FC = () => {
           </button>
         )}
         {role === 'staff' && (
-          <span className="text-sm text-ink-3">선배 {chat.seniorsAvailable}명 채팅 가능</span>
+          <span className="text-sm text-ink-3">근로장학생 {chat.seniorsAvailable}명 채팅 가능</span>
         )}
         <div className="ml-auto flex items-center gap-2">
           {chat.notifyPermission === 'default' && (
@@ -628,7 +628,7 @@ const ChatMain: React.FC = () => {
                   className={`flex w-full flex-col gap-1 border-b border-line px-4 py-3 text-left hover:bg-card ${selectedId === s.id ? 'bg-card' : ''}`}
                 >
                   <span className="flex items-center gap-2">
-                    {s.mode === 'senior' && role !== 'senior' && <Badge tone="senior">선배</Badge>}
+                    {s.mode === 'senior' && role !== 'senior' && <Badge tone="senior">근로장학생</Badge>}
                     {s.profile?.program && <Badge tone="accent">{PROGRAM_LABEL[s.profile.program] ?? s.profile.program}</Badge>}
                     <LanguageBadge language={s.language} />
                     <span className="min-w-0 flex-1 truncate text-sm font-semibold text-ink">
@@ -864,7 +864,7 @@ const ChatMain: React.FC = () => {
                 <p className="break-all font-semibold text-ink">{session.studentEmail}</p>
                 <div className="mt-1 flex items-center gap-2">
                   <LanguageBadge language={session.language} />
-                  {session.mode === 'senior' && role !== 'senior' && <Badge tone="senior">선배 채팅</Badge>}
+                  {session.mode === 'senior' && role !== 'senior' && <Badge tone="senior">근로장학생 채팅</Badge>}
                 </div>
               </div>
               {session.profile && (
