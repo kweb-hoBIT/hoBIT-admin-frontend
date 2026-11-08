@@ -11,8 +11,18 @@ interface EntireAnalyzeFilterProps {
 const EntireAnalyzeFilter: React.FC<EntireAnalyzeFilterProps> = ({ onApplyFilter }) => {
   const [searchSubject, setSearchSubject] = useState('frequency');
   const [period, setPeriod] = useState('day');
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  // 처음에는 최근 30일 (일 단위) — 날짜를 고르지 않아도 바로 검색
+  const [startDate, setStartDate] = useState<Date | null>(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() - 29);
+    return d;
+  });
+  const [endDate, setEndDate] = useState<Date | null>(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  });
   const [sortOrder, setSortOrder] = useState('1');
 
   const disableDates = (date: Date, type: "start" | "end"): boolean => {
@@ -55,17 +65,16 @@ const EntireAnalyzeFilter: React.FC<EntireAnalyzeFilterProps> = ({ onApplyFilter
   };
 
   return (
-    <div className="w-full p-2 sm:p-4 lg:flex-[0.25] lg:h-[500px] bg-card border border-line rounded-xl shadow-[0_2px_6px_rgba(0,0,0,0.1)] overflow-y-auto">
-      <div className="p-2 sm:p-4 rounded-3xl max-w-sm mx-auto space-y-4">
-        <h4 className="text-xl font-semibold text-ink">분석 필터 설정</h4>
-        <div className="space-y-3">
+    // 조건은 한 줄 도구 모음 (좁으면 2칸씩 줄바꿈) — 결과는 아래에 넓게
+    <div className="rounded-2xl border border-line bg-card/60 p-3 sm:p-4">
+        <div className="grid grid-cols-2 items-end gap-3 md:grid-cols-[repeat(5,minmax(0,1fr))_auto]">
           {/* 검색 주제 */}
           <div>
-            <label className="block text-sm font-medium text-ink">검색 주제</label>
+            <label className="mb-1 block text-xs font-semibold text-ink-2">검색 주제</label>
             <Select
               value={searchSubject}
               onChange={(e) => setSearchSubject(e.target.value)}
-              className="w-full p-1 min-h-[40px] sm:min-h-0 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
+              className="h-10 w-full rounded-xl border border-line bg-surface px-3 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-accent-ink/40"
             >
               <option value="frequency">FAQ 검색 빈도</option>
               <option value="feedback">FAQ 피드백 점수</option>
@@ -75,7 +84,7 @@ const EntireAnalyzeFilter: React.FC<EntireAnalyzeFilterProps> = ({ onApplyFilter
 
           {/* 검색 주기 */}
           <div>
-            <label className="block text-sm font-medium text-ink">검색 주기</label>
+            <label className="mb-1 block text-xs font-semibold text-ink-2">검색 주기</label>
             <Select
               value={period}
               onChange={(e) => {
@@ -83,7 +92,7 @@ const EntireAnalyzeFilter: React.FC<EntireAnalyzeFilterProps> = ({ onApplyFilter
                 setStartDate(null);
                 setEndDate(null);
               }}
-              className="w-full p-1 min-h-[40px] sm:min-h-0 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
+              className="h-10 w-full rounded-xl border border-line bg-surface px-3 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-accent-ink/40"
             >
               <option value="day">일</option>
               <option value="week">주</option>
@@ -93,13 +102,14 @@ const EntireAnalyzeFilter: React.FC<EntireAnalyzeFilterProps> = ({ onApplyFilter
 
           {/* 시작 일자 */}
           <div>
-            <label className="block text-sm font-medium text-ink">시작 일자</label>
+            <label className="mb-1 block text-xs font-semibold text-ink-2">시작 일자</label>
             <DatePicker
               locale={ko}
               selected={startDate}
               onChange={(date: Date | null) => setStartDate(date)}
               dateFormat="yyyy-MM-dd"
-              className="w-full p-1 min-h-[40px] sm:min-h-0 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
+              wrapperClassName="w-full"
+              className="h-10 w-full rounded-xl border border-line bg-surface px-3 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-accent-ink/40"
               filterDate={(date) => !disableDates(date, "start")}
               placeholderText="시작 일자 선택"
               maxDate={endDate || undefined}
@@ -108,13 +118,14 @@ const EntireAnalyzeFilter: React.FC<EntireAnalyzeFilterProps> = ({ onApplyFilter
 
           {/* 종료 일자 */}
           <div>
-            <label className="block text-sm font-medium text-ink">종료 일자</label>
+            <label className="mb-1 block text-xs font-semibold text-ink-2">종료 일자</label>
             <DatePicker
               locale={ko}
               selected={endDate}
               onChange={(date: Date | null) => setEndDate(date)}
               dateFormat="yyyy-MM-dd"
-              className="w-full p-1 min-h-[40px] sm:min-h-0 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
+              wrapperClassName="w-full"
+              className="h-10 w-full rounded-xl border border-line bg-surface px-3 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-accent-ink/40"
               filterDate={(date) => !disableDates(date, "end")}
               placeholderText="종료 일자 선택"
               minDate={startDate || undefined}
@@ -123,11 +134,11 @@ const EntireAnalyzeFilter: React.FC<EntireAnalyzeFilterProps> = ({ onApplyFilter
 
           {/* 정렬 순서 */}
           <div>
-            <label className="block text-sm font-medium text-ink">정렬 순서</label>
+            <label className="mb-1 block text-xs font-semibold text-ink-2">정렬 순서</label>
             <Select
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}
-              className="w-full p-1 min-h-[40px] sm:min-h-0 rounded-xl border border-line shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-ink/40 transition ease-in-out"
+              className="h-10 w-full rounded-xl border border-line bg-surface px-3 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-accent-ink/40"
             >
               <option value="1">내림차순</option>
               <option value="0">오름차순</option>
@@ -135,11 +146,11 @@ const EntireAnalyzeFilter: React.FC<EntireAnalyzeFilterProps> = ({ onApplyFilter
           </div>
 
           {/* 검색 버튼 */}
-          <div>
+          <div className="col-span-2 md:col-span-1">
             <button
               onClick={handleApplyFilter}
               disabled={!startDate || !endDate}
-              className={`w-full p-2 text-sm font-semibold rounded-xl mt-4 transition duration-300 ${
+              className={`h-10 w-full rounded-xl px-6 text-sm font-semibold transition duration-300 ${
                 !startDate || !endDate
                   ? 'bg-card-2 cursor-not-allowed'
                   : 'bg-accent text-white hover:bg-accent/90 focus:ring-2 focus:ring-accent-ink/40'
@@ -149,7 +160,6 @@ const EntireAnalyzeFilter: React.FC<EntireAnalyzeFilterProps> = ({ onApplyFilter
             </button>
           </div>
         </div>
-      </div>
     </div>
   );
 };

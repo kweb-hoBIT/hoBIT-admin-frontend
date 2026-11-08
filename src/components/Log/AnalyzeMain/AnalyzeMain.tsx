@@ -53,14 +53,28 @@ const AnalyzeMain: React.FC = () => {
     setShowSpecificAnalyze(true);
   };
 
+  const empty = (text: string) => (
+    <div className="flex min-h-[220px] flex-col items-center justify-center gap-1 text-center">
+      <p className="font-semibold text-ink-2">조건을 고르고 [검색]을 눌러 주세요</p>
+      <p className="text-sm text-ink-3">{text}</p>
+    </div>
+  );
+
   return (
-    <section className="panel">
-      <SelectAnalyze selectedAnalyze={selectedAnalyze} onFilterChange={handleFilterChange}/>
-      {/* lg 미만: 필터를 위에, 결과를 아래에 (flex-col-reverse) */}
+    <section className="panel p-4 sm:p-6">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h4 className="text-xl font-bold text-ink">로그 분석</h4>
+          <p className="text-sm text-ink-3">
+            {selectedAnalyze === 'Entire' ? '기간 안에서 많이 쓰인(또는 평가가 높은·낮은) FAQ 10개' : 'FAQ 하나의 기간별 추이'}
+          </p>
+        </div>
+        <SelectAnalyze selectedAnalyze={selectedAnalyze} onFilterChange={handleFilterChange} />
+      </div>
       {selectedAnalyze === 'Entire' ? (
-        <div className="flex flex-col-reverse gap-4 p-3 sm:p-6 lg:flex-row lg:items-start lg:justify-between lg:gap-6">
-          <div className="flex min-w-0 flex-col gap-6 min-h-[300px] border border-line rounded-xl p-3 bg-page sm:p-5 lg:flex-[0.75] lg:min-h-[500px] lg:min-w-[300px]">
-            {/* Analysis Results and Graph Section */}
+        <div className="flex flex-col gap-4">
+          <EntireAnalyzeFilter onApplyFilter={handleApplyEntireFilter} />
+          <div className="min-w-0 rounded-2xl border border-line p-3 sm:p-5">
             {showEntireAnalyze ? (
               <EntireAnalyze
                 searchSubject={Entirefilters.searchSubject}
@@ -71,20 +85,14 @@ const AnalyzeMain: React.FC = () => {
                 limit={'10'}
               />
             ) : (
-              <div className="text-center text-ink-2">
-                <h2>검색 결과가 여기에 표시됩니다</h2>
-                <p>검색 조건을 설정한 후 결과를 확인하세요.</p>
-                <p>조건에 맞는 Top 10의 FAQ를 보여줍니다.</p>
-              </div>
+              empty('조건에 맞는 FAQ 10개를 표와 그래프로 보여 줘요.')
             )}
           </div>
-          {/* Filter Section */}
-          <EntireAnalyzeFilter onApplyFilter={handleApplyEntireFilter} />
         </div>
       ) : (
-        <div className="flex flex-col-reverse gap-4 p-3 sm:p-6 lg:flex-row lg:items-start lg:justify-between lg:gap-6">
-          <div className="flex min-w-0 flex-col gap-6 min-h-[300px] border border-line rounded-xl p-3 bg-page sm:p-5 lg:flex-[0.75] lg:min-h-[500px] lg:min-w-[300px]">
-            {/* Analysis Results and Graph Section */}
+        <div className="flex flex-col gap-4">
+          <SpecificAnalyzeFilter onApplyFilter={handleApplySpecificFilter} />
+          <div className="min-w-0 rounded-2xl border border-line p-3 sm:p-5">
             {showSpecificAnalyze ? (
               <SpecificAnalyze
                 faq_id={Specificfilters.faq_id}
@@ -94,15 +102,9 @@ const AnalyzeMain: React.FC = () => {
                 endDate={Specificfilters.endDate}
               />
             ) : (
-              <div className="text-center text-ink-2">
-                <h2>검색 결과가 여기에 표시됩니다</h2>
-                <p>검색 조건을 설정한 후 결과를 확인하세요.</p>
-                <p>해당 FAQ에 대한 분석 결과를 보여줍니다.</p>
-              </div>
+              empty('FAQ 질문을 검색해 고르면 그 FAQ의 기간별 추이를 보여 줘요.')
             )}
           </div>
-          {/* Filter Section */}
-          <SpecificAnalyzeFilter onApplyFilter={handleApplySpecificFilter} />
         </div>
       )}
     </section>
