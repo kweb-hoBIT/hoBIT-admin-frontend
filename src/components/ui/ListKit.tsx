@@ -209,7 +209,7 @@ export function useExpanded<K>() {
  * 쓰는 법: <div className="flex items-start gap-3"><div className="min-w-0 flex-1">내용</div><CardMore /></div>
  */
 export const CardMore: React.FC = () => (
-  <span aria-hidden="true" className="flex shrink-0 items-center gap-0.5 self-center text-sm font-semibold text-accent-ink">
+  <span aria-hidden="true" className="flex shrink-0 items-center gap-0.5 text-sm font-semibold text-accent-ink">
     <span className="hidden sm:inline">더보기</span>
     <svg viewBox="0 0 20 20" className="h-5 w-5 sm:h-4 sm:w-4">
       <path d="M7.5 5.5 12 10l-4.5 4.5" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />

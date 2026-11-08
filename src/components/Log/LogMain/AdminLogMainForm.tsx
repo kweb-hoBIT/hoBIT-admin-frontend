@@ -99,7 +99,10 @@ const AdminLogMainForm: React.FC<AdminLogMainFormProps> = ({ adminLogs }) => {
                     </div>
                   </div>
                 </div>
-                <CardMore />
+                {/* › 는 FAQ 카드와 같이 오른쪽 아래 */}
+                <div className="flex shrink-0 flex-col justify-end self-stretch">
+                  <CardMore />
+                </div>
                 </div>
               </div>
             ))}
