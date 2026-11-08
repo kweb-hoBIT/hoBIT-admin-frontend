@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { whenBooted } from '../../bootSplash';
 
 const reducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -53,7 +54,8 @@ function watchInView(el: Element, cb: () => void): () => void {
     );
   }
   inViewCallbacks.set(el, cb);
-  inViewObserver.observe(el);
+  const io = inViewObserver;
+  whenBooted(() => inViewCallbacks.has(el) && io.observe(el)); // 첫 로딩 화면이 걷힌 뒤부터 (덮인 채로 끝나지 않게)
   return () => {
     inViewObserver?.unobserve(el);
     inViewCallbacks.delete(el);
@@ -163,7 +165,7 @@ export const revealRef = (el: HTMLElement | null) => {
     return;
   }
   watching.add(el);
-  io.observe(el);
+  whenBooted(() => watching.has(el) && io.observe(el)); // 첫 로딩 화면이 걷힌 뒤부터
   if (!sweepQueued) {
     sweepQueued = true;
     window.setTimeout(sweep, 1000);

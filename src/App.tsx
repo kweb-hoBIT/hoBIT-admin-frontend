@@ -10,6 +10,7 @@ import { DialogHost } from './components/ui/Dialog';
 import envs from './config/envs';
 import { ROUTES, warmRoutes, seniorCanOpen } from './routes';
 import { ChatProvider, useChat } from './components/Chat/ChatProvider';
+import { holdBoot } from './bootSplash';
 
 // 목록을 오가도 30초 안에는 받아 둔 데이터를 바로 보여줌 (예전엔 화면에 들어갈 때마다 새로 받았음).
 // 창을 다시 볼 때마다 다시 받던 것(refetchOnWindowFocus)도 끔.
@@ -29,6 +30,7 @@ const queryClient: QueryClient = new QueryClient({
  */
 const PageFallback: React.FC = () => {
   const [show, setShow] = useState(false);
+  useEffect(() => holdBoot(), []); // 첫 로딩 화면은 이 화면 코드를 받을 때까지 유지
   useEffect(() => {
     const t = window.setTimeout(() => setShow(true), 150);
     return () => window.clearTimeout(t);

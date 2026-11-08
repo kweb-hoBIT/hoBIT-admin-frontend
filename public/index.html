@@ -43,7 +43,9 @@
       @keyframes hobit-splash-bob { 0%, 100% { transform: translateY(0) rotate(0deg); } 25% { transform: translateY(-5px) rotate(-3deg); } 50% { transform: translateY(-8px) rotate(0deg); } 75% { transform: translateY(-5px) rotate(3deg); } }
       @keyframes hobit-splash-shadow { 0%, 100% { transform: scaleX(1); opacity: 0.12; } 50% { transform: scaleX(0.75); opacity: 0.06; } }
       @keyframes hobit-splash-dot { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.9; } }
-            @media (prefers-reduced-motion: reduce) {
+            #boot-splash { z-index: 2147483000; transition: opacity 0.25s ease-out; }
+      #boot-splash.hobit-splash--out { opacity: 0; pointer-events: none; }
+      @media (prefers-reduced-motion: reduce) {
         .hobit-splash__char, .hobit-splash__shadow, .hobit-splash__mark, .hobit-splash__dots, .hobit-splash__dots i { animation: none !important; opacity: 1; }
         .hobit-splash__shadow { opacity: 0.12; }
       }
@@ -72,13 +74,13 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root">
-      <div class="hobit-splash" role="status" aria-label="관리자 사이트를 불러오는 중">
-        <img class="hobit-splash__char" src="%PUBLIC_URL%/hobit-splash.png" width="96" height="96" alt="" />
-        <div class="hobit-splash__shadow" aria-hidden="true"></div>
-        <div class="hobit-splash__mark">hoBIT admin</div>
-        <div class="hobit-splash__dots" aria-hidden="true"><i></i><i></i><i></i></div>
-      </div>
+    <div id="root"></div>
+    <!-- 첫 로딩 화면 — React와 따로 두고, 첫 화면의 데이터까지 다 받으면 src/bootSplash.ts가 걷음 -->
+    <div id="boot-splash" class="hobit-splash" role="status" aria-label="관리자 사이트를 불러오는 중">
+      <img class="hobit-splash__char" src="%PUBLIC_URL%/hobit-splash.png" width="96" height="96" alt="" />
+      <div class="hobit-splash__shadow" aria-hidden="true"></div>
+      <div class="hobit-splash__mark">hoBIT admin</div>
+      <div class="hobit-splash__dots" aria-hidden="true"><i></i><i></i><i></i></div>
     </div>
     <!--
       This HTML file is a template.
