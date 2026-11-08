@@ -17,7 +17,7 @@ interface TabsProps<T extends string> {
 function Tabs<T extends string>({ tabs, value, onChange, right }: TabsProps<T>) {
   const ref = useRef<HTMLDivElement>(null);
   return (
-    <div ref={ref} className="relative flex items-center gap-6 border-b border-line px-6" role="tablist">
+    <div ref={ref} className="relative flex items-center gap-4 border-b border-line px-4 sm:gap-6 sm:px-6" role="tablist">
       <SlidingIndicator containerRef={ref} activeKey={value} variant="underline" className="bg-accent-ink" />
       {tabs.map((tab) => {
         const active = tab.value === value;

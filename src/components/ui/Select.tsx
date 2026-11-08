@@ -175,6 +175,7 @@ const Select: React.FC<SelectProps> = ({ value, onChange, className = '', disabl
               top: pos.up ? undefined : pos.top,
               bottom: pos.up ? window.innerHeight - pos.top : undefined,
               minWidth: pos.width,
+              maxWidth: Math.max(pos.width, window.innerWidth - pos.left - 8), // 휴대폰에서 화면 오른쪽 밖으로 나가지 않게
               maxHeight: pos.maxHeight,
             }}
           >
