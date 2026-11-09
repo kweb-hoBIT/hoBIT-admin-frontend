@@ -90,12 +90,12 @@ const CategoryMain: React.FC<{ section?: 'category' | 'bulk' }> = ({ section = '
         {faqKind === 'faq' ? (
           <>
             <Block title="이름 수정" desc="대분류·소분류 이름을 그 분류의 모든 FAQ에서 한 번에 바꿔요."><FAQCategoryRename /></Block>
-            <Block title="순서 수정" desc="끌어서 학생 메뉴에 보이는 순서를 바꿔요."><FAQCategoryReorder /></Block>
+            <Block title="순서 수정" desc="▲▼로 옮기면 바로 저장돼요. 이름을 누르면 하위 분류가 펼쳐져요."><FAQCategoryReorder /></Block>
           </>
         ) : (
           <>
             <Block title="이름 수정" desc="대분류·소분류·세부 항목 이름을 한 번에 바꿔요."><SeniorFAQCategoryRename /></Block>
-            <Block title="순서 수정" desc="끌어서 학생 메뉴에 보이는 순서를 바꿔요."><SeniorFAQCategoryReorder /></Block>
+            <Block title="순서 수정" desc="▲▼로 옮기면 바로 저장돼요. 이름을 누르면 하위 분류가 펼쳐져요."><SeniorFAQCategoryReorder /></Block>
           </>
         )}
       </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useHobitQueryGetApi, useHobitMutatePutApi } from '../../../../hooks/hobitAdmin';
 import {
   GetAllSeniorFAQCategoryRequest,
@@ -6,169 +6,53 @@ import {
   UpdateSeniorFAQCategoryOrderRequest,
   UpdateSeniorFAQCategoryOrderResponse,
 } from '../../../../types/seniorfaq';
-import SeniorFAQCategoryReorderForm from './SeniorFAQCategoryReorderForm';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import CategoryOrderTree, { OrderNode } from '../../CategoryOrderTree';
+import { LoadError } from '../../../ui/ListKit';
 
-import { appAlert } from '../../../ui/Dialog';
-interface CategoryData {
-  maincategory_ko: string;
-  order: number;
-  subcategories?: SubcategoryData[];
-}
+const byOrder = (a?: number | null, b?: number | null) => (a ?? Infinity) - (b ?? Infinity);
 
-interface SubcategoryData {
-  subcategory_ko: string;
-  order: number;
-  detailcategories?: DetailCategoryData[];
-}
-
-interface DetailCategoryData {
-  detailcategory_ko: string;
-  order: number;
-}
-
+/** 선배 FAQ 카테고리 순서 — 대분류 ▸ 소분류 ▸ 세부 항목 (▲▼로 옮기면 바로 저장) */
 const SeniorFAQCategoryReorder: React.FC = () => {
-  const GetSeniorFAQCategoriesApi = useHobitQueryGetApi<GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse>(
-    'seniorfaqs/category'
+  const api = useHobitQueryGetApi<GetAllSeniorFAQCategoryRequest, GetAllSeniorFAQCategoryResponse>('seniorfaqs/category');
+  const saveApi = useHobitMutatePutApi<UpdateSeniorFAQCategoryOrderRequest, UpdateSeniorFAQCategoryOrderResponse>(
+    'seniorfaqs/category/order'
   );
-  const UpdateSeniorCategoryOrderApi = useHobitMutatePutApi<
-    UpdateSeniorFAQCategoryOrderRequest,
-    UpdateSeniorFAQCategoryOrderResponse
-  >('seniorfaqs/category/order');
+  const payload = api.data?.payload;
 
-  const [originalCategories, setOriginalCategories] = useState<CategoryData[]>([]);
-  const [categories, setCategories] = useState<CategoryData[]>([]);
-  const [isUpdating, setIsUpdating] = useState(false);
+  const nodes = useMemo<OrderNode[]>(() => {
+    if (payload?.statusCode !== 200) return [];
+    return [...payload.data.categories]
+      .sort((a, b) => byOrder(a.category_order, b.category_order))
+      .map((m) => ({
+        name: m.maincategory_ko,
+        children: [...(m.subcategories || [])]
+          .sort((a, b) => byOrder(a.subcategory_order, b.subcategory_order))
+          // 세부 항목은 서버가 이미 순서대로 보내 줌
+          .map((s) => ({ name: s.subcategory_ko, children: (s.detailcategories?.detailcategory_ko ?? []).map((d) => ({ name: d })) })),
+      }));
+  }, [payload]);
 
-  useEffect(() => {
-    const fetchSeniorFAQCategory = async () => {
-      if (GetSeniorFAQCategoriesApi.data?.payload?.statusCode === 200) {
-        const apiCategories = GetSeniorFAQCategoriesApi.data.payload?.data.categories;
-
-        // Sort by existing order and structure categories
-        const sortedCategories = [...apiCategories].sort(
-          (a, b) => (a.category_order ?? Infinity) - (b.category_order ?? Infinity)
-        );
-
-        const structuredCategories: CategoryData[] = sortedCategories.map((mainCat, mainIdx) => {
-          // Sort subcategories by their order
-          const sortedSubcategories = [...(mainCat.subcategories || [])].sort(
-            (a, b) => (a.subcategory_order ?? Infinity) - (b.subcategory_order ?? Infinity)
-          );
-
-          const subcategories: SubcategoryData[] = sortedSubcategories.map((subCat, subIdx) => ({
-            subcategory_ko: subCat.subcategory_ko,
-            order: subCat.subcategory_order ?? subIdx + 1,
-            detailcategories: subCat.detailcategories?.detailcategory_ko?.map((detailCat, detailIdx) => ({
-              detailcategory_ko: detailCat,
-              order: detailIdx + 1, // Detail categories don't have individual order in DB yet
-            })),
-          }));
-
-          return {
-            maincategory_ko: mainCat.maincategory_ko,
-            order: mainCat.category_order ?? mainIdx + 1,
-            subcategories,
-          };
-        });
-
-        setOriginalCategories(JSON.parse(JSON.stringify(structuredCategories)));
-        setCategories(structuredCategories);
-      } else {
-        appAlert('선배 FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
-        console.log('선배 FAQ 카테고리 데이터 오류:', GetSeniorFAQCategoriesApi.data?.payload?.message);
-      }
-    };
-
-    if (GetSeniorFAQCategoriesApi.isSuccess && GetSeniorFAQCategoriesApi.data) {
-      fetchSeniorFAQCategory();
-    }
-  }, [GetSeniorFAQCategoriesApi.isSuccess, GetSeniorFAQCategoriesApi.data]);
-
-  const moveCategory = (
-    type: 'main' | 'sub' | 'detail',
-    fromIndex: number,
-    toIndex: number,
-    mainIdx?: number,
-    subIdx?: number
-  ) => {
-    const newCategories = JSON.parse(JSON.stringify(categories));
-
-    if (type === 'main') {
-      const [moved] = newCategories.splice(fromIndex, 1);
-      newCategories.splice(toIndex, 0, moved);
-      // Update order values
-      newCategories.forEach((cat: CategoryData, idx: number) => {
-        cat.order = idx + 1;
-      });
-    } else if (type === 'sub' && mainIdx !== undefined) {
-      const subs = newCategories[mainIdx].subcategories;
-      if (subs) {
-        const [moved] = subs.splice(fromIndex, 1);
-        subs.splice(toIndex, 0, moved);
-        // Update order values
-        subs.forEach((sub: SubcategoryData, idx: number) => {
-          sub.order = idx + 1;
-        });
-      }
-    } else if (type === 'detail' && mainIdx !== undefined && subIdx !== undefined) {
-      const details = newCategories[mainIdx].subcategories?.[subIdx]?.detailcategories;
-      if (details) {
-        const [moved] = details.splice(fromIndex, 1);
-        details.splice(toIndex, 0, moved);
-        // Update order values
-        details.forEach((detail: DetailCategoryData, idx: number) => {
-          detail.order = idx + 1;
-        });
-      }
-    }
-
-    setCategories(newCategories);
+  const save = async (next: OrderNode[]) => {
+    const res = await saveApi({
+      body: {
+        mainCategories: next.map((m, i) => ({
+          maincategory_ko: m.name,
+          order: i + 1,
+          subcategories: (m.children ?? []).map((s, j) => ({
+            subcategory_ko: s.name,
+            order: j + 1,
+            detailcategories: (s.children ?? []).map((d, k) => ({ detailcategory_ko: d.name, order: k + 1 })),
+          })),
+        })),
+      },
+    });
+    return res?.payload?.statusCode === 200;
   };
 
-  const handleReset = () => {
-    setCategories(JSON.parse(JSON.stringify(originalCategories)));
-  };
-
-  const handleSubmit = async () => {
-    if (isUpdating) return;
-    setIsUpdating(true);
-    try {
-      const fetchUpdateSeniorCategoryOrderApi = await UpdateSeniorCategoryOrderApi({
-        body: {
-          mainCategories: categories,
-        },
-      });
-
-      if (fetchUpdateSeniorCategoryOrderApi?.payload?.statusCode === 200) {
-        appAlert('카테고리 순서가 성공적으로 변경되었습니다.');
-        setOriginalCategories(JSON.parse(JSON.stringify(categories)));
-      } else {
-        console.error('카테고리 순서 변경 실패:', fetchUpdateSeniorCategoryOrderApi?.payload?.message);
-        appAlert('카테고리 순서 변경 중 오류가 발생했습니다.');
-      }
-    } catch (error) {
-      console.error('카테고리 순서 변경 실패:', error);
-      appAlert('카테고리 순서 변경 중 오류가 발생했습니다.');
-    } finally {
-      setIsUpdating(false);
-    }
-  };
-
-  if (GetSeniorFAQCategoriesApi.isLoading) return <p></p>;
-
-  return (
-    <DndProvider backend={HTML5Backend}>
-      <SeniorFAQCategoryReorderForm
-        categories={categories}
-        onMove={moveCategory}
-        onReset={handleReset}
-        onSubmit={handleSubmit}
-        isUpdating={isUpdating}
-      />
-    </DndProvider>
-  );
+  if (api.isError || (payload && payload.statusCode !== 200)) {
+    return <LoadError message="카테고리를 불러오지 못했어요." onRetry={() => api.refetch()} />;
+  }
+  return <CategoryOrderTree nodes={nodes} loading={api.isLoading} onSave={save} />;
 };
 
 export default SeniorFAQCategoryReorder;

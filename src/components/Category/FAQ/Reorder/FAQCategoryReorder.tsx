@@ -1,139 +1,51 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useHobitQueryGetApi, useHobitMutatePutApi } from '../../../../hooks/hobitAdmin';
-import { GetAllFAQCategoryRequest, GetAllFAQCategoryResponse, UpdateFAQCategoryOrderRequest, UpdateFAQCategoryOrderResponse } from '../../../../types/faq';
-import FAQCategoryReorderForm from './FAQCategoryReorderForm';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import {
+  GetAllFAQCategoryRequest,
+  GetAllFAQCategoryResponse,
+  UpdateFAQCategoryOrderRequest,
+  UpdateFAQCategoryOrderResponse,
+} from '../../../../types/faq';
+import CategoryOrderTree, { OrderNode } from '../../CategoryOrderTree';
+import { LoadError } from '../../../ui/ListKit';
 
-import { appAlert } from '../../../ui/Dialog';
-interface CategoryData {
-  maincategory_ko: string;
-  order: number;
-  subcategories?: SubcategoryData[];
-}
+const byOrder = (a?: number | null, b?: number | null) => (a ?? Infinity) - (b ?? Infinity);
 
-interface SubcategoryData {
-  subcategory_ko: string;
-  order: number;
-}
-
+/** 행정실 FAQ 카테고리 순서 — 대분류 ▸ 소분류 (▲▼로 옮기면 바로 저장) */
 const FAQCategoryReorder: React.FC = () => {
-  const GetFAQCategoriesApi = useHobitQueryGetApi<GetAllFAQCategoryRequest, GetAllFAQCategoryResponse>('faqs/category');
-  const UpdateFAQCategoryOrderApi = useHobitMutatePutApi<UpdateFAQCategoryOrderRequest, UpdateFAQCategoryOrderResponse>('faqs/category/order');
+  const api = useHobitQueryGetApi<GetAllFAQCategoryRequest, GetAllFAQCategoryResponse>('faqs/category');
+  const saveApi = useHobitMutatePutApi<UpdateFAQCategoryOrderRequest, UpdateFAQCategoryOrderResponse>('faqs/category/order');
+  const payload = api.data?.payload;
 
-  const [originalCategories, setOriginalCategories] = useState<CategoryData[]>([]);
-  const [categories, setCategories] = useState<CategoryData[]>([]);
-  const [isUpdating, setIsUpdating] = useState(false);
+  const nodes = useMemo<OrderNode[]>(() => {
+    if (payload?.statusCode !== 200) return [];
+    return [...payload.data.categories]
+      .sort((a, b) => byOrder(a.category_order, b.category_order))
+      .map((m) => ({
+        name: m.maincategory_ko,
+        children: [...(m.subcategories || [])]
+          .sort((a, b) => byOrder(a.subcategory_order, b.subcategory_order))
+          .map((s) => ({ name: s.subcategory_ko })),
+      }));
+  }, [payload]);
 
-  useEffect(() => {
-    const fetchFAQCategory = async () => {
-      if (GetFAQCategoriesApi.data?.payload?.statusCode === 200) {
-        const apiCategories = GetFAQCategoriesApi.data.payload?.data.categories;
-
-        const sortedCategories = [...apiCategories].sort(
-          (a, b) => (a.category_order ?? Infinity) - (b.category_order ?? Infinity)
-        );
-
-        const structuredCategories: CategoryData[] = sortedCategories.map((mainCat, mainIdx) => {
-          const sortedSubcategories = [...(mainCat.subcategories || [])].sort(
-            (a, b) => (a.subcategory_order ?? Infinity) - (b.subcategory_order ?? Infinity)
-          );
-
-          const subcategories: SubcategoryData[] = sortedSubcategories.map((subCat, subIdx) => ({
-            subcategory_ko: subCat.subcategory_ko,
-            order: subCat.subcategory_order ?? subIdx + 1,
-          }));
-
-          return {
-            maincategory_ko: mainCat.maincategory_ko,
-            order: mainCat.category_order ?? mainIdx + 1,
-            subcategories,
-          };
-        });
-
-        setOriginalCategories(JSON.parse(JSON.stringify(structuredCategories)));
-        setCategories(structuredCategories);
-      } else {
-        appAlert('FAQ 카테고리 데이터를 불러오는데 실패했습니다.');
-        console.log('FAQ 카테고리 데이터 오류:', GetFAQCategoriesApi.data?.payload?.message);
-      }
-    };
-
-    if (GetFAQCategoriesApi.isSuccess && GetFAQCategoriesApi.data) {
-      fetchFAQCategory();
-    }
-  }, [GetFAQCategoriesApi.isSuccess, GetFAQCategoriesApi.data]);
-
-  const moveCategory = (
-    type: 'main' | 'sub',
-    fromIndex: number,
-    toIndex: number,
-    mainIdx?: number
-  ) => {
-    const newCategories = JSON.parse(JSON.stringify(categories));
-
-    if (type === 'main') {
-      const [moved] = newCategories.splice(fromIndex, 1);
-      newCategories.splice(toIndex, 0, moved);
-      newCategories.forEach((cat: CategoryData, idx: number) => {
-        cat.order = idx + 1;
-      });
-    } else if (type === 'sub' && mainIdx !== undefined) {
-      const subs = newCategories[mainIdx].subcategories;
-      if (subs) {
-        const [moved] = subs.splice(fromIndex, 1);
-        subs.splice(toIndex, 0, moved);
-        subs.forEach((sub: SubcategoryData, idx: number) => {
-          sub.order = idx + 1;
-        });
-      }
-    }
-
-    setCategories(newCategories);
+  const save = async (next: OrderNode[]) => {
+    const res = await saveApi({
+      body: {
+        mainCategories: next.map((m, i) => ({
+          maincategory_ko: m.name,
+          order: i + 1,
+          subcategories: (m.children ?? []).map((s, j) => ({ subcategory_ko: s.name, order: j + 1 })),
+        })),
+      },
+    });
+    return res?.payload?.statusCode === 200;
   };
 
-  const handleReset = () => {
-    setCategories(JSON.parse(JSON.stringify(originalCategories)));
-  };
-
-  const handleSubmit = async () => {
-    if (isUpdating) return;
-    setIsUpdating(true);
-    try {
-      const fetchUpdateFAQCategoryOrderApi = await UpdateFAQCategoryOrderApi({
-        body: {
-          mainCategories: categories,
-        },
-      });
-
-      if (fetchUpdateFAQCategoryOrderApi?.payload?.statusCode === 200) {
-        appAlert('카테고리 순서가 성공적으로 변경되었습니다.');
-        setOriginalCategories(JSON.parse(JSON.stringify(categories)));
-      } else {
-        console.error('카테고리 순서 변경 실패:', fetchUpdateFAQCategoryOrderApi?.payload?.message);
-        appAlert('카테고리 순서 변경 중 오류가 발생했습니다.');
-      }
-    } catch (error) {
-      console.error('카테고리 순서 변경 실패:', error);
-      appAlert('카테고리 순서 변경 중 오류가 발생했습니다.');
-    } finally {
-      setIsUpdating(false);
-    }
-  };
-
-  if (GetFAQCategoriesApi.isLoading) return <p></p>;
-
-  return (
-    <DndProvider backend={HTML5Backend}>
-      <FAQCategoryReorderForm
-        categories={categories}
-        onMove={moveCategory}
-        onReset={handleReset}
-        onSubmit={handleSubmit}
-        isUpdating={isUpdating}
-      />
-    </DndProvider>
-  );
+  if (api.isError || (payload && payload.statusCode !== 200)) {
+    return <LoadError message="카테고리를 불러오지 못했어요." onRetry={() => api.refetch()} />;
+  }
+  return <CategoryOrderTree nodes={nodes} loading={api.isLoading} onSave={save} />;
 };
 
 export default FAQCategoryReorder;
