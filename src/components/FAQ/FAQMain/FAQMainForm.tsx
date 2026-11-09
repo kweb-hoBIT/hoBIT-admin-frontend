@@ -11,6 +11,7 @@ import {
 import FAQDelete from './FAQDelete';
 import FAQFilter from './FAQFilter';
 import FAQSort, { sortFAQs } from './FAQSort';
+import FAQCategoryFilter, { CategoryPick, filterByCategory } from './FAQCategoryFilter';
 import { GetAllFAQResponse } from '../../../types/faq';
 import { FAQAudienceBadge } from '../FAQAudienceField';
 import FAQExcelButtons from '../FAQExcel/FAQExcelButtons';
@@ -38,6 +39,20 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' 
     'maincategory_ko' | 'subcategory_ko' | 'question_ko' | 'manager'
   >(storedFilterName);
   const [faqSortValue, setFAQSortValue] = useState<number>(storedSortValue);
+  // 카테고리로 모아 보기 — 학부·대학원 따로, 이 창을 닫기 전까지 기억
+  const catKey = `faq-category:${view}`;
+  const [category, setCategory] = useState<CategoryPick>(() => {
+    try {
+      const v = JSON.parse(sessionStorage.getItem(catKey) || 'null');
+      if (v && typeof v.main === 'string' && typeof v.sub === 'string') return v;
+    } catch {}
+    return { main: '', sub: '' };
+  });
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(catKey, JSON.stringify(category));
+    } catch {}
+  }, [catKey, category]);
 
   // 검색어·정렬은 다른 화면에 다녀와도 그대로 (redux + localStorage)
   useEffect(() => {
@@ -49,12 +64,13 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' 
   // 거르기·정렬은 바뀔 때만 다시 계산
   const filteredFaqs = useMemo(() => {
     const q = filter.toLowerCase();
-    const matched = q ? faqs.filter((faq) => String(faq[selectedFilter] ?? '').toLowerCase().includes(q)) : faqs;
+    const inCategory = filterByCategory(faqs, category);
+    const matched = q ? inCategory.filter((faq) => String(faq[selectedFilter] ?? '').toLowerCase().includes(q)) : inCategory;
     return sortFAQs(matched, faqSortValue);
-  }, [faqs, filter, selectedFilter, faqSortValue]);
+  }, [faqs, category, filter, selectedFilter, faqSortValue]);
 
   // 처음 20개, 내려가면 20개씩 더 — 검색어·정렬이 바뀌면 처음부터. 상세·수정 화면에 다녀오면 보던 자리로
-  const { shown, total, hasMore, sentinelRef, listRef } = useIncremental(filteredFaqs, `${selectedFilter}|${filter}|${faqSortValue}`, {
+  const { shown, total, hasMore, sentinelRef, listRef } = useIncremental(filteredFaqs, `${category.main}|${category.sub}|${selectedFilter}|${filter}|${faqSortValue}`, {
     restoreFrom: /^\/faqs\/(?!graduate\/?$)./,
   });
   // 지우면 목록에서 바로 빼고 뒤에서 다시 받음 (새로고침하지 않아 보던 자리 그대로)
@@ -87,7 +103,12 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' 
               추가
             </button>
           }
-          left={<FAQSort sort={faqSortValue} onSortChange={setFAQSortValue} />}
+          left={
+            <>
+              <FAQCategoryFilter faqs={faqs} value={category} onChange={setCategory} />
+              <FAQSort sort={faqSortValue} onSortChange={setFAQSortValue} />
+            </>
+          }
           right={<FAQExcelButtons />}
         />
         <div>
@@ -138,7 +159,7 @@ const FAQMainForm: React.FC<FAQMainFormProps> = ({ faqs, view = 'undergraduate' 
             ))}
           </div>
         </div>
-          {total === 0 && <p className="py-16 text-center text-sm text-ink-3">{filter ? '검색어에 맞는 FAQ가 없어요' : '아직 FAQ가 없어요'}</p>}
+          {total === 0 && <p className="py-16 text-center text-sm text-ink-3">{filter ? '검색어에 맞는 FAQ가 없어요' : category.main ? '이 카테고리에 FAQ가 없어요' : '아직 FAQ가 없어요'}</p>}
           <ListEnd hasMore={hasMore} total={total} sentinelRef={sentinelRef} />
       </div>
     </div>

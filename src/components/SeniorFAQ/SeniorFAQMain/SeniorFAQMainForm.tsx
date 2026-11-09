@@ -12,6 +12,7 @@ import {
 import SeniorFAQDelete from './SeniorFAQDelete';
 import SeniorFAQFilter from './SeniorFAQFilter';
 import SeniorFAQSort, { sortSeniorFAQs } from './SeniorFAQSort';
+import FAQCategoryFilter, { CategoryPick, filterByCategory } from '../../FAQ/FAQMain/FAQCategoryFilter';
 import FAQExcelButtons from '../../FAQ/FAQExcel/FAQExcelButtons';
 import { useChat } from '../../Chat/ChatProvider';
 import { useIncremental } from '../../../hooks/useIncremental';
@@ -37,6 +38,19 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
     storedFilterName
   );
   const [seniorFaqSortValue, setseniorFAQSortValue] = useState<number>(storedSortValue);
+  // 카테고리로 모아 보기 — 이 창을 닫기 전까지 기억
+  const [category, setCategory] = useState<CategoryPick>(() => {
+    try {
+      const v = JSON.parse(sessionStorage.getItem('faq-category:senior') || 'null');
+      if (v && typeof v.main === 'string' && typeof v.sub === 'string') return v;
+    } catch {}
+    return { main: '', sub: '' };
+  });
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('faq-category:senior', JSON.stringify(category));
+    } catch {}
+  }, [category]);
 
   // 검색어·정렬은 다른 화면에 다녀와도 그대로 (redux + localStorage)
   useEffect(() => {
@@ -48,15 +62,16 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
   // 거르기·정렬은 바뀔 때만 다시 계산
   const filteredSeniorFaqs = useMemo(() => {
     const q = filter.toLowerCase();
-    const matched = q ? seniorFaqs.filter((faq) => String(faq[selectedFilter] ?? '').toLowerCase().includes(q)) : seniorFaqs;
+    const inCategory = filterByCategory(seniorFaqs, category);
+    const matched = q ? inCategory.filter((faq) => String(faq[selectedFilter] ?? '').toLowerCase().includes(q)) : inCategory;
     return sortSeniorFAQs(matched, seniorFaqSortValue);
-  }, [seniorFaqs, filter, selectedFilter, seniorFaqSortValue]);
+  }, [seniorFaqs, category, filter, selectedFilter, seniorFaqSortValue]);
 
   // 처음 20개, 내려가면 20개씩 더 — 검색어·정렬이 바뀌면 처음부터
   // 상세·수정 화면에 다녀오면 보던 자리로
   const { shown, total, hasMore, sentinelRef, listRef } = useIncremental(
     filteredSeniorFaqs,
-    `${selectedFilter}|${filter}|${seniorFaqSortValue}`,
+    `${category.main}|${category.sub}|${selectedFilter}|${filter}|${seniorFaqSortValue}`,
     { restoreFrom: /^\/seniorfaqs\/./ }
   );
   // 지우면 목록에서 바로 빼고 뒤에서 다시 받음 (새로고침하지 않아 보던 자리 그대로)
@@ -90,7 +105,12 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
               추가
             </button>
           }
-          left={<SeniorFAQSort sort={seniorFaqSortValue} onSortChange={setseniorFAQSortValue} />}
+          left={
+            <>
+              <FAQCategoryFilter faqs={seniorFaqs} value={category} onChange={setCategory} />
+              <SeniorFAQSort sort={seniorFaqSortValue} onSortChange={setseniorFAQSortValue} />
+            </>
+          }
           // 엑셀 파일 하나에 행정실 FAQ·선배 FAQ·담당자·이메일 — 근로장학생 계정은 선배 FAQ만 다뤄서 숨김
           // 근로장학생 계정은 선배 FAQ만 담긴 엑셀, 행정실·개발자는 전체 (같은 hoBIT 데이터 파일)
           right={<FAQExcelButtons scope={role === 'senior' ? 'senior' : 'all'} />}
@@ -134,7 +154,7 @@ const SeniorFAQMainForm: React.FC<SeniorFAQMainFormProps> = ({ seniorFaqs }) => 
             ))}
           </div>
         </div>
-        {total === 0 && <p className="py-16 text-center text-sm text-ink-3">{filter ? '검색어에 맞는 선배 FAQ가 없어요' : '아직 선배 FAQ가 없어요'}</p>}
+        {total === 0 && <p className="py-16 text-center text-sm text-ink-3">{filter ? '검색어에 맞는 선배 FAQ가 없어요' : category.main ? '이 카테고리에 선배 FAQ가 없어요' : '아직 선배 FAQ가 없어요'}</p>}
         <ListEnd hasMore={hasMore} total={total} sentinelRef={sentinelRef} />
       </div>
     </div>
