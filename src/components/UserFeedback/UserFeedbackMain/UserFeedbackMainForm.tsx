@@ -126,7 +126,7 @@ const UserFeedbackMainForm: React.FC<UserFeedbackMainFormProps> = ({ userFeedbac
                         langFilter === value ? 'bg-surface text-ink shadow-sm' : 'text-ink-2 hover:text-ink'
                       }`}
                     >
-                      {label} <span className={value === 'EN' && langCounts.EN > 0 ? 'text-link' : 'text-ink-3'}>{langCounts[value]}</span>
+                      {label} <span className={value === 'EN' && langCounts.EN > 0 ? 'text-violet-600 dark:text-violet-300' : 'text-ink-3'}>{langCounts[value]}</span>
                     </button>
                   ))}
                 </div>

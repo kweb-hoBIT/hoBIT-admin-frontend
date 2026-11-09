@@ -178,13 +178,13 @@ const Bubble: React.FC<{ m: ChatMessage; canModify?: boolean; onEdit?: () => voi
       </div>
       {studentTranslated && (
         <button type="button" onClick={() => setShowOriginal((v) => !v)} className="ml-1 mt-0.5 flex items-center gap-1 text-[11px] text-ink-3 hover:text-ink">
-          <span className="rounded bg-link/15 px-1 font-bold text-link">EN</span>
+          <span className="rounded bg-violet-500/15 px-1 font-bold text-violet-700 dark:bg-violet-400/15 dark:text-violet-300">EN</span>
           {showOriginal ? '번역 보기' : '자동 번역됨 · 원문 보기'}
         </button>
       )}
       {mine && m.translation?.lang === 'en' && (
         <p className="mr-1 mt-0.5 max-w-[min(460px,72vw)] text-right text-[11px] text-ink-3">
-          <span className="mr-1 rounded bg-link/15 px-1 font-bold text-link">EN</span>학생에게: {m.translation.text}
+          <span className="mr-1 rounded bg-violet-500/15 px-1 font-bold text-violet-700 dark:bg-violet-400/15 dark:text-violet-300">EN</span>학생에게: {m.translation.text}
         </p>
       )}
     </div>
@@ -700,7 +700,7 @@ const ChatMain: React.FC = () => {
                       {session.status === 'waiting' ? '대기 중' : session.status === 'active' ? `${session.assignedName} 채팅 중` : '종료됨'}
                     </span>
                     {(session.studentLang === 'en' || session.language === 'EN') && (
-                      <span className="shrink-0 rounded-full bg-link/15 px-2 py-0.5 font-semibold text-link" title="자동 번역 EN ↔ 한국어">
+                      <span className="shrink-0 rounded-full bg-violet-500/15 px-2 py-0.5 font-semibold text-violet-700 dark:bg-violet-400/15 dark:text-violet-300" title="자동 번역 EN ↔ 한국어">
                         자동 번역 EN ↔ 한국어
                       </span>
                     )}

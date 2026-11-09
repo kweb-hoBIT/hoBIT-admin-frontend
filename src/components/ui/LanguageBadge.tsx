@@ -9,12 +9,12 @@ const LanguageBadge: React.FC<{ language?: string | null; className?: string }> 
   const lang = (language || '').toUpperCase();
   if (lang === 'EN') {
     return (
-      <Badge tone="link" className={className} title="영어 화면에서 남긴 피드백 (외국인 학생일 가능성이 높아요)">
+      <Badge tone="purple" className={className} title="영어 화면에서 남긴 피드백 (외국인 학생일 가능성이 높아요)">
         EN · 영어 사용자
       </Badge>
     );
   }
-  if (lang === 'KO') return <Badge className={className}>KO</Badge>;
+  if (lang === 'KO') return <Badge tone="green" className={className}>KO</Badge>;
   return null;
 };
 
