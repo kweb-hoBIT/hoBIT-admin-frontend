@@ -33,7 +33,7 @@ type NavGroup = { key: string; label: string; pin?: boolean; children: SubItem[]
 
 /**
  * 메뉴 — 비슷한 화면은 한 메뉴로 묶고, 묶음 안 화면은 헤더 아래 줄의 탭으로 고름
- *   FAQ: 학부 FAQ · 대학원 FAQ · 선배 FAQ / 로그: 로그 · 로그 분석 / 피드백: 피드백 · 답변 확인
+ *   FAQ: 학부 FAQ · 대학원 FAQ · 선배 FAQ / 로그: 로그 · 로그 분석 / 피드백: 피드백 · FAQ 후보 · 답변 확인
  */
 const NAV: NavGroup[] = [
   { key: "faq", label: "FAQ", children: [
@@ -49,6 +49,7 @@ const NAV: NavGroup[] = [
   ] },
   { key: "feedback", label: "피드백", children: [
     { path: "/userfeedbacks", label: "피드백" },
+    { path: "/faq-candidates", label: "FAQ 후보" }, // 답을 못 찾은 질문을 묶은 것 (예전엔 피드백에 한 줄씩 섞여 있었음)
     { path: "/answer-reviews", label: "답변 확인" },
   ] },
   { key: "categories", label: "관리", children: [

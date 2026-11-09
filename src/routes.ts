@@ -48,6 +48,7 @@ export const ROUTES: RouteDef[] = [
   def('/adminlogs/seniorfaqlogs/:id', () => import('./pages/SeniorFAQLogDetailPage')),
 
   def('/userfeedbacks', () => import('./pages/UserFeedbackPage')),
+  def('/faq-candidates', () => import('./pages/FaqCandidatePage')),
   def('/answer-reviews', () => import('./pages/AnswerReviewPage')),
   def('/keywords', () => import('./pages/KeywordPage')),
   def('/chats', () => import('./pages/ChatPage')),
