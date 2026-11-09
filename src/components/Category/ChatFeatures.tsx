@@ -70,13 +70,13 @@ const ChatFeatures: React.FC = () => {
 
   const toggleChat = async (mode: 'staff' | 'senior', on: boolean) => {
     const name = mode === 'staff' ? '행정실 채팅' : '근로장학생 채팅';
-    if (!on && !(await appConfirm(`${name}을 끌까요? 호빗 화면 메뉴에서 ${name} 버튼이 사라지고, 새 채팅을 시작할 수 없어요. 진행 중인 채팅은 그대로 이어져요.`))) return;
+    if (!on && !(await appConfirm(`${name}을 끌까요? 호빗 화면 메뉴에서 ${name} 버튼이 사라지고, 새 채팅을 시작할 수 없어요. 진행 중인 채팅은 그대로 이어져요.`, { confirmLabel: '끄기' }))) return;
     save({ [mode]: on });
   };
   const toggleEmail = async (on: boolean) => {
     if (
       !on &&
-      !(await appConfirm('학교 메일 인증을 끌까요? 학생이 메일 주소만 적고 인증 코드 없이 채팅을 시작해요. 다른 사람 메일을 적어도 막을 수 없어서, 시연할 때처럼 꼭 필요할 때만 꺼 주세요.', { danger: true }))
+      !(await appConfirm('학교 메일 인증을 끌까요? 학생이 메일 주소만 적고 인증 코드 없이 채팅을 시작해요. 다른 사람 메일을 적어도 막을 수 없어서, 시연할 때처럼 꼭 필요할 때만 꺼 주세요.', { danger: true, confirmLabel: '확인' }))
     )
       return;
     save({ emailVerification: on });

@@ -13,6 +13,7 @@ type DialogRequest = {
   kind: 'alert' | 'confirm' | 'choice';
   message: string;
   danger?: boolean;
+  confirmLabel?: string; // 확인 버튼 글자 (없으면 위험한 확인은 '삭제', 아니면 '확인')
   choices?: Choice[];
   cancelLabel?: string;
   resolve: (ok: boolean, value?: string) => void;
@@ -20,9 +21,9 @@ type DialogRequest = {
 
 let enqueue: ((request: DialogRequest) => void) | null = null;
 
-export const appConfirm = (message: string, options?: { danger?: boolean }) =>
+export const appConfirm = (message: string, options?: { danger?: boolean; confirmLabel?: string }) =>
   new Promise<boolean>((resolve) => {
-    if (enqueue) enqueue({ kind: 'confirm', message, danger: options?.danger, resolve });
+    if (enqueue) enqueue({ kind: 'confirm', message, danger: options?.danger, confirmLabel: options?.confirmLabel, resolve });
     else resolve(window.confirm(message)); // DialogHost가 아직 없을 때만
   });
 
@@ -122,7 +123,7 @@ export const DialogHost: React.FC = () => {
               current.danger ? 'bg-danger hover:bg-danger/85 focus-visible:ring-danger/30' : 'bg-accent hover:bg-accent/85 focus-visible:ring-accent/30'
             }`}
           >
-            {current.kind === 'confirm' && current.danger ? '삭제' : '확인'}
+            {current.confirmLabel ?? (current.kind === 'confirm' && current.danger ? '삭제' : '확인')}
           </button>
         </div>
         )}

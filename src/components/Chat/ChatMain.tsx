@@ -522,12 +522,39 @@ const ChatMain: React.FC = () => {
   };
 
   const block = async () => {
-    if (!session || !(await appConfirm(`${session.studentEmail} 학생을 차단할까요?\n채팅이 종료되고, 이 메일로는 다시 채팅할 수 없어요.`, { danger: true }))) return;
+    if (!session || !(await appConfirm(`${session.studentEmail} 학생을 차단할까요?\n채팅이 종료되고, 이 메일로는 다시 채팅할 수 없어요.`, { danger: true, confirmLabel: '차단' }))) return;
     try {
       await chatApi.block(session.id, '담당자 차단');
       refreshLists();
     } catch {
       appAlert('차단하지 못했어요.');
+    }
+  };
+
+  // 채팅 기록 삭제 — 종료된 채팅만, 행정실·개발자 계정만 (메시지·첨부 파일까지 지워져 되돌릴 수 없음)
+  const removeOne = async () => {
+    if (!session || session.status !== 'closed') return;
+    if (!(await appConfirm(`${session.studentEmail} 학생과의 채팅 기록을 삭제할까요?\n메시지와 첨부 파일이 모두 지워지고 되돌릴 수 없어요.`, { danger: true }))) return;
+    try {
+      await chatApi.deleteSessions([session.id]);
+      backToList();
+      refreshLists();
+    } catch {
+      appAlert('삭제하지 못했어요. 잠시 후 다시 시도해 주세요.');
+    }
+  };
+  const removeAllClosed = async () => {
+    const ids = lists.closed.filter(byProgram(program)).map((s) => s.id);
+    if (!ids.length) return;
+    if (!(await appConfirm(`지금 목록의 종료된 채팅 ${ids.length}개 기록을 모두 삭제할까요?\n메시지와 첨부 파일이 모두 지워지고 되돌릴 수 없어요.`, { danger: true, confirmLabel: `${ids.length}개 삭제` })))
+      return;
+    try {
+      const r = await chatApi.deleteSessions(ids);
+      if (selectedId && ids.includes(selectedId)) backToList();
+      refreshLists();
+      appAlert(`채팅 기록 ${r.deleted}개를 삭제했어요.`);
+    } catch {
+      appAlert('삭제하지 못했어요. 잠시 후 다시 시도해 주세요.');
     }
   };
 
@@ -625,6 +652,14 @@ const ChatMain: React.FC = () => {
               </button>
             ))}
           </div>
+          {tab === 'closed' && role === 'staff' && items.length > 0 && (
+            <div className="flex items-center justify-between border-b border-line px-4 py-2 text-xs text-ink-3">
+              <span>종료된 채팅 {items.length}개 · 1년 지나면 자동 삭제</span>
+              <button type="button" onClick={removeAllClosed} className="rounded-full px-2 py-1 font-semibold text-danger hover:bg-danger-soft">
+                목록 전체 삭제
+              </button>
+            </div>
+          )}
           <ul className="min-h-0 flex-1 overflow-y-auto">
             {items.length === 0 && <li className="px-4 py-10 text-center text-sm text-ink-3">{tab === 'waiting' ? '기다리는 채팅이 없어요' : '채팅이 없어요'}</li>}
             {items.map((s) => (
@@ -714,6 +749,11 @@ const ChatMain: React.FC = () => {
                 {session.status !== 'closed' && session.status !== 'waiting' && (role === 'staff' || session.assignedUserId === uid) && (
                   <button type="button" onClick={end} className="shrink-0 whitespace-nowrap rounded-full bg-card px-4 py-2 text-sm font-semibold text-ink hover:bg-card-2">
                     채팅 종료
+                  </button>
+                )}
+                {role === 'staff' && session.status === 'closed' && (
+                  <button type="button" onClick={removeOne} className="shrink-0 whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold text-danger hover:bg-danger-soft">
+                    기록 삭제
                   </button>
                 )}
                 {role === 'staff' && session.status !== 'closed' && (
