@@ -12,6 +12,7 @@ import {
 import { appAlert } from '../ui/Dialog';
 import type { FaqOption } from './KeywordMain';
 import Icon from '../ui/Icon';
+import { isLatin } from './keywordMatch';
 
 const MAX_PINNED = 3; // 학생 화면이 실제로 쓰는 개수와 같게 (엑셀도 3개)
 const MAX_SOURCES = 6;
@@ -162,7 +163,9 @@ interface Props {
 
 const KeywordEditor: React.FC<Props> = ({ rule, rules, faqs, onClose, onSaved }) => {
   const [keyword, setKeyword] = useState(rule?.keyword ?? '');
-  const [synonyms, setSynonyms] = useState<string[]>(rule?.synonyms ?? []);
+  // 연관 단어는 한 목록에 저장하되, 화면에서는 한국어 / 영어(약어 포함) 칸을 나눠서
+  const [synonyms, setSynonyms] = useState<string[]>((rule?.synonyms ?? []).filter((w) => !isLatin(w)));
+  const [english, setEnglish] = useState<string[]>((rule?.synonyms ?? []).filter((w) => isLatin(w)));
   const [pinned, setPinned] = useState<number[]>(rule?.pinned_faq_ids ?? []);
   const [sources, setSources] = useState<string[]>(rule?.search_sources ?? []);
   const sourceApi = useHobitQueryGetApi<GetSearchSourcesRequest, GetSearchSourcesResponse>('keywords/sources');
@@ -181,18 +184,20 @@ const KeywordEditor: React.FC<Props> = ({ rule, rules, faqs, onClose, onSaved })
 
   // 다른 규칙과 겹치는 단어 (같은 단어가 두 규칙에 있으면 둘 다 걸림 — 막지는 않고 알려줌)
   const overlaps = useMemo(() => {
-    const mine = new Set([keyword.trim(), ...synonyms]);
+    const mine = new Set([keyword.trim(), ...synonyms, ...english]);
     return rules
       .filter((r) => r.id !== rule?.id)
       .flatMap((r) => [r.keyword, ...r.synonyms].filter((w) => mine.has(w)).map((w) => `${w} (${r.keyword})`));
-  }, [keyword, synonyms, rules, rule]);
+  }, [keyword, synonyms, english, rules, rule]);
 
   const save = async () => {
     const k = keyword.trim();
     if (!k) return appAlert('대표 키워드를 입력해주세요.');
     if (rules.some((r) => r.id !== rule?.id && r.keyword === k)) return appAlert(`"${k}"은(는) 이미 등록된 대표 키워드예요.`);
     setSaving(true);
-    const body = { keyword: k, synonyms: synonyms.filter((s) => s !== k), pinned_faq_ids: pinned, search_sources: sources };
+    const all = Array.from(new Set([...synonyms, ...english]));
+    if (all.length > 50) return appAlert('연관 단어는 한국어·영어 합쳐 50개까지 등록할 수 있어요.');
+    const body = { keyword: k, synonyms: all.filter((s) => s !== k), pinned_faq_ids: pinned, search_sources: sources };
     const res = rule ? await updateApi({ params: { id: String(rule.id) }, body }) : await createApi({ body });
     setSaving(false);
     if (res.payload?.statusCode === 200) onSaved();
@@ -217,6 +222,14 @@ const KeywordEditor: React.FC<Props> = ({ rule, rules, faqs, onClose, onSaved })
         <label className="mt-5 block text-sm font-semibold text-ink">연관 단어</label>
         <p className="mb-1.5 text-xs text-ink-3">학생이 이 단어로 물어도 대표 키워드로 찾아요. Enter나 쉼표로 추가.</p>
         <ChipInput value={synonyms} onChange={setSynonyms} placeholder="예: 수시, 정시, 입학, 이공계, 인문계, 계열" />
+
+        <label className="mt-5 block text-sm font-semibold text-ink">
+          영어 단어·약어 <span className="font-normal text-ink-3">(선택)</span>
+        </label>
+        <p className="mb-1.5 text-xs text-ink-3">
+          영어나 약어로 물어도 이 키워드로 찾아요. 대소문자 상관없이 단어 단위로 비교해요 (“cs”는 “CS 졸업요건”에는 걸리고 “physics”에는 안 걸려요).
+        </p>
+        <ChipInput value={english} onChange={setEnglish} placeholder="예: computer science, cs, comp sci" />
         {overlaps.length > 0 && <p className="mt-1.5 text-xs text-warn">다른 키워드에도 있는 단어: {overlaps.join(', ')}</p>}
 
         <label className="mt-5 block text-sm font-semibold text-ink">
