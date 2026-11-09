@@ -54,6 +54,7 @@ const ERRORS: Record<string, string> = {
   closed: '이미 종료된 채팅이에요.',
   not_started: '채팅을 시작한 뒤에 보낼 수 있어요.',
   rate_limited: '너무 빠르게 보내고 있어요.',
+  moderated: '욕설이나 비하 표현이 있어 보내지 않았어요. 표현을 바꿔 다시 보내 주세요.',
   too_long: '메시지가 너무 길어요 (2,000자까지).',
   edit_expired: '보낸 지 5분이 지나 고치거나 지울 수 없어요.',
   not_editable: '파일은 고칠 수 없어요. 지우고 다시 보내 주세요.',
