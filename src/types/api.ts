@@ -122,7 +122,7 @@ import {
 import { GetDashboardRequest, GetDashboardResponse } from './dashboard';
 import { GetAnswerReviewsRequest, GetAnswerReviewsResponse, GetAnswerTraceRequest, GetAnswerTraceResponse, UpdateAnswerReviewRequest, UpdateAnswerReviewResponse } from './answerReview';
 import { GetNoticeChangesRequest, GetNoticeChangesResponse, UpdateNoticeChangeRequest, UpdateNoticeChangeResponse } from './noticeChange';
-import { DeleteFaqCandidateRequest, DeleteFaqCandidateResponse, GetFaqCandidatesRequest, GetFaqCandidatesResponse, UpdateFaqCandidateRequest, UpdateFaqCandidateResponse } from './faqCandidate';
+import { DeleteFaqCandidateRequest, DeleteFaqCandidateResponse, GetFaqCandidateQuestionsRequest, GetFaqCandidateQuestionsResponse, GetFaqCandidatesRequest, GetFaqCandidatesResponse, GetFaqCandidateTopicsRequest, GetFaqCandidateTopicsResponse, UpdateFaqCandidateRequest, UpdateFaqCandidateResponse } from './faqCandidate';
 
 import { BulkUpdateEmailRequest, BulkUpdateEmailResponse, GetAllEmailsRequest, GetAllEmailsResponse, BulkDeleteEmailRequest, BulkDeleteEmailResponse } from './email';
 
@@ -157,6 +157,8 @@ export type HobitAdminGetApiRequest =
   | GetNoticeChangesRequest
   | GetAnswerReviewsRequest
   | GetFaqCandidatesRequest
+  | GetFaqCandidateTopicsRequest
+  | GetFaqCandidateQuestionsRequest
   | GetAnswerTraceRequest
   | GetSearchSourcesRequest
   | GetDashboardRequest;
@@ -216,6 +218,8 @@ export type HobitAdminApiResponse =
   | GetAnswerTraceResponse
   | UpdateAnswerReviewResponse
   | GetFaqCandidatesResponse
+  | GetFaqCandidateTopicsResponse
+  | GetFaqCandidateQuestionsResponse
   | UpdateFaqCandidateResponse
   | DeleteFaqCandidateResponse
   | GetSearchSourcesResponse
