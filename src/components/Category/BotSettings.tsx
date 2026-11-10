@@ -150,7 +150,7 @@ const BotSettings: React.FC = () => {
   const num = (k: BotNumberKey, unit: string, label: string) => (
     <NumberInput value={draft[k]} onChange={(v) => set(k, v)} limit={limits[k]} def={defs[k]} unit={unit} disabled={!canEdit || busy} label={label} />
   );
-  const sw = (k: 'placeEnabled' | 'blockFarPlace' | 'menuEnabled' | 'blockPersonalUse', label: string) => (
+  const sw = (k: 'placeEnabled' | 'blockFarPlace' | 'menuEnabled' | 'gradEnabled' | 'blockPersonalUse', label: string) => (
     <Switch on={draft[k]} disabled={!canEdit || busy} onChange={(v) => set(k, v)} label={label} />
   );
 
@@ -200,15 +200,15 @@ const BotSettings: React.FC = () => {
         </div>
         {canEdit && (
           <div className="flex shrink-0 gap-2">
-            <button type="button" onClick={reset} disabled={busy || same(draft, defs)} className="bg-card px-4 py-2 text-sm font-semibold text-ink-2 hover:bg-card-2 disabled:opacity-50">
+            <button type="button" onClick={reset} disabled={busy || same(draft, defs)} className="rounded-xl bg-card px-4 py-2 text-sm font-semibold text-ink-2 hover:bg-card-2 disabled:opacity-50">
               기본값으로
             </button>
             {dirty && (
-              <button type="button" onClick={() => setDraft(data.settings)} disabled={busy} className="bg-card px-4 py-2 text-sm font-semibold text-ink-2 hover:bg-card-2 disabled:opacity-50">
+              <button type="button" onClick={() => setDraft(data.settings)} disabled={busy} className="rounded-xl bg-card px-4 py-2 text-sm font-semibold text-ink-2 hover:bg-card-2 disabled:opacity-50">
                 되돌리기
               </button>
             )}
-            <button type="button" onClick={save} disabled={busy || !dirty} className="bg-accent px-5 py-2 text-sm font-semibold text-white disabled:opacity-50">
+            <button type="button" onClick={save} disabled={busy || !dirty} className="rounded-xl bg-accent px-5 py-2 text-sm font-semibold text-white disabled:opacity-50">
               {busy ? '저장 중…' : '저장'}
             </button>
           </div>
@@ -238,6 +238,12 @@ const BotSettings: React.FC = () => {
             </Row>
             <Row title="최대 답변 길이" help="답변 한 번에 쓸 수 있는 최대 길이 (토큰, 한글 약 1~2자). 짧으면 긴 답이 중간에 끊겨요.">
               {num('maxTokens', '토큰', '최대 답변 길이')}
+            </Row>
+            <Row
+              title="대학원 답변"
+              help="학부는 항상 답해요. 끄면 학생 화면에서 학부/대학원 스위치가 사라지고, 대학원을 골라 두었던 학생도 학부 기준으로 답을 받아요."
+            >
+              {sw('gradEnabled', '대학원 답변')}
             </Row>
           </Group>
 

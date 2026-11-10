@@ -40,7 +40,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="min-h-screen bg-page text-ink">
     <Header />
     {/* 휴대폰: 옆 여백 좁게 */}
-    <div className="mx-auto max-w-[1680px] px-4 sm:px-6 2xl:px-10">{children}</div>
+    <div className="mx-auto max-w-[var(--page-max)] px-4 sm:px-6 2xl:px-10">{children}</div>
     <NavLoader />
     <BackFab />
     <ScrollTopFab />

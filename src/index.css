@@ -49,8 +49,11 @@ html.dark {
 }
 
 /* 화면 폭에 따라 전체 크기를 연속으로 조정 — 글자·여백(rem 단위)이 함께 커지고 작아짐.
-   노트북(~1400px)에서는 14px, 큰 모니터(2200px 이상)에서는 16px */
-html { font-size: clamp(14px, calc(10.5px + 0.25vw), 16px); }
+   노트북(~1400px) 14px → 1920px 15.3px → 2560px(QHD) 16.9px → 3000px 이상(4K) 18px.
+   본문 최대 폭(--page-max)도 rem이라 큰 모니터에서는 같이 넓어짐 (예전엔 16px·1680px에서 멈춰 양옆이 비었음) */
+html { font-size: clamp(14px, calc(10.5px + 0.25vw), 18px); }
+:root { --page-max: 105rem; }
+@media (min-width: 2200px) { :root { --page-max: 125rem; } }
 /* 휴대폰은 한 단계 작게 — 글자·카드 여백(rem 기준)이 함께 줄어듦. 입력칸은 16px 유지 (iOS가 작은 입력칸을 누르면 화면을 확대해서) */
 @media (max-width: 639px) {
   html { font-size: 13.5px; }

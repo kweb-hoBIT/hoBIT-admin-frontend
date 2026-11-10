@@ -126,6 +126,7 @@ export type BotSettings = {
   placeSize: number;
   blockFarPlace: boolean;
   menuEnabled: boolean;
+  gradEnabled: boolean;
   sessionPerMin: number;
   sessionPerDay: number;
   ipPerMin: number;
@@ -147,6 +148,28 @@ export type BotSettingsResponse = {
   updatedAt: string | null;
   updatedBy: string | null;
 };
+
+/** 정기 수집 (채팅 서버 src/services/crawl_pages.ts · RAG /crawl/status) */
+export type CrawlPage = { url: string; title: string; enabled: boolean };
+export type CrawlRun = {
+  started_at: string | null;
+  finished_at: string | null;
+  scope: 'all' | 'boards' | 'static' | string | null;
+  changes: { added?: number; updated?: number; deleted?: number; restored?: number };
+  errors: number;
+  problems: string[];
+  custom_pages: { pages: number; items: number; errors: Record<string, string> } | null;
+  custom_pages_error: string | null;
+};
+export type CrawlResponse = {
+  pages: CrawlPage[];
+  updatedAt: string | null;
+  updatedBy: string | null;
+  maxPages: number;
+  schedule: { when: string; what: string }[];
+  status: { latest: { available: boolean; finished_at?: string; scope?: string; ok?: boolean; problems?: string[]; last_ok_at?: string }; runs: CrawlRun[] } | null;
+};
+export type CrawlPreview = { title: string; sections: number; chars: number; text: string };
 
 export const chatApi = {
   sessions: (status: 'waiting' | 'active' | 'closed') => call<{ sessions: ListedSession[] }>('GET', `/agent/sessions?status=${status}`),
@@ -170,6 +193,10 @@ export const chatApi = {
   /** 챗봇 설정 — 보기는 담당자 누구나, 저장은 행정실·개발자만 (범위를 벗어난 값은 서버가 끝값으로 맞춤) */
   getBotSettings: () => call<BotSettingsResponse>('GET', '/agent/bot-settings'),
   setBotSettings: (settings: Partial<BotSettings>) => call<BotSettingsResponse>('PUT', '/agent/bot-settings', { settings }),
+  /** 정기 수집 — 시간표·최근 기록·관리자가 더한 학교 페이지 (저장은 행정실·개발자만) */
+  getCrawl: () => call<CrawlResponse>('GET', '/agent/crawl'),
+  setCrawlPages: (pages: CrawlPage[]) => call<CrawlResponse>('PUT', '/agent/crawl', { pages }),
+  previewCrawlPage: (url: string) => call<CrawlPreview>('POST', '/agent/crawl/preview', { url }),
   /** 학생 화면과 같은 상태 (운영 중·운영 시간 아님·자리 비움·꺼짐) */
   status: (mode: 'staff' | 'senior') =>
     call<{ open: boolean; reason: string; hours: { today: { start: string; end: string } | null } | null }>('GET', `/status?mode=${mode}`),

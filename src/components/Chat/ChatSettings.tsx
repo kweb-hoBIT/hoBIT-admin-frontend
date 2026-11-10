@@ -72,7 +72,7 @@ const HolidayImport: React.FC<{ current: string[]; onAdd: (dates: string[]) => v
             </option>
           ))}
         </Select>
-        <button type="button" onClick={load} disabled={loading} className="bg-surface px-4 py-1.5 text-sm font-semibold text-ink shadow-sm hover:bg-card-2 disabled:opacity-60">
+        <button type="button" onClick={load} disabled={loading} className="rounded-xl bg-surface px-4 py-1.5 text-sm font-semibold text-ink shadow-sm hover:bg-card-2 disabled:opacity-60">
           {loading ? '불러오는 중…' : '불러오기'}
         </button>
         <span className="text-xs text-ink-3">Google 대한민국 휴일 캘린더 · 기념일 제외</span>
@@ -97,7 +97,7 @@ const HolidayImport: React.FC<{ current: string[]; onAdd: (dates: string[]) => v
             })}
           </ul>
           <div className="mt-2 flex justify-end gap-2">
-            <button type="button" onClick={() => setList(null)} className="px-3 py-1.5 text-sm text-ink-2 hover:bg-surface">
+            <button type="button" onClick={() => setList(null)} className="rounded-xl px-3 py-1.5 text-sm text-ink-2 hover:bg-surface">
               닫기
             </button>
             <button
@@ -107,7 +107,7 @@ const HolidayImport: React.FC<{ current: string[]; onAdd: (dates: string[]) => v
                 onAdd([...picked]);
                 setList(null);
               }}
-              className="bg-accent px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
+              className="rounded-xl bg-accent px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
             >
               {picked.size}일 추가
             </button>
@@ -243,7 +243,7 @@ const HoursTab: React.FC<{ guardRef: React.MutableRefObject<UnsavedGuard | null>
         <textarea value={holidaysText} onChange={(e) => setHolidaysText(e.target.value)} rows={6} className="w-full rounded-xl border border-line px-3 py-2 font-mono text-sm" />
       </div>
       <div className="flex justify-end">
-        <button type="button" onClick={save} disabled={saving} className="bg-accent px-6 py-2.5 font-semibold text-white disabled:opacity-60">
+        <button type="button" onClick={save} disabled={saving} className="rounded-xl bg-accent px-6 py-2.5 font-semibold text-white disabled:opacity-60">
           {saving ? '저장 중…' : '저장'}
         </button>
       </div>
@@ -347,7 +347,7 @@ const ChatSettings: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       >
         <div className="mb-4 flex shrink-0 items-center justify-between">
           <h2>채팅 설정</h2>
-          <button type="button" onClick={requestClose} aria-label="닫기" className="h-9 w-9 text-ink-2 hover:bg-card">
+          <button type="button" onClick={requestClose} aria-label="닫기" className="rounded-xl h-9 w-9 text-ink-2 hover:bg-card">
             ✕
           </button>
         </div>

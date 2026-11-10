@@ -302,14 +302,14 @@ const KeywordEditor: React.FC<Props> = ({ rule, rules, faqs, onClose, onSaved })
         )}
 
         <div className="mt-6 flex justify-end gap-2 [&>button]:flex-1 sm:[&>button]:flex-none">
-          <button type="button" onClick={onClose} className="bg-card px-5 py-2.5 font-semibold text-ink-2 hover:bg-card-2">
+          <button type="button" onClick={onClose} className="rounded-xl bg-card px-5 py-2.5 font-semibold text-ink-2 hover:bg-card-2">
             취소
           </button>
           <button
             type="button"
             onClick={save}
             disabled={saving}
-            className="bg-accent px-6 py-2.5 font-semibold text-white hover:bg-accent/90 disabled:opacity-60"
+            className="rounded-xl bg-accent px-6 py-2.5 font-semibold text-white hover:bg-accent/90 disabled:opacity-60"
           >
             {saving ? '저장 중…' : '저장'}
           </button>

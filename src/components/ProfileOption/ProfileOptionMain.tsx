@@ -133,14 +133,14 @@ const Editor: React.FC<{ editing: Editing; onClose: () => void; onSaved: () => v
         <p className="mt-1 text-xs text-ink-3">숨겨도 질문 속 이름 인식과 검색에는 계속 써요. (없어진 학과는 삭제보다 숨기기를 권해요)</p>
 
         <div className="mt-6 flex justify-end gap-2 [&>button]:flex-1 sm:[&>button]:flex-none">
-          <button type="button" onClick={onClose} className="bg-card px-5 py-2.5 font-semibold text-ink-2 hover:bg-card-2">
+          <button type="button" onClick={onClose} className="rounded-xl bg-card px-5 py-2.5 font-semibold text-ink-2 hover:bg-card-2">
             취소
           </button>
           <button
             type="button"
             onClick={save}
             disabled={saving}
-            className="bg-accent px-6 py-2.5 font-semibold text-white hover:bg-accent/90 disabled:opacity-60"
+            className="rounded-xl bg-accent px-6 py-2.5 font-semibold text-white hover:bg-accent/90 disabled:opacity-60"
           >
             {saving ? '저장 중…' : '저장'}
           </button>

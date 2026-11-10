@@ -365,7 +365,7 @@ const FAQExcelUpload: React.FC<{ onClose: () => void; scope?: ExcelScope }> = ({
       >
         <div className="flex items-center justify-between">
           <h2>{senior ? '선배 FAQ 엑셀로 올리기' : '엑셀로 올리기'}</h2>
-          <button type="button" onClick={close} aria-label="닫기" className="p-2 text-ink-3 hover:bg-card hover:text-ink">
+          <button type="button" onClick={close} aria-label="닫기" className="rounded-xl p-2 text-ink-3 hover:bg-card hover:text-ink">
             <Icon name="close" className="h-5 w-5" />
           </button>
         </div>
@@ -389,7 +389,7 @@ const FAQExcelUpload: React.FC<{ onClose: () => void; scope?: ExcelScope }> = ({
               type="button"
               disabled={step === 'reading' || step === 'applying'}
               onClick={() => fileRef.current?.click()}
-              className="inline-flex items-center gap-1.5 bg-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent/90 disabled:opacity-60"
+              className="rounded-xl inline-flex items-center gap-1.5 bg-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent/90 disabled:opacity-60"
             >
               <Icon name="file" />
               {step === 'reading' ? '읽는 중…' : preview ? '다른 파일 고르기' : '파일 고르기'}
@@ -402,7 +402,7 @@ const FAQExcelUpload: React.FC<{ onClose: () => void; scope?: ExcelScope }> = ({
         {step === 'done' && (
           <div className="rounded-2xl border border-line bg-success-soft p-5">
             <p className="whitespace-pre-line font-semibold text-ink">{result}</p>
-            <button type="button" onClick={close} className="mt-4 bg-accent px-5 py-2 text-sm font-semibold text-white hover:bg-accent/90">
+            <button type="button" onClick={close} className="rounded-xl mt-4 bg-accent px-5 py-2 text-sm font-semibold text-white hover:bg-accent/90">
               닫기
             </button>
           </div>
@@ -472,14 +472,14 @@ const FAQExcelUpload: React.FC<{ onClose: () => void; scope?: ExcelScope }> = ({
             )}
 
             <div className="flex justify-end gap-2 [&>button]:flex-1 sm:[&>button]:flex-none">
-              <button type="button" onClick={close} className="bg-card px-5 py-2.5 text-sm font-semibold text-ink-2 hover:bg-card-2">
+              <button type="button" onClick={close} className="rounded-xl bg-card px-5 py-2.5 text-sm font-semibold text-ink-2 hover:bg-card-2">
                 취소
               </button>
               <button
                 type="button"
                 onClick={apply}
                 disabled={!canApply}
-                className="bg-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {step === 'applying' ? '적용하는 중…' : '적용하기'}
               </button>
@@ -518,7 +518,7 @@ const FAQExcelUpload: React.FC<{ onClose: () => void; scope?: ExcelScope }> = ({
                     type="button"
                     disabled={restoring || step === 'applying' || step === 'reading'}
                     onClick={() => restore(b)}
-                    className="shrink-0 border border-line px-3 py-1.5 text-xs font-semibold text-ink hover:bg-card disabled:opacity-50"
+                    className="rounded-xl shrink-0 border border-line px-3 py-1.5 text-xs font-semibold text-ink hover:bg-card disabled:opacity-50"
                   >
                     {restoring ? '되돌리는 중…' : '이때로 되돌리기'}
                   </button>

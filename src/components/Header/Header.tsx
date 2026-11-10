@@ -434,7 +434,7 @@ const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-surface">
       {/* 윗줄을 아래 탭 줄보다 위 층에 — 사용자 메뉴·더보기 펼침이 아래 탭 글자에 비쳐 보이던 문제 */}
-      <div className="relative z-30 mx-auto flex h-[4.5rem] max-w-[1680px] items-center gap-2 px-4 sm:gap-4 sm:px-6 xl:gap-8 2xl:px-10">
+      <div className="relative z-30 mx-auto flex h-[4.5rem] max-w-[var(--page-max)] items-center gap-2 px-4 sm:gap-4 sm:px-6 xl:gap-8 2xl:px-10">
         <button
           type="button"
           disabled={isAuthPage}
@@ -570,7 +570,7 @@ const Header: React.FC = () => {
       {/* 하위 화면 탭 — 묶음 안에 화면이 둘 이상일 때만 (FAQ·로그·피드백) */}
       {!isAuthPage && subItems.length > 1 && (
         <div className="border-t border-line/70">
-          <div ref={subRef} className="no-scrollbar relative mx-auto flex h-12 max-w-[1680px] items-center gap-1 overflow-x-auto px-4 sm:px-6 2xl:px-10">
+          <div ref={subRef} className="no-scrollbar relative mx-auto flex h-12 max-w-[var(--page-max)] items-center gap-1 overflow-x-auto px-4 sm:px-6 2xl:px-10">
             <SlidingIndicator containerRef={subRef} activeKey={currentChild} variant="underline" className="bg-accent-ink" />
             {subItems.map((s) => {
               const on = s.path === currentChild;
