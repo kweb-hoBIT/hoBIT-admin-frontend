@@ -90,7 +90,7 @@ const SENIOR_OK = ["/seniorfaqs", "/categories", "/chats"];
 type NavItem = { key: string; path: string; label: string; pin?: boolean };
 const NAV_GAP = 4;
 // inline-flex items-center — 글자 기준선에 맞춰지면 옆의 작은 숫자 배지가 아래로 처져 보였음
-const NAV_ITEM = "relative z-[1] inline-flex shrink-0 items-center rounded-full px-[1.1rem] py-2.5 text-[17px] font-semibold leading-6 transition-colors";
+const NAV_ITEM = "relative z-[1] inline-flex shrink-0 items-center rounded-full px-[1.1rem] py-2.5 text-[length:max(17px,1.0625rem)] font-semibold leading-6 transition-colors";
 
 /**
  * 메뉴 줄 — 자리가 모자라면 뒤쪽 메뉴부터 "더보기"로 접음 (가로 스크롤로 숨겨져 안 보이던 문제)
@@ -213,7 +213,7 @@ const NavBar: React.FC<{
                     role="menuitem"
                     onClick={() => onGo(item.path)}
                     onMouseEnter={() => prefetchRoute(item.path)}
-                    className={`flex w-full items-center rounded-xl px-3.5 py-2.5 text-left text-[16px] font-semibold ${
+                    className={`flex w-full items-center rounded-xl px-3.5 py-2.5 text-left text-[length:max(16px,1rem)] font-semibold ${
                       current === item.key ? "bg-accent/10 text-accent-ink dark:bg-accent-ink/15" : "text-ink-2 hover:bg-card hover:text-ink"
                     }`}
                   >
@@ -262,7 +262,7 @@ const ThemeToggle: React.FC = () => {
         </svg>
       )}
       {/* 누르면 바뀔 모드 — 호빗 사용자 화면과 같이 항상 영어 */}
-      <span className="hidden text-[17px] font-semibold xl:inline">{dark ? "Light" : "Night"}</span>
+      <span className="hidden text-[length:max(17px,1.0625rem)] font-semibold xl:inline">{dark ? "Light" : "Night"}</span>
     </button>
   );
 };
@@ -309,7 +309,7 @@ const MobileDrawer: React.FC<{
           const single = g.children.length === 1;
           return (
             <div key={g.key} className="border-b border-line/70 py-2 last:border-b-0">
-              {!single && <p className="px-3 pb-1 pt-1.5 text-[13px] font-bold tracking-wide text-ink-3">{g.label}</p>}
+              {!single && <p className="px-3 pb-1 pt-1.5 text-[length:max(13px,0.8125rem)] font-bold tracking-wide text-ink-3">{g.label}</p>}
               {g.children.map((c) => {
                 const on = c.path === currentChild;
                 return (
@@ -318,7 +318,7 @@ const MobileDrawer: React.FC<{
                     type="button"
                     aria-current={on ? "page" : undefined}
                     onClick={() => onGo(c.path)}
-                    className={`flex min-h-[44px] w-full items-center rounded-xl px-3 text-left text-[16px] font-semibold ${
+                    className={`flex min-h-[max(44px,2.75rem)] w-full items-center rounded-xl px-3 text-left text-[length:max(16px,1rem)] font-semibold ${
                       on ? "bg-accent/10 text-accent-ink dark:bg-accent-ink/15" : "text-ink-2 active:bg-card"
                     }`}
                   >
@@ -338,7 +338,7 @@ const MobileDrawer: React.FC<{
           href={HOBIT_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 flex min-h-[44px] items-center gap-2 rounded-xl px-3 text-[16px] font-semibold text-ink-2 active:bg-card"
+          className="mt-2 flex min-h-[max(44px,2.75rem)] items-center gap-2 rounded-xl px-3 text-[length:max(16px,1rem)] font-semibold text-ink-2 active:bg-card"
         >
           <Icon name="external" className="h-5 w-5" />
           챗봇 보기
@@ -445,12 +445,12 @@ const Header: React.FC = () => {
           <img src="/hoBIT64.ico" alt="" className="h-9 w-9 rounded-full sm:h-10 sm:w-10" />
           {/* 로고 글자 바로 아래에 작게: 행정실·개발자 = 관리자, 근로장학생 = 선배 (옆에 알약으로 두면 메뉴 탭처럼 보였음) */}
           <span className="flex flex-col items-start leading-none">
-            <span className="text-[22px] font-bold tracking-tight text-accent-ink sm:text-[26px]">hoBIT</span>
+            <span className="text-[length:max(22px,1.375rem)] font-bold tracking-tight text-accent-ink sm:text-[length:max(26px,1.625rem)]">hoBIT</span>
             {role === "senior" ? (
               // 호빗 화면의 선배모드 표시(Senior)와 같은 모양
-              <span className="mt-1 w-fit rounded-full bg-senior px-2 py-0.5 text-[12px] font-semibold text-red-600">senior</span>
+              <span className="mt-1 w-fit rounded-full bg-senior px-2 py-0.5 text-[length:max(12px,0.75rem)] font-semibold text-red-600">senior</span>
             ) : (
-              <span className="mt-1 text-[12px] font-bold tracking-[0.08em] text-ink-3">admin</span>
+              <span className="mt-1 text-[length:max(12px,0.75rem)] font-bold tracking-[0.08em] text-ink-3">admin</span>
             )}
           </span>
         </button>
@@ -466,7 +466,7 @@ const Header: React.FC = () => {
             aria-expanded={drawer}
             aria-controls="mobile-nav"
             aria-label={`메뉴 ${drawer ? "닫기" : "열기"} (지금: ${currentLabel})`}
-            className={`relative flex h-10 min-w-0 items-center gap-1.5 rounded-full px-3.5 text-[15px] font-semibold transition-colors md:hidden ${
+            className={`relative flex h-10 min-w-0 items-center gap-1.5 rounded-full px-3.5 text-[length:max(15px,0.9375rem)] font-semibold transition-colors md:hidden ${
               drawer ? "bg-accent/15 text-accent-ink dark:bg-accent-ink/20" : "bg-card text-accent-ink hover:bg-card-2"
             }`}
           >
@@ -475,7 +475,7 @@ const Header: React.FC = () => {
               <path d="M5.5 7.5 10 12l4.5-4.5" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             {chatBadge > 0 && (
-              <span className="absolute -right-1 -top-1 inline-flex min-w-[1.1rem] items-center justify-center rounded-full bg-accent px-1 text-[11px] font-bold leading-[1.1rem] text-white">
+              <span className="absolute -right-1 -top-1 inline-flex min-w-[1.1rem] items-center justify-center rounded-full bg-accent px-1 text-[length:max(11px,0.6875rem)] font-bold leading-[1.1rem] text-white">
                 {chatBadge}
               </span>
             )}
@@ -508,7 +508,7 @@ const Header: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             // 휴대폰에서는 메뉴(햄버거) 안으로
-            className="wiggle hidden h-12 items-center gap-2 rounded-full px-3.5 text-[17px] font-semibold text-ink-2 transition-colors hover:bg-card hover:text-ink sm:flex"
+            className="wiggle hidden h-12 items-center gap-2 rounded-full px-3.5 text-[length:max(17px,1.0625rem)] font-semibold text-ink-2 transition-colors hover:bg-card hover:text-ink sm:flex"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="wiggle-icon h-6 w-6" aria-hidden="true">
               <path d="M7 17 17 7M9 7h8v8" />
@@ -528,16 +528,16 @@ const Header: React.FC = () => {
                 aria-expanded={showPopup}
                 className="wiggle flex h-11 items-center gap-3 rounded-full px-1 text-ink-2 hover:bg-card hover:text-ink transition-colors sm:h-12 sm:pl-1.5 sm:pr-4"
               >
-                <span className="wiggle-icon flex h-9 w-9 items-center justify-center rounded-full bg-accent text-[17px] font-bold text-white">
+                <span className="wiggle-icon flex h-9 w-9 items-center justify-center rounded-full bg-accent text-[length:max(17px,1.0625rem)] font-bold text-white">
                   {(username || "?").slice(0, 1)}
                 </span>
-                <span className="hidden max-w-[160px] truncate text-[17px] font-semibold lg:inline">{username}</span>
+                <span className="hidden max-w-[max(160px,10rem)] truncate text-[length:max(17px,1.0625rem)] font-semibold lg:inline">{username}</span>
               </button>
               {showPopup && (
                 <div role="menu" className="pop-menu absolute right-0 top-[3.5rem] z-50 w-64 max-w-[calc(100vw-2rem)] rounded-2xl border border-line bg-surface p-2 shadow-xl">
                   {/* 나 — 동그라미 + 이름 + 권한 */}
                   <div className="flex items-center gap-3 px-3 pb-3 pt-2">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-[17px] font-bold text-white">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-[length:max(17px,1.0625rem)] font-bold text-white">
                       {(username || "?").slice(0, 1)}
                     </span>
                     <span className="min-w-0">
@@ -582,7 +582,7 @@ const Header: React.FC = () => {
                   aria-current={on ? "page" : undefined}
                   onClick={() => handleNavigation(s.path)}
                   onMouseEnter={() => prefetchRoute(s.path)}
-                  className={`relative z-[1] shrink-0 h-full px-4 text-[15px] font-semibold transition-colors ${
+                  className={`relative z-[1] shrink-0 h-full px-4 text-[length:max(15px,0.9375rem)] font-semibold transition-colors ${
                     on ? "text-accent-ink" : "text-ink-3 hover:text-ink"
                   }`}
                 >
