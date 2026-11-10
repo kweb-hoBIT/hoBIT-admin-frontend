@@ -83,7 +83,7 @@ const Line: React.FC<{ title: string; help: string; children: React.ReactNode }>
   </div>
 );
 
-const selectCls = 'rounded-xl border border-line bg-surface px-3 py-2 text-sm text-ink disabled:opacity-60';
+const selectCls = 'field min-w-[8.5rem]';
 
 const CrawlSettings: React.FC = () => {
   const { role } = useChat();
