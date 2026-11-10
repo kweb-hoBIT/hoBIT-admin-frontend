@@ -814,7 +814,14 @@ const ChatMain: React.FC = () => {
                     {(unread[s.id] ?? 0) > 0 && <span className="rounded-full bg-accent px-1.5 text-xs text-white">{unread[s.id]}</span>}
                   </span>
                   <span className="truncate text-xs text-ink-2">
-                    {s.botContext?.length ? `“${s.botContext[s.botContext.length - 1]?.q}”` : s.profile?.department ?? '최근 호빗 대화 없음'}
+                    {/* 채팅의 마지막 메시지 (없으면 채팅 전 마지막 호빗 질문) — 목록에서 지금 대화가 어디까지 왔는지 보이게 */}
+                    {(s as ListedSession).lastMessage
+                      ? `${(s as ListedSession).lastMessage!.sender === 'agent' ? '담당자: ' : ''}${
+                          (s as ListedSession).lastMessage!.attachment && !(s as ListedSession).lastMessage!.body ? '📎 파일' : (s as ListedSession).lastMessage!.body
+                        }`
+                      : s.botContext?.length
+                        ? `호빗에 물은 것: “${s.botContext[s.botContext.length - 1]?.q}”`
+                        : s.profile?.department ?? '아직 메시지 없음'}
                   </span>
                   <span className="text-[11px] text-ink-3">
                     {tab === 'closed' && s.closedAt ? `${ago(s.closedAt)} 종료${s.rating ? ` · ★${s.rating}` : ''}` : `${ago(s.createdAt)} 요청`}
