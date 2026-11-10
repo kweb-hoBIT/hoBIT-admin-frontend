@@ -645,7 +645,11 @@ const ChatMain: React.FC = () => {
   };
 
   const end = async () => {
-    if (!session || !(await appConfirm('채팅을 종료할까요? 학생에게 만족도 평가가 표시돼요.'))) return;
+    const msg =
+      session?.status === 'waiting'
+        ? '대기 중인 채팅을 종료할까요? 학생에게 종료 안내가 표시돼요.'
+        : '채팅을 종료할까요? 학생에게 만족도 평가가 표시돼요.';
+    if (!session || !(await appConfirm(msg, { confirmLabel: '종료' }))) return;
     socket?.emit('session:close', { sessionId: session.id }, (r: any) => {
       if (!r?.ok) appAlert(ERRORS[r?.error] ?? '종료하지 못했어요.');
       refreshLists();
@@ -872,24 +876,30 @@ const ChatMain: React.FC = () => {
                     )}
                   </p>
                 </div>
+                {/* 좁은 화면(휴대폰)에서는 아이콘만 — 글자는 sm 이상에서. 이름은 aria-label·title로 */}
                 {session.status === 'waiting' && (
-                  <button type="button" onClick={claim} className="shrink-0 whitespace-nowrap rounded-full bg-accent px-5 py-2 text-sm font-semibold text-white hover:bg-accent/90">
-                    채팅 시작
+                  <button type="button" onClick={claim} aria-label="채팅 시작" title="채팅 시작" className="flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-accent px-3 text-sm font-semibold text-white hover:bg-accent/90 sm:px-5">
+                    <HeadIcon d="M4 6h16v10H8l-4 4V6z" />
+                    <span className="hidden sm:inline">채팅 시작</span>
                   </button>
                 )}
-                {session.status !== 'closed' && session.status !== 'waiting' && (role === 'staff' || session.assignedUserId === uid) && (
-                  <button type="button" onClick={end} className="shrink-0 whitespace-nowrap rounded-full bg-card px-4 py-2 text-sm font-semibold text-ink hover:bg-card-2">
-                    채팅 종료
+                {/* 대기 중인 채팅도 종료할 수 있음 (장난·중복 요청 등 시작하지 않고 정리) */}
+                {session.status !== 'closed' && (session.status === 'waiting' || role === 'staff' || session.assignedUserId === uid) && (
+                  <button type="button" onClick={end} aria-label="채팅 종료" title="채팅 종료" className="flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-card px-3 text-sm font-semibold text-ink hover:bg-card-2 sm:px-4">
+                    <HeadIcon d="M6 6l12 12M18 6L6 18" />
+                    <span className="hidden sm:inline">{session.status === 'waiting' ? '종료' : '채팅 종료'}</span>
                   </button>
                 )}
                 {role === 'staff' && session.status === 'closed' && (
-                  <button type="button" onClick={removeOne} className="shrink-0 whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold text-danger hover:bg-danger-soft">
-                    기록 삭제
+                  <button type="button" onClick={removeOne} aria-label="기록 삭제" title="기록 삭제" className="flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-sm font-semibold text-danger hover:bg-danger-soft">
+                    <HeadIcon d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" />
+                    <span className="hidden sm:inline">기록 삭제</span>
                   </button>
                 )}
                 {role === 'staff' && session.status !== 'closed' && (
-                  <button type="button" onClick={block} className="shrink-0 whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold text-danger hover:bg-danger-soft">
-                    차단
+                  <button type="button" onClick={block} aria-label="차단" title="차단" className="flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-sm font-semibold text-danger hover:bg-danger-soft">
+                    <HeadIcon d="M5.6 5.6l12.8 12.8M12 3a9 9 0 100 18 9 9 0 000-18z" />
+                    <span className="hidden sm:inline">차단</span>
                   </button>
                 )}
                 <button
@@ -1142,5 +1152,12 @@ const ChatMain: React.FC = () => {
     </div>
   );
 };
+
+/** 대화 상단 버튼 아이콘 (휴대폰에서는 아이콘만 보임) */
+const HeadIcon: React.FC<{ d: string }> = ({ d }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px] shrink-0" aria-hidden="true">
+    <path d={d} />
+  </svg>
+);
 
 export default ChatMain;

@@ -87,7 +87,8 @@ const SENIOR_OK = ["/seniorfaqs", "/categories", "/chats"];
 
 type NavItem = { key: string; path: string; label: string; pin?: boolean };
 const NAV_GAP = 4;
-const NAV_ITEM = "relative z-[1] shrink-0 rounded-full px-[1.1rem] py-2.5 text-[17px] font-semibold transition-colors";
+// inline-flex items-center — 글자 기준선에 맞춰지면 옆의 작은 숫자 배지가 아래로 처져 보였음
+const NAV_ITEM = "relative z-[1] inline-flex shrink-0 items-center rounded-full px-[1.1rem] py-2.5 text-[17px] font-semibold leading-6 transition-colors";
 
 /**
  * 메뉴 줄 — 자리가 모자라면 뒤쪽 메뉴부터 "더보기"로 접음 (가로 스크롤로 숨겨져 안 보이던 문제)
@@ -488,7 +489,7 @@ const Header: React.FC = () => {
               item.key === "chats" && chatBadge > 0 ? (
                 <span
                   title={`대기 ${waiting.length} · 안 읽은 메시지 ${summary?.unread ?? 0}`}
-                  className="ml-1.5 inline-flex min-w-[1.25rem] animate-pulse items-center justify-center rounded-full bg-accent px-1.5 text-xs font-bold text-white"
+                  className="ml-1.5 inline-flex h-5 min-w-[1.25rem] animate-pulse items-center justify-center rounded-full bg-accent px-1.5 text-xs font-bold leading-none tabular-nums text-white"
                 >
                   {chatBadge}
                 </span>

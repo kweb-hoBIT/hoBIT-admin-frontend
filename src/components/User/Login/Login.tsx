@@ -43,6 +43,9 @@ const Login: React.FC = () => {
           setError('존재하지 않는 이메일입니다. 다시 확인해주세요.');
         } else if (response.payload?.statusCode === 401) {
           setError('비밀번호가 일치하지 않습니다. 다시 확인해주세요.');
+        } else if ((response.payload?.statusCode as number | undefined) === 429) {
+          // 서버의 로그인 시도 제한 (같은 IP에서 15분 안에 5번 틀림)
+          setError('로그인 시도가 너무 많아요. 15분 뒤에 다시 시도해주세요.');
         } else {
           setError('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
         }
