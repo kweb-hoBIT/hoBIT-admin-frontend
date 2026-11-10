@@ -151,7 +151,7 @@ const BotSettings: React.FC = () => {
   const num = (k: BotNumberKey, unit: string, label: string) => (
     <NumberInput value={draft[k]} onChange={(v) => set(k, v)} limit={limits[k]} def={defs[k]} unit={unit} disabled={!canEdit || busy} label={label} />
   );
-  const sw = (k: 'placeEnabled' | 'blockFarPlace' | 'menuEnabled' | 'gradEnabled' | 'blockPersonalUse', label: string) => (
+  const sw = (k: 'placeEnabled' | 'blockFarPlace' | 'menuEnabled' | 'gradEnabled' | 'mascotEnabled' | 'blockPersonalUse', label: string) => (
     <Switch on={draft[k]} disabled={!canEdit || busy} onChange={(v) => set(k, v)} label={label} />
   );
 
@@ -266,6 +266,15 @@ const BotSettings: React.FC = () => {
             </Row>
             <Row title="학교 밖 지역 질문 막기" help="'강남 맛집', '내 위치 근처 카페'처럼 학교 주변이 아닌 장소 질문에는 안내만 하고 답하지 않아요.">
               {sw('blockFarPlace', '학교 밖 지역 질문 막기')}
+            </Row>
+          </Group>
+
+          <Group title="호빗 캐릭터" desc="학생 화면 시작 화면의 움직이는 호빗이에요. 들어오면 손인사, 누르면 손 흔들기, 가만히 두면 졸고, 졸 때 마우스를 올리거나 탭·흔들면 깨요.">
+            <Row title="움직이는 캐릭터" help="끄면 움직이지 않는 그림만 보여요. 휴대폰에서 '동작 줄이기'를 켠 학생에게는 항상 그림만 보여요.">
+              {sw('mascotEnabled', '움직이는 캐릭터')}
+            </Row>
+            <Row title="졸기까지 시간" help="학생이 이 시간 동안 아무것도 하지 않으면 호빗이 졸아요.">
+              {num('mascotIdleSec', '초', '졸기까지 시간')}
             </Row>
           </Group>
 

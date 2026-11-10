@@ -127,6 +127,8 @@ export type BotSettings = {
   blockFarPlace: boolean;
   menuEnabled: boolean;
   gradEnabled: boolean;
+  mascotEnabled: boolean;
+  mascotIdleSec: number;
   sessionPerMin: number;
   sessionPerDay: number;
   ipPerMin: number;
