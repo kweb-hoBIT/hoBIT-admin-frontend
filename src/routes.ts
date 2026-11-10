@@ -40,6 +40,7 @@ export const ROUTES: RouteDef[] = [
   def('/categories/profile-options', () => import('./pages/ProfileOptionPage')),
   def('/categories/bulk', () => import('./pages/CategoryBulkPage')),
   def('/categories/chat', () => import('./pages/CategoryChatPage')),
+  def('/categories/bot', () => import('./pages/CategoryBotPage')),
 
   def('/logs', () => import('./pages/LogsPage')),
   def('/logs/analytics', () => import('./pages/LogAnalyticsPage')),

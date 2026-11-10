@@ -117,6 +117,37 @@ async function call<T>(method: string, path: string, body?: unknown): Promise<T>
 
 export type ChatFeatures = { staff: boolean; senior: boolean; emailVerification: boolean };
 
+/** 챗봇 설정 (답변 자유도·주변 장소·학식·과다 사용) — 채팅 서버 src/services/bot_settings.ts와 같은 모양 */
+export type BotSettings = {
+  temperature: number;
+  maxTokens: number;
+  placeEnabled: boolean;
+  placeRadiusM: number;
+  placeSize: number;
+  blockFarPlace: boolean;
+  menuEnabled: boolean;
+  sessionPerMin: number;
+  sessionPerDay: number;
+  ipPerMin: number;
+  ipPerDay: number;
+  maxQuestionChars: number;
+  dailyCharBudget: number;
+  repeatNoticeAt: number;
+  repeatStrikeAt: number;
+  meaninglessStrikeAt: number;
+  warnLimit: number;
+  suspendMinutes: [number, number, number];
+  blockPersonalUse: boolean;
+};
+export type BotNumberKey = { [K in keyof BotSettings]: BotSettings[K] extends number ? K : never }[keyof BotSettings];
+export type BotSettingsResponse = {
+  settings: BotSettings;
+  defaults: BotSettings;
+  limits: Record<BotNumberKey | 'suspendMinutes', { min: number; max: number; step: number }>;
+  updatedAt: string | null;
+  updatedBy: string | null;
+};
+
 export const chatApi = {
   sessions: (status: 'waiting' | 'active' | 'closed') => call<{ sessions: ListedSession[] }>('GET', `/agent/sessions?status=${status}`),
   summary: () => call<ChatSummary>('GET', '/agent/summary'),
@@ -136,6 +167,9 @@ export const chatApi = {
   /** 채팅 켜고 끄기 — 행정실 채팅·근로장학생 채팅·학교 메일 인증 (끈 채팅은 호빗 화면에 안 보임) */
   getFeatures: () => call<{ features: ChatFeatures }>('GET', '/agent/features'),
   setFeatures: (features: Partial<ChatFeatures>) => call<{ features: ChatFeatures }>('PUT', '/agent/features', { features }),
+  /** 챗봇 설정 — 보기는 담당자 누구나, 저장은 행정실·개발자만 (범위를 벗어난 값은 서버가 끝값으로 맞춤) */
+  getBotSettings: () => call<BotSettingsResponse>('GET', '/agent/bot-settings'),
+  setBotSettings: (settings: Partial<BotSettings>) => call<BotSettingsResponse>('PUT', '/agent/bot-settings', { settings }),
   /** 학생 화면과 같은 상태 (운영 중·운영 시간 아님·자리 비움·꺼짐) */
   status: (mode: 'staff' | 'senior') =>
     call<{ open: boolean; reason: string; hours: { today: { start: string; end: string } | null } | null }>('GET', `/status?mode=${mode}`),

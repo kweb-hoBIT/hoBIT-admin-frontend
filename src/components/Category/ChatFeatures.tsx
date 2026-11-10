@@ -4,7 +4,7 @@ import { useChat } from '../Chat/ChatProvider';
 import { appAlert, appConfirm } from '../ui/Dialog';
 
 /** 켜기·끄기 스위치 — 동그라미가 옆으로 미끄러짐 */
-const Switch: React.FC<{ on: boolean; disabled?: boolean; onChange: (v: boolean) => void; label: string }> = ({ on, disabled, onChange, label }) => (
+export const Switch: React.FC<{ on: boolean; disabled?: boolean; onChange: (v: boolean) => void; label: string }> = ({ on, disabled, onChange, label }) => (
   <button
     type="button"
     role="switch"
