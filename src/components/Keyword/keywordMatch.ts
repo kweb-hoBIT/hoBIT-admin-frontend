@@ -2,7 +2,10 @@
  * 호빗 입력창 추천과 같은 규칙 (hoBIT-frontend/src/components/AutoComplete.tsx, hoBIT-backend/src/apis/keywordRules.ts)
  * — 관리자 화면의 "미리 해보기"가 실제 호빗과 똑같이 보이도록 같은 비교 방식을 씀
  */
-export type RuleLike = { keyword: string; synonyms: string[] };
+export type RuleLike = { keyword: string; keyword_en?: string | null; synonyms: string[]; synonyms_en?: string[] };
+
+/** 규칙의 모든 단어 — 한국어·영어 어느 모드든 다 비교 (호빗과 같음) */
+export const ruleWords = (r: RuleLike) => [r.keyword, r.keyword_en ?? '', ...r.synonyms, ...(r.synonyms_en ?? [])];
 
 export const norm = (s: string) => s.toLowerCase().replace(/\s+/g, '');
 
@@ -24,7 +27,7 @@ export function matchRules<R extends RuleLike>(rules: R[], input: string): { rul
   const lower = input.toLowerCase();
   const out: { rule: R; word: string }[] = [];
   rules.forEach((rule) => {
-    const word = [rule.keyword, ...rule.synonyms].find((w) => {
+    const word = ruleWords(rule).find((w) => {
       const t = stem(w);
       if (!t.length) return false;
       if (isLatin(w)) return latinRe(w).test(lower) || (text.length >= 3 && t.startsWith(text));

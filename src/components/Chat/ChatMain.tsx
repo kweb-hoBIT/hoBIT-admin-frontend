@@ -24,6 +24,7 @@ const PROFILE_LABEL: Record<string, string> = {
   admission_year: '입학년도',
   grade: '학년',
   major_type: '전공 유형',
+  degree: '학위 과정',
 };
 const PROFILE_ORDER = Object.keys(PROFILE_LABEL);
 const PROGRAM_LABEL: Record<string, string> = { undergrad: '학부', grad: '대학원' };
@@ -111,21 +112,58 @@ const MessageMenu: React.FC<{ canEdit: boolean; onEdit: () => void; onRemove?: (
   );
 };
 
-/** 답글 인용에 쓸 한 줄 — 학생 메시지는 한국어 번역이 있으면 그것 */
+/** 답글 인용에 쓸 글 — 학생 메시지는 한국어 번역이 있으면 그것 (담당자 화면은 한국어로 읽음) */
 const quoteText = (m: ChatMessage) =>
   m.removed ? '삭제된 메시지예요' : m.attachment ? `📎 ${m.attachment.name}` : m.sender === 'student' && m.translation?.lang === 'ko' ? m.translation.text : m.body;
-const quoteWho = (m: ChatMessage) => (m.sender === 'student' ? '학생' : m.senderName ?? '담당자');
+/** 누구에게 답장하는지 — 내 화면 기준 (학생 / 나 / 다른 담당자) */
+const quoteWho = (m: ChatMessage, uid: number | null | undefined) =>
+  m.sender === 'student' ? '학생' : m.senderUserId != null && m.senderUserId === uid ? '나' : m.senderName ?? '담당자';
 const jumpTo = (id: number) => {
   const el = document.getElementById(`chat-msg-${id}`);
   if (!el) return;
   el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  el.classList.add('chat-flash');
-  window.setTimeout(() => el.classList.remove('chat-flash'), 1200);
+  // 줄 전체에 배경을 깔지 않고 말풍선만 살짝 흔듦 (움직임 줄이기 설정이면 테두리만)
+  const bubble = (el.querySelector('[data-bubble]') as HTMLElement | null) ?? el;
+  bubble.classList.remove('chat-shake');
+  void bubble.offsetWidth; // 연달아 눌러도 다시 흔들리게
+  bubble.classList.add('chat-shake');
+  window.setTimeout(() => bubble.classList.remove('chat-shake'), 1000);
 };
 
-const Bubble: React.FC<{ m: ChatMessage; parent?: ChatMessage | null; canModify?: boolean; onEdit?: () => void; onRemove?: () => void; onReply?: () => void }> = ({
+/**
+ * 말풍선 안 맨 위 인용 — 왼쪽 세로 막대 + "학생에게 답장" + 원래 글 두 줄까지 (누르면 원래 메시지로)
+ * 예전에는 말풍선 위 작은 상자에 "학생 hi"처럼 이름과 글이 붙어 읽기 어려웠음
+ */
+const ReplyQuote: React.FC<{ parent: ChatMessage | null | undefined; parentId: number; uid: number | null | undefined; onMine: boolean }> = ({ parent, parentId, uid, onMine }) => (
+  <button
+    type="button"
+    onClick={() => jumpTo(parentId)}
+    title="원래 메시지로 이동"
+    className={`mb-1.5 block w-full min-w-[9rem] whitespace-normal rounded-lg border-l-[3px] py-1 pl-2.5 pr-2 text-left transition-colors ${
+      onMine ? 'border-white/80 bg-white/15 hover:bg-white/25' : 'border-accent bg-surface/80 hover:bg-surface dark:bg-black/20'
+    }`}
+  >
+    <span className={`block text-[11px] font-semibold leading-tight ${onMine ? 'text-white/90' : 'text-accent-ink'}`}>
+      {parent ? `${quoteWho(parent, uid)}에게 답장` : '이전 메시지에 답장'}
+    </span>
+    <span className={`mt-0.5 line-clamp-2 break-words text-[13px] leading-snug ${onMine ? 'text-white/80' : 'text-ink-2'}`}>
+      {parent ? quoteText(parent) : '원래 메시지를 찾을 수 없어요'}
+    </span>
+  </button>
+);
+
+const Bubble: React.FC<{
+  m: ChatMessage;
+  parent?: ChatMessage | null;
+  uid?: number | null;
+  canModify?: boolean;
+  onEdit?: () => void;
+  onRemove?: () => void;
+  onReply?: () => void;
+}> = ({
   m,
   parent,
+  uid,
   canModify,
   onEdit,
   onRemove,
@@ -165,31 +203,27 @@ const Bubble: React.FC<{ m: ChatMessage; parent?: ChatMessage | null; canModify?
   };
   return (
     <div id={`chat-msg-${m.id}`} className={`my-2 flex flex-col rounded-xl transition-colors ${mine ? 'items-end' : 'items-start'}`}>
-      {m.replyToId && (
-        // 답글 — 원래 메시지 한 줄 (누르면 그 메시지로)
-        <button
-          type="button"
-          onClick={() => m.replyToId && jumpTo(m.replyToId)}
-          className={`mb-0.5 flex max-w-[min(420px,66vw)] items-center gap-1.5 rounded-lg border-l-2 border-ink-3/50 bg-card/70 px-2.5 py-1 text-left text-xs text-ink-3 hover:bg-card ${mine ? 'mr-1' : 'ml-1'}`}
-        >
-          <span className="shrink-0 font-semibold text-ink-2">{parent ? quoteWho(parent) : '이전 메시지'}</span>
-          <span className="truncate">{parent ? quoteText(parent) : ''}</span>
-        </button>
+      {m.replyToId && m.attachment && (
+        // 첨부에는 말풍선이 없으므로 인용을 위에 따로
+        <div className={`mb-1 w-[min(320px,65vw)] rounded-xl bg-card p-1.5 ${mine ? 'mr-1' : 'ml-1'}`}>
+          <ReplyQuote parent={parent} parentId={m.replyToId} uid={uid} onMine={false} />
+        </div>
       )}
       {/* 보낸 담당자 이름은 붙이지 않음 — 다른 담당자가 들어오면 "OO 담당자가 연결되었어요" 안내가 대신 */}
       <div className={`group flex items-end gap-1.5 ${mine ? 'flex-row-reverse' : ''}`}>
         {m.attachment ? (
           // 첨부는 말풍선 없이 — 사진은 사진만, PDF는 흰 파일 카드
           !m.attachment.url ? (
-            <span className="rounded-xl border border-line bg-surface px-3 py-2 text-sm text-ink-3">보관 기간이 지나 삭제된 파일</span>
+            <span data-bubble className="rounded-xl border border-line bg-surface px-3 py-2 text-sm text-ink-3">보관 기간이 지나 삭제된 파일</span>
           ) : m.attachment.mime.startsWith('image/') ? (
-            <button type="button" onClick={open} className="block overflow-hidden rounded-2xl border border-line" aria-label={m.attachment.name}>
+            <button type="button" onClick={open} data-bubble className="block overflow-hidden rounded-2xl border border-line" aria-label={m.attachment.name}>
               <img src={fileUrl(m.attachment.url)} alt={m.attachment.name} className="block max-h-[280px] max-w-[min(320px,65vw)] object-cover" />
             </button>
           ) : (
             <button
               type="button"
               onClick={open}
+              data-bubble
               className="flex max-w-[min(360px,72vw)] items-center gap-3 rounded-xl border border-line bg-surface px-3.5 py-2.5 text-left hover:bg-card"
             >
               <span className="flex h-10 w-8 shrink-0 items-end justify-center rounded-md bg-[#e5484d] pb-1 text-[10px] font-bold text-white">PDF</span>
@@ -201,10 +235,12 @@ const Bubble: React.FC<{ m: ChatMessage; parent?: ChatMessage | null; canModify?
           )
         ) : (
           <div
+            data-bubble
             className={`max-w-[min(460px,72vw)] whitespace-pre-wrap break-words rounded-2xl px-3.5 py-2 text-[14px] leading-[1.5] ${
               mine ? 'rounded-br-md bg-accent text-white' : 'rounded-bl-md bg-card text-ink'
             }`}
           >
+            {m.replyToId && <ReplyQuote parent={parent} parentId={m.replyToId} uid={uid} onMine={mine} />}
             {studentTranslated && !showOriginal ? m.translation!.text : m.body}
           </div>
         )}
@@ -549,6 +585,43 @@ const ChatMain: React.FC = () => {
     });
   };
 
+  /**
+   * 번역 미리보기 — 영어로 받는 학생에게 보낼 한국어 답변을, 입력이 멈추고 0.8초 뒤 미리 번역해 보여 줌
+   * 서버가 같은 글의 번역을 기억해 두었다가 보낼 때 그대로 씀 → 학생은 여기서 본 번역을 받음
+   */
+  const needsEn = !!session && (session.studentLang === 'en' || session.language === 'EN');
+  const [preview, setPreview] = useState<{ body: string; translation: string | null; needed: boolean } | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const previewSeq = useRef(0);
+  const sessionIdForPreview = session?.id;
+  useEffect(() => {
+    const body = text.trim();
+    // 짧거나 한글이 없는 글(영어로 직접 쓴 답 등)은 번역하지 않음 — 서버도 같은 기준
+    if (!needsEn || !sessionIdForPreview || body.length < 2 || !/[가-힣]/.test(body)) {
+      previewSeq.current++;
+      setPreview(null);
+      setPreviewLoading(false);
+      return;
+    }
+    if (preview?.body === body) return; // 그대로면 다시 부르지 않음
+    const seq = ++previewSeq.current;
+    const timer = window.setTimeout(async () => {
+      setPreviewLoading(true);
+      try {
+        const r = await chatApi.translatePreview(sessionIdForPreview, body);
+        if (seq !== previewSeq.current) return;
+        setPreview({ body, translation: r.translation, needed: r.needed }); // needed=false도 기억 — 같은 글로 다시 묻지 않게
+      } catch {
+        if (seq === previewSeq.current) setPreview(null); // 미리보기만 못 함 — 보낼 때 평소처럼 번역됨
+      } finally {
+        if (seq === previewSeq.current) setPreviewLoading(false);
+      }
+    }, 800);
+    return () => window.clearTimeout(timer);
+    // (이 프로젝트 eslint에는 react-hooks 규칙이 없어 disable 주석을 쓰면 빌드가 실패함)
+  }, [text, needsEn, sessionIdForPreview]);
+  const previewStale = !!preview && preview.body !== text.trim();
+
   const onType = (v: string) => {
     setText(v);
     if (session && Date.now() - lastTyping.current > 2000 && v.trim()) {
@@ -844,6 +917,7 @@ const ChatMain: React.FC = () => {
                     key={m.id}
                     m={m}
                     parent={m.replyToId ? byId.get(m.replyToId) ?? null : null}
+                    uid={uid}
                     canModify={canModify(m)}
                     onEdit={() => startEdit(m)}
                     onRemove={() => removeMsg(m)}
@@ -867,7 +941,7 @@ const ChatMain: React.FC = () => {
                         <path d="M9 14 4 9l5-5" />
                         <path d="M4 9h10a6 6 0 0 1 6 6v5" />
                       </svg>
-                      <span className="shrink-0 font-semibold">{quoteWho(replying)}에게 답글</span>
+                      <span className="shrink-0 font-semibold">{quoteWho(replying, uid)}에게 답장</span>
                       <span className="truncate text-ink-3">{quoteText(replying)}</span>
                     </span>
                     <button type="button" onClick={() => setReplying(null)} className="ml-2 shrink-0 rounded-full px-2 py-0.5 font-semibold text-ink-2 hover:bg-card-2">
@@ -926,6 +1000,27 @@ const ChatMain: React.FC = () => {
                     {editing ? '수정' : '보내기'}
                   </button>
                 </div>
+                {(preview?.needed || (previewLoading && preview?.needed !== false)) && (
+                  // 번역 미리보기 — 학생이 받을 영어 (입력 중이면 흐리게)
+                  <div className="-mt-1 flex items-start gap-1.5 px-4 pb-2.5 text-xs text-ink-3 sm:pl-[4.25rem] sm:pr-4" aria-live="polite">
+                    <span className="mt-px shrink-0 rounded bg-violet-500/15 px-1 font-bold text-violet-700 dark:bg-violet-400/15 dark:text-violet-300">EN</span>
+                    {preview?.translation ? (
+                      <p className={`min-w-0 flex-1 break-words transition-opacity ${previewStale || previewLoading ? 'opacity-50' : ''}`}>
+                        <span className="font-semibold text-ink-2">학생에게 이렇게 보내져요:</span> {preview.translation}
+                      </p>
+                    ) : previewLoading ? (
+                      <p className="flex items-center gap-1.5">
+                        <span className="h-3 w-3 animate-spin rounded-full border-2 border-line border-t-violet-500" aria-hidden="true" />
+                        번역 미리보는 중…
+                      </p>
+                    ) : (
+                      <p>미리보기 번역을 만들지 못했어요. 보내면 평소처럼 번역돼요.</p>
+                    )}
+                    {preview?.translation && previewLoading && (
+                      <span className="mt-0.5 h-3 w-3 shrink-0 animate-spin rounded-full border-2 border-line border-t-violet-500" aria-hidden="true" />
+                    )}
+                  </div>
+                )}
                 </div>
               ) : (
                 session.status === 'active' && <p className="border-t border-line px-5 py-3 text-sm text-ink-3">{session.assignedName} 담당자가 맡은 채팅이에요.</p>

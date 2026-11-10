@@ -14,27 +14,57 @@ import { matchRules, tokenSuggestions } from './keywordMatch';
 import Icon from '../ui/Icon';
 import { revealRef } from '../ui/motion';
 
-export type FaqOption = { faq_id: number; question_ko: string; maincategory_ko: string };
+export type FaqOption = { faq_id: number; question_ko: string; question_en: string; maincategory_ko: string };
 
-/** 호빗 입력창에서 이 질문을 쳤을 때 추천 목록이 어떻게 나오는지 — 실제 호빗과 같은 규칙 */
+/** 호빗 입력창에서 이 질문을 쳤을 때 추천 목록이 어떻게 나오는지 — 실제 호빗과 같은 규칙 (한국어 / 영어 모드) */
 const Tester: React.FC<{ rules: KeywordRule[]; faqs: FaqOption[] }> = ({ rules, faqs }) => {
   const [input, setInput] = useState('');
-  const questions = useMemo(() => faqs.map((f) => f.question_ko), [faqs]);
+  const [en, setEn] = useState(false);
+  const questions = useMemo(() => faqs.map((f) => (en ? f.question_en : f.question_ko)).filter(Boolean), [faqs, en]);
+  const byId = useMemo(() => new Map(faqs.map((f) => [f.faq_id, f])), [faqs]);
   const matched = matchRules(rules, input);
-  const pinned = matched.flatMap((m) => m.rule.pinned_faqs.map((p) => p.question_ko).filter(Boolean) as string[]);
+  // 영어 모드는 고정 FAQ의 영어 질문, 영어 대표 키워드가 든 영어 질문 (호빗 영어 모드와 같음)
+  const pinned = matched.flatMap(
+    (m) =>
+      m.rule.pinned_faqs
+        .map((p) => (en ? p.question_en ?? byId.get(p.faq_id)?.question_en : p.question_ko))
+        .filter(Boolean) as string[]
+  );
   const base = tokenSuggestions(questions, input);
-  const expanded = matched.flatMap((m) => tokenSuggestions(questions, m.rule.keyword));
+  const expanded = matched.flatMap((m) =>
+    en ? (m.rule.keyword_en ? tokenSuggestions(questions, m.rule.keyword_en) : []) : tokenSuggestions(questions, m.rule.keyword)
+  );
   const list = Array.from(new Set([...pinned, ...base, ...expanded])).slice(0, 8);
   const pinnedSet = new Set(pinned);
 
   return (
     <section className="rounded-2xl border border-line bg-surface p-5">
-      <h2 className="font-bold text-ink">미리 해보기</h2>
-      <p className="mb-3 mt-1 text-sm text-ink-2">학생이 호빗 입력창에 이렇게 치면 추천 질문이 아래처럼 떠요.</p>
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="font-bold text-ink">미리 해보기</h2>
+        <div className="flex gap-1" role="group" aria-label="호빗 언어">
+          {[
+            { on: false, label: '한국어' },
+            { on: true, label: 'English' },
+          ].map((o) => (
+            <button
+              key={o.label}
+              type="button"
+              aria-pressed={en === o.on}
+              onClick={() => setEn(o.on)}
+              className={`rounded-full border px-3 py-1 text-xs font-semibold ${en === o.on ? 'border-accent bg-accent text-white' : 'border-line text-ink-2 hover:bg-card'}`}
+            >
+              {o.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <p className="mb-3 mt-1 text-sm text-ink-2">
+        학생이 호빗 입력창({en ? '영어 모드' : '한국어 모드'})에 이렇게 치면 추천 질문이 아래처럼 떠요.
+      </p>
       <input
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder="예: 이공계 계열만 지원 가능해?"
+        placeholder={en ? '예: cs graduation requirements' : '예: 이공계 계열만 지원 가능해?'}
         className="w-full rounded-xl border border-line px-3 py-2.5"
       />
       {input.trim() && (
@@ -43,7 +73,7 @@ const Tester: React.FC<{ rules: KeywordRule[]; faqs: FaqOption[] }> = ({ rules, 
             <div className="mb-3 flex flex-wrap gap-1.5">
               {matched.map((m) => (
                 <span key={m.rule.id} className="rounded-full bg-accent/10 px-2.5 py-1 text-xs font-semibold text-accent-ink dark:bg-accent-ink/15">
-                  “{m.word}” → {m.rule.keyword}
+                  “{m.word}” → {en ? m.rule.keyword_en || m.rule.keyword : m.rule.keyword}
                 </span>
               ))}
             </div>
@@ -81,6 +111,7 @@ const KeywordMain: React.FC = () => {
       (faqsApi.data?.payload?.data?.faqs ?? []).map((f) => ({
         faq_id: f.faq_id,
         question_ko: f.question_ko,
+        question_en: f.question_en,
         maincategory_ko: f.maincategory_ko,
       })),
     [faqsApi.data]
@@ -90,7 +121,12 @@ const KeywordMain: React.FC = () => {
   const shown = useMemo(() => {
     const q = query.trim();
     if (!q) return rules;
-    return rules.filter((r) => [r.keyword, ...r.synonyms, ...r.pinned_faqs.map((p) => p.question_ko || '')].some((w) => w.includes(q)));
+    const lq = q.toLowerCase();
+    return rules.filter((r) =>
+      [r.keyword, r.keyword_en ?? '', ...r.synonyms, ...(r.synonyms_en ?? []), ...r.pinned_faqs.map((p) => p.question_ko || '')].some((w) =>
+        w.toLowerCase().includes(lq)
+      )
+    );
   }, [rules, query]);
 
   const remove = async (rule: KeywordRule) => {
@@ -156,13 +192,22 @@ const KeywordMain: React.FC = () => {
                 >
                     <div className="shrink-0 sm:w-36">
                       <p className="text-lg font-bold text-ink">{rule.keyword}</p>
-                      <p className="text-xs text-ink-3">연관 단어 {rule.synonyms.length}개</p>
+                      {rule.keyword_en && <p className="text-sm font-semibold text-ink-2">{rule.keyword_en}</p>}
+                      <p className="text-xs text-ink-3">
+                        연관 단어 {rule.synonyms.length}개{(rule.synonyms_en ?? []).length > 0 && ` · 영어 ${(rule.synonyms_en ?? []).length}개`}
+                      </p>
                     </div>
                     <div className="min-w-0 flex-1">
-                      {rule.synonyms.length > 0 && (
+                      {rule.synonyms.length + (rule.synonyms_en ?? []).length > 0 && (
                         <div className="mb-2 flex flex-wrap gap-1.5">
                           {rule.synonyms.map((s) => (
                             <span key={s} className="rounded-full bg-card px-2.5 py-1 text-xs font-medium text-ink-2">
+                              {s}
+                            </span>
+                          ))}
+                          {/* 영어 단어는 테두리로 구분 */}
+                          {(rule.synonyms_en ?? []).map((s) => (
+                            <span key={`en-${s}`} lang="en" className="rounded-full border border-line px-2.5 py-1 text-xs font-medium text-ink-2">
                               {s}
                             </span>
                           ))}
@@ -214,6 +259,9 @@ const KeywordMain: React.FC = () => {
               <li>학생 입력에 <b className="text-ink">대표 키워드나 연관 단어</b>가 있으면 고정 질문이 추천 맨 위에 떠요.</li>
               <li>연관 단어로 입력해도 대표 키워드가 든 질문까지 함께 추천해요. (대여 → 대관 질문)</li>
               <li>질문을 보냈을 때도 대표 키워드로 함께 찾고, 고정 FAQ를 답변 근거로 넣어요.</li>
+              <li>
+                영어 모드에서는 <b className="text-ink">영어 대표 키워드</b>로 찾아요. (cs → computer science가 든 영어 질문) 한국어 질문에 든 영어 단어(“CS 졸업요건”)도 걸려요.
+              </li>
               <li>동사는 기본형으로 넣으면 어간으로 비교해요. (빌리다 → “빌리고”, “빌리는”) 활용형이 다르면 따로 추가해 주세요. (빌려)</li>
               <li>저장하면 1분 안에 호빗에 반영돼요.</li>
             </ul>

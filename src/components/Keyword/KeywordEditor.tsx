@@ -12,10 +12,11 @@ import {
 import { appAlert } from '../ui/Dialog';
 import type { FaqOption } from './KeywordMain';
 import Icon from '../ui/Icon';
-import { isLatin } from './keywordMatch';
+import { isLatin, ruleWords } from './keywordMatch';
 
 const MAX_PINNED = 3; // 학생 화면이 실제로 쓰는 개수와 같게 (엑셀도 3개)
 const MAX_SOURCES = 6;
+const MAX_WORDS = 50; // 한국어·영어 칸마다 (관리자 백엔드 keywordsIndex.ts MAX_SYNONYMS)
 
 /** 연관 단어 입력 — Enter·쉼표로 추가, 빈 칸에서 Backspace로 마지막 단어 삭제, "a, b, c" 붙여넣기 */
 export const ChipInput: React.FC<{ value: string[]; onChange: (v: string[]) => void; placeholder: string }> = ({ value, onChange, placeholder }) => {
@@ -163,9 +164,18 @@ interface Props {
 
 const KeywordEditor: React.FC<Props> = ({ rule, rules, faqs, onClose, onSaved }) => {
   const [keyword, setKeyword] = useState(rule?.keyword ?? '');
-  // 연관 단어는 한 목록에 저장하되, 화면에서는 한국어 / 영어(약어 포함) 칸을 나눠서
+  const [keywordEn, setKeywordEn] = useState(rule?.keyword_en ?? '');
+  // 한국어 / 영어 칸을 따로 저장 (synonyms / synonyms_en). 예전 줄의 synonyms에 섞인 영어 단어는 영어 칸으로 — 저장하면 synonyms_en으로 옮겨짐
   const [synonyms, setSynonyms] = useState<string[]>((rule?.synonyms ?? []).filter((w) => !isLatin(w)));
-  const [english, setEnglish] = useState<string[]>((rule?.synonyms ?? []).filter((w) => isLatin(w)));
+  const [english, setEnglish] = useState<string[]>(
+    Array.from(new Set([...(rule?.synonyms_en ?? []), ...(rule?.synonyms ?? []).filter((w) => isLatin(w))]))
+  );
+  // 한국어 칸에 영어 단어를 넣으면 영어 칸으로 옮김
+  const setKoreanWords = (v: string[]) => {
+    setSynonyms(v.filter((w) => !isLatin(w)));
+    const moved = v.filter((w) => isLatin(w));
+    if (moved.length) setEnglish((cur) => Array.from(new Set([...cur, ...moved])));
+  };
   const [pinned, setPinned] = useState<number[]>(rule?.pinned_faq_ids ?? []);
   const [sources, setSources] = useState<string[]>(rule?.search_sources ?? []);
   const sourceApi = useHobitQueryGetApi<GetSearchSourcesRequest, GetSearchSourcesResponse>('keywords/sources');
@@ -184,20 +194,24 @@ const KeywordEditor: React.FC<Props> = ({ rule, rules, faqs, onClose, onSaved })
 
   // 다른 규칙과 겹치는 단어 (같은 단어가 두 규칙에 있으면 둘 다 걸림 — 막지는 않고 알려줌)
   const overlaps = useMemo(() => {
-    const mine = new Set([keyword.trim(), ...synonyms, ...english]);
+    const key = (w: string) => w.trim().toLowerCase();
+    const mine = new Set([keyword, keywordEn, ...synonyms, ...english].map(key).filter(Boolean));
     return rules
       .filter((r) => r.id !== rule?.id)
-      .flatMap((r) => [r.keyword, ...r.synonyms].filter((w) => mine.has(w)).map((w) => `${w} (${r.keyword})`));
-  }, [keyword, synonyms, english, rules, rule]);
+      .flatMap((r) => ruleWords(r).filter((w) => w && mine.has(key(w))).map((w) => `${w} (${r.keyword})`));
+  }, [keyword, keywordEn, synonyms, english, rules, rule]);
 
   const save = async () => {
     const k = keyword.trim();
     if (!k) return appAlert('대표 키워드를 입력해주세요.');
     if (rules.some((r) => r.id !== rule?.id && r.keyword === k)) return appAlert(`"${k}"은(는) 이미 등록된 대표 키워드예요.`);
+    const kEn = keywordEn.trim();
+    const ko = synonyms.filter((s) => s !== k);
+    const en = english.filter((s) => s.toLowerCase() !== kEn.toLowerCase());
+    if (ko.length > MAX_WORDS) return appAlert(`연관 단어는 ${MAX_WORDS}개까지 등록할 수 있어요.`);
+    if (en.length > MAX_WORDS) return appAlert(`영어 단어·약어는 ${MAX_WORDS}개까지 등록할 수 있어요.`);
     setSaving(true);
-    const all = Array.from(new Set([...synonyms, ...english]));
-    if (all.length > 50) return appAlert('연관 단어는 한국어·영어 합쳐 50개까지 등록할 수 있어요.');
-    const body = { keyword: k, synonyms: all.filter((s) => s !== k), pinned_faq_ids: pinned, search_sources: sources };
+    const body = { keyword: k, keyword_en: kEn, synonyms: ko, synonyms_en: en, pinned_faq_ids: pinned, search_sources: sources };
     const res = rule ? await updateApi({ params: { id: String(rule.id) }, body }) : await createApi({ body });
     setSaving(false);
     if (res.payload?.statusCode === 200) onSaved();
@@ -209,27 +223,45 @@ const KeywordEditor: React.FC<Props> = ({ rule, rules, faqs, onClose, onSaved })
       <div className="modal-panel max-w-[640px] max-h-[90vh] overflow-y-auto" role="dialog" aria-modal="true">
         <h2>{rule ? '키워드 수정' : '새 키워드'}</h2>
 
-        <label className="mt-5 block text-sm font-semibold text-ink">대표 키워드</label>
-        <input
-          ref={firstRef}
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          placeholder="예: 입시"
-          maxLength={100}
-          className="mt-1.5 w-full rounded-xl border border-line px-3 py-2.5"
-        />
+        {/* 한국어 — 한국어 모드 검색어·추천 */}
+        <fieldset className="mt-5 rounded-2xl border border-line p-4">
+          <legend className="px-1.5 text-xs font-bold text-ink-2">한국어</legend>
+          <label className="block text-sm font-semibold text-ink">대표 키워드</label>
+          <input
+            ref={firstRef}
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            placeholder="예: 컴퓨터학과"
+            maxLength={100}
+            className="mt-1.5 w-full rounded-xl border border-line px-3 py-2.5"
+          />
 
-        <label className="mt-5 block text-sm font-semibold text-ink">연관 단어</label>
-        <p className="mb-1.5 text-xs text-ink-3">학생이 이 단어로 물어도 대표 키워드로 찾아요. Enter나 쉼표로 추가.</p>
-        <ChipInput value={synonyms} onChange={setSynonyms} placeholder="예: 수시, 정시, 입학, 이공계, 인문계, 계열" />
+          <label className="mt-4 block text-sm font-semibold text-ink">연관 단어</label>
+          <p className="mb-1.5 text-xs text-ink-3">학생이 이 단어로 물어도 대표 키워드로 찾아요. Enter나 쉼표로 추가. 영어 단어는 아래 English 칸으로 옮겨져요.</p>
+          <ChipInput value={synonyms} onChange={setKoreanWords} placeholder="예: 컴학, 컴과" />
+        </fieldset>
 
-        <label className="mt-5 block text-sm font-semibold text-ink">
-          영어 단어·약어 <span className="font-normal text-ink-3">(선택)</span>
-        </label>
-        <p className="mb-1.5 text-xs text-ink-3">
-          영어나 약어로 물어도 이 키워드로 찾아요. 대소문자 상관없이 단어 단위로 비교해요 (“cs”는 “CS 졸업요건”에는 걸리고 “physics”에는 안 걸려요).
-        </p>
-        <ChipInput value={english} onChange={setEnglish} placeholder="예: computer science, cs, comp sci" />
+        {/* English — 영어 모드 검색어·추천 (한국어 질문에 든 영어 단어도 걸림) */}
+        <fieldset className="mt-4 rounded-2xl border border-line p-4" lang="en">
+          <legend className="px-1.5 text-xs font-bold text-ink-2">
+            English <span className="font-normal text-ink-3">(선택)</span>
+          </legend>
+          <label className="block text-sm font-semibold text-ink">영어 대표 키워드</label>
+          <p className="mb-1.5 text-xs text-ink-3">영어 모드에서 걸리면 이 말로 함께 찾고, 이 말이 든 영어 질문을 추천해요. 비우면 한국어 대표 키워드로 찾아요.</p>
+          <input
+            value={keywordEn}
+            onChange={(e) => setKeywordEn(e.target.value)}
+            placeholder="예: computer science"
+            maxLength={100}
+            className="w-full rounded-xl border border-line px-3 py-2.5"
+          />
+
+          <label className="mt-4 block text-sm font-semibold text-ink">영어 단어·약어</label>
+          <p className="mb-1.5 text-xs text-ink-3">
+            대소문자 상관없이 단어 단위로 비교해요 (“cs”는 “CS 졸업요건”에는 걸리고 “physics”에는 안 걸려요). 입력창 추천은 세 글자부터 앞부분으로도 찾아요 (“comp” → comp sci).
+          </p>
+          <ChipInput value={english} onChange={setEnglish} placeholder="예: cs, comp sci" />
+        </fieldset>
         {overlaps.length > 0 && <p className="mt-1.5 text-xs text-warn">다른 키워드에도 있는 단어: {overlaps.join(', ')}</p>}
 
         <label className="mt-5 block text-sm font-semibold text-ink">

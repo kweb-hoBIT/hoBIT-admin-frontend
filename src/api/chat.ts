@@ -129,6 +129,9 @@ export const chatApi = {
   block: (sessionId: string, reason: string) => call('POST', '/agent/blocks', { sessionId, reason }),
   /** 종료된 채팅 기록 삭제 (메시지·첨부 파일까지, 되돌릴 수 없음) — 행정실·개발자 계정만 */
   deleteSessions: (ids: string[]) => call<{ deleted: number }>('POST', '/agent/sessions/delete', { ids }),
+  /** 번역 미리보기 — 영어로 받는 학생에게 이 답변이 어떻게 번역돼 갈지 (보낼 때 서버가 같은 번역을 씀) */
+  translatePreview: (sessionId: string, body: string) =>
+    call<{ needed: boolean; translation: string | null }>('POST', `/agent/sessions/${sessionId}/translate-preview`, { body }),
   getHours: () => call<{ hours: HoursSettings }>('GET', '/agent/settings'),
   /** 채팅 켜고 끄기 — 행정실 채팅·근로장학생 채팅·학교 메일 인증 (끈 채팅은 호빗 화면에 안 보임) */
   getFeatures: () => call<{ features: ChatFeatures }>('GET', '/agent/features'),
