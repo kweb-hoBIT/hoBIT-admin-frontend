@@ -18,6 +18,7 @@ import { appAlert } from '../ui/Dialog';
 import Icon from '../ui/Icon';
 import { revealRef } from '../ui/motion';
 import { LoadError } from '../ui/ListKit';
+import MiniMarkdown from '../ui/MiniMarkdown';
 
 const TABS: { type: ReviewType; label: string; icon?: 'thumbsDown'; hint: string }[] = [
   { type: 'down', label: '받은 답변', icon: 'thumbsDown', hint: '학생이 도움이 안 됐다고 한 답변이에요. 남긴 이유와 근거를 보고 원인을 골라 주세요.' },
@@ -39,6 +40,23 @@ const TOPIC_LABEL: Record<string, string> = {
   career: '진로', exchange: '교환', facilities: '시설', office: '행정', safety: '안전·교육', student_life: '학생 활동',
   faculty: '교수·연구', notices: '공지',
 };
+
+/** '날짜 11.4', '숫자 30학점' → 종류와 값 (RAG grounding.py가 만드는 형식) — 날짜는 '11월 4일'처럼 */
+const KIND_LABEL: Record<string, string> = { 날짜: '날짜', 금액: '금액', 전화: '전화번호', 메일: '이메일', 숫자: '숫자', 시각: '시각' };
+const parseIssues = (s: string) =>
+  s.split(/,\s*(?=(?:날짜|금액|전화|메일|숫자|시각)\s)/).map((raw) => {
+    const m = raw.trim().match(/^(\S+)\s+(.+)$/);
+    const kind = m?.[1] ?? '';
+    let value = m?.[2] ?? raw.trim();
+    if (kind === '날짜') {
+      const d = value.split('.').map(Number);
+      value = d.length === 3 ? `${d[0]}년 ${d[1]}월 ${d[2]}일` : d.length === 2 ? `${d[0]}월 ${d[1]}일` : value;
+    }
+    return { kind: KIND_LABEL[kind] ?? kind, value };
+  });
+
+/** 검색 경로 'A | B | C' → 짧은 칩 */
+const parseRoutes = (s: string) => s.split(/\s*\|\s*/).filter(Boolean);
 
 const when = (iso: string) => new Date(iso).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
@@ -104,10 +122,14 @@ const ReviewCard: React.FC<{ item: AnswerReview; done: boolean; onChanged: () =>
         <span>{when(item.created_at)}</span>
         {item.feedback_score === -1 && <span className="inline-flex items-center rounded-full bg-danger-soft px-2 py-0.5 font-semibold text-danger"><Icon name="thumbsDown" className="h-3.5 w-3.5" title="도움 안 됨" /></span>}
         {item.answer_status === 'not_found' && <span className="rounded-full bg-card px-2 py-0.5">못 찾음</span>}
-        {item.grounding_issues && <span className="rounded-full bg-warn-soft px-2 py-0.5 text-warn">숫자 삭제</span>}
-        {item.topic && <span className="rounded-full bg-card px-2 py-0.5">{TOPIC_LABEL[item.topic] ?? item.topic}</span>}
-        {item.classified_by && <span className="rounded-full bg-card px-2 py-0.5">{item.classified_by === 'rule' ? '규칙 분류' : 'AI 분류'}</span>}
-        {item.latency_ms != null && <span>{(item.latency_ms / 1000).toFixed(1)}초</span>}
+        {item.grounding_issues && <span className="rounded-full bg-warn-soft px-2 py-0.5 font-semibold text-warn">일부 내용 뺌</span>}
+        {/* 주제를 규칙/AI 중 무엇이 정했는지는 칩 대신 마우스를 올리면 보이게 (관리자에게는 주제만 중요) */}
+        {item.topic && (
+          <span className="rounded-full bg-card px-2 py-0.5" title={item.classified_by ? `주제를 ${item.classified_by === 'rule' ? '규칙이' : 'AI가'} 정했어요` : undefined}>
+            {TOPIC_LABEL[item.topic] ?? item.topic}
+          </span>
+        )}
+        {item.latency_ms != null && <span>· 답변 {(item.latency_ms / 1000).toFixed(1)}초</span>}
       </div>
       <p className="mt-2 text-lg font-semibold text-ink">{item.user_question}</p>
       {(item.feedback_reason || item.feedback_detail) && (
@@ -115,12 +137,34 @@ const ReviewCard: React.FC<{ item: AnswerReview; done: boolean; onChanged: () =>
           학생 의견: {[item.feedback_reason, item.feedback_detail].filter(Boolean).join(' · ')}
         </p>
       )}
-      {item.grounding_issues && <p className="mt-1 text-sm text-warn">근거에 없어 뺀 값: {item.grounding_issues}</p>}
+      {item.grounding_issues && (
+        <div className="mt-3 rounded-xl border border-warn/30 bg-warn-soft/60 px-4 py-3">
+          <p className="text-sm font-semibold text-warn">학생에게 보낼 때 뺀 내용</p>
+          <p className="mt-0.5 text-xs text-ink-2">
+            AI 답변에 아래 값이 있었는데 참고한 자료에서는 찾지 못했어요. 잘못된 정보일 수 있어 그 값이 들어간 줄을 지우고 보냈어요.
+          </p>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {parseIssues(item.grounding_issues).map((it, i) => (
+              <span key={i} className="inline-flex items-center gap-1 rounded-lg bg-surface px-2 py-1 text-sm text-ink">
+                {it.kind && <span className="text-xs text-ink-3">{it.kind}</span>}
+                <span className="font-semibold">{it.value}</span>
+              </span>
+            ))}
+          </div>
+          <p className="mt-2 text-xs text-ink-3">
+            자료에 원래 있는 값이면 <b className="text-ink-2">엉뚱한 자료</b>나 <b className="text-ink-2">자료 없음</b>(FAQ 만들기), AI가 지어낸 값이면 <b className="text-ink-2">답이 틀림</b>을 골라 주세요.
+          </p>
+        </div>
+      )}
 
       <div className="mt-3 rounded-xl bg-card px-4 py-3 text-sm text-ink-2">
-        <p className="whitespace-pre-wrap">{open || answer.length <= 280 ? answer : `${answer.slice(0, 280)}…`}</p>
+        <p className="mb-1.5 text-xs font-semibold text-ink-3">{item.grounding_issues ? '학생이 받은 답변 (뺀 뒤)' : '학생이 받은 답변'}</p>
+        <div className={`relative ${!open && answer.length > 280 ? 'max-h-[10.5rem] overflow-hidden' : ''}`}>
+          <MiniMarkdown text={answer} />
+          {!open && answer.length > 280 && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-card to-transparent" />}
+        </div>
         {answer.length > 280 && (
-          <button type="button" onClick={() => setOpen(!open)} className="mt-1 text-xs text-link underline">
+          <button type="button" onClick={() => setOpen(!open)} className="mt-1.5 text-xs text-link underline">
             {open ? '접기' : '답변 전체 보기'}
           </button>
         )}
@@ -137,10 +181,18 @@ const ReviewCard: React.FC<{ item: AnswerReview; done: boolean; onChanged: () =>
           ))}
         </p>
       )}
-      {item.routes && <p className="mt-1 text-xs text-ink-3">검색 경로: {item.routes}</p>}
+      {item.routes && (
+        <div className="mt-1.5 flex flex-wrap items-center gap-1 text-xs text-ink-3">
+          <span>자료를 찾은 방법</span>
+          {parseRoutes(item.routes).map((r) => (
+            <span key={r} className="rounded-full bg-card px-2 py-0.5">{r}</span>
+          ))}
+        </div>
+      )}
       {item.trace_id && <Trace id={item.id} />}
 
-      <div className="mt-4 flex flex-wrap items-center gap-2">
+      <p className="mt-4 border-t border-line pt-3 text-sm font-semibold text-ink">무엇이 문제였나요?</p>
+      <div className="mt-2 flex flex-wrap items-center gap-2">
         {CAUSES.map((c) => (
           <button
             key={c.value}
@@ -167,6 +219,10 @@ const ReviewCard: React.FC<{ item: AnswerReview; done: boolean; onChanged: () =>
           </button>
         )}
       </div>
+      {/* 고른 원인의 뜻 — 휴대폰에는 마우스 올림(title)이 없어서 글로 */}
+      <p className="mt-1.5 min-h-[1.25rem] text-xs text-ink-3">
+        {cause ? CAUSES.find((c) => c.value === cause)?.tip : '원인을 고른 뒤 처리 완료를 눌러 주세요.'}
+      </p>
     </li>
   );
 };
