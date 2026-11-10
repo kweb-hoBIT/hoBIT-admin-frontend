@@ -300,3 +300,14 @@ input[type="password"]::placeholder {
 @media (prefers-reduced-motion: no-preference) {
   .chat-shake { animation: chat-shake 0.4s ease-in-out; }
 }
+
+/* 숫자 칸의 브라우저 기본 위아래 화살표 숨김 — 옆의 −/+ 버튼을 씀 (챗봇 설정) */
+input.no-spin::-webkit-outer-spin-button,
+input.no-spin::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input.no-spin {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}

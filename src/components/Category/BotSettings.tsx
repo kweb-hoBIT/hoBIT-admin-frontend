@@ -20,7 +20,69 @@ const Row: React.FC<{ title: string; help: string; children: React.ReactNode }> 
   </div>
 );
 
-/** 숫자 칸 — 범위는 서버가 알려 준 값 (벗어나면 저장할 때 끝값으로 맞춰짐) */
+/** 버튼 한 번에 바뀌는 양 — 범위가 넓으면 크게 (300~3000m를 1씩 누를 수는 없으니) */
+const stepOf = (limit: { min: number; max: number; step: number }) => {
+  if (limit.step && limit.step !== 1) return limit.step;
+  const range = limit.max - limit.min;
+  return range >= 10000 ? 1000 : range >= 1000 ? 100 : range >= 100 ? 10 : 1;
+};
+const roundTo = (v: number, step: number) => Math.round(v / step) * step;
+
+/**
+ * 숫자 칸 — [−] 값 단위 [+]. 브라우저 기본 위아래 화살표(작고 안 보임) 대신 큰 버튼, 직접 입력도 됨.
+ * 범위는 서버가 알려 준 값 (벗어나면 빨간 테두리, 저장할 때 끝값으로 맞춰짐)
+ */
+const Stepper: React.FC<{
+  value: number;
+  onChange: (v: number) => void;
+  limit: { min: number; max: number; step: number };
+  unit: string;
+  disabled: boolean;
+  label: string;
+  width?: string;
+}> = ({ value, onChange, limit, unit, disabled, label, width = 'w-[4.5rem]' }) => {
+  const step = stepOf(limit);
+  const ok = Number.isFinite(value);
+  const out = ok && (value < limit.min || value > limit.max);
+  const bump = (dir: -1 | 1) => {
+    const base = ok ? value : limit.min;
+    const next = Math.min(limit.max, Math.max(limit.min, Number((roundTo(base, step) + dir * step).toFixed(2))));
+    onChange(next);
+  };
+  const btn =
+    'flex h-9 w-9 shrink-0 items-center justify-center text-lg font-semibold text-ink-2 transition-colors hover:bg-card hover:text-ink disabled:opacity-30 disabled:hover:bg-transparent';
+  return (
+    <span
+      className={`inline-flex items-center overflow-hidden rounded-xl border bg-surface ${out ? 'border-danger' : 'border-line'} ${
+        disabled ? 'opacity-60' : 'focus-within:border-accent-ink'
+      }`}
+    >
+      <button type="button" aria-label={`${label} 줄이기`} disabled={disabled || (ok && value <= limit.min)} onClick={() => bump(-1)} className={btn}>
+        −
+      </button>
+      <span className="flex items-baseline gap-1 border-x border-line px-2">
+        <input
+          type="number"
+          inputMode="numeric"
+          aria-label={label}
+          value={ok ? value : ''}
+          min={limit.min}
+          max={limit.max}
+          step={limit.step}
+          disabled={disabled}
+          onChange={(e) => onChange(e.target.value === '' ? NaN : Number(e.target.value))}
+          className={`no-spin ${width} bg-transparent py-1.5 text-right text-base font-semibold tabular-nums text-ink outline-none`}
+        />
+        {unit && <span className="text-sm text-ink-3">{unit}</span>}
+      </span>
+      <button type="button" aria-label={`${label} 늘리기`} disabled={disabled || (ok && value >= limit.max)} onClick={() => bump(1)} className={btn}>
+        +
+      </button>
+    </span>
+  );
+};
+
+/** 숫자 칸 + 기본값·범위 안내 */
 const NumberInput: React.FC<{
   value: number;
   onChange: (v: number) => void;
@@ -30,25 +92,16 @@ const NumberInput: React.FC<{
   disabled: boolean;
   label: string;
 }> = ({ value, onChange, limit, def, unit, disabled, label }) => (
-  <span className="flex flex-col items-start gap-0.5 sm:items-end">
-    <span className="flex items-center gap-2">
-      <input
-        type="number"
-        aria-label={label}
-        value={Number.isFinite(value) ? value : ''}
-        min={limit.min}
-        max={limit.max}
-        step={limit.step}
-        disabled={disabled}
-        onChange={(e) => onChange(e.target.value === '' ? NaN : Number(e.target.value))}
-        className={`w-28 rounded-xl border px-3 py-1.5 text-right disabled:opacity-60 ${
-          Number.isFinite(value) && (value < limit.min || value > limit.max) ? 'border-danger' : 'border-line'
-        }`}
-      />
-      <span className="w-8 text-sm text-ink-2">{unit}</span>
-    </span>
+  <span className="flex flex-col items-start gap-1 sm:items-end">
+    <Stepper value={value} onChange={onChange} limit={limit} unit={unit} disabled={disabled} label={label} />
     <span className="text-xs text-ink-3">
-      기본 {fmt(def)} · {fmt(limit.min)}~{fmt(limit.max)}
+      기본 {fmt(def)}
+      {unit} · {fmt(limit.min)}~{fmt(limit.max)}
+      {value !== def && Number.isFinite(value) && !disabled && (
+        <button type="button" onClick={() => onChange(def)} className="ml-1.5 text-accent-ink hover:underline">
+          기본값
+        </button>
+      )}
     </span>
   </span>
 );
@@ -243,25 +296,23 @@ const BotSettings: React.FC = () => {
           </Row>
           <Row title="정지 시간" help={`경고 ${draft.warnLimit}번째 · ${draft.warnLimit + 1}번째 · ${draft.warnLimit + 2}번째부터 막는 시간이에요. 단계마다 같거나 길게 맞춰져요.`}>
             <span className="flex flex-col items-start gap-0.5 sm:items-end">
-              <span className="flex items-center gap-1.5">
+              <span className="flex flex-wrap items-center gap-1.5 sm:justify-end">
                 {[0, 1, 2].map((i) => (
-                  <input
+                  <Stepper
                     key={i}
-                    type="number"
-                    aria-label={`정지 시간 ${i + 1}단계 (분)`}
-                    value={Number.isFinite(draft.suspendMinutes[i]) ? draft.suspendMinutes[i] : ''}
-                    min={limits.suspendMinutes.min}
-                    max={limits.suspendMinutes.max}
+                    label={`정지 시간 ${i + 1}단계`}
+                    value={draft.suspendMinutes[i]}
+                    limit={{ min: limits.suspendMinutes.min, max: limits.suspendMinutes.max, step: 10 }}
+                    unit="분"
+                    width="w-[3.5rem]"
                     disabled={!canEdit || busy}
-                    onChange={(e) => {
+                    onChange={(v) => {
                       const next = [...draft.suspendMinutes] as Settings['suspendMinutes'];
-                      next[i] = e.target.value === '' ? NaN : Number(e.target.value);
+                      next[i] = v;
                       set('suspendMinutes', next);
                     }}
-                    className="w-20 rounded-xl border border-line px-2 py-1.5 text-right disabled:opacity-60"
                   />
                 ))}
-                <span className="w-8 text-sm text-ink-2">분</span>
               </span>
               <span className="text-xs text-ink-3">기본 {defs.suspendMinutes.map(fmt).join(' · ')}분 (24시간 = 1,440분)</span>
             </span>
