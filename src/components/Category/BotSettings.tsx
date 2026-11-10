@@ -3,6 +3,7 @@ import { BotNumberKey, BotSettings as Settings, BotSettingsResponse, chatApi } f
 import { useChat } from '../Chat/ChatProvider';
 import { appAlert, appConfirm } from '../ui/Dialog';
 import { Switch } from './ChatFeatures';
+import Badge from '../ui/Badge';
 
 type Limits = BotSettingsResponse['limits'];
 
@@ -219,7 +220,7 @@ const BotSettings: React.FC = () => {
         <div className="flex flex-col gap-4">
           <Group title="답변 대상" desc="학부는 항상 답해요. 대학원 답변만 끌 수 있어요.">
             <Row title="학부" help="기본 — 끌 수 없어요.">
-              <span className="rounded-full bg-success-soft px-3 py-1 text-sm font-semibold text-success">항상 켜짐</span>
+              <Badge tone="green">항상 켜짐</Badge>
             </Row>
             <Row
               title="대학원"

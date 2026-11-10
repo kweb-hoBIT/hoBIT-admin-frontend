@@ -9,13 +9,13 @@ const pad = (n: number) => String(n).padStart(2, '0');
 const HOURS = Array.from({ length: 24 }, (_, i) => pad(i));
 const MINUTES = Array.from({ length: 12 }, (_, i) => pad(i * 5));
 
-const TimeInput: React.FC<{ value: string; onChange: (v: string) => void; 'aria-label'?: string }> = ({ value, onChange, ...rest }) => {
+const TimeInput: React.FC<{ value: string; onChange: (v: string) => void; disabled?: boolean; 'aria-label'?: string }> = ({ value, onChange, disabled, ...rest }) => {
   const [h = '09', m = '00'] = (value || '09:00').split(':');
   const minutes = MINUTES.includes(m) ? MINUTES : [...MINUTES, m].sort();
   const label = rest['aria-label'];
   return (
     <span className="inline-flex items-center gap-1" role="group" aria-label={label}>
-      <Select value={h} onChange={(e) => onChange(`${e.target.value}:${m}`)} aria-label={label ? `${label} 시` : '시'} className="w-[5.25rem] px-3 py-1.5 tabular-nums">
+      <Select disabled={disabled} value={h} onChange={(e) => onChange(`${e.target.value}:${m}`)} aria-label={label ? `${label} 시` : '시'} className="w-[5.25rem] px-3 py-1.5 tabular-nums">
         {HOURS.map((x) => (
           <option key={x} value={x}>
             {x}시
@@ -23,7 +23,7 @@ const TimeInput: React.FC<{ value: string; onChange: (v: string) => void; 'aria-
         ))}
       </Select>
       <span className="text-ink-3">:</span>
-      <Select value={m} onChange={(e) => onChange(`${h}:${e.target.value}`)} aria-label={label ? `${label} 분` : '분'} className="w-[5.25rem] px-3 py-1.5 tabular-nums">
+      <Select disabled={disabled} value={m} onChange={(e) => onChange(`${h}:${e.target.value}`)} aria-label={label ? `${label} 분` : '분'} className="w-[5.25rem] px-3 py-1.5 tabular-nums">
         {minutes.map((x) => (
           <option key={x} value={x}>
             {x}분

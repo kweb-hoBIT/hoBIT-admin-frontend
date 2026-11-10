@@ -3,6 +3,9 @@ import { chatApi, CrawlPreview, CrawlResponse, CrawlRun, CrawlSchedule, CrawlSou
 import { useChat } from '../Chat/ChatProvider';
 import { appAlert, appConfirm } from '../ui/Dialog';
 import { Switch } from './ChatFeatures';
+import Select from '../ui/Select';
+import Badge from '../ui/Badge';
+import TimeInput from '../ui/TimeInput';
 
 /**
  * 관리 > 챗봇 설정 > 정기 수집 — 일정·수집 대상·더한 학교 페이지·최근 기록
@@ -83,7 +86,7 @@ const Line: React.FC<{ title: string; help: string; children: React.ReactNode }>
   </div>
 );
 
-const selectCls = 'field min-w-[8.5rem]';
+const selectCls = 'min-w-[9rem] px-3 py-1.5';
 
 const CrawlSettings: React.FC = () => {
   const { role } = useChat();
@@ -185,65 +188,47 @@ const CrawlSettings: React.FC = () => {
             title="수집 일정"
             desc="한국 시간 기준, 5분 단위예요. 저장하면 다음 5분 안에 적용돼요."
             right={
-              <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${ticking ? 'bg-success-soft text-success' : 'bg-warn-soft text-warn'}`}>
-                {ticking ? `서버 적용 중 · ${short(data.tickAt)} 확인` : '서버 확인 기록 없음'}
-              </span>
+              <Badge tone={ticking ? 'green' : 'yellow'}>{ticking ? `서버 적용 중 · ${short(data.tickAt)} 확인` : '서버 확인 기록 없음'}</Badge>
             }
           >
             <Line title="새 공지 확인" help="정보대학 공지·장학 게시판 첫 페이지만 보고, 새 글이 있을 때만 게시판을 수집해요.">
-              <select aria-label="새 공지 확인 간격" value={draft.quickMin} disabled={lock} onChange={(e) => setS('quickMin', Number(e.target.value))} className={selectCls}>
+              <Select aria-label="새 공지 확인 간격" value={draft.quickMin} disabled={lock} onChange={(e) => setS('quickMin', Number(e.target.value))} className={selectCls}>
                 {data.options.quickMin.map((m) => (
                   <option key={m} value={m}>
                     {m ? `${m}분마다` : '끔'}
                   </option>
                 ))}
-              </select>
+              </Select>
             </Line>
             <Line title="게시판 전체 수집" help="공지·장학·행사·진로 게시판을 모두 다시 봐요 (매시 20분).">
-              <select aria-label="게시판 수집 간격" value={draft.boardsHours} disabled={lock} onChange={(e) => setS('boardsHours', Number(e.target.value))} className={selectCls}>
+              <Select aria-label="게시판 수집 간격" value={draft.boardsHours} disabled={lock} onChange={(e) => setS('boardsHours', Number(e.target.value))} className={selectCls}>
                 {data.options.boardsHours.map((h) => (
                   <option key={h} value={h}>
                     {h ? (h === 24 ? '하루 한 번 (00:20)' : `${h}시간마다`) : '끔'}
                   </option>
                 ))}
-              </select>
+              </Select>
             </Line>
             <Line title="전체 수집" help="게시판·안내 페이지·학사일정·학교생활 안내·FAQ·더한 페이지를 모두 다시 모아요 (10분쯤 걸려요).">
               <Switch on={!!draft.allTime} disabled={lock} label="매일 전체 수집" onChange={(v) => setS('allTime', v ? data.defaults.schedule.allTime : '')} />
               {draft.allTime && (
                 <span className="flex items-center gap-1.5 text-sm text-ink-2">
                   매일
-                  <input
-                    type="time"
-                    step={300}
-                    aria-label="전체 수집 시각"
-                    value={draft.allTime}
-                    disabled={lock}
-                    onChange={(e) => setS('allTime', round5(e.target.value) || data.defaults.schedule.allTime)}
-                    className={selectCls}
-                  />
+                  <TimeInput aria-label="전체 수집 시각" value={draft.allTime} disabled={lock} onChange={(v) => setS('allTime', round5(v) || data.defaults.schedule.allTime)} />
                 </span>
               )}
             </Line>
             <Line title="추천 질문 점검" help="시작 화면 추천 질문이 지금도 답이 되는지 확인하고, 답 못 하는 질문은 빼요 (약 400원).">
-              <select aria-label="점검 요일" value={draft.recDay} disabled={lock} onChange={(e) => setS('recDay', Number(e.target.value))} className={selectCls}>
+              <Select aria-label="점검 요일" value={draft.recDay} disabled={lock} onChange={(e) => setS('recDay', Number(e.target.value))} className={selectCls}>
                 <option value={-1}>끔</option>
                 {DAYS.map((d, i) => (
                   <option key={d} value={i}>
                     매주 {d}요일
                   </option>
                 ))}
-              </select>
+              </Select>
               {draft.recDay >= 0 && (
-                <input
-                  type="time"
-                  step={300}
-                  aria-label="점검 시각"
-                  value={draft.recTime}
-                  disabled={lock}
-                  onChange={(e) => setS('recTime', round5(e.target.value) || data.defaults.schedule.recTime)}
-                  className={selectCls}
-                />
+                <TimeInput aria-label="점검 시각" value={draft.recTime} disabled={lock} onChange={(v) => setS('recTime', round5(v) || data.defaults.schedule.recTime)} />
               )}
             </Line>
             {canEdit && (
@@ -285,7 +270,7 @@ const CrawlSettings: React.FC = () => {
                   <div className="min-w-0 flex-1">
                     <p className="flex flex-wrap items-center gap-2">
                       <span className={`font-semibold ${data.sources[s.key] ? 'text-ink' : 'text-ink-3'}`}>{s.name}</span>
-                      <span className="rounded-full bg-card px-2 py-0.5 text-xs text-ink-3">{s.host}</span>
+                      <Badge>{s.host}</Badge>
                     </p>
                     <p className="mt-0.5 text-sm text-ink-3">{s.what}</p>
                   </div>
@@ -297,7 +282,7 @@ const CrawlSettings: React.FC = () => {
                   <p className="font-semibold text-ink">관리자 사이트 FAQ·선배 FAQ</p>
                   <p className="mt-0.5 text-sm text-ink-3">저장하면 바로 반영돼요. 수집 때 한 번 더 맞춰요.</p>
                 </div>
-                <span className="rounded-full bg-success-soft px-3 py-1 text-xs font-semibold text-success">항상</span>
+                <Badge tone="green">항상</Badge>
               </li>
               <li className="py-2.5 last:pb-0">
                 <p className="font-semibold text-ink">학식·셔틀 시간표·주변 장소</p>
@@ -419,13 +404,13 @@ const CrawlSettings: React.FC = () => {
                   <li key={`${r.started_at}-${r.scope}`} className="flex items-center gap-3 py-2 text-sm first:pt-0 last:pb-0">
                     <span className="w-[5.5rem] shrink-0 whitespace-nowrap tabular-nums text-ink-3">{short(r.started_at)}</span>
                     <span className="w-[4.5rem] shrink-0">
-                      <span className="rounded-full bg-card px-2 py-0.5 text-xs font-semibold text-ink-2">{SCOPE_LABEL[r.scope ?? ''] ?? r.scope}</span>
+                      <Badge>{SCOPE_LABEL[r.scope ?? ''] ?? r.scope}</Badge>
                     </span>
                     <span className={`min-w-0 flex-1 truncate ${r.changes.added || r.changes.updated || r.changes.deleted ? 'font-semibold text-ink' : 'text-ink-3'}`}>{changesText(r.changes)}</span>
                     {r.problems.length > 0 && (
-                      <span className="shrink-0 rounded-full bg-warn-soft px-2 py-0.5 text-xs font-semibold text-warn" title={r.problems.join('\n')}>
+                      <Badge tone="yellow" title={r.problems.join('\n')}>
                         문제 {r.problems.length}건
-                      </span>
+                      </Badge>
                     )}
                   </li>
                 ))}
