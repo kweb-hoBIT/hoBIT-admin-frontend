@@ -217,6 +217,18 @@ const BotSettings: React.FC = () => {
 
       <div className="mt-5 grid grid-cols-1 items-start gap-4 xl:grid-cols-2">
         <div className="flex flex-col gap-4">
+          <Group title="답변 대상" desc="학부는 항상 답해요. 대학원 답변만 끌 수 있어요.">
+            <Row title="학부" help="기본 — 끌 수 없어요.">
+              <span className="rounded-full bg-success-soft px-3 py-1 text-sm font-semibold text-success">항상 켜짐</span>
+            </Row>
+            <Row
+              title="대학원"
+              help="끄면 학생 화면의 학부/대학원 스위치가 사라지고, 대학원을 골라 두었던 학생도 학부 기준으로 답을 받아요. 다시 켜면 학생이 골라 둔 값으로 돌아가요."
+            >
+              {sw('gradEnabled', '대학원 답변')}
+            </Row>
+          </Group>
+
           <Group title="답변" desc="답변을 쓰는 AI의 말투·길이">
             <Row title="답변 자유도" help={`낮으면 찾은 자료 그대로 정확하게, 높으면 표현을 자유롭게 바꿔요. 높을수록 자료에 없는 말을 지어낼 수 있어요. (기본 ${defs.temperature})`}>
               <span className="flex w-full items-center gap-2 sm:w-64">
@@ -238,12 +250,6 @@ const BotSettings: React.FC = () => {
             </Row>
             <Row title="최대 답변 길이" help="답변 한 번에 쓸 수 있는 최대 길이 (토큰, 한글 약 1~2자). 짧으면 긴 답이 중간에 끊겨요.">
               {num('maxTokens', '토큰', '최대 답변 길이')}
-            </Row>
-            <Row
-              title="대학원 답변"
-              help="학부는 항상 답해요. 끄면 학생 화면에서 학부/대학원 스위치가 사라지고, 대학원을 골라 두었던 학생도 학부 기준으로 답을 받아요."
-            >
-              {sw('gradEnabled', '대학원 답변')}
             </Row>
           </Group>
 

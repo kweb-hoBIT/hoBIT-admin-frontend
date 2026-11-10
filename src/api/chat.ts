@@ -161,12 +161,18 @@ export type CrawlRun = {
   custom_pages: { pages: number; items: number; errors: Record<string, string> } | null;
   custom_pages_error: string | null;
 };
+export type CrawlSchedule = { quickMin: number; boardsHours: number; allTime: string; recDay: number; recTime: string };
+export type CrawlSources = { boards: boolean; infoPages: boolean; registrar: boolean; campusLife: boolean; customPages: boolean };
 export type CrawlResponse = {
   pages: CrawlPage[];
+  schedule: CrawlSchedule;
+  sources: CrawlSources;
+  defaults: { schedule: CrawlSchedule; sources: CrawlSources };
+  options: { quickMin: number[]; boardsHours: number[] };
+  tickAt: string | null;
   updatedAt: string | null;
   updatedBy: string | null;
   maxPages: number;
-  schedule: { when: string; what: string }[];
   status: { latest: { available: boolean; finished_at?: string; scope?: string; ok?: boolean; problems?: string[]; last_ok_at?: string }; runs: CrawlRun[] } | null;
 };
 export type CrawlPreview = { title: string; sections: number; chars: number; text: string };
@@ -195,7 +201,7 @@ export const chatApi = {
   setBotSettings: (settings: Partial<BotSettings>) => call<BotSettingsResponse>('PUT', '/agent/bot-settings', { settings }),
   /** 정기 수집 — 시간표·최근 기록·관리자가 더한 학교 페이지 (저장은 행정실·개발자만) */
   getCrawl: () => call<CrawlResponse>('GET', '/agent/crawl'),
-  setCrawlPages: (pages: CrawlPage[]) => call<CrawlResponse>('PUT', '/agent/crawl', { pages }),
+  setCrawl: (body: { pages?: CrawlPage[]; schedule?: CrawlSchedule; sources?: Partial<CrawlSources> }) => call<CrawlResponse>('PUT', '/agent/crawl', body),
   previewCrawlPage: (url: string) => call<CrawlPreview>('POST', '/agent/crawl/preview', { url }),
   /** 학생 화면과 같은 상태 (운영 중·운영 시간 아님·자리 비움·꺼짐) */
   status: (mode: 'staff' | 'senior') =>
