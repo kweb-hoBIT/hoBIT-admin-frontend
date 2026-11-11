@@ -4,6 +4,7 @@ import { useChat } from '../Chat/ChatProvider';
 import { appAlert, appConfirm } from '../ui/Dialog';
 import { Switch } from './ChatFeatures';
 import Badge from '../ui/Badge';
+import Segmented from '../ui/Segmented';
 
 type Limits = BotSettingsResponse['limits'];
 
@@ -151,7 +152,7 @@ const BotSettings: React.FC = () => {
   const num = (k: BotNumberKey, unit: string, label: string) => (
     <NumberInput value={draft[k]} onChange={(v) => set(k, v)} limit={limits[k]} def={defs[k]} unit={unit} disabled={!canEdit || busy} label={label} />
   );
-  const sw = (k: 'placeEnabled' | 'blockFarPlace' | 'menuEnabled' | 'gradEnabled' | 'mascotEnabled' | 'blockPersonalUse', label: string) => (
+  const sw = (k: 'placeEnabled' | 'blockFarPlace' | 'menuEnabled' | 'webSearchEnabled' | 'gradEnabled' | 'mascotEnabled' | 'blockPersonalUse', label: string) => (
     <Switch on={draft[k]} disabled={!canEdit || busy} onChange={(v) => set(k, v)} label={label} />
   );
 
@@ -287,6 +288,27 @@ const BotSettings: React.FC = () => {
             </Row>
             <Row title="학교 밖 지역 질문 막기" help="'강남 맛집', '내 위치 근처 카페'처럼 학교 주변이 아닌 장소 질문에는 안내만 하고 답하지 않아요.">
               {sw('blockFarPlace', '학교 밖 지역 질문 막기')}
+            </Row>
+          </Group>
+
+          <Group title="웹 검색" desc="학교 자료에서 답을 못 찾았을 때만 웹을 검색해 답 아래에 붙여요. '웹에서 찾아봤어요'와 출처 링크가 함께 나가요. (검색 1,000번에 약 $10 + 토큰 비용)">
+            <Row title="웹 검색" help="끄면 못 찾은 질문은 '찾지 못했어요'로만 답해요.">
+              {sw('webSearchEnabled', '웹 검색')}
+            </Row>
+            <Row title="검색 범위" help="웹 전체는 유튜브·블로그·커뮤니티까지 찾아서 테니스장 같은 생활 정보를 잘 찾지만, 틀리거나 오래된 정보가 섞일 수 있어요.">
+              <span className={!canEdit || busy || !draft.webSearchEnabled ? 'pointer-events-none opacity-50' : ''}>
+                <Segmented
+                  value={draft.webSearchWide ? 'wide' : 'school'}
+                  onChange={(v) => set('webSearchWide', v === 'wide')}
+                  options={[
+                    ['school', '학교 사이트만'],
+                    ['wide', '웹 전체'],
+                  ] as const}
+                />
+              </span>
+            </Row>
+            <Row title="하루 최대 검색 수" help="넘으면 그날은 검색하지 않고 '찾지 못했어요'로 답해요. (300번 ≈ $3)">
+              {num('webSearchDaily', '번', '하루 최대 검색 수')}
             </Row>
           </Group>
 

@@ -128,6 +128,9 @@ export type BotSettings = {
   placeSize: number;
   blockFarPlace: boolean;
   menuEnabled: boolean;
+  webSearchEnabled: boolean;
+  webSearchWide: boolean;
+  webSearchDaily: number;
   gradEnabled: boolean;
   mascotEnabled: boolean;
   mascotIdleSec: number;
