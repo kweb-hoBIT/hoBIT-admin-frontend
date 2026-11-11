@@ -252,6 +252,27 @@ const BotSettings: React.FC = () => {
             <Row title="최대 답변 길이" help="답변 한 번에 쓸 수 있는 최대 길이 (토큰, 한글 약 1~2자). 짧으면 긴 답이 중간에 끊겨요.">
               {num('maxTokens', '토큰', '최대 답변 길이')}
             </Row>
+            <Row title="이어서 물어볼 질문 수" help="답변 아래에 보여 줄 추천 질문 수예요. 0이면 보이지 않아요.">
+              {num('recCount', '개', '이어서 물어볼 질문 수')}
+            </Row>
+            <Row title="이어서 물어볼 질문 자유도" help={`낮으면 이번 질문과 확실히 이어지는 질문만(적게 나올 수 있어요), 높으면 조금 먼 주제까지 보여 줘요. (기본 ${defs.recBreadth})`}>
+              <span className="flex w-full items-center gap-2 sm:w-64">
+                <span className="text-xs text-ink-3">가까운 것만</span>
+                <input
+                  type="range"
+                  aria-label="이어서 물어볼 질문 자유도"
+                  min={limits.recBreadth.min}
+                  max={limits.recBreadth.max}
+                  step={limits.recBreadth.step}
+                  value={draft.recBreadth}
+                  disabled={!canEdit || busy}
+                  onChange={(e) => set('recBreadth', Number(e.target.value))}
+                  className="min-w-0 flex-1 accent-accent disabled:opacity-60"
+                />
+                <span className="text-xs text-ink-3">넓게</span>
+                <span className="w-8 text-right text-sm font-semibold text-ink">{draft.recBreadth.toFixed(1)}</span>
+              </span>
+            </Row>
           </Group>
 
           <Group title="주변 장소" desc="카카오맵으로 학교 주변 맛집·카페·약국 등을 찾아 답해요 (우정정보관 기준)">

@@ -121,6 +121,8 @@ export type ChatFeatures = { staff: boolean; senior: boolean; emailVerification:
 export type BotSettings = {
   temperature: number;
   maxTokens: number;
+  recCount: number;
+  recBreadth: number;
   placeEnabled: boolean;
   placeRadiusM: number;
   placeSize: number;
