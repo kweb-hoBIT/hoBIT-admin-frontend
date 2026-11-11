@@ -17,7 +17,7 @@ const Row: React.FC<{ title: string; help: string; children: React.ReactNode }> 
   <div className="flex flex-col gap-2 border-t border-line py-3 first:border-t-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
     <div className="min-w-0">
       <p className="font-semibold text-ink">{title}</p>
-      <p className="mt-0.5 text-sm text-ink-3">{help}</p>
+      {help && <p className="mt-0.5 text-sm text-ink-3">{help}</p>}
     </div>
     <div className="shrink-0">{children}</div>
   </div>
@@ -112,7 +112,7 @@ const NumberInput: React.FC<{
 const Group: React.FC<{ title: string; desc: string; children: React.ReactNode }> = ({ title, desc, children }) => (
   <div className="rounded-2xl border border-line p-4 sm:p-5">
     <h5 className="font-semibold text-ink">{title}</h5>
-    <p className="mt-0.5 text-sm text-ink-3">{desc}</p>
+    {desc && <p className="mt-0.5 text-sm text-ink-3">{desc}</p>}
     <div className="mt-2">{children}</div>
   </div>
 );
@@ -198,8 +198,7 @@ const BotSettings: React.FC = () => {
         <div className="min-w-0">
           <h4 className="text-xl font-bold text-ink">챗봇 설정</h4>
           <p className="mt-1 text-sm text-ink-3">
-            호빗이 답하는 방식과 과다 사용을 막는 기준을 바꿔요.
-            {!canEdit && ' (바꾸기는 행정실·개발자 계정만 할 수 있어요)'}
+            {canEdit ? '저장하면 다음 질문부터 바로 적용돼요.' : '바꾸기는 행정실·개발자 계정만 할 수 있어요.'}
           </p>
           {data.updatedAt && (
             <p className="mt-1 text-xs text-ink-3">
@@ -227,20 +226,20 @@ const BotSettings: React.FC = () => {
 
       <div className="mt-5 grid grid-cols-1 items-start gap-4 xl:grid-cols-2">
         <div className="flex flex-col gap-4">
-          <Group title="답변 대상" desc="학부는 항상 답해요. 대학원 답변만 끌 수 있어요.">
-            <Row title="학부" help="기본 — 끌 수 없어요.">
+          <Group title="답변 대상" desc="">
+            <Row title="학부" help="">
               <Badge tone="green">항상 켜짐</Badge>
             </Row>
             <Row
               title="대학원"
-              help="끄면 학생 화면의 학부/대학원 스위치가 사라지고, 대학원을 골라 두었던 학생도 학부 기준으로 답을 받아요. 다시 켜면 학생이 골라 둔 값으로 돌아가요."
+              help="끄면 모든 학생이 학부 기준으로 답을 받아요."
             >
               {sw('gradEnabled', '대학원 답변')}
             </Row>
           </Group>
 
-          <Group title="답변" desc="답변을 쓰는 AI의 말투·길이">
-            <Row title="답변 자유도" help={`낮으면 찾은 자료 그대로 정확하게, 높으면 표현을 자유롭게 바꿔요. 높을수록 자료에 없는 말을 지어낼 수 있어요. (기본 ${defs.temperature})`}>
+          <Group title="답변" desc="">
+            <Row title="답변 자유도" help={`높을수록 자료에 없는 말을 지어낼 수 있어요. (기본 ${defs.temperature})`}>
               <span className="flex w-full items-center gap-2 sm:w-64">
                 <span className="text-xs text-ink-3">정확하게</span>
                 <input
@@ -258,13 +257,13 @@ const BotSettings: React.FC = () => {
                 <span className="w-8 text-right text-sm font-semibold text-ink">{t.toFixed(1)}</span>
               </span>
             </Row>
-            <Row title="최대 답변 길이" help="답변 한 번에 쓸 수 있는 최대 길이 (토큰, 한글 약 1~2자). 짧으면 긴 답이 중간에 끊겨요.">
+            <Row title="최대 답변 길이" help="짧으면 긴 답이 중간에 끊겨요. (토큰 ≈ 한글 1~2자)">
               {num('maxTokens', '토큰', '최대 답변 길이')}
             </Row>
-            <Row title="이어서 물어볼 질문 수" help="답변 아래에 보여 줄 추천 질문 수예요. 0이면 보이지 않아요.">
+            <Row title="이어서 물어볼 질문 수" help="0이면 보이지 않아요.">
               {num('recCount', '개', '이어서 물어볼 질문 수')}
             </Row>
-            <Row title="이어서 물어볼 질문 자유도" help={`낮으면 이번 질문과 확실히 이어지는 질문만(적게 나올 수 있어요), 높으면 조금 먼 주제까지 보여 줘요. (기본 ${defs.recBreadth})`}>
+            <Row title="이어서 물어볼 질문 자유도" help={`높을수록 조금 먼 주제까지 보여 줘요. (기본 ${defs.recBreadth})`}>
               <span className="flex w-full items-center gap-2 sm:w-64">
                 <span className="text-xs text-ink-3">가까운 것만</span>
                 <input
@@ -284,26 +283,26 @@ const BotSettings: React.FC = () => {
             </Row>
           </Group>
 
-          <Group title="주변 장소" desc="카카오맵으로 학교 주변 맛집·카페·약국 등을 찾아 답해요 (우정정보관 기준)">
-            <Row title="주변 장소 검색" help="끄면 장소 질문에도 카카오맵을 찾지 않고, 학교 자료로만 답해요.">
+          <Group title="주변 장소" desc="카카오맵 · 우정정보관 기준">
+            <Row title="주변 장소 검색" help="">
               {sw('placeEnabled', '주변 장소 검색')}
             </Row>
-            <Row title="검색 반경" help="우정정보관에서 이 거리 안의 장소만 찾아요.">
+            <Row title="검색 반경" help="">
               {num('placeRadiusM', 'm', '검색 반경')}
             </Row>
-            <Row title="결과 수" help="한 번에 보여 줄 장소 수예요.">
+            <Row title="결과 수" help="">
               {num('placeSize', '곳', '결과 수')}
             </Row>
-            <Row title="학교 밖 지역 질문 막기" help="'강남 맛집', '내 위치 근처 카페'처럼 학교 주변이 아닌 장소 질문에는 안내만 하고 답하지 않아요.">
+            <Row title="학교 밖 지역 질문 막기" help="예: '강남 맛집', '내 위치 근처 카페'">
               {sw('blockFarPlace', '학교 밖 지역 질문 막기')}
             </Row>
           </Group>
 
-          <Group title="웹 검색" desc="학교 자료에서 답을 못 찾았을 때만 웹을 검색해 답 아래에 붙여요. '웹에서 찾아봤어요'와 출처 링크가 함께 나가요. (검색 1,000번에 약 $10 + 토큰 비용)">
-            <Row title="웹 검색" help="끄면 못 찾은 질문은 '찾지 못했어요'로만 답해요.">
+          <Group title="웹 검색" desc="학교 자료에서 못 찾았을 때만 검색해요.">
+            <Row title="웹 검색" help="">
               {sw('webSearchEnabled', '웹 검색')}
             </Row>
-            <Row title="검색 범위" help="웹 전체는 유튜브·블로그·커뮤니티까지 찾아서 테니스장 같은 생활 정보를 잘 찾지만, 틀리거나 오래된 정보가 섞일 수 있어요.">
+            <Row title="검색 범위" help="웹 전체는 블로그·커뮤니티까지 찾아 틀린 정보가 섞일 수 있어요.">
               <span className={!canEdit || busy || !draft.webSearchEnabled ? 'pointer-events-none opacity-50' : ''}>
                 <Segmented
                   value={draft.webSearchWide ? 'wide' : 'school'}
@@ -315,59 +314,59 @@ const BotSettings: React.FC = () => {
                 />
               </span>
             </Row>
-            <Row title="하루 최대 검색 수" help="넘으면 그날은 검색하지 않고 '찾지 못했어요'로 답해요. (300번 ≈ $3)">
+            <Row title="하루 최대 검색 수" help="">
               {num('webSearchDaily', '번', '하루 최대 검색 수')}
             </Row>
           </Group>
 
-          <Group title="호빗 캐릭터" desc="학생 화면 시작 화면의 움직이는 호빗이에요. 들어오면 손인사, 누르면 손 흔들기, 가만히 두면 졸고, 졸 때 마우스를 올리거나 탭·흔들면 깨요.">
-            <Row title="움직이는 캐릭터" help="끄면 움직이지 않는 그림만 보여요. 휴대폰에서 '동작 줄이기'를 켠 학생에게는 항상 그림만 보여요.">
+          <Group title="호빗 캐릭터" desc="">
+            <Row title="움직이는 캐릭터" help="">
               {sw('mascotEnabled', '움직이는 캐릭터')}
             </Row>
-            <Row title="졸기까지 시간" help="학생이 이 시간 동안 아무것도 하지 않으면 호빗이 졸아요.">
+            <Row title="졸기까지 시간" help="">
               {num('mascotIdleSec', '초', '졸기까지 시간')}
             </Row>
           </Group>
 
-          <Group title="학식" desc="학식 메뉴 질문에 학교 홈페이지 식단(없으면 고파스)을 그때그때 읽어 답해요">
-            <Row title="학식 메뉴 답변" help="끄면 메뉴를 읽지 않고 일반 자료로만 답해요.">
+          <Group title="학식" desc="">
+            <Row title="학식 메뉴 답변" help="">
               {sw('menuEnabled', '학식 메뉴 답변')}
             </Row>
           </Group>
         </div>
 
-        <Group title="과다 사용" desc="질문 하나마다 AI 비용이 나가서, 너무 많이·이상하게 쓰면 안내하거나 잠시 막아요. 서버 안에서 보내는 테스트 질문은 빼요.">
-          <Row title="1분 질문 수 (브라우저마다)" help="학생 한 명이 1분에 보낼 수 있는 질문 수예요. 넘으면 경고 1번.">
+        <Group title="과다 사용" desc="">
+          <Row title="1분 질문 수 (브라우저마다)" help="넘으면 경고 1번">
             {num('sessionPerMin', '번', '브라우저 1분 질문 수')}
           </Row>
-          <Row title="하루 질문 수 (브라우저마다)" help="학생 한 명이 하루에 보낼 수 있는 질문 수예요.">
+          <Row title="하루 질문 수 (브라우저마다)" help="">
             {num('sessionPerDay', '번', '브라우저 하루 질문 수')}
           </Row>
-          <Row title="1분 질문 수 (IP마다)" help="학교 와이파이는 여러 학생이 IP 하나를 같이 써서 넉넉하게 둬요.">
+          <Row title="1분 질문 수 (IP마다)" help="학교 와이파이는 IP 하나를 여럿이 같이 써요.">
             {num('ipPerMin', '번', 'IP 1분 질문 수')}
           </Row>
-          <Row title="하루 질문 수 (IP마다)" help="세션을 계속 바꿔 보내는 스크립트를 막는 용도예요.">
+          <Row title="하루 질문 수 (IP마다)" help="">
             {num('ipPerDay', '번', 'IP 하루 질문 수')}
           </Row>
-          <Row title="최대 질문 길이" help={`이보다 긴 질문은 답하지 않아요. 2배(${fmt(Number.isFinite(draft.maxQuestionChars) ? draft.maxQuestionChars * 2 : 0)}자)를 넘으면 경고까지.`}>
+          <Row title="최대 질문 길이" help={`${fmt(Number.isFinite(draft.maxQuestionChars) ? draft.maxQuestionChars * 2 : 0)}자를 넘으면 경고`}>
             {num('maxQuestionChars', '자', '최대 질문 길이')}
           </Row>
-          <Row title="하루 글자 수 합" help="한 학생이 하루 동안 보낸 질문 글자 수의 합이 넘으면 그날은 더 답하지 않아요 (자정에 초기화).">
+          <Row title="하루 글자 수 합" help="자정에 초기화">
             {num('dailyCharBudget', '자', '하루 글자 수 합')}
           </Row>
-          <Row title="같은 질문 반복 — 안내" help="10분 안에 같은 질문을 이만큼 하면 답하지 않고 '위 답변을 확인해 주세요'라고 안내해요.">
+          <Row title="같은 질문 반복 — 안내" help="10분 안에">
             {num('repeatNoticeAt', '번째', '같은 질문 안내 횟수')}
           </Row>
           <Row title="같은 질문 반복 — 경고" help="안내 횟수보다 커야 해요.">
             {num('repeatStrikeAt', '번째', '같은 질문 경고 횟수')}
           </Row>
-          <Row title="뜻 없는 입력 — 경고" help="10분 안에 'ㅋㅋㅋ', 'asdf' 같은 입력을 이만큼 보내면 경고해요 (그 전에는 안내만).">
+          <Row title="뜻 없는 입력 — 경고" help="10분 안에 · 예: 'ㅋㅋㅋ', 'asdf'">
             {num('meaninglessStrikeAt', '번째', '뜻 없는 입력 경고 횟수')}
           </Row>
-          <Row title="정지까지 경고 수" help="욕설·공격 입력·횟수 초과 등으로 24시간 안에 경고를 이만큼 받으면 잠시 질문을 막아요.">
+          <Row title="정지까지 경고 수" help="24시간 안에">
             {num('warnLimit', '번', '정지까지 경고 수')}
           </Row>
-          <Row title="정지 시간" help={`경고 ${draft.warnLimit}번째 · ${draft.warnLimit + 1}번째 · ${draft.warnLimit + 2}번째부터 막는 시간이에요. 단계마다 같거나 길게 맞춰져요.`}>
+          <Row title="정지 시간" help={`경고 ${draft.warnLimit} · ${draft.warnLimit + 1} · ${draft.warnLimit + 2}번째부터`}>
             <span className="flex flex-col items-start gap-0.5 sm:items-end">
               <span className="flex flex-wrap items-center gap-1.5 sm:justify-end">
                 {[0, 1, 2].map((i) => (
@@ -390,7 +389,7 @@ const BotSettings: React.FC = () => {
               <span className="text-xs text-ink-3">기본 {defs.suspendMinutes.map(fmt).join(' · ')}분 (24시간 = 1,440분)</span>
             </span>
           </Row>
-          <Row title="개인 AI 용도 막기" help="코드 작성·자소서 대필·번역·과제 풀이·역할극처럼 학교생활과 관계없는 요청에는 안내만 하고 답하지 않아요.">
+          <Row title="개인 AI 용도 막기" help="예: 코드 작성·자소서 대필·번역·과제 풀이">
             {sw('blockPersonalUse', '개인 AI 용도 막기')}
           </Row>
         </Group>

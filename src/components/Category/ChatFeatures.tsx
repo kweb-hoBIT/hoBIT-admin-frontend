@@ -83,16 +83,15 @@ const ChatFeatures: React.FC = () => {
   };
 
   const cards: { mode: 'staff' | 'senior'; title: string; desc: string }[] = [
-    { mode: 'staff', title: '행정실 채팅', desc: '운영 시간에 행정실 담당자와 연결돼요. 운영 시간은 채팅 화면의 [채팅 설정]에서 바꿔요.' },
-    { mode: 'senior', title: '근로장학생 채팅', desc: '채팅 가능 상태인 근로장학생이 있을 때 연결돼요. 학생에게는 이름·학번이 보이지 않아요.' },
+    { mode: 'staff', title: '행정실 채팅', desc: '운영 시간은 채팅 화면의 [채팅 설정]에서 바꿔요.' },
+    { mode: 'senior', title: '근로장학생 채팅', desc: '학생에게는 이름·학번이 보이지 않아요.' },
   ];
 
   return (
     <section className="panel p-4 sm:p-6">
       <h4 className="text-xl font-bold text-ink">채팅</h4>
       <p className="mt-1 text-sm text-ink-3">
-        호빗 화면에서 쓸 채팅을 켜고 꺼요. 끈 채팅은 학생 메뉴에서 아예 안 보여요.
-        {!canEdit && ' (바꾸기는 행정실·개발자 계정만 할 수 있어요)'}
+        {canEdit ? '끈 채팅은 학생 메뉴에서 안 보여요.' : '바꾸기는 행정실·개발자 계정만 할 수 있어요.'}
       </p>
       {failed && <p className="mt-4 rounded-xl bg-danger-soft px-4 py-3 text-sm text-danger">채팅 서버에서 설정을 불러오지 못했어요. 잠시 후 새로고침해 주세요.</p>}
       <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -119,7 +118,7 @@ const ChatFeatures: React.FC = () => {
         <div className="min-w-0">
           <p className="font-semibold text-ink">학교 메일 인증</p>
           <p className="mt-0.5 text-sm text-ink-3">
-            채팅을 시작하기 전에 학교 메일(@korea.ac.kr)로 받은 인증 코드를 확인해요. 끄면 본인 확인 없이 메일 주소만 적고 시작해요.
+            끄면 본인 확인 없이 채팅을 시작해요.
           </p>
           {f && !f.emailVerification && <p className="mt-1 text-sm font-semibold text-warn">지금 꺼져 있어요 — 본인 확인 없이 채팅을 시작할 수 있어요.</p>}
         </div>

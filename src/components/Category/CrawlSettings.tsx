@@ -19,11 +19,11 @@ const SCOPE_LABEL: Record<string, string> = { boards: '게시판', static: '안�
 const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
 const SOURCES: { key: keyof CrawlSources; name: string; host: string; what: string }[] = [
-  { key: 'boards', name: '정보대학 게시판', host: 'info.korea.ac.kr', what: '공지·장학·행사·진로 게시판 (첨부파일 포함). 끄면 새 공지 확인·게시판 수집도 쉬어요.' },
-  { key: 'infoPages', name: '정보대학 안내 페이지', host: 'info.korea.ac.kr', what: '학과·교육과정·졸업·교수진 등 게시판이 아닌 페이지 전체' },
-  { key: 'registrar', name: '학사일정', host: 'korea.ac.kr', what: '학교 학사일정 (이번·다음 학기)' },
-  { key: 'campusLife', name: '학교생활 안내', host: 'korea.ac.kr', what: '체육·편의시설·도서관·식당·셔틀·주차·상담 등 21쪽' },
-  { key: 'customPages', name: '더한 페이지', host: '오른쪽 목록', what: '관리자가 더한 학교 페이지 전체를 한 번에 켜고 꺼요.' },
+  { key: 'boards', name: '정보대학 게시판', host: 'info.korea.ac.kr', what: '공지·장학·행사·진로' },
+  { key: 'infoPages', name: '정보대학 안내 페이지', host: 'info.korea.ac.kr', what: '학과·교육과정·졸업·교수진 등' },
+  { key: 'registrar', name: '학사일정', host: 'korea.ac.kr', what: '' },
+  { key: 'campusLife', name: '학교생활 안내', host: 'korea.ac.kr', what: '체육·편의시설·도서관·식당·셔틀 등' },
+  { key: 'customPages', name: '더한 페이지', host: '오른쪽 목록', what: '' },
 ];
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -81,7 +81,7 @@ const Line: React.FC<{ title: string; help: string; children: React.ReactNode }>
   <div className="flex flex-col gap-2 border-t border-line py-3 first:border-t-0 first:pt-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
     <div className="min-w-0">
       <p className="font-semibold text-ink">{title}</p>
-      <p className="mt-0.5 text-sm text-ink-3">{help}</p>
+      {help && <p className="mt-0.5 text-sm text-ink-3">{help}</p>}
     </div>
     <div className="flex shrink-0 flex-wrap items-center gap-2">{children}</div>
   </div>
@@ -175,8 +175,7 @@ const CrawlSettings: React.FC = () => {
         <div className="min-w-0">
           <h4 className="text-xl font-bold text-ink">정기 수집</h4>
           <p className="mt-1 text-sm text-ink-3">
-            호빗이 답할 때 쓰는 자료를 정해진 시간마다 학교 홈페이지에서 다시 모아요.
-            {!canEdit && ' (바꾸기는 행정실·개발자 계정만 할 수 있어요)'}
+            {!canEdit && '바꾸기는 행정실·개발자 계정만 할 수 있어요.'}
           </p>
         </div>
         {latest?.available && (
@@ -191,12 +190,12 @@ const CrawlSettings: React.FC = () => {
         <div className="flex flex-col gap-4">
           <Block
             title="수집 일정"
-            desc="한국 시간 기준, 5분 단위예요. 저장하면 다음 5분 안에 적용돼요."
+            desc="5분 단위 · 저장하면 5분 안에 적용"
             right={
               <Badge tone={ticking ? 'green' : 'yellow'}>{ticking ? `서버 적용 중 · ${short(data.tickAt)} 확인` : '서버 확인 기록 없음'}</Badge>
             }
           >
-            <Line title="새 공지 확인" help="정보대학 공지·장학 게시판 첫 페이지만 보고, 새 글이 있을 때만 게시판을 수집해요.">
+            <Line title="새 공지 확인" help="새 글이 있을 때만 수집">
               <Select aria-label="새 공지 확인 간격" value={draft.quickMin} disabled={lock} onChange={(e) => setS('quickMin', Number(e.target.value))} className={selectCls}>
                 {data.options.quickMin.map((m) => (
                   <option key={m} value={m}>
@@ -205,7 +204,7 @@ const CrawlSettings: React.FC = () => {
                 ))}
               </Select>
             </Line>
-            <Line title="게시판 전체 수집" help="공지·장학·행사·진로 게시판을 모두 다시 봐요 (매시 20분).">
+            <Line title="게시판 전체 수집" help="매시 20분">
               <Select aria-label="게시판 수집 간격" value={draft.boardsHours} disabled={lock} onChange={(e) => setS('boardsHours', Number(e.target.value))} className={selectCls}>
                 {data.options.boardsHours.map((h) => (
                   <option key={h} value={h}>
@@ -214,7 +213,7 @@ const CrawlSettings: React.FC = () => {
                 ))}
               </Select>
             </Line>
-            <Line title="전체 수집" help="게시판·안내 페이지·학사일정·학교생활 안내·FAQ·더한 페이지를 모두 다시 모아요 (10분쯤 걸려요).">
+            <Line title="전체 수집" help="10분쯤 걸려요">
               <Switch on={!!draft.allTime} disabled={lock} label="매일 전체 수집" onChange={(v) => setS('allTime', v ? data.defaults.schedule.allTime : '')} />
               {draft.allTime && (
                 <span className="flex items-center gap-1.5 text-sm text-ink-2">
@@ -223,7 +222,7 @@ const CrawlSettings: React.FC = () => {
                 </span>
               )}
             </Line>
-            <Line title="추천 질문 점검" help="시작 화면 추천 질문이 지금도 답이 되는지 확인하고, 답 못 하는 질문은 빼요 (약 400원).">
+            <Line title="추천 질문 점검" help="답 못 하는 추천 질문은 빼요 (약 400원)">
               <Select aria-label="점검 요일" value={draft.recDay} disabled={lock} onChange={(e) => setS('recDay', Number(e.target.value))} className={selectCls}>
                 <option value={-1}>끔</option>
                 {DAYS.map((d, i) => (
@@ -268,7 +267,7 @@ const CrawlSettings: React.FC = () => {
             )}
           </Block>
 
-          <Block title="수집 대상" desc="끄면 정기 수집 때 다시 받지 않아요. 이미 모은 자료는 그대로 답변에 쓰여요. 바꾸면 바로 저장돼요.">
+          <Block title="수집 대상" desc="끄면 다시 받지만 않고, 모아 둔 자료는 계속 쓰여요.">
             <ul className="divide-y divide-line">
               {SOURCES.map((s) => (
                 <li key={s.key} className="flex items-center gap-3 py-2.5 first:pt-0">
@@ -277,7 +276,7 @@ const CrawlSettings: React.FC = () => {
                       <span className={`font-semibold ${data.sources[s.key] ? 'text-ink' : 'text-ink-3'}`}>{s.name}</span>
                       <Badge>{s.host}</Badge>
                     </p>
-                    <p className="mt-0.5 text-sm text-ink-3">{s.what}</p>
+                    {s.what && <p className="mt-0.5 text-sm text-ink-3">{s.what}</p>}
                   </div>
                   <Switch on={data.sources[s.key]} disabled={lock} label={`${s.name} 수집`} onChange={(v) => put({ sources: { [s.key]: v } })} />
                 </li>
@@ -285,13 +284,13 @@ const CrawlSettings: React.FC = () => {
               <li className="flex items-center gap-3 py-2.5">
                 <div className="min-w-0 flex-1">
                   <p className="font-semibold text-ink">관리자 사이트 FAQ·선배 FAQ</p>
-                  <p className="mt-0.5 text-sm text-ink-3">저장하면 바로 반영돼요. 수집 때 한 번 더 맞춰요.</p>
+                  
                 </div>
                 <Badge tone="green">항상</Badge>
               </li>
               <li className="py-2.5 last:pb-0">
                 <p className="font-semibold text-ink">학식·셔틀 시간표·주변 장소</p>
-                <p className="mt-0.5 text-sm text-ink-3">수집하지 않고 질문이 올 때마다 바로 읽어요. 학식·주변 장소는 위 챗봇 설정에서 끌 수 있어요.</p>
+                <p className="mt-0.5 text-sm text-ink-3">질문이 올 때 바로 읽어요.</p>
               </li>
             </ul>
           </Block>
@@ -300,7 +299,7 @@ const CrawlSettings: React.FC = () => {
         <div className="flex flex-col gap-4">
           <Block
             title={`더한 페이지 ${data.pages.length}/${data.maxPages}`}
-            desc="학교 사이트(korea.ac.kr)의 안내 페이지를 더하면 전체 수집 때 본문을 읽어 답변 자료에 넣어요. 사이트가 자동 수집을 막아 둔 페이지(예: 도서관)는 읽지 않아요."
+            desc="korea.ac.kr 페이지만 · 자동 수집을 막은 사이트(예: 도서관)는 안 돼요."
           >
             {!data.sources.customPages && <p className="mb-3 rounded-xl bg-warn-soft px-3 py-2 text-sm text-warn">'수집 대상'에서 더한 페이지를 꺼 두어서 지금은 수집하지 않아요.</p>}
             {canEdit && (
@@ -400,7 +399,7 @@ const CrawlSettings: React.FC = () => {
             )}
           </Block>
 
-          <Block title="최근 수집 기록" desc="오늘과 어제 기록이에요. 새 공지 확인은 새 글이 있어 게시판을 수집했을 때만 남아요.">
+          <Block title="최근 수집 기록" desc="오늘·어제">
             {runs.length === 0 ? (
               <p className="text-sm text-ink-3">{data.status ? '기록이 없어요.' : '답변 서버에 연결하지 못해 기록을 못 가져왔어요.'}</p>
             ) : (

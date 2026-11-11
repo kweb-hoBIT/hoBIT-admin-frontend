@@ -54,7 +54,7 @@ const BotPower: React.FC = () => {
             챗봇 {on ? <Badge tone="green">켜짐</Badge> : <Badge tone="yellow">꺼짐</Badge>}
           </h4>
           <p className="mt-1 text-sm text-ink-3">
-            끄면 학생 화면에 '호빗이 잠시 쉬고 있어요' 안내(우는 호빗)가 나오고 질문을 받지 않아요. 바꾸려면 개발자 키가 필요해요.
+            끄면 학생이 질문할 수 없어요. 바꾸려면 개발자 키가 필요해요.
           </p>
           {data.updatedAt && (
             <p className="mt-1 text-xs text-ink-3">
@@ -73,7 +73,7 @@ const BotPower: React.FC = () => {
           }}
         />
       </div>
-      {!data.keyConfigured && <p className="mt-3 text-xs text-ink-3">서버에 개발자 키(BOT_POWER_KEY)가 없어 지금은 바꿀 수 없어요.</p>}
+      {!data.keyConfigured && <p className="mt-3 text-xs text-ink-3">서버에 개발자 키가 없어 바꿀 수 없어요.</p>}
       {want !== null && (
         <form onSubmit={submit} className="mt-3 flex flex-wrap items-center gap-2 rounded-xl bg-card p-3">
           <label className="text-sm font-semibold text-ink-2" htmlFor="bot-power-key">
