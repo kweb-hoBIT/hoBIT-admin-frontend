@@ -157,6 +157,7 @@ export type BotSettingsResponse = {
 };
 
 /** 정기 수집 (채팅 서버 src/services/crawl_pages.ts · RAG /crawl/status) */
+export type BotPowerResponse = { enabled: boolean; updatedAt: string | null; updatedBy: string | null; keyConfigured: boolean };
 export type CrawlPage = { url: string; title: string; enabled: boolean };
 export type CrawlRun = {
   started_at: string | null;
@@ -207,6 +208,9 @@ export const chatApi = {
   getBotSettings: () => call<BotSettingsResponse>('GET', '/agent/bot-settings'),
   setBotSettings: (settings: Partial<BotSettings>) => call<BotSettingsResponse>('PUT', '/agent/bot-settings', { settings }),
   /** 정기 수집 — 시간표·최근 기록·관리자가 더한 학교 페이지 (저장은 행정실·개발자만) */
+  /** 챗봇 켜기·끄기 — 바꾸기는 개발자 키(서버 BOT_POWER_KEY)가 필요 */
+  getBotPower: () => call<BotPowerResponse>('GET', '/agent/bot-power'),
+  setBotPower: (enabled: boolean, key: string) => call<BotPowerResponse>('PUT', '/agent/bot-power', { enabled, key }),
   getCrawl: () => call<CrawlResponse>('GET', '/agent/crawl'),
   setCrawl: (body: { pages?: CrawlPage[]; schedule?: CrawlSchedule; sources?: Partial<CrawlSources> }) => call<CrawlResponse>('PUT', '/agent/crawl', body),
   previewCrawlPage: (url: string) => call<CrawlPreview>('POST', '/agent/crawl/preview', { url }),
