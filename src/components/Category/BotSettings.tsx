@@ -10,6 +10,29 @@ import Segmented from '../ui/Segmented';
 type Limits = BotSettingsResponse['limits'];
 
 const same = (a: Settings | null, b: Settings | null) => JSON.stringify(a) === JSON.stringify(b);
+
+// 저장하지 않고 나갈 때 알림창에 보여 줄 이름·단위 (ui/UnsavedGuard)
+const LABELS: Record<keyof Settings, [string, string?]> = {
+  temperature: ['답변 자유도'], maxTokens: ['최대 답변 길이', '토큰'], recCount: ['이어서 물어볼 질문 수', '개'],
+  recBreadth: ['이어서 물어볼 질문 자유도'], gradEnabled: ['대학원 답변'], placeEnabled: ['주변 장소 검색'],
+  placeRadiusM: ['검색 반경', 'm'], placeSize: ['장소 결과 수', '곳'], blockFarPlace: ['학교 밖 지역 질문 막기'],
+  menuEnabled: ['학식 메뉴 답변'], webSearchEnabled: ['웹 검색'], webSearchWide: ['검색 범위'], webSearchDaily: ['하루 최대 검색 수', '번'],
+  mascotEnabled: ['움직이는 캐릭터'], mascotIdleSec: ['졸기까지 시간', '초'], sessionPerMin: ['1분 질문 수 (브라우저)', '번'],
+  sessionPerDay: ['하루 질문 수 (브라우저)', '번'], ipPerMin: ['1분 질문 수 (IP)', '번'], ipPerDay: ['하루 질문 수 (IP)', '번'],
+  maxQuestionChars: ['최대 질문 길이', '자'], dailyCharBudget: ['하루 글자 수 합', '자'], repeatNoticeAt: ['같은 질문 반복 — 안내', '번'],
+  repeatStrikeAt: ['같은 질문 반복 — 경고', '번'], meaninglessStrikeAt: ['뜻 없는 입력 — 경고', '번'], warnLimit: ['정지까지 경고 수', '번'],
+  suspendMinutes: ['정지 시간', '분'], blockPersonalUse: ['개인 AI 용도 막기'],
+};
+const show = (k: keyof Settings, v: unknown) => {
+  if (typeof v === 'boolean') return k === 'webSearchWide' ? (v ? '웹 전체' : '학교 사이트만') : v ? '켬' : '끔';
+  if (Array.isArray(v)) return v.map((x) => fmt(Number(x))).join(' · ') + (LABELS[k][1] ?? '');
+  return typeof v === 'number' ? fmt(v) + (LABELS[k][1] ?? '') : String(v);
+};
+/** 바뀐 칸 → ['답변 자유도: 0.3 → 0.5', …] */
+const changes = (from: Settings, to: Settings) =>
+  (Object.keys(LABELS) as (keyof Settings)[])
+    .filter((k) => JSON.stringify(from[k]) !== JSON.stringify(to[k]))
+    .map((k) => `${LABELS[k][0]}: ${show(k, from[k])} → ${show(k, to[k])}`);
 const fmt = (n: number) => n.toLocaleString('ko-KR');
 
 /** 한 줄 — 이름·설명 왼쪽, 입력 오른쪽 */
@@ -144,7 +167,9 @@ const BotSettings: React.FC = () => {
   }, [load]);
   // 저장하지 않고 다른 화면으로 가면 묻기 (ui/UnsavedGuard) — save는 아래에서 정해짐
   const saveRef = useRef<() => Promise<boolean>>(async () => true);
-  useUnsavedChanges(!!data && !!draft && !same(draft, data.settings), () => saveRef.current());
+  useUnsavedChanges(!!data && !!draft && !same(draft, data.settings), () => saveRef.current(), () =>
+    data && draft ? changes(data.settings, draft) : []
+  );
 
   if (failed) return <p className="panel px-4 py-3 text-sm text-danger">채팅 서버에서 챗봇 설정을 불러오지 못했어요. 잠시 후 새로고침해 주세요.</p>;
   if (!data || !draft) return <div className="panel h-60 animate-pulse" />;

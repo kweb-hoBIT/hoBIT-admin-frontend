@@ -12,7 +12,8 @@ import { appChoice } from './Dialog';
  * 먼저 가로채 물은 뒤 직접 이동함. 창 닫기·새로고침은 브라우저 기본 경고(beforeunload — 문구는 브라우저가 정함).
  * 브라우저 뒤로 가기는 막지 못함.
  */
-type Guard = { dirty: boolean | (() => boolean); save: () => Promise<boolean> };
+// describe: 바뀐 항목 (예: '답변 자유도: 0.3 → 0.5') — 알림창에 같이 보여 줌
+type Guard = { dirty: boolean | (() => boolean); save: () => Promise<boolean>; describe?: () => string[] };
 const isDirty = (g: Guard) => (typeof g.dirty === 'function' ? g.dirty() : g.dirty);
 const guards = new Map<number, Guard>();
 let seq = 0;
@@ -23,7 +24,10 @@ const anyDirty = () => Array.from(guards.values()).some(isDirty);
 export async function confirmLeave(): Promise<boolean> {
   const dirty = Array.from(guards.values()).filter(isDirty);
   if (!dirty.length) return true;
-  const pick = await appChoice('저장하지 않은 사항이 있어요. 저장하시겠어요?', [
+  const items = dirty.flatMap((g) => g.describe?.() ?? []);
+  const list = items.length > 6 ? [...items.slice(0, 6), `외 ${items.length - 6}개`] : items;
+  const message = `저장하지 않은 사항이 있어요. 저장하시겠어요?${list.length ? `\n\n${list.map((t) => `· ${t}`).join('\n')}` : ''}`;
+  const pick = await appChoice(message, [
     { label: '저장 안 함', value: 'discard' },
     { label: '저장', value: 'save', primary: true },
   ]);
@@ -34,11 +38,11 @@ export async function confirmLeave(): Promise<boolean> {
 }
 
 /** dirty는 값 또는 함수 (자식 화면의 상태를 물을 때는 함수로 — 부모가 다시 그려지지 않아도 지금 값) */
-export function useUnsavedChanges(dirty: boolean | (() => boolean), save: () => Promise<boolean>) {
+export function useUnsavedChanges(dirty: boolean | (() => boolean), save: () => Promise<boolean>, describe?: () => string[]) {
   const id = useRef(0);
   if (!id.current) id.current = ++seq;
   // 최신 값으로 (렌더마다)
-  guards.set(id.current, { dirty, save });
+  guards.set(id.current, { dirty, save, describe });
   useEffect(() => {
     const key = id.current;
     return () => {

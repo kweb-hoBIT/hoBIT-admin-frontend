@@ -309,7 +309,7 @@ const ChatSettings: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const guardRef = useRef<UnsavedGuard | null>(null);
   const asking = useRef(false);
   // 창을 연 채 상단 탭으로 다른 화면에 가려 할 때도 같은 확인 (ui/UnsavedGuard)
-  useUnsavedChanges(() => !!guardRef.current?.dirty(), () => guardRef.current?.save() ?? Promise.resolve(true));
+  useUnsavedChanges(() => !!guardRef.current?.dirty(), () => guardRef.current?.save() ?? Promise.resolve(true), () => ['채팅 운영 시간·쉬는 날']);
 
   /** 바뀐 게 있으면 먼저 물어봄 — 저장 / 저장 안 함 / 계속 편집(바깥·Esc) */
   const leave = async (then: () => void) => {
@@ -318,7 +318,7 @@ const ChatSettings: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     if (!g?.dirty()) return then();
     asking.current = true;
     try {
-      const pick = await appChoice('저장하지 않은 사항이 있어요. 저장하시겠어요?', [
+      const pick = await appChoice('저장하지 않은 사항이 있어요. 저장하시겠어요?\n\n· 채팅 운영 시간·쉬는 날', [
         { label: '저장 안 함', value: 'discard' },
         { label: '저장', value: 'save', primary: true },
       ]);

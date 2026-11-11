@@ -117,7 +117,18 @@ const CrawlSettings: React.FC = () => {
   }, [load]);
   // 수집 일정을 고치고 저장하지 않은 채 다른 화면으로 가면 묻기 (대상·더한 페이지는 바로 저장돼서 해당 없음)
   const saveRef = useRef<() => Promise<boolean>>(async () => true);
-  useUnsavedChanges(!!data && !!draft && !sameSchedule(draft, data.schedule), () => saveRef.current());
+  useUnsavedChanges(!!data && !!draft && !sameSchedule(draft, data.schedule), () => saveRef.current(), () => {
+    if (!data || !draft) return [];
+    const a = data.schedule;
+    const every = (m: number, u: string) => (m ? `${m}${u}마다` : '끔');
+    const rec = (s: CrawlSchedule) => (s.recDay < 0 ? '끔' : `${DAYS[s.recDay]}요일 ${s.recTime}`);
+    return [
+      a.quickMin !== draft.quickMin && `새 공지 확인: ${every(a.quickMin, '분')} → ${every(draft.quickMin, '분')}`,
+      a.boardsHours !== draft.boardsHours && `게시판 전체 수집: ${every(a.boardsHours, '시간')} → ${every(draft.boardsHours, '시간')}`,
+      a.allTime !== draft.allTime && `전체 수집: ${a.allTime || '끔'} → ${draft.allTime || '끔'}`,
+      (a.recDay !== draft.recDay || a.recTime !== draft.recTime) && `추천 질문 점검: ${rec(a)} → ${rec(draft)}`,
+    ].filter(Boolean) as string[];
+  });
 
   if (failed) return <section className="panel mt-4 p-4 text-sm text-ink-3 sm:p-6">정기 수집 정보를 불러오지 못했어요.</section>;
   if (!data || !draft) return <section className="panel mt-4 h-40 animate-pulse p-4 sm:p-6" />;
