@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useUnsavedChanges } from '../ui/UnsavedGuard';
 import { chatApi, CrawlPreview, CrawlResponse, CrawlRun, CrawlSchedule, CrawlSources } from '../../api/chat';
 import { useChat } from '../Chat/ChatProvider';
 import { appAlert, appConfirm } from '../ui/Dialog';
@@ -114,6 +115,9 @@ const CrawlSettings: React.FC = () => {
   useEffect(() => {
     load();
   }, [load]);
+  // 수집 일정을 고치고 저장하지 않은 채 다른 화면으로 가면 묻기 (대상·더한 페이지는 바로 저장돼서 해당 없음)
+  const saveRef = useRef<() => Promise<boolean>>(async () => true);
+  useUnsavedChanges(!!data && !!draft && !sameSchedule(draft, data.schedule), () => saveRef.current());
 
   if (failed) return <section className="panel mt-4 p-4 text-sm text-ink-3 sm:p-6">정기 수집 정보를 불러오지 못했어요.</section>;
   if (!data || !draft) return <section className="panel mt-4 h-40 animate-pulse p-4 sm:p-6" />;
@@ -132,6 +136,7 @@ const CrawlSettings: React.FC = () => {
       setBusy(false);
     }
   };
+  saveRef.current = () => put({ schedule: draft });
   const setS = <K extends keyof CrawlSchedule>(k: K, v: CrawlSchedule[K]) => setDraft({ ...draft, [k]: v });
   const dirty = !sameSchedule(draft, data.schedule);
   const lock = !canEdit || busy;

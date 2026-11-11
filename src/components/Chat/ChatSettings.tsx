@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AccountRole, agentsApi, chatApi, HoursSettings, ROLE_LABEL } from '../../api/chat';
 import { appAlert, appChoice } from '../ui/Dialog';
+import { useUnsavedChanges } from '../ui/UnsavedGuard';
 import { useChat } from './ChatProvider';
 import Segmented from '../ui/Segmented';
 import Select from '../ui/Select';
@@ -307,6 +308,8 @@ const ChatSettings: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [tab, setTab] = useState<'hours' | 'agents'>('hours');
   const guardRef = useRef<UnsavedGuard | null>(null);
   const asking = useRef(false);
+  // 창을 연 채 상단 탭으로 다른 화면에 가려 할 때도 같은 확인 (ui/UnsavedGuard)
+  useUnsavedChanges(() => !!guardRef.current?.dirty(), () => guardRef.current?.save() ?? Promise.resolve(true));
 
   /** 바뀐 게 있으면 먼저 물어봄 — 저장 / 저장 안 함 / 계속 편집(바깥·Esc) */
   const leave = async (then: () => void) => {
@@ -315,7 +318,7 @@ const ChatSettings: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     if (!g?.dirty()) return then();
     asking.current = true;
     try {
-      const pick = await appChoice('바뀐 내용이 있어요. 저장할까요?', [
+      const pick = await appChoice('저장하지 않은 사항이 있어요. 저장하시겠어요?', [
         { label: '저장 안 함', value: 'discard' },
         { label: '저장', value: 'save', primary: true },
       ]);

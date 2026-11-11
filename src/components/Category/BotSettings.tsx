@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useUnsavedChanges } from '../ui/UnsavedGuard';
 import { BotNumberKey, BotSettings as Settings, BotSettingsResponse, chatApi } from '../../api/chat';
 import { useChat } from '../Chat/ChatProvider';
 import { appAlert, appConfirm } from '../ui/Dialog';
@@ -141,6 +142,9 @@ const BotSettings: React.FC = () => {
   useEffect(() => {
     load();
   }, [load]);
+  // 저장하지 않고 다른 화면으로 가면 묻기 (ui/UnsavedGuard) — save는 아래에서 정해짐
+  const saveRef = useRef<() => Promise<boolean>>(async () => true);
+  useUnsavedChanges(!!data && !!draft && !same(draft, data.settings), () => saveRef.current());
 
   if (failed) return <p className="panel px-4 py-3 text-sm text-danger">채팅 서버에서 챗봇 설정을 불러오지 못했어요. 잠시 후 새로고침해 주세요.</p>;
   if (!data || !draft) return <div className="panel h-60 animate-pulse" />;
@@ -156,28 +160,32 @@ const BotSettings: React.FC = () => {
     <Switch on={draft[k]} disabled={!canEdit || busy} onChange={(v) => set(k, v)} label={label} />
   );
 
-  const save = async () => {
+  // skipConfirm: 다른 화면으로 갈 때 '저장'을 고른 경우 (이미 물었으니 한 번 더 묻지 않음). 저장했으면 true
+  const save = async (skipConfirm = false): Promise<boolean> => {
     const bad = (Object.keys(limits) as (BotNumberKey | 'suspendMinutes')[]).filter((k) =>
       k === 'suspendMinutes' ? draft.suspendMinutes.some((v) => !Number.isFinite(v)) : !Number.isFinite(draft[k])
     );
     if (bad.length) {
       await appAlert('비어 있는 칸이 있어요. 숫자를 넣어 주세요.');
-      return;
+      return false;
     }
-    if (!(await appConfirm('챗봇 설정을 저장할까요? 학생이 보내는 다음 질문부터 바로 적용돼요.', { confirmLabel: '저장' }))) return;
+    if (!skipConfirm && !(await appConfirm('챗봇 설정을 저장할까요? 학생이 보내는 다음 질문부터 바로 적용돼요.', { confirmLabel: '저장' }))) return false;
     setBusy(true);
     try {
       const r = await chatApi.setBotSettings(draft);
       const adjusted = !same(r.settings, draft);
       setData(r);
       setDraft(r.settings);
-      appAlert(adjusted ? '저장했어요. 범위를 벗어난 값은 가장 가까운 허용 값으로 맞췄어요.' : '저장했어요. 다음 질문부터 바로 적용돼요.');
+      if (!skipConfirm || adjusted) appAlert(adjusted ? '저장했어요. 범위를 벗어난 값은 가장 가까운 허용 값으로 맞췄어요.' : '저장했어요. 다음 질문부터 바로 적용돼요.');
+      return true;
     } catch {
       appAlert('저장하지 못했어요. 잠시 후 다시 시도해 주세요.');
+      return false;
     } finally {
       setBusy(false);
     }
   };
+  saveRef.current = () => save(true);
   const reset = async () => {
     if (!(await appConfirm('모든 칸을 기본값으로 바꿀까요? [저장]을 눌러야 실제로 적용돼요.', { confirmLabel: '기본값으로' }))) return;
     setDraft(defs);
@@ -210,7 +218,7 @@ const BotSettings: React.FC = () => {
                 되돌리기
               </button>
             )}
-            <button type="button" onClick={save} disabled={busy || !dirty} className="rounded-xl bg-accent px-5 py-2 text-sm font-semibold text-white disabled:opacity-50">
+            <button type="button" onClick={() => save()} disabled={busy || !dirty} className="rounded-xl bg-accent px-5 py-2 text-sm font-semibold text-white disabled:opacity-50">
               {busy ? '저장 중…' : '저장'}
             </button>
           </div>

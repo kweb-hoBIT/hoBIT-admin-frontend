@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 
 import store from './redux/store';
 import Layout from './components/Layout/Layout';
+import { UnsavedGuardHost } from './components/ui/UnsavedGuard';
 import { DialogHost } from './components/ui/Dialog';
 import envs from './config/envs';
 import { ROUTES, warmRoutes, seniorCanOpen } from './routes';
@@ -95,6 +96,7 @@ const App: React.FC = () => {
       <QueryClientProvider client={queryClient}>
         <Router>
           <ChatProvider>
+          <UnsavedGuardHost />
           <Layout>
             <Suspense fallback={<PageFallback />}>
               <Routes>

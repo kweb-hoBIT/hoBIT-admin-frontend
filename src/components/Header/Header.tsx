@@ -24,6 +24,7 @@ import MenuItem from "../ui/MenuItem";
 import Icon from "../ui/Icon";
 import Logout from "./Logout";
 import DeleteAccount from "./DeleteAccount";
+import { confirmLeave } from '../ui/UnsavedGuard';
 
 const THEME_KEY = "hobit-theme"; // 호빗 사용자 화면과 같은 키
 const HOBIT_URL = process.env.REACT_APP_HOBIT_URL || "https://www.hobit.kr";
@@ -413,7 +414,9 @@ const Header: React.FC = () => {
     row.scrollLeft = el.offsetLeft - (row.clientWidth - el.offsetWidth) / 2;
   }, [currentChild]);
 
-  const handleNavigation = (path: string) => {
+  const handleNavigation = async (path: string) => {
+    // 저장하지 않은 변경이 있으면 먼저 물음 (ui/UnsavedGuard)
+    if (location.pathname !== path && !(await confirmLeave())) return;
     dispatch(clearFAQFilterState());
     dispatch(clearFAQSortState());
     dispatch(clearSeniorFAQFilterState());
